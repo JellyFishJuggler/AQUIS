@@ -2,91 +2,97 @@ const xlsx = require("xlsx");
 const { Client } = require("pg");
 
 const client = new Client({
-  user: "postgres",
-  host: "localhost",
-  database: "aquis",
-  password: "vanshika",
-  port: 5432,
+    user: "postgres",
+    host: "localhost",
+    database: "aquis",
+    password: "vanshika",
+    port: 5432,
 });
 
 function getStatus(level) {
-  if (level > 50000) return "SAFE";
-  if (level > 20000) return "WARNING";
-  return "CRITICAL";
+    if (level > 50000) return "SAFE";
+    if (level > 20000) return "WARNING";
+    return "CRITICAL";
 }
 
 async function importExcel() {
-  await client.connect();
+    await client.connect();
 
-  const workbook = xlsx.readFile("src/dataset/ground_water_dataset.xlsx");
-  const sheet = workbook.Sheets[workbook.SheetNames[2]]; // Public_View
-  const data = xlsx.utils.sheet_to_json(sheet);
+    const workbook = xlsx.readFile("src/dataset/ground_water_dataset.xlsx");
+    const sheet = workbook.Sheets[workbook.SheetNames[2]]; // Public_View
+    const data = xlsx.utils.sheet_to_json(sheet);
 
-  // ================= STATE AVG =================
-  const stateData = {};
+    // ================= STATE AVG =================
+    const stateData = {};
 
-  for (let row of data) {
-    const state = row["STATE"];
-    const rainfall = row["RAINFALL L_MM"];
-    const recharge = row["ANNUAL_RECHARGE_HAM"]; // ✅ FIXED
+    // ===== PASS 1: CALCULATE STATE AVERAGE =====
+    for (let row of data) {
+        const state = row["STATE"];
+        const rainfall = row["RAINFALL L_MM"];
+        const recharge = row["ANNUAL_RECHARGE_HAM"];
 
-    if (!state) continue;
+        if (!state) continue;
 
-    if (!stateData[state]) {
-      stateData[state] = { rSum: 0, gSum: 0, count: 0 };
+        if (!stateData[state]) {
+            stateData[state] = { rSum: 0, gSum: 0, count: 0 };
+        }
+
+        if (rainfall != null && recharge != null) {
+            stateData[state].rSum += rainfall;
+            stateData[state].gSum += recharge;
+            stateData[state].count++;
+        }
     }
 
-    if (rainfall != null || recharge != null) {
-      stateData[state].rSum += rainfall || 0;
-      stateData[state].gSum += recharge || 0;
-      stateData[state].count++;
+    // compute avg
+    const stateAvg = {};
+
+    for (let state in stateData) {
+        const s = stateData[state];
+
+        stateAvg[state] = {
+            rainfall: s.count ? s.rSum / s.count : 0,
+            recharge: s.count ? s.gSum / s.count : 0,
+        };
     }
-  }
 
-  const stateAvg = {};
+    // ================= FINAL INSERT =================
+    let index = 1;
 
-  for (let state in stateData) {
-    const s = stateData[state];
+    for (let row of data) {
+        const district = String(row["DISTRICT"] || "").trim();
+        const state = String(row["STATE"] || "").trim();
 
-    stateAvg[state] = {
-      rainfall: s.count ? s.rSum / s.count : 0,
-      recharge: s.count ? s.gSum / s.count : 0,
-    };
-  }
+        let rainfall = row["RAINFALL L_MM"];
+        let recharge = row["ANNUAL_RECHARGE_HAM"];
 
-  // ================= FINAL INSERT =================
-  for (let row of data) {
-    const district = row["DISTRICT"];
-    const state = row["STATE"];
+        if (!district || !state) continue;
 
-    let rainfall = row["RAINFALL L_MM"];
-    let recharge = row["ANNUAL_RECHARGE_HAM"]; // ✅ FIXED
+        if (rainfall == null && recharge == null) {
+            rainfall = stateAvg[state].rainfall;
+            recharge = stateAvg[state].recharge;
+        }
 
-    if (!district || !state) continue;
+        rainfall = rainfall ?? stateAvg[state].rainfall;
+        recharge = recharge ?? stateAvg[state].recharge;
 
-    // fallback
-    if (rainfall == null) rainfall = stateAvg[state].rainfall;
-    if (recharge == null) recharge = stateAvg[state].recharge;
+        const area = 100000;
+        const rainfall_HAM = (rainfall / 1000) * area;
 
-    rainfall = rainfall || 0;
-    recharge = recharge || 0;
+        const water_level = (0.4 * rainfall_HAM) + (0.6 * recharge);
 
-    const area = 100000;
-    const rainfall_HAM = (rainfall / 1000) * area;
+        // 🔥 NEW: arbitrary station name
+        const name = `Station-${index++}`;
 
-    const water_level = (0.4 * rainfall_HAM) + (0.6 * recharge);
+        await client.query(
+            `INSERT INTO stations (name, district, state, water_level, status)
+     VALUES ($1, $2, $3, $4, 'UNKNOWN')`,
+            [name, district, state, water_level]
+        );
+    }
 
-    const status = getStatus(water_level);
-
-    await client.query(
-      `INSERT INTO stations (district, state, water_level, status)
-       VALUES ($1, $2, $3, $4)`,
-      [district, state, water_level, status]
-    );
-  }
-
-  console.log("✅ FINAL: Data imported correctly");
-  await client.end();
+    console.log("✅ FINAL: Data imported correctly");
+    await client.end();
 }
 
 importExcel();

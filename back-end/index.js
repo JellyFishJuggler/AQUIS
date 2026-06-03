@@ -1,7 +1,10 @@
 const express = require("express");
+const cors = require("cors");
 const { Client } = require("pg");
 
 const app = express();
+
+app.use(cors());
 app.use(express.json());
 
 // DB connection
@@ -20,6 +23,54 @@ client
 
 
 // =======================
+// 🔥 DYNAMIC STATUS LOGIC
+// =======================
+async function updateDynamicStatus() {
+  const result = await client.query(`
+    SELECT id, water_level FROM stations
+    WHERE water_level IS NOT NULL
+    ORDER BY water_level ASC
+  `);
+
+  const values = result.rows.map(r => r.water_level);
+
+  if (values.length === 0) return;
+
+  const p30 = values[Math.floor(values.length * 0.3)];
+  const p70 = values[Math.floor(values.length * 0.7)];
+
+  console.log("📊 Thresholds:", { p30, p70 });
+
+  for (let row of result.rows) {
+    let status = "CRITICAL";
+
+    if (row.water_level >= p70) status = "SAFE";
+    else if (row.water_level >= p30) status = "WARNING";
+
+    await client.query(
+      `UPDATE stations SET status = $1 WHERE id = $2`,
+      [status, row.id]
+    );
+  }
+
+  console.log("✅ Dynamic status updated");
+}
+
+
+// =======================
+// 📌 TRIGGER STATUS UPDATE
+// =======================
+app.get("/update-status", async (req, res) => {
+  try {
+    await updateDynamicStatus();
+    res.json({ message: "Dynamic status updated" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+// =======================
 // 📌 GET ALL + FILTER
 // =======================
 app.get("/stations", async (req, res) => {
@@ -30,11 +81,11 @@ app.get("/stations", async (req, res) => {
     let values = [];
 
     if (district) {
-      query += " WHERE district = $1";
-      values.push(district);
+      query += " WHERE district ILIKE $1";
+      values.push(`%${district}%`);
     } else if (state) {
-      query += " WHERE state = $1";
-      values.push(state);
+      query += " WHERE state ILIKE $1";
+      values.push(`%${state}%`);
     }
 
     const result = await client.query(query, values);
@@ -46,90 +97,20 @@ app.get("/stations", async (req, res) => {
 
 
 // =======================
-// 📌 GET SINGLE
-// =======================
-app.get("/stations/:id", async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-
-    const result = await client.query(
-      "SELECT * FROM stations WHERE id = $1",
-      [id]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Not found" });
-    }
-
-    res.json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-
-// =======================
-// 📌 DELETE
-// =======================
-app.delete("/stations/:id", async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-
-    await client.query("DELETE FROM stations WHERE id = $1", [id]);
-
-    res.json({ message: "Station deleted" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-
-// =======================
-// 📌 UPDATE water_level
-// =======================
-app.put("/stations/:id", async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-    const { water_level } = req.body;
-
-    function getStatus(level) {
-      if (level > 15) return "SAFE";
-      if (level > 10) return "WARNING";
-      return "CRITICAL";
-    }
-
-    const status = getStatus(water_level);
-
-    const result = await client.query(
-      `UPDATE stations 
-       SET water_level = $1, status = $2
-       WHERE id = $3 RETURNING *`,
-      [water_level, status, id]
-    );
-
-    res.json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-
-// =======================
-// 📊 ANALYTICS (BASIC)
+// 📊 ANALYTICS
 // =======================
 app.get("/analytics/avg", async (req, res) => {
   try {
     const result = await client.query(`
-      SELECT district, AVG(water_level::float) as avg_water
+      SELECT district, AVG(water_level) as avg_water
       FROM stations
-      WHERE water_level IS NOT NULL
+      WHERE district IS NOT NULL
       GROUP BY district
       ORDER BY avg_water DESC
     `);
 
     res.json(result.rows);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -138,10 +119,9 @@ app.get("/analytics/avg", async (req, res) => {
 app.get("/analytics/risky", async (req, res) => {
   try {
     const result = await client.query(`
-      SELECT district, AVG(water_level) as avg_water
+      SELECT district, state, AVG(water_level) as avg_water
       FROM stations
-      WHERE water_level IS NOT NULL
-      GROUP BY district
+      GROUP BY district, state
       ORDER BY avg_water ASC
       LIMIT 5
     `);
@@ -153,12 +133,14 @@ app.get("/analytics/risky", async (req, res) => {
 });
 
 
+// =======================
+// 🚨 ALERTS
+// =======================
 app.get("/alerts", async (req, res) => {
   try {
     const result = await client.query(`
       SELECT district, state, water_level, status
       FROM stations
-      WHERE water_level < 20000
       ORDER BY water_level ASC
       LIMIT 10
     `);
@@ -173,6 +155,9 @@ app.get("/alerts", async (req, res) => {
 });
 
 
+// =======================
+// 📊 STATE SUMMARY
+// =======================
 app.get("/analytics/state-summary", async (req, res) => {
   try {
     const result = await client.query(`
@@ -191,19 +176,6 @@ app.get("/analytics/state-summary", async (req, res) => {
   }
 });
 
-
-app.get("/map-data", async (req, res) => {
-  try {
-    const result = await client.query(`
-      SELECT district, state, water_level, status
-      FROM stations
-    `);
-
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
 
 // =======================
 app.listen(3000, () => {
