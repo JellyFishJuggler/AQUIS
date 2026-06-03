@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AQUIS – Officer Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ── Reset & Tokens ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #f0f3f9;
+  --surface:     #ffffff;
+  --surface-2:   #f7f9fc;
+  --border:      #e2e8f2;
+
+  --blue-deep:   #1a3a6e;
+  --blue-mid:    #1f6feb;
+  --blue-light:  #4fa3ff;
+  --blue-glow:   rgba(31,111,235,0.12);
+
+  --safe:        #16a34a;
+  --safe-bg:     #dcfce7;
+  --semi:        #d97706;
+  --semi-bg:     #fef3c7;
+  --critical:    #ea580c;
+  --critical-bg: #ffedd5;
+  --over:        #dc2626;
+  --over-bg:     #fee2e2;
+
+  --text:        #0f172a;
+  --text-2:      #475569;
+  --text-3:      #94a3b8;
+
+  --sidebar-w:   240px;
+  --radius:      14px;
+  --radius-sm:   8px;
+
+  --font-body:   'Sora', sans-serif;
+  --font-mono:   'DM Mono', monospace;
+
+  --shadow-sm:   0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:   0 4px 16px rgba(0,0,0,.08);
+  --shadow-lg:   0 8px 32px rgba(0,0,0,.10);
+}
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  flex-shrink: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 8px 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.brand-icon {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--blue-mid), var(--blue-light));
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(31,111,235,.35);
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--blue-deep);
+  letter-spacing: -.3px;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 24px;
+}
+
+.user-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue-mid), #7c3aed);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.user-info .name { font-size: 13px; font-weight: 600; }
+.user-info .role { font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: .5px; margin-top: 1px; }
+
+.nav-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: var(--text-3);
+  padding: 0 8px;
+  margin-bottom: 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-2);
+  transition: all .15s;
+  margin-bottom: 2px;
+  user-select: none;
+}
+
+.nav-item:hover { background: var(--blue-glow); color: var(--blue-mid); }
+.nav-item.active { background: var(--blue-glow); color: var(--blue-mid); font-weight: 600; }
+.nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--over);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 1px 7px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.sidebar-footer .nav-item { color: var(--text-3); }
+.sidebar-footer .nav-item:hover { color: #ef4444; background: #fef2f2; }
+
+/* ── Main Layout ─────────────────────────────────────────── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Topbar ──────────────────────────────────────────────── */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.topbar-left h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.topbar-left .sub {
+  font-size: 12px;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  margin-top: 1px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.weather-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.notif-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  position: relative;
+  transition: all .15s;
+}
+
+.notif-btn:hover { background: var(--blue-glow); border-color: var(--blue-mid); }
+
+.notif-dot {
+  position: absolute;
+  top: 6px; right: 6px;
+  width: 8px; height: 8px;
+  background: var(--over);
+  border-radius: 50%;
+  border: 2px solid var(--surface);
+}
+
+/* ── Content Area ────────────────────────────────────────── */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px;
+}
+
+/* ── Cards grid ──────────────────────────────────────────── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.6fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow .2s;
+}
+
+.stat-card:hover { box-shadow: var(--shadow-md); }
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--text-3);
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+  font-family: var(--font-mono);
+  margin-bottom: 4px;
+}
+
+.stat-sub {
+  font-size: 12px;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-sub .trend { font-weight: 600; }
+.trend.up   { color: var(--safe); }
+.trend.down { color: var(--over); }
+
+/* Hero card (groundwater level) */
+.hero-card {
+  grid-column: span 1;
+  background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue-mid) 60%, var(--blue-light) 100%);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  bottom: -20px; right: -30px;
+  width: 130px; height: 130px;
+  background: rgba(255,255,255,.06);
+  border-radius: 50%;
+}
+
+.hero-card::after {
+  content: '';
+  position: absolute;
+  bottom: 10px; right: 20px;
+  width: 70px; height: 70px;
+  background: rgba(255,255,255,.05);
+  border-radius: 50%;
+}
+
+.hero-card .stat-label { color: rgba(255,255,255,.7); }
+.hero-card .stat-value { font-size: 38px; }
+.hero-card .stat-sub   { color: rgba(255,255,255,.65); }
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.pill-SAFE          { background: var(--safe-bg);     color: var(--safe); }
+.pill-SEMI_CRITICAL { background: var(--semi-bg);     color: var(--semi); }
+.pill-CRITICAL      { background: var(--critical-bg); color: var(--critical); }
+.pill-OVER_EXPLOITED { background: var(--over-bg);    color: var(--over); }
+
+/* ── Distribution Bar ────────────────────────────────────── */
+.dist-card {
+  grid-column: span 1;
+}
+
+.dist-bar-wrap {
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 8px;
+  margin: 10px 0 12px;
+  gap: 2px;
+}
+
+.dist-seg {
+  height: 100%;
+  border-radius: 3px;
+  transition: flex .5s ease;
+}
+
+.dist-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-2);
+}
+
+.legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+
+/* ── Content row ─────────────────────────────────────────── */
+.content-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.panel-header .view-all {
+  font-size: 12px;
+  color: var(--blue-mid);
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* ── Station List ────────────────────────────────────────── */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  font-family: var(--font-body);
+  color: var(--text);
+  background: transparent;
+}
+
+.search-bar input::placeholder { color: var(--text-3); }
+
+.search-icon { color: var(--text-3); font-size: 14px; }
+
+.station-list { overflow-y: auto; max-height: 320px; }
+
+.station-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .12s;
+}
+
+.station-row:last-child { border-bottom: none; }
+.station-row:hover { background: var(--surface-2); }
+
+.station-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-SAFE           { background: var(--safe); }
+.dot-SEMI_CRITICAL  { background: var(--semi); }
+.dot-CRITICAL       { background: var(--critical); }
+.dot-OVER_EXPLOITED { background: var(--over); }
+.dot-null           { background: var(--text-3); }
+
+.station-info { flex: 1; min-width: 0; }
+
+.station-name {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.station-meta {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+
+.station-val {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.station-val .v {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.station-val .label {
+  font-size: 10px;
+  color: var(--text-3);
+}
+
+.station-bar {
+  width: 60px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.station-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width .5s ease;
+}
+
+/* ── Alert Panel ─────────────────────────────────────────── */
+.alert-list { max-height: 380px; overflow-y: auto; }
+
+.alert-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .12s;
+}
+
+.alert-item:last-child { border-bottom: none; }
+.alert-item:hover { background: var(--surface-2); }
+
+.alert-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.alert-icon.over     { background: var(--over-bg);     }
+.alert-icon.critical { background: var(--critical-bg); }
+
+.alert-text .t {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.alert-text .m {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.alert-pct {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--over);
+  flex-shrink: 0;
+}
+
+/* ── Quick Actions ───────────────────────────────────────── */
+.quick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 16px;
+}
+
+.qa-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px 12px;
+  cursor: pointer;
+  transition: all .15s;
+  text-align: center;
+}
+
+.qa-btn:hover {
+  background: var(--blue-glow);
+  border-color: var(--blue-mid);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.qa-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+
+.qa-icon.red    { background: var(--over-bg); }
+.qa-icon.blue   { background: #dbeafe; }
+.qa-icon.green  { background: var(--safe-bg); }
+.qa-icon.purple { background: #ede9fe; }
+
+.qa-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  line-height: 1.3;
+}
+
+/* ── Loading skeleton ────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skel {
+  background: linear-gradient(90deg, #e2e8f2 25%, #f0f3f9 50%, #e2e8f2 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 4px;
+}
+
+/* ── Empty state ─────────────────────────────────────────── */
+.empty {
+  text-align: center;
+  padding: 32px 20px;
+  color: var(--text-3);
+  font-size: 13px;
+}
+
+/* ── Scrollbars ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 1200px) {
+  .stat-grid { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .content-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ────────────────────────────────────────────── -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">💧</div>
+    <span class="brand-name">AQUIS</span>
+  </div>
+
+  <div class="user-card">
+    <div class="user-avatar">SR</div>
+    <div class="user-info">
+      <div class="name">Srijan Gupta</div>
+      <div class="role">District Officer</div>
+    </div>
+  </div>
+
+  <div class="nav-label">Navigation</div>
+
+  <div class="nav-item active" onclick="setActive(this)">
+    <span class="icon">⊞</span> Overview
+  </div>
+  <div class="nav-item" onclick="setActive(this)">
+    <span class="icon">🗺</span> Live Map
+  </div>
+  <div class="nav-item" onclick="setActive(this)">
+    <span class="icon">⬡</span> Station List
+  </div>
+  <div class="nav-item" onclick="setActive(this)">
+    <span class="icon">⚠</span> Alert History
+    <span class="nav-badge" id="alertBadge">–</span>
+  </div>
+  <div class="nav-item" onclick="setActive(this)">
+    <span class="icon">⊕</span> Analytics
+  </div>
+
+  <div class="nav-label" style="margin-top:20px;">System</div>
+  <div class="nav-item" onclick="setActive(this)">
+    <span class="icon">⚙</span> Settings
+  </div>
+  <div class="nav-item" onclick="setActive(this)">
+    <span class="icon">⊞</span> Add Station
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="nav-item">
+      <span class="icon">?</span> Help Center
+    </div>
+    <div class="nav-item" style="color:#ef4444">
+      <span class="icon">↪</span> Logout
+    </div>
+  </div>
+</nav>
+
+<!-- ── MAIN ───────────────────────────────────────────────── -->
+<div class="main">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <h2 id="topDate">Hi, Srijan! Loading…</h2>
+      <div class="sub" id="topSub">Connecting to AQUIS API…</div>
+    </div>
+    <div class="topbar-right">
+      <div class="weather-chip">☁ 28°C &nbsp;·&nbsp; <span id="stateCtx">–</span></div>
+      <div class="notif-btn" title="Alerts">
+        🔔 <div class="notif-dot"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Stat cards -->
+    <div class="stat-grid">
+
+      <!-- Hero: total extractable groundwater -->
+      <div class="stat-card hero-card">
+        <div class="stat-label">Avg Extractable GW Resource</div>
+        <div class="stat-value" id="heroVal">–</div>
+        <div class="stat-sub">ham &nbsp;·&nbsp; national average</div>
+      </div>
+
+      <!-- Safe districts -->
+      <div class="stat-card">
+        <div class="stat-label">Safe Districts</div>
+        <div class="stat-value" style="color:var(--safe)" id="safeCount">–</div>
+        <div class="stat-sub">
+          <span class="trend up" id="safePct">–%</span> of all assessed units
+        </div>
+      </div>
+
+      <!-- Over-exploited -->
+      <div class="stat-card">
+        <div class="stat-label">Over-Exploited</div>
+        <div class="stat-value" style="color:var(--over)" id="overCount">–</div>
+        <div class="stat-sub">
+          <span class="trend down" id="overPct">–%</span> require urgent action
+        </div>
+      </div>
+
+      <!-- Status distribution -->
+      <div class="stat-card dist-card">
+        <div class="stat-label">Status Distribution</div>
+        <div class="dist-bar-wrap" id="distBar">
+          <div class="dist-seg skel" style="flex:1"></div>
+        </div>
+        <div class="dist-legend" id="distLegend"></div>
+      </div>
+
+    </div>
+
+    <!-- Content row -->
+    <div class="content-row">
+
+      <!-- Station list panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3>District Stations</h3>
+          <span class="view-all" onclick="loadStations()">↻ Refresh</span>
+        </div>
+        <div class="search-bar">
+          <span class="search-icon">⊕</span>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by district or state…"
+            oninput="filterStations(this.value)"
+          />
+        </div>
+        <div class="station-list" id="stationList">
+          <div class="empty skel" style="height:200px;margin:16px"></div>
+        </div>
+      </div>
+
+      <!-- Right column: Alerts + Quick actions -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+
+        <!-- Alerts panel -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3>⚠ Critical Alerts</h3>
+            <span class="view-all" onclick="loadAlerts()">View all</span>
+          </div>
+          <div class="alert-list" id="alertList">
+            <div class="empty skel" style="height:140px;margin:16px"></div>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Quick Actions</h3>
+          </div>
+          <div class="quick-grid">
+            <div class="qa-btn" onclick="loadAlerts()">
+              <div class="qa-icon red">⚠</div>
+              <div class="qa-label">Report Anomaly</div>
+            </div>
+            <div class="qa-btn" onclick="openAnalytics()">
+              <div class="qa-icon blue">📄</div>
+              <div class="qa-label">Generate Report</div>
+            </div>
+            <div class="qa-btn" onclick="loadStations()">
+              <div class="qa-icon green">↻</div>
+              <div class="qa-label">Force Sync</div>
+            </div>
+            <div class="qa-btn">
+              <div class="qa-icon purple">⇪</div>
+              <div class="qa-label">Share Data</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+// ── Config ──────────────────────────────────────────────────
+const API = "http://localhost:3000";
+
+// ── State ───────────────────────────────────────────────────
+let allStations = [];
+
+// ── Boot ────────────────────────────────────────────────────
+(function init() {
+  setDateHeader();
+  loadSummary();
+  loadStations();
+  loadAlerts();
+})();
+
+function setDateHeader() {
+  const now = new Date();
+  const days   = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  document.getElementById("topDate").textContent =
+    `Hi, Srijan!`;
+  document.getElementById("topSub").textContent =
+    `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()} · AQUIS Officer Dashboard`;
+}
+
+function setActive(el) {
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  el.classList.add("active");
+}
+
+// ── Summary ─────────────────────────────────────────────────
+async function loadSummary() {
+  try {
+    const [distRes, hotRes] = await Promise.all([
+      fetch(`${API}/analytics/status-distribution`),
+      fetch(`${API}/analytics/hotspots?limit=1`),
+    ]);
+
+    const distData = await distRes.json();
+    const hotData  = await hotRes.json();
+
+    renderDistribution(distData.data || []);
+    renderHeroFromHot(hotData.data || []);
+  } catch (err) {
+    console.warn("Summary load failed:", err.message);
+    document.getElementById("heroVal").textContent = "N/A";
+  }
+}
+
+function renderDistribution(rows) {
+  const map = {};
+  let total = 0;
+  for (const r of rows) {
+    map[r.status] = parseInt(r.count);
+    total += parseInt(r.count);
+  }
+
+  // Safe count
+  const safeN = map["SAFE"] || 0;
+  const overN = map["OVER_EXPLOITED"] || 0;
+
+  document.getElementById("safeCount").textContent = safeN.toLocaleString();
+  document.getElementById("overCount").textContent = overN.toLocaleString();
+  document.getElementById("safePct").textContent =
+    total ? `${((safeN/total)*100).toFixed(1)}%` : "–%";
+  document.getElementById("overPct").textContent =
+    total ? `${((overN/total)*100).toFixed(1)}%` : "–%";
+
+  // Alert badge
+  const alertN = (map["CRITICAL"] || 0) + (map["OVER_EXPLOITED"] || 0);
+  document.getElementById("alertBadge").textContent = alertN || "0";
+
+  // Distribution bar
+  const colorMap = {
+    SAFE: "var(--safe)",
+    SEMI_CRITICAL: "var(--semi)",
+    CRITICAL: "var(--critical)",
+    OVER_EXPLOITED: "var(--over)",
+  };
+  const labelMap = {
+    SAFE: "Safe",
+    SEMI_CRITICAL: "Semi-Crit.",
+    CRITICAL: "Critical",
+    OVER_EXPLOITED: "Over-Expl.",
+  };
+
+  const bar = document.getElementById("distBar");
+  bar.innerHTML = "";
+  const legend = document.getElementById("distLegend");
+  legend.innerHTML = "";
+
+  for (const status of ["SAFE","SEMI_CRITICAL","CRITICAL","OVER_EXPLOITED"]) {
+    const count = map[status] || 0;
+    const pct   = total ? (count / total) * 100 : 0;
+    const color = colorMap[status];
+
+    const seg = document.createElement("div");
+    seg.className = "dist-seg";
+    seg.style.cssText = `flex:${Math.max(pct,0.5)};background:${color};border-radius:3px`;
+    bar.appendChild(seg);
+
+    const li = document.createElement("div");
+    li.className = "legend-item";
+    li.innerHTML = `<div class="legend-dot" style="background:${color}"></div>${labelMap[status]}: ${count}`;
+    legend.appendChild(li);
+  }
+
+  // State context
+  document.getElementById("stateCtx").textContent = `${total} districts`;
+}
+
+async function renderHeroFromHot() {
+  // Use state summary for a meaningful hero metric
+  try {
+    const res = await fetch(`${API}/data?limit=1&sort_by=extraction_rate_pct&order=desc`);
+    const json = await res.json();
+    const row = json.data?.[0];
+    if (row) {
+      const val = row.annual_extractable_gw_ham != null
+        ? parseFloat(row.annual_extractable_gw_ham).toLocaleString("en-IN", { maximumFractionDigits: 0 })
+        : "–";
+      document.getElementById("heroVal").textContent = val;
+    }
+  } catch {}
+}
+
+// ── Stations ─────────────────────────────────────────────────
+async function loadStations() {
+  const list = document.getElementById("stationList");
+  list.innerHTML = `<div class="empty skel" style="height:200px;margin:16px"></div>`;
+
+  try {
+    const res  = await fetch(`${API}/data?limit=100&sort_by=extraction_rate_pct&order=desc`);
+    const json = await res.json();
+    allStations = json.data || [];
+    renderStations(allStations);
+  } catch (err) {
+    list.innerHTML = `<div class="empty">⚠ Could not load stations<br><small>${err.message}</small></div>`;
+  }
+}
+
+function renderStations(rows) {
+  const list = document.getElementById("stationList");
+
+  if (!rows.length) {
+    list.innerHTML = `<div class="empty">No stations found</div>`;
+    return;
+  }
+
+  // Max extraction for bar scaling
+  const maxExtr = Math.max(...rows.map(r => parseFloat(r.extraction_rate_pct) || 0), 1);
+
+  list.innerHTML = rows.slice(0, 50).map(r => {
+    const pct   = parseFloat(r.extraction_rate_pct) || 0;
+    const barW  = Math.min((pct / maxExtr) * 100, 100).toFixed(1);
+    const color = statusColor(r.status);
+
+    return `
+    <div class="station-row">
+      <div class="station-dot dot-${r.status || "null"}"></div>
+      <div class="station-info">
+        <div class="station-name">${esc(r.district)}</div>
+        <div class="station-meta">${esc(r.state)}</div>
+      </div>
+      <div class="station-val">
+        <div class="v">${pct > 0 ? pct.toFixed(1) + "%" : "–"}</div>
+        <div class="label">extraction</div>
+      </div>
+      <div>
+        <div class="station-bar">
+          <div class="station-bar-fill" style="width:${barW}%;background:${color}"></div>
+        </div>
+        <div style="margin-top:4px">
+          <span class="status-pill pill-${r.status || "null"}">${pillLabel(r.status)}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function filterStations(q) {
+  if (!q) { renderStations(allStations); return; }
+  const lq = q.toLowerCase();
+  const filtered = allStations.filter(r =>
+    r.district?.toLowerCase().includes(lq) ||
+    r.state?.toLowerCase().includes(lq)
+  );
+  renderStations(filtered);
+}
+
+// ── Alerts ───────────────────────────────────────────────────
+async function loadAlerts() {
+  const list = document.getElementById("alertList");
+  list.innerHTML = `<div class="empty skel" style="height:140px;margin:16px"></div>`;
+
+  try {
+    const res  = await fetch(`${API}/alerts?limit=10`);
+    const json = await res.json();
+    renderAlerts(json.alerts || []);
+  } catch (err) {
+    list.innerHTML = `<div class="empty">⚠ ${err.message}</div>`;
+  }
+}
+
+function renderAlerts(rows) {
+  const list = document.getElementById("alertList");
+
+  if (!rows.length) {
+    list.innerHTML = `<div class="empty">✅ No critical alerts</div>`;
+    return;
+  }
+
+  list.innerHTML = rows.map(r => {
+    const cls   = r.status === "OVER_EXPLOITED" ? "over" : "critical";
+    const emoji = r.status === "OVER_EXPLOITED" ? "🔴" : "🟠";
+    const pct   = parseFloat(r.extraction_rate_pct);
+
+    return `
+    <div class="alert-item">
+      <div class="alert-icon ${cls}">${emoji}</div>
+      <div class="alert-text">
+        <div class="t">${esc(r.district)}</div>
+        <div class="m">${esc(r.state)} · ${pillLabel(r.status)}</div>
+      </div>
+      <div class="alert-pct">${isNaN(pct) ? "–" : pct.toFixed(1) + "%"}</div>
+    </div>`;
+  }).join("");
+}
+
+function openAnalytics() {
+  window.open(`${API}/analytics/state-summary`, "_blank");
+}
+
+// ── Utils ────────────────────────────────────────────────────
+function statusColor(s) {
+  const m = {
+    SAFE: "var(--safe)",
+    SEMI_CRITICAL: "var(--semi)",
+    CRITICAL: "var(--critical)",
+    OVER_EXPLOITED: "var(--over)",
+  };
+  return m[s] || "var(--text-3)";
+}
+
+function pillLabel(s) {
+  const m = {
+    SAFE: "Safe",
+    SEMI_CRITICAL: "Semi-Crit",
+    CRITICAL: "Critical",
+    OVER_EXPLOITED: "Over-Expl",
+  };
+  return m[s] || (s || "Unknown");
+}
+
+function esc(str) {
+  return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+</script>
+</body>
+</html>

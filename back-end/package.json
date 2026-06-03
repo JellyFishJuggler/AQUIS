@@ -1,18 +1,23 @@
 {
-  "name": "back-end",
+  "name": "aquis-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "AQUIS – Aquifer Query and User Information System. Production-ready backend.",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "migrate": "node scripts/migrate.js",
+    "import": "node scripts/importData.js",
+    "setup": "npm run migrate && npm run import"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "pg": "^8.21.0"
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.0",
+    "express-validator": "^7.2.0",
+    "helmet": "^8.0.0",
+    "morgan": "^1.10.0",
+    "pg": "^8.13.0",
+    "xlsx": "^0.18.5"
   }
 }
