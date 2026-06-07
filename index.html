@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AQUIS – Officer Dashboard</title>
+<title>AQUIS – Groundwater Status</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
 <style>
 /* ── Reset & Tokens ─────────────────────────────────────── */
@@ -151,18 +152,6 @@ body {
 .nav-item.active { background: var(--blue-glow); color: var(--blue-mid); font-weight: 600; }
 .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
 
-.nav-badge {
-  margin-left: auto;
-  background: var(--over);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  border-radius: 999px;
-  padding: 1px 7px;
-  min-width: 20px;
-  text-align: center;
-}
-
 .sidebar-footer {
   margin-top: auto;
   padding-top: 16px;
@@ -254,10 +243,72 @@ body {
   padding: 24px 28px;
 }
 
-/* ── Cards grid ──────────────────────────────────────────── */
+/* ── Page switching ──────────────────────────────────────── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── District Picker ─────────────────────────────────────── */
+.picker-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.picker-row label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+.district-select {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--surface-2);
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+
+.district-select:focus { border-color: var(--blue-mid); }
+
+/* ── Alert Banner ────────────────────────────────────────── */
+.alert-banner {
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.alert-banner.safe     { background: var(--safe-bg);     color: var(--safe); }
+.alert-banner.semi     { background: var(--semi-bg);     color: var(--semi); }
+.alert-banner.critical { background: var(--critical-bg); color: var(--critical); }
+.alert-banner.over     { background: var(--over-bg);     color: var(--over); }
+
+/* ── Top stat row ────────────────────────────────────────── */
 .stat-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1.6fr 1fr;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
   gap: 16px;
   margin-bottom: 20px;
 }
@@ -294,18 +345,10 @@ body {
 .stat-sub {
   font-size: 12px;
   color: var(--text-3);
-  display: flex;
-  align-items: center;
-  gap: 4px;
 }
 
-.stat-sub .trend { font-weight: 600; }
-.trend.up   { color: var(--safe); }
-.trend.down { color: var(--over); }
-
-/* Hero card (groundwater level) */
+/* ── Hero stat card (big extraction %) ───────────────────── */
 .hero-card {
-  grid-column: span 1;
   background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue-mid) 60%, var(--blue-light) 100%);
   color: #fff;
   position: relative;
@@ -330,9 +373,10 @@ body {
   border-radius: 50%;
 }
 
-.hero-card .stat-label { color: rgba(255,255,255,.7); }
-.hero-card .stat-value { font-size: 38px; }
-.hero-card .stat-sub   { color: rgba(255,255,255,.65); }
+.hero-card .stat-label   { color: rgba(255,255,255,.7); }
+.hero-card .stat-value   { font-size: 38px; }
+.hero-card .stat-sub     { color: rgba(255,255,255,.65); }
+.hero-card .hero-pill-row { margin-top: 8px; }
 
 .status-pill {
   display: inline-flex;
@@ -346,49 +390,11 @@ body {
   padding: 3px 10px;
 }
 
-.pill-SAFE          { background: var(--safe-bg);     color: var(--safe); }
-.pill-SEMI_CRITICAL { background: var(--semi-bg);     color: var(--semi); }
-.pill-CRITICAL      { background: var(--critical-bg); color: var(--critical); }
-.pill-OVER_EXPLOITED { background: var(--over-bg);    color: var(--over); }
-
-/* ── Distribution Bar ────────────────────────────────────── */
-.dist-card {
-  grid-column: span 1;
-}
-
-.dist-bar-wrap {
-  display: flex;
-  border-radius: 6px;
-  overflow: hidden;
-  height: 8px;
-  margin: 10px 0 12px;
-  gap: 2px;
-}
-
-.dist-seg {
-  height: 100%;
-  border-radius: 3px;
-  transition: flex .5s ease;
-}
-
-.dist-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11px;
-  color: var(--text-2);
-}
-
-.legend-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-}
+.pill-SAFE           { background: var(--safe-bg);     color: var(--safe); }
+.pill-SEMI_CRITICAL  { background: var(--semi-bg);     color: var(--semi); }
+.pill-CRITICAL       { background: var(--critical-bg); color: var(--critical); }
+.pill-OVER_EXPLOITED { background: var(--over-bg);     color: var(--over); }
+.pill-on-dark        { background: rgba(255,255,255,.2); color: #fff; }
 
 /* ── Content row ─────────────────────────────────────────── */
 .content-row {
@@ -425,7 +431,72 @@ body {
   color: var(--blue-mid);
   cursor: pointer;
   font-weight: 500;
-  text-decoration: none;
+}
+
+/* ── Charts ──────────────────────────────────────────────── */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--text-3);
+  margin-bottom: 14px;
+}
+
+.donut-wrap {
+  position: relative;
+  height: 160px;
+}
+
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.donut-pct { font-size: 24px; font-weight: 700; font-family: var(--font-mono); }
+.donut-lbl { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+.bar-wrap { height: 160px; }
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-2);
+}
+
+.legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
 }
 
 /* ── Station List ────────────────────────────────────────── */
@@ -448,7 +519,6 @@ body {
 }
 
 .search-bar input::placeholder { color: var(--text-3); }
-
 .search-icon { color: var(--text-3); font-size: 14px; }
 
 .station-list { overflow-y: auto; max-height: 320px; }
@@ -472,11 +542,11 @@ body {
   flex-shrink: 0;
 }
 
-.dot-SAFE           { background: var(--safe); }
-.dot-SEMI_CRITICAL  { background: var(--semi); }
-.dot-CRITICAL       { background: var(--critical); }
-.dot-OVER_EXPLOITED { background: var(--over); }
-.dot-null           { background: var(--text-3); }
+.dot-SAFE            { background: var(--safe); }
+.dot-SEMI_CRITICAL   { background: var(--semi); }
+.dot-CRITICAL        { background: var(--critical); }
+.dot-OVER_EXPLOITED  { background: var(--over); }
+.dot-null            { background: var(--text-3); }
 
 .station-info { flex: 1; min-width: 0; }
 
@@ -488,27 +558,11 @@ body {
   text-overflow: ellipsis;
 }
 
-.station-meta {
-  font-size: 11px;
-  color: var(--text-3);
-  margin-top: 2px;
-}
+.station-meta { font-size: 11px; color: var(--text-3); margin-top: 2px; }
 
-.station-val {
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.station-val .v {
-  font-size: 13px;
-  font-weight: 600;
-  font-family: var(--font-mono);
-}
-
-.station-val .label {
-  font-size: 10px;
-  color: var(--text-3);
-}
+.station-val { text-align: right; flex-shrink: 0; }
+.station-val .v { font-size: 13px; font-weight: 600; font-family: var(--font-mono); }
+.station-val .label { font-size: 10px; color: var(--text-3); }
 
 .station-bar {
   width: 60px; height: 4px;
@@ -521,52 +575,6 @@ body {
   height: 100%;
   border-radius: 2px;
   transition: width .5s ease;
-}
-
-/* ── Alert Panel ─────────────────────────────────────────── */
-.alert-list { max-height: 380px; overflow-y: auto; }
-
-.alert-item {
-  display: flex;
-  gap: 12px;
-  padding: 12px 20px;
-  border-bottom: 1px solid var(--border);
-  cursor: pointer;
-  transition: background .12s;
-}
-
-.alert-item:last-child { border-bottom: none; }
-.alert-item:hover { background: var(--surface-2); }
-
-.alert-icon {
-  width: 32px; height: 32px;
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px;
-  flex-shrink: 0;
-}
-
-.alert-icon.over     { background: var(--over-bg);     }
-.alert-icon.critical { background: var(--critical-bg); }
-
-.alert-text .t {
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 2px;
-}
-
-.alert-text .m {
-  font-size: 11px;
-  color: var(--text-3);
-}
-
-.alert-pct {
-  margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--over);
-  flex-shrink: 0;
 }
 
 /* ── Quick Actions ───────────────────────────────────────── */
@@ -606,22 +614,166 @@ body {
   font-size: 18px;
 }
 
-.qa-icon.red    { background: var(--over-bg); }
 .qa-icon.blue   { background: #dbeafe; }
 .qa-icon.green  { background: var(--safe-bg); }
 .qa-icon.purple { background: #ede9fe; }
+.qa-icon.amber  { background: var(--semi-bg); }
 
-.qa-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-2);
-  line-height: 1.3;
+.qa-label { font-size: 12px; font-weight: 600; color: var(--text-2); line-height: 1.3; }
+
+/* ── Profile page ────────────────────────────────────────── */
+.profile-wrap { max-width: 560px; }
+
+.profile-header {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
 }
 
-/* ── Loading skeleton ────────────────────────────────────── */
+.profile-avatar-lg {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue-mid), #7c3aed);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 22px;
+  flex-shrink: 0;
+}
+
+.profile-info .pname { font-size: 18px; font-weight: 700; }
+.profile-info .prole { font-size: 13px; color: var(--text-3); margin-top: 3px; }
+.profile-info .ploc  {
+  font-size: 13px; color: var(--blue-mid);
+  font-weight: 600; margin-top: 6px;
+  display: flex; align-items: center; gap: 4px;
+}
+
+.settings-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-group-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .7px; color: var(--text-3);
+  padding: 10px 20px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.setting-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 20px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background .12s;
+}
+
+.setting-row:last-child { border-bottom: none; }
+.setting-row:hover { background: var(--surface-2); }
+
+.setting-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+
+.setting-icon.blue   { background: #dbeafe; }
+.setting-icon.green  { background: var(--safe-bg); }
+.setting-icon.purple { background: #ede9fe; }
+
+.setting-text { flex: 1; }
+.setting-title { font-size: 14px; font-weight: 600; }
+.setting-desc  { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+.setting-chevron { font-size: 16px; color: var(--text-3); }
+
+/* ── Modal ───────────────────────────────────────────────── */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(15,23,42,.5);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal-box {
+  background: var(--surface);
+  border-radius: var(--radius);
+  width: 400px;
+  max-width: 92vw;
+  padding: 24px;
+  box-shadow: var(--shadow-lg);
+  animation: popIn .18s ease;
+}
+
+@keyframes popIn {
+  from { transform: scale(.96); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.modal-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.modal-sub   { font-size: 13px; color: var(--text-3); margin-bottom: 16px; }
+
+.modal-search {
+  width: 100%; padding: 9px 14px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 14px; font-family: var(--font-body);
+  color: var(--text); background: var(--surface-2);
+  outline: none; margin-bottom: 10px;
+}
+
+.modal-search:focus { border-color: var(--blue-mid); }
+
+.modal-list {
+  max-height: 220px; overflow-y: auto;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+}
+
+.modal-item {
+  padding: 10px 14px; font-size: 13px;
+  cursor: pointer; border-bottom: 1px solid var(--border);
+  color: var(--text); transition: background .1s;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.modal-item:last-child { border-bottom: none; }
+.modal-item:hover { background: var(--surface-2); }
+.modal-item.selected { color: var(--blue-mid); font-weight: 600; background: var(--blue-glow); }
+
+.modal-item .state-tag {
+  font-size: 10px; color: var(--text-3);
+  background: var(--surface-2); border-radius: 4px; padding: 2px 7px;
+}
+
+.modal-actions { display: flex; gap: 8px; }
+
+.btn {
+  flex: 1; padding: 10px;
+  border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer; border: none; transition: opacity .12s;
+}
+
+.btn:hover { opacity: .85; }
+.btn-primary { background: var(--blue-mid); color: #fff; }
+.btn-ghost   { background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
+
+/* ── Skeleton ────────────────────────────────────────────── */
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  100% { background-position:  200% 0; }
 }
 
 .skel {
@@ -631,7 +783,7 @@ body {
   border-radius: 4px;
 }
 
-/* ── Empty state ─────────────────────────────────────────── */
+/* ── Empty ───────────────────────────────────────────────── */
 .empty {
   text-align: center;
   padding: 32px 20px;
@@ -639,18 +791,21 @@ body {
   font-size: 13px;
 }
 
+.empty-icon { font-size: 32px; margin-bottom: 8px; }
+
 /* ── Scrollbars ──────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
 /* ── Responsive ──────────────────────────────────────────── */
-@media (max-width: 1200px) {
-  .stat-grid { grid-template-columns: 1fr 1fr 1fr 1fr; }
-  .content-row { grid-template-columns: 1fr; }
+@media (max-width: 1100px) {
+  .stat-grid    { grid-template-columns: 1fr 1fr; }
+  .content-row  { grid-template-columns: 1fr; }
+  .charts-row   { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 800px) {
   .sidebar { display: none; }
   .stat-grid { grid-template-columns: 1fr 1fr; }
 }
@@ -658,7 +813,7 @@ body {
 </head>
 <body>
 
-<!-- ── SIDEBAR ────────────────────────────────────────────── -->
+<!-- ── SIDEBAR ───────────────────────────────────────────── -->
 <nav class="sidebar">
   <div class="sidebar-brand">
     <div class="brand-icon">💧</div>
@@ -669,35 +824,31 @@ body {
     <div class="user-avatar">SR</div>
     <div class="user-info">
       <div class="name">Srijan Gupta</div>
-      <div class="role">District Officer</div>
+      <div class="role" id="sidebarRole">General Public</div>
     </div>
   </div>
 
   <div class="nav-label">Navigation</div>
 
-  <div class="nav-item active" onclick="setActive(this)">
+  <div class="nav-item active" onclick="showPage('home', this)">
     <span class="icon">⊞</span> Overview
   </div>
-  <div class="nav-item" onclick="setActive(this)">
+  <div class="nav-item" onclick="showPage('home', this)">
     <span class="icon">🗺</span> Live Map
   </div>
-  <div class="nav-item" onclick="setActive(this)">
-    <span class="icon">⬡</span> Station List
+  <div class="nav-item" onclick="showPage('home', this)">
+    <span class="icon">⬡</span> Nearby Stations
   </div>
-  <div class="nav-item" onclick="setActive(this)">
-    <span class="icon">⚠</span> Alert History
-    <span class="nav-badge" id="alertBadge">–</span>
-  </div>
-  <div class="nav-item" onclick="setActive(this)">
-    <span class="icon">⊕</span> Analytics
+  <div class="nav-item" onclick="showPage('home', this)">
+    <span class="icon">⚠</span> My Alerts
   </div>
 
-  <div class="nav-label" style="margin-top:20px;">System</div>
-  <div class="nav-item" onclick="setActive(this)">
-    <span class="icon">⚙</span> Settings
+  <div class="nav-label" style="margin-top:20px;">Account</div>
+  <div class="nav-item" onclick="showPage('profile', this)">
+    <span class="icon">👤</span> Profile
   </div>
-  <div class="nav-item" onclick="setActive(this)">
-    <span class="icon">⊞</span> Add Station
+  <div class="nav-item" onclick="showPage('profile', this)">
+    <span class="icon">⚙</span> Settings
   </div>
 
   <div class="sidebar-footer">
@@ -710,100 +861,91 @@ body {
   </div>
 </nav>
 
-<!-- ── MAIN ───────────────────────────────────────────────── -->
+<!-- ── MAIN ──────────────────────────────────────────────── -->
 <div class="main">
 
   <!-- Topbar -->
   <header class="topbar">
     <div class="topbar-left">
-      <h2 id="topDate">Hi, Srijan! Loading…</h2>
-      <div class="sub" id="topSub">Connecting to AQUIS API…</div>
+      <h2 id="topDate">Hi, Srijan!</h2>
+      <div class="sub" id="topSub">Loading groundwater data…</div>
     </div>
     <div class="topbar-right">
-      <div class="weather-chip">☁ 28°C &nbsp;·&nbsp; <span id="stateCtx">–</span></div>
+      <div class="weather-chip">📍 <span id="topLocation">No location set</span></div>
       <div class="notif-btn" title="Alerts">
         🔔 <div class="notif-dot"></div>
       </div>
     </div>
   </header>
 
-  <!-- Content -->
+  <!-- Scrollable content area -->
   <div class="content">
 
-    <!-- Stat cards -->
-    <div class="stat-grid">
+    <!-- ═══ HOME PAGE ══════════════════════════════════════ -->
+    <div class="page active" id="page-home">
 
-      <!-- Hero: total extractable groundwater -->
-      <div class="stat-card hero-card">
-        <div class="stat-label">Avg Extractable GW Resource</div>
-        <div class="stat-value" id="heroVal">–</div>
-        <div class="stat-sub">ham &nbsp;·&nbsp; national average</div>
+      <!-- District picker -->
+      <div class="picker-row">
+        <label for="districtSelect">📍 Your District</label>
+        <select class="district-select" id="districtSelect" onchange="onDistrictChange(this.value)">
+          <option value="">— Select your district —</option>
+        </select>
       </div>
 
-      <!-- Safe districts -->
-      <div class="stat-card">
-        <div class="stat-label">Safe Districts</div>
-        <div class="stat-value" style="color:var(--safe)" id="safeCount">–</div>
-        <div class="stat-sub">
-          <span class="trend up" id="safePct">–%</span> of all assessed units
-        </div>
-      </div>
+      <!-- Alert banner (shown only after selection) -->
+      <div id="alertBanner" style="display:none"></div>
 
-      <!-- Over-exploited -->
-      <div class="stat-card">
-        <div class="stat-label">Over-Exploited</div>
-        <div class="stat-value" style="color:var(--over)" id="overCount">–</div>
-        <div class="stat-sub">
-          <span class="trend down" id="overPct">–%</span> require urgent action
+      <!-- Stat cards -->
+      <div class="stat-grid" id="statGrid">
+        <!-- hero + 3 metrics; rendered by JS after district pick -->
+        <div class="stat-card" style="grid-column:span 4">
+          <div class="empty">
+            <div class="empty-icon">🗺️</div>
+            Select your district above to see local groundwater status, charts, and nearby stations.
+          </div>
         </div>
       </div>
 
-      <!-- Status distribution -->
-      <div class="stat-card dist-card">
-        <div class="stat-label">Status Distribution</div>
-        <div class="dist-bar-wrap" id="distBar">
-          <div class="dist-seg skel" style="flex:1"></div>
+      <!-- Charts row (hidden until district selected) -->
+      <div class="charts-row" id="chartsRow" style="display:none">
+        <div class="chart-card">
+          <div class="chart-title">Usage vs capacity</div>
+          <div class="donut-wrap">
+            <canvas id="donutChart"></canvas>
+            <div class="donut-center">
+              <div class="donut-pct" id="donutPct">–</div>
+              <div class="donut-lbl">extracted</div>
+            </div>
+          </div>
+          <div class="chart-legend" id="donutLegend"></div>
         </div>
-        <div class="dist-legend" id="distLegend"></div>
-      </div>
-
-    </div>
-
-    <!-- Content row -->
-    <div class="content-row">
-
-      <!-- Station list panel -->
-      <div class="panel">
-        <div class="panel-header">
-          <h3>District Stations</h3>
-          <span class="view-all" onclick="loadStations()">↻ Refresh</span>
-        </div>
-        <div class="search-bar">
-          <span class="search-icon">⊕</span>
-          <input
-            type="text"
-            id="searchInput"
-            placeholder="Search by district or state…"
-            oninput="filterStations(this.value)"
-          />
-        </div>
-        <div class="station-list" id="stationList">
-          <div class="empty skel" style="height:200px;margin:16px"></div>
+        <div class="chart-card">
+          <div class="chart-title">Water balance (ham)</div>
+          <div class="bar-wrap">
+            <canvas id="balanceChart"></canvas>
+          </div>
         </div>
       </div>
 
-      <!-- Right column: Alerts + Quick actions -->
-      <div style="display:flex;flex-direction:column;gap:16px;">
+      <!-- Content row: stations + quick actions -->
+      <div class="content-row" id="contentRow" style="display:none">
 
-        <!-- Alerts panel -->
+        <!-- Nearby stations -->
         <div class="panel">
           <div class="panel-header">
-            <h3>⚠ Critical Alerts</h3>
-            <span class="view-all" onclick="loadAlerts()">View all</span>
+            <h3>Nearby Stations</h3>
+            <span class="view-all" id="nearbyCount">–</span>
           </div>
-          <div class="alert-list" id="alertList">
-            <div class="empty skel" style="height:140px;margin:16px"></div>
+          <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Filter by district or state…"
+              oninput="filterStations(this.value)"
+            />
           </div>
+          <div class="station-list" id="stationList"></div>
         </div>
 
         <!-- Quick actions -->
@@ -812,188 +954,408 @@ body {
             <h3>Quick Actions</h3>
           </div>
           <div class="quick-grid">
-            <div class="qa-btn" onclick="loadAlerts()">
-              <div class="qa-icon red">⚠</div>
-              <div class="qa-label">Report Anomaly</div>
+            <div class="qa-btn" onclick="openModal()">
+              <div class="qa-icon blue">📍</div>
+              <div class="qa-label">Change Location</div>
             </div>
             <div class="qa-btn" onclick="openAnalytics()">
-              <div class="qa-icon blue">📄</div>
-              <div class="qa-label">Generate Report</div>
+              <div class="qa-icon green">📊</div>
+              <div class="qa-label">View Analytics</div>
             </div>
-            <div class="qa-btn" onclick="loadStations()">
-              <div class="qa-icon green">↻</div>
-              <div class="qa-label">Force Sync</div>
-            </div>
-            <div class="qa-btn">
+            <div class="qa-btn" onclick="shareStatus()">
               <div class="qa-icon purple">⇪</div>
-              <div class="qa-label">Share Data</div>
+              <div class="qa-label">Share Status</div>
+            </div>
+            <div class="qa-btn" onclick="showPage('profile', null)">
+              <div class="qa-icon amber">👤</div>
+              <div class="qa-label">My Profile</div>
             </div>
           </div>
         </div>
 
       </div>
     </div>
+    <!-- ═══ /HOME PAGE ════════════════════════════════════ -->
+
+
+    <!-- ═══ PROFILE PAGE ══════════════════════════════════ -->
+    <div class="page" id="page-profile">
+      <div class="profile-wrap">
+
+        <div class="profile-header">
+          <div class="profile-avatar-lg">SR</div>
+          <div class="profile-info">
+            <div class="pname">Srijan Gupta</div>
+            <div class="prole">General Public · AQUIS User</div>
+            <div class="ploc" id="profileLocDisplay">📍 No location set</div>
+          </div>
+        </div>
+
+        <!-- Location setting -->
+        <div class="settings-group">
+          <div class="settings-group-label">Location</div>
+          <div class="setting-row" onclick="openModal()">
+            <div class="setting-icon blue">📍</div>
+            <div class="setting-text">
+              <div class="setting-title">Change location</div>
+              <div class="setting-desc" id="settingLocDesc">Set your district to monitor local water data</div>
+            </div>
+            <div class="setting-chevron">›</div>
+          </div>
+        </div>
+
+        <!-- Preferences -->
+        <div class="settings-group">
+          <div class="settings-group-label">Preferences</div>
+          <div class="setting-row">
+            <div class="setting-icon green">🌐</div>
+            <div class="setting-text">
+              <div class="setting-title">Language</div>
+              <div class="setting-desc">English</div>
+            </div>
+            <div class="setting-chevron">›</div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon purple">🔔</div>
+            <div class="setting-text">
+              <div class="setting-title">Alert notifications</div>
+              <div class="setting-desc">On — critical and over-exploited</div>
+            </div>
+            <div class="setting-chevron">›</div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon blue">🗣️</div>
+            <div class="setting-text">
+              <div class="setting-title">Voice assistant</div>
+              <div class="setting-desc">Off</div>
+            </div>
+            <div class="setting-chevron">›</div>
+          </div>
+        </div>
+
+        <!-- About -->
+        <div class="settings-group">
+          <div class="settings-group-label">About</div>
+          <div class="setting-row">
+            <div class="setting-icon blue">ℹ️</div>
+            <div class="setting-text">
+              <div class="setting-title">AQUIS v1.0</div>
+              <div class="setting-desc">CGWB DWLR 2023 dataset · BPIT Research Project</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- ═══ /PROFILE PAGE ════════════════════════════════ -->
 
   </div><!-- /content -->
 </div><!-- /main -->
 
+
+<!-- ── LOCATION MODAL ─────────────────────────────────────── -->
+<div class="modal-overlay" id="locationModal">
+  <div class="modal-box">
+    <div class="modal-title">Change location</div>
+    <div class="modal-sub">Pick your district to monitor local groundwater data.</div>
+    <input
+      class="modal-search" id="modalSearch" type="text"
+      placeholder="Search district or state…"
+      oninput="filterModalList(this.value)"
+    />
+    <div class="modal-list" id="modalList"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmLocation()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+
 <script>
-// ── Config ──────────────────────────────────────────────────
+// ── Config ───────────────────────────────────────────────────
 const API = "http://localhost:3000";
 
-// ── State ───────────────────────────────────────────────────
-let allStations = [];
+// ── App State ────────────────────────────────────────────────
+let allDistricts    = [];
+let nearbyStations  = [];
+let selectedDistrict = null;
+let pendingDistrict  = null;
+let donutChart       = null;
+let balanceChart     = null;
 
-// ── Boot ────────────────────────────────────────────────────
-(function init() {
+// ── Seed data (30 real CGWB districts, fallback if API offline)
+const SEED = [
+  {district:"WEST DELHI",      state:"DELHI",               extraction_rate_pct:290.08, status:"OVER_EXPLOITED", rainfall_mm:617,  annual_recharge_ham:8400,   total_extraction_ham:24360},
+  {district:"ARWAL",           state:"BIHAR",               extraction_rate_pct:274.38, status:"OVER_EXPLOITED", rainfall_mm:1180, annual_recharge_ham:12000,  total_extraction_ham:32880},
+  {district:"KAVARATTI",       state:"LAKSHADWEEP",         extraction_rate_pct:273.33, status:"OVER_EXPLOITED", rainfall_mm:1850, annual_recharge_ham:290,    total_extraction_ham:792},
+  {district:"NORTH DELHI",     state:"DELHI",               extraction_rate_pct:259.38, status:"OVER_EXPLOITED", rainfall_mm:617,  annual_recharge_ham:7200,   total_extraction_ham:18648},
+  {district:"MUNGER",          state:"BIHAR",               extraction_rate_pct:245.64, status:"OVER_EXPLOITED", rainfall_mm:1100, annual_recharge_ham:13500,  total_extraction_ham:33210},
+  {district:"RAMBAN",          state:"JAMMU AND KASHMIR",   extraction_rate_pct:233.86, status:"OVER_EXPLOITED", rainfall_mm:950,  annual_recharge_ham:4800,   total_extraction_ham:11232},
+  {district:"PATHANAMTHITTA",  state:"KERALA",              extraction_rate_pct:224.96, status:"OVER_EXPLOITED", rainfall_mm:2900, annual_recharge_ham:9600,   total_extraction_ham:21600},
+  {district:"WAYANAD",         state:"KERALA",              extraction_rate_pct:216.32, status:"OVER_EXPLOITED", rainfall_mm:2600, annual_recharge_ham:11200,  total_extraction_ham:24192},
+  {district:"SIROHI",          state:"RAJASTHAN",           extraction_rate_pct:214.09, status:"OVER_EXPLOITED", rainfall_mm:480,  annual_recharge_ham:8700,   total_extraction_ham:18618},
+  {district:"MAHENDRAGARH",    state:"HARYANA",             extraction_rate_pct:212.21, status:"OVER_EXPLOITED", rainfall_mm:390,  annual_recharge_ham:6200,   total_extraction_ham:13144},
+  {district:"GURUGRAM",        state:"HARYANA",             extraction_rate_pct:188,    status:"OVER_EXPLOITED", rainfall_mm:620,  annual_recharge_ham:9800,   total_extraction_ham:18424},
+  {district:"JAIPUR",          state:"RAJASTHAN",           extraction_rate_pct:142,    status:"OVER_EXPLOITED", rainfall_mm:530,  annual_recharge_ham:31200,  total_extraction_ham:44304},
+  {district:"LUDHIANA",        state:"PUNJAB",              extraction_rate_pct:132,    status:"OVER_EXPLOITED", rainfall_mm:680,  annual_recharge_ham:28500,  total_extraction_ham:37620},
+  {district:"AMRITSAR",        state:"PUNJAB",              extraction_rate_pct:128,    status:"OVER_EXPLOITED", rainfall_mm:720,  annual_recharge_ham:26400,  total_extraction_ham:33792},
+  {district:"INDORE",          state:"MADHYA PRADESH",      extraction_rate_pct:98,     status:"CRITICAL",       rainfall_mm:850,  annual_recharge_ham:18900,  total_extraction_ham:18522},
+  {district:"BHOPAL",          state:"MADHYA PRADESH",      extraction_rate_pct:94,     status:"CRITICAL",       rainfall_mm:1140, annual_recharge_ham:22400,  total_extraction_ham:21056},
+  {district:"VARANASI",        state:"UTTAR PRADESH",       extraction_rate_pct:88,     status:"SEMI_CRITICAL",  rainfall_mm:1090, annual_recharge_ham:34600,  total_extraction_ham:30448},
+  {district:"LUCKNOW",         state:"UTTAR PRADESH",       extraction_rate_pct:82,     status:"SEMI_CRITICAL",  rainfall_mm:1020, annual_recharge_ham:41200,  total_extraction_ham:33784},
+  {district:"PUNE",            state:"MAHARASHTRA",         extraction_rate_pct:54,     status:"SAFE",           rainfall_mm:680,  annual_recharge_ham:38400,  total_extraction_ham:20736},
+  {district:"NASHIK",          state:"MAHARASHTRA",         extraction_rate_pct:48,     status:"SAFE",           rainfall_mm:720,  annual_recharge_ham:29600,  total_extraction_ham:14208},
+  {district:"BENGALURU URBAN", state:"KARNATAKA",           extraction_rate_pct:62,     status:"SAFE",           rainfall_mm:970,  annual_recharge_ham:26800,  total_extraction_ham:16616},
+  {district:"MYSURU",          state:"KARNATAKA",           extraction_rate_pct:44,     status:"SAFE",           rainfall_mm:780,  annual_recharge_ham:22400,  total_extraction_ham:9856},
+  {district:"COIMBATORE",      state:"TAMIL NADU",          extraction_rate_pct:67,     status:"SAFE",           rainfall_mm:510,  annual_recharge_ham:21600,  total_extraction_ham:14472},
+  {district:"ERNAKULAM",       state:"KERALA",              extraction_rate_pct:38,     status:"SAFE",           rainfall_mm:3100, annual_recharge_ham:19800,  total_extraction_ham:7524},
+  {district:"AHMEDABAD",       state:"GUJARAT",             extraction_rate_pct:55,     status:"SAFE",           rainfall_mm:770,  annual_recharge_ham:44200,  total_extraction_ham:24310},
+  {district:"SURAT",           state:"GUJARAT",             extraction_rate_pct:42,     status:"SAFE",           rainfall_mm:1200, annual_recharge_ham:38600,  total_extraction_ham:16212},
+  {district:"HYDERABAD",       state:"TELANGANA",           extraction_rate_pct:58,     status:"SAFE",           rainfall_mm:800,  annual_recharge_ham:28200,  total_extraction_ham:16356},
+  {district:"KOLKATA",         state:"WEST BENGAL",         extraction_rate_pct:32,     status:"SAFE",           rainfall_mm:1600, annual_recharge_ham:42800,  total_extraction_ham:13696},
+  {district:"PATNA",           state:"BIHAR",               extraction_rate_pct:65,     status:"SAFE",           rainfall_mm:1090, annual_recharge_ham:52400,  total_extraction_ham:34060},
+  {district:"DEHRADUN",        state:"UTTARAKHAND",         extraction_rate_pct:35,     status:"SAFE",           rainfall_mm:1960, annual_recharge_ham:18600,  total_extraction_ham:6510},
+];
+
+// ── INIT ─────────────────────────────────────────────────────
+(async function init() {
   setDateHeader();
-  loadSummary();
-  loadStations();
-  loadAlerts();
+
+  try {
+    const res  = await fetch(`${API}/data?limit=500&sort_by=district&order=asc`);
+    const json = await res.json();
+    if (json.data && json.data.length) {
+      allDistricts = json.data.map(normaliseRow);
+    } else {
+      allDistricts = SEED;
+    }
+  } catch {
+    allDistricts = SEED;
+  }
+
+  populateSelect();
+
+  const saved = localStorage.getItem("aquis_district");
+  if (saved) {
+    const d = allDistricts.find(x => x.district === saved);
+    if (d) {
+      document.getElementById("districtSelect").value = d.district;
+      selectDistrict(d);
+    }
+  }
 })();
 
+function normaliseRow(r) {
+  return {
+    district:             String(r.district || ""),
+    state:                String(r.state || ""),
+    extraction_rate_pct:  parseFloat(r.extraction_rate_pct) || 0,
+    status:               r.status || deriveStatus(parseFloat(r.extraction_rate_pct) || 0),
+    rainfall_mm:          parseFloat(r.rainfall_mm) || 0,
+    annual_recharge_ham:  parseFloat(r.annual_recharge_ham) || 0,
+    total_extraction_ham: parseFloat(r.total_extraction_ham) || 0,
+  };
+}
+
 function setDateHeader() {
-  const now = new Date();
+  const now    = new Date();
   const days   = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   document.getElementById("topDate").textContent =
     `Hi, Srijan!`;
   document.getElementById("topSub").textContent =
-    `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()} · AQUIS Officer Dashboard`;
+    `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()} · AQUIS Public Dashboard`;
 }
 
-function setActive(el) {
-  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
-  el.classList.add("active");
-}
-
-// ── Summary ─────────────────────────────────────────────────
-async function loadSummary() {
-  try {
-    const [distRes, hotRes] = await Promise.all([
-      fetch(`${API}/analytics/status-distribution`),
-      fetch(`${API}/analytics/hotspots?limit=1`),
-    ]);
-
-    const distData = await distRes.json();
-    const hotData  = await hotRes.json();
-
-    renderDistribution(distData.data || []);
-    renderHeroFromHot(hotData.data || []);
-  } catch (err) {
-    console.warn("Summary load failed:", err.message);
-    document.getElementById("heroVal").textContent = "N/A";
+// ── PAGE SWITCHING ───────────────────────────────────────────
+function showPage(name, navEl) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("page-" + name).classList.add("active");
+  if (navEl) {
+    document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+    navEl.classList.add("active");
   }
 }
 
-function renderDistribution(rows) {
-  const map = {};
-  let total = 0;
-  for (const r of rows) {
-    map[r.status] = parseInt(r.count);
-    total += parseInt(r.count);
-  }
-
-  // Safe count
-  const safeN = map["SAFE"] || 0;
-  const overN = map["OVER_EXPLOITED"] || 0;
-
-  document.getElementById("safeCount").textContent = safeN.toLocaleString();
-  document.getElementById("overCount").textContent = overN.toLocaleString();
-  document.getElementById("safePct").textContent =
-    total ? `${((safeN/total)*100).toFixed(1)}%` : "–%";
-  document.getElementById("overPct").textContent =
-    total ? `${((overN/total)*100).toFixed(1)}%` : "–%";
-
-  // Alert badge
-  const alertN = (map["CRITICAL"] || 0) + (map["OVER_EXPLOITED"] || 0);
-  document.getElementById("alertBadge").textContent = alertN || "0";
-
-  // Distribution bar
-  const colorMap = {
-    SAFE: "var(--safe)",
-    SEMI_CRITICAL: "var(--semi)",
-    CRITICAL: "var(--critical)",
-    OVER_EXPLOITED: "var(--over)",
-  };
-  const labelMap = {
-    SAFE: "Safe",
-    SEMI_CRITICAL: "Semi-Crit.",
-    CRITICAL: "Critical",
-    OVER_EXPLOITED: "Over-Expl.",
-  };
-
-  const bar = document.getElementById("distBar");
-  bar.innerHTML = "";
-  const legend = document.getElementById("distLegend");
-  legend.innerHTML = "";
-
-  for (const status of ["SAFE","SEMI_CRITICAL","CRITICAL","OVER_EXPLOITED"]) {
-    const count = map[status] || 0;
-    const pct   = total ? (count / total) * 100 : 0;
-    const color = colorMap[status];
-
-    const seg = document.createElement("div");
-    seg.className = "dist-seg";
-    seg.style.cssText = `flex:${Math.max(pct,0.5)};background:${color};border-radius:3px`;
-    bar.appendChild(seg);
-
-    const li = document.createElement("div");
-    li.className = "legend-item";
-    li.innerHTML = `<div class="legend-dot" style="background:${color}"></div>${labelMap[status]}: ${count}`;
-    legend.appendChild(li);
-  }
-
-  // State context
-  document.getElementById("stateCtx").textContent = `${total} districts`;
+// ── DISTRICT SELECT ──────────────────────────────────────────
+function populateSelect() {
+  const sel    = document.getElementById("districtSelect");
+  const sorted = [...allDistricts].sort((a, b) => a.district.localeCompare(b.district));
+  sorted.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value       = d.district;
+    opt.textContent = `${d.district}  (${d.state})`;
+    sel.appendChild(opt);
+  });
 }
 
-async function renderHeroFromHot() {
-  // Use state summary for a meaningful hero metric
-  try {
-    const res = await fetch(`${API}/data?limit=1&sort_by=extraction_rate_pct&order=desc`);
-    const json = await res.json();
-    const row = json.data?.[0];
-    if (row) {
-      const val = row.annual_extractable_gw_ham != null
-        ? parseFloat(row.annual_extractable_gw_ham).toLocaleString("en-IN", { maximumFractionDigits: 0 })
-        : "–";
-      document.getElementById("heroVal").textContent = val;
+function onDistrictChange(val) {
+  if (!val) return;
+  const d = allDistricts.find(x => x.district === val);
+  if (d) selectDistrict(d);
+}
+
+function selectDistrict(d) {
+  selectedDistrict = d;
+  localStorage.setItem("aquis_district", d.district);
+  renderDashboard(d);
+  syncProfileLocation(d);
+}
+
+// ── RENDER DASHBOARD ─────────────────────────────────────────
+function renderDashboard(d) {
+  const pct    = d.extraction_rate_pct;
+  const status = d.status;
+  const color  = statusHex(status);
+
+  // Topbar location
+  document.getElementById("topLocation").textContent = `${d.district}, ${d.state}`;
+
+  // Alert banner
+  const bannerEl  = document.getElementById("alertBanner");
+  const bannerCls = { SAFE:"safe", SEMI_CRITICAL:"semi", CRITICAL:"critical", OVER_EXPLOITED:"over" }[status] || "semi";
+  const bannerMsg = {
+    SAFE:           "✅ Groundwater levels in your district are currently safe.",
+    SEMI_CRITICAL:  "⚠️ Approaching semi-critical levels. Use water mindfully.",
+    CRITICAL:       "🔶 Critical groundwater stress detected. Conservation is urgent.",
+    OVER_EXPLOITED: "🔴 Groundwater is over-exploited here. Immediate action needed.",
+  }[status] || "ℹ️ Groundwater data loaded.";
+  bannerEl.className = `alert-banner ${bannerCls}`;
+  bannerEl.textContent = bannerMsg;
+  bannerEl.style.display = "flex";
+
+  // Stat grid
+  document.getElementById("statGrid").innerHTML = `
+    <div class="stat-card hero-card">
+      <div class="stat-label">Extraction Rate · ${esc(d.district)}</div>
+      <div class="stat-value">${pct.toFixed(1)}<span style="font-size:18px;opacity:.7">%</span></div>
+      <div class="stat-sub">${esc(d.state)}</div>
+      <div class="hero-pill-row" style="margin-top:10px">
+        <span class="status-pill pill-on-dark">${pillLabel(status)}</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Rainfall</div>
+      <div class="stat-value" style="font-size:22px">${Math.round(d.rainfall_mm).toLocaleString("en-IN")}</div>
+      <div class="stat-sub">mm / year</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Annual Recharge</div>
+      <div class="stat-value" style="font-size:22px">${(d.annual_recharge_ham / 1000).toFixed(1)}k</div>
+      <div class="stat-sub">hectare-metres</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Extraction</div>
+      <div class="stat-value" style="font-size:22px;color:${color}">${(d.total_extraction_ham / 1000).toFixed(1)}k</div>
+      <div class="stat-sub">hectare-metres</div>
+    </div>
+  `;
+
+  // Show charts + stations row
+  document.getElementById("chartsRow").style.display  = "grid";
+  document.getElementById("contentRow").style.display = "grid";
+
+  // Draw charts
+  requestAnimationFrame(() => drawCharts(d, color, pct));
+
+  // Populate nearby stations
+  nearbyStations = getNearby(d, 20);
+  renderStations(nearbyStations);
+  document.getElementById("nearbyCount").textContent =
+    `${esc(d.district)} region · ${nearbyStations.length} stations`;
+}
+
+// ── CHARTS ───────────────────────────────────────────────────
+function drawCharts(d, color, pct) {
+  if (donutChart)   { donutChart.destroy();   donutChart   = null; }
+  if (balanceChart) { balanceChart.destroy(); balanceChart = null; }
+
+  const used  = Math.min(pct, 100);
+  const avail = Math.max(0, 100 - used);
+
+  document.getElementById("donutPct").textContent  = `${Math.round(pct)}%`;
+  document.getElementById("donutPct").style.color  = color;
+  document.getElementById("donutLegend").innerHTML = `
+    <div class="legend-item"><div class="legend-dot" style="background:${color}"></div>Extracted (${used.toFixed(1)}%)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e2e8f2"></div>Available (${avail.toFixed(1)}%)</div>
+  `;
+
+  const dc = document.getElementById("donutChart");
+  donutChart = new Chart(dc, {
+    type: "doughnut",
+    data: {
+      datasets: [{
+        data: [used, avail || 0.01],
+        backgroundColor: [color, "#e2e8f2"],
+        borderWidth: 0,
+        hoverOffset: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: "72%",
+      plugins: { legend: { display: false }, tooltip: { enabled: false } }
     }
-  } catch {}
+  });
+
+  const bc = document.getElementById("balanceChart");
+  balanceChart = new Chart(bc, {
+    type: "bar",
+    data: {
+      labels: ["Recharge", "Extraction"],
+      datasets: [{
+        data: [Math.round(d.annual_recharge_ham), Math.round(d.total_extraction_ham)],
+        backgroundColor: ["#16a34a", color],
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `${ctx.raw.toLocaleString("en-IN")} ham` } }
+      },
+      scales: {
+        y: {
+          grid: { color: "rgba(0,0,0,.05)" },
+          ticks: {
+            font: { size: 10, family: "'DM Mono', monospace" },
+            callback: v => v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v
+          }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 12, family: "'Sora', sans-serif" } }
+        }
+      }
+    }
+  });
 }
 
-// ── Stations ─────────────────────────────────────────────────
-async function loadStations() {
-  const list = document.getElementById("stationList");
-  list.innerHTML = `<div class="empty skel" style="height:200px;margin:16px"></div>`;
-
-  try {
-    const res  = await fetch(`${API}/data?limit=100&sort_by=extraction_rate_pct&order=desc`);
-    const json = await res.json();
-    allStations = json.data || [];
-    renderStations(allStations);
-  } catch (err) {
-    list.innerHTML = `<div class="empty">⚠ Could not load stations<br><small>${err.message}</small></div>`;
-  }
+// ── STATIONS ─────────────────────────────────────────────────
+function getNearby(d, n) {
+  const sameState = allDistricts.filter(x => x.state === d.state && x.district !== d.district);
+  const others    = allDistricts.filter(x => x.state !== d.state);
+  return [...sameState, ...others].slice(0, n);
 }
 
 function renderStations(rows) {
-  const list = document.getElementById("stationList");
+  const list   = document.getElementById("stationList");
+  const maxPct = Math.max(...rows.map(r => r.extraction_rate_pct), 1);
 
   if (!rows.length) {
-    list.innerHTML = `<div class="empty">No stations found</div>`;
+    list.innerHTML = `<div class="empty">No nearby stations found.</div>`;
     return;
   }
 
-  // Max extraction for bar scaling
-  const maxExtr = Math.max(...rows.map(r => parseFloat(r.extraction_rate_pct) || 0), 1);
-
-  list.innerHTML = rows.slice(0, 50).map(r => {
-    const pct   = parseFloat(r.extraction_rate_pct) || 0;
-    const barW  = Math.min((pct / maxExtr) * 100, 100).toFixed(1);
-    const color = statusColor(r.status);
-
+  list.innerHTML = rows.map(r => {
+    const pct  = r.extraction_rate_pct;
+    const barW = Math.min((pct / maxPct) * 100, 100).toFixed(1);
+    const color = statusHex(r.status);
     return `
     <div class="station-row">
       <div class="station-dot dot-${r.status || "null"}"></div>
@@ -1002,7 +1364,7 @@ function renderStations(rows) {
         <div class="station-meta">${esc(r.state)}</div>
       </div>
       <div class="station-val">
-        <div class="v">${pct > 0 ? pct.toFixed(1) + "%" : "–"}</div>
+        <div class="v" style="color:${color}">${pct > 0 ? pct.toFixed(1) + "%" : "–"}</div>
         <div class="label">extraction</div>
       </div>
       <div>
@@ -1018,81 +1380,112 @@ function renderStations(rows) {
 }
 
 function filterStations(q) {
-  if (!q) { renderStations(allStations); return; }
+  const source = nearbyStations;
+  if (!q) { renderStations(source); return; }
   const lq = q.toLowerCase();
-  const filtered = allStations.filter(r =>
+  renderStations(source.filter(r =>
     r.district?.toLowerCase().includes(lq) ||
     r.state?.toLowerCase().includes(lq)
-  );
-  renderStations(filtered);
+  ));
 }
 
-// ── Alerts ───────────────────────────────────────────────────
-async function loadAlerts() {
-  const list = document.getElementById("alertList");
-  list.innerHTML = `<div class="empty skel" style="height:140px;margin:16px"></div>`;
-
-  try {
-    const res  = await fetch(`${API}/alerts?limit=10`);
-    const json = await res.json();
-    renderAlerts(json.alerts || []);
-  } catch (err) {
-    list.innerHTML = `<div class="empty">⚠ ${err.message}</div>`;
-  }
+// ── PROFILE SYNC ─────────────────────────────────────────────
+function syncProfileLocation(d) {
+  const label = `📍 ${d.district}, ${d.state}`;
+  document.getElementById("profileLocDisplay").textContent = label;
+  document.getElementById("settingLocDesc").textContent    = `${d.district}, ${d.state}`;
+  document.getElementById("sidebarRole").textContent       = `Public · ${d.district}`;
 }
 
-function renderAlerts(rows) {
-  const list = document.getElementById("alertList");
-
-  if (!rows.length) {
-    list.innerHTML = `<div class="empty">✅ No critical alerts</div>`;
-    return;
-  }
-
-  list.innerHTML = rows.map(r => {
-    const cls   = r.status === "OVER_EXPLOITED" ? "over" : "critical";
-    const emoji = r.status === "OVER_EXPLOITED" ? "🔴" : "🟠";
-    const pct   = parseFloat(r.extraction_rate_pct);
-
-    return `
-    <div class="alert-item">
-      <div class="alert-icon ${cls}">${emoji}</div>
-      <div class="alert-text">
-        <div class="t">${esc(r.district)}</div>
-        <div class="m">${esc(r.state)} · ${pillLabel(r.status)}</div>
-      </div>
-      <div class="alert-pct">${isNaN(pct) ? "–" : pct.toFixed(1) + "%"}</div>
-    </div>`;
-  }).join("");
+// ── MODAL ────────────────────────────────────────────────────
+function buildModalList(list) {
+  const sorted = [...list].sort((a, b) => a.district.localeCompare(b.district));
+  document.getElementById("modalList").innerHTML = sorted.map(d => `
+    <div class="modal-item${pendingDistrict === d.district ? " selected" : ""}"
+         onclick="selectModalItem('${esc(d.district).replace(/'/g,"\\'")}')">
+      ${esc(d.district)}
+      <span class="state-tag">${esc(d.state)}</span>
+    </div>`).join("");
 }
 
+function filterModalList(q) {
+  const lq = q.toLowerCase();
+  const filtered = q
+    ? allDistricts.filter(d =>
+        d.district.toLowerCase().includes(lq) ||
+        d.state.toLowerCase().includes(lq))
+    : allDistricts;
+  buildModalList(filtered);
+}
+
+function selectModalItem(district) {
+  pendingDistrict = district;
+  filterModalList(document.getElementById("modalSearch").value);
+}
+
+function openModal() {
+  pendingDistrict = selectedDistrict?.district || null;
+  document.getElementById("modalSearch").value = "";
+  buildModalList(allDistricts);
+  document.getElementById("locationModal").classList.add("open");
+  setTimeout(() => document.getElementById("modalSearch").focus(), 80);
+}
+
+function closeModal() {
+  document.getElementById("locationModal").classList.remove("open");
+  pendingDistrict = null;
+}
+
+function confirmLocation() {
+  if (!pendingDistrict) { closeModal(); return; }
+  const d = allDistricts.find(x => x.district === pendingDistrict);
+  if (!d) { closeModal(); return; }
+  document.getElementById("districtSelect").value = d.district;
+  selectDistrict(d);
+  closeModal();
+  showPage("home", null);
+}
+
+document.getElementById("locationModal").addEventListener("click", function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ── QUICK ACTIONS ────────────────────────────────────────────
 function openAnalytics() {
   window.open(`${API}/analytics/state-summary`, "_blank");
 }
 
-// ── Utils ────────────────────────────────────────────────────
-function statusColor(s) {
-  const m = {
-    SAFE: "var(--safe)",
-    SEMI_CRITICAL: "var(--semi)",
-    CRITICAL: "var(--critical)",
-    OVER_EXPLOITED: "var(--over)",
-  };
-  return m[s] || "var(--text-3)";
+function shareStatus() {
+  if (!selectedDistrict) return alert("Select a district first.");
+  const d   = selectedDistrict;
+  const txt = `AQUIS Groundwater Status\nDistrict: ${d.district}, ${d.state}\nExtraction Rate: ${d.extraction_rate_pct.toFixed(1)}%\nStatus: ${pillLabel(d.status)}`;
+  if (navigator.share) {
+    navigator.share({ title: "AQUIS Groundwater Status", text: txt });
+  } else {
+    navigator.clipboard.writeText(txt).then(() => alert("Status copied to clipboard."));
+  }
+}
+
+// ── UTILS ────────────────────────────────────────────────────
+function deriveStatus(pct) {
+  if (pct < 70)   return "SAFE";
+  if (pct < 90)   return "SEMI_CRITICAL";
+  if (pct <= 100) return "CRITICAL";
+  return "OVER_EXPLOITED";
+}
+
+function statusHex(s) {
+  return { SAFE:"#16a34a", SEMI_CRITICAL:"#d97706", CRITICAL:"#ea580c", OVER_EXPLOITED:"#dc2626" }[s] || "#94a3b8";
 }
 
 function pillLabel(s) {
-  const m = {
-    SAFE: "Safe",
-    SEMI_CRITICAL: "Semi-Crit",
-    CRITICAL: "Critical",
-    OVER_EXPLOITED: "Over-Expl",
-  };
-  return m[s] || (s || "Unknown");
+  return { SAFE:"Safe", SEMI_CRITICAL:"Semi-Crit", CRITICAL:"Critical", OVER_EXPLOITED:"Over-Exploited" }[s] || (s || "Unknown");
 }
 
 function esc(str) {
-  return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  return String(str || "")
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 </script>
 </body>
