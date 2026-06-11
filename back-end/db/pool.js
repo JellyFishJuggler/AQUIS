@@ -7,9 +7,11 @@ const pool = new Pool({
   user: process.env.DB_USER || "postgres",
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME || "aquis",
-  max: 20,                    // max connections in pool
-  idleTimeoutMillis: 30000,   // close idle clients after 30s
+  max: 20,
+  idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
+  // YE RHA SSL CONFIG JO AAPKO ADD KARNA HAI:
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false
 });
 
 pool.on("error", (err) => {
