@@ -1,7 +1,9 @@
 // ==============================
 // CONFIG
 // ==============================
-const API = "http://localhost:3000";
+// const API = "http://localhost:3000";
+// index.js mein change karo
+const API = "https://aquis-backend.onrender.com"; // localhost ki jagah yeh daalo
 
 // ==============================
 // STATE

@@ -1,27 +1,58 @@
 require("dotenv").config({ path: require("path").join(__dirname, "../.env") });
+const XLSX = require("xlsx");
 const { Pool } = require('pg');
-const fs = require('fs');
+const { classifyStatus } = require("../services/groundwaterClassification");
 
 async function importData() {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const client = await pool.connect();
+  
+  const SHEET_NAME = "Officer_view";
   
   try {
-    // 1. Table saaf karo taaki purana data na ho
-    await pool.query('TRUNCATE TABLE groundwater_data;');
+    console.log(`📂 Reading sheet: ${SHEET_NAME}...`);
+    const workbook = XLSX.readFile('db/ground_water_dataset.xlsx');
+    const worksheet = workbook.Sheets[SHEET_NAME];
     
-    // 2. CSV file read karo (Excel ko pehle CSV mein save kar lena!)
-    const csvData = fs.readFileSync('db/data.csv', 'utf8');
+    if (!worksheet) {
+      console.error(`❌ Sheet "${SHEET_NAME}" not found!`);
+      return;
+    }
     
-    // 3. PostgreSQL COPY command (Ye sabse fast hai)
-    await pool.query(`
-      COPY groundwater_data(state, district, assessment_unit, rainfall_mm, annual_recharge_ham, total_extraction_ham, annual_extractable_gw_ham, extraction_rate_pct, status) 
-      FROM STDIN WITH (FORMAT csv, HEADER true)
-    `);
+    const data = XLSX.utils.sheet_to_json(worksheet);
+    console.log(`📊 Total rows found: ${data.length}`);
+
+    await client.query('TRUNCATE TABLE groundwater_data;');
+    console.log("🧹 Table truncated.");
+
+    for (const row of data) {
+      const extractionPct = parseFloat(row['Stage of Ground Water Extraction (%)_Total_Total']) || 0;
+      const status = classifyStatus(extractionPct);
+
+      await client.query(`
+        INSERT INTO groundwater_data (
+          state, district, assessment_unit, rainfall_mm, annual_recharge_ham, 
+          total_extraction_ham, annual_extractable_gw_ham, extraction_rate_pct, status
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, 
+        [
+          row.STATE || "N/A", 
+          row.DISTRICT || "N/A", 
+          row['ASSESSMENT UNIT'] || "N/A", 
+          parseFloat(row.RAINFALL_MM) || 0, 
+          parseFloat(row.ANNUAL_RECHARGE_HAM) || 0, 
+          parseFloat(row['Ground Water Extraction for all uses (ha.m)_Total_Total']) || 0, 
+          parseFloat(row['Annual Extractable Ground water Resource (ham)_Total_Total']) || 0, 
+          extractionPct, 
+          status
+        ]
+      );
+    }
     
     console.log("🎉 Data successfully imported!");
   } catch (err) {
-    console.error("❌ Error:", err);
+    console.error("❌ Error during import:", err.message);
   } finally {
+    client.release();
     await pool.end();
   }
 }
