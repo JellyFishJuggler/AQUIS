@@ -8,7 +8,7 @@ async function getAll(req, res, next) {
   try {
     const {
       state, district, status,
-      limit  = 50,
+      limit  = 1000,
       offset = 0,
       sort_by = "id",
       order   = "asc",

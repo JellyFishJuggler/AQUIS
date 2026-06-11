@@ -1,0 +1,707 @@
+/* =========================
+   RESET
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: #f8f9ff;
+    color: #0f1c2c;
+    display: flex;
+}
+
+/* =========================
+   LAYOUT (FIXED STRUCTURE)
+========================= */
+.sidebar {
+    width: 260px;
+    background: #eef4ff;
+    height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+
+    /* Sidebar stays locked on screen */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.main {
+    flex: 1;
+    /* Push the content area to the right to account for the fixed sidebar width */
+    margin-left: 260px;
+    padding: 28px;
+
+    /* Give space at the top so content doesn't hide behind the fixed header */
+    padding-top: 110px;
+    min-height: 100vh;
+}
+
+/* =========================
+   SIDEBAR COMPONENTS
+========================= */
+.brand {
+    font-weight: 800;
+    font-size: 18px;
+    color: #005ea4;
+    margin-bottom: 24px;
+}
+
+.user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #ffffff;
+    padding: 12px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #0077ce;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nav a {
+    display: block;
+    padding: 12px 16px;
+    border-radius: 12px;
+    color: #4a5d78;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nav a:hover {
+    background: rgba(0, 94, 164, 0.05);
+    color: #005ea4;
+}
+
+.nav a.active {
+    background: #0077ce;
+    color: #ffffff;
+}
+
+/* =========================
+   HEADER (FIXED CONFIG)
+========================= */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    /* Lock header to top right quadrant, respecting sidebar grid boundary */
+    position: fixed;
+    top: 0;
+    left: 260px;
+    right: 0;
+    height: 85px;
+    background: rgba(248, 249, 255, 0.9);
+    /* Modern frosted glass feel */
+    backdrop-filter: blur(8px);
+    padding: 0 28px;
+    z-index: 90;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.header h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.weather {
+    background: #ffffff;
+    padding: 8px 16px;
+    border-radius: 99px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* =========================
+   DASHBOARD GRID STRUCTURE
+========================= */
+.grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.hero {
+    background: #005ea4;
+    color: white;
+    padding: 24px;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 8px 24px rgba(0, 94, 164, 0.15);
+}
+
+.hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.hero-value {
+    font-size: 36px;
+    font-weight: 800;
+    margin-top: 8px;
+}
+
+.badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.hero-bottom {
+    font-size: 13px;
+    opacity: 0.9;
+    margin-top: 24px;
+}
+
+.card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.metric {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 6px 0;
+}
+
+.sub {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* =========================
+   BOTTOM ROW SPLIT LAYOUT
+========================= */
+.bottom-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 24px 0 14px 0;
+    color: #334155;
+}
+
+.charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.chart-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+}
+
+/* DONUT OVERLAY SETUP */
+.donut-wrap {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+}
+
+.donut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.donut-pct {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.donut-label {
+    font-size: 10px;
+    color: #64748b;
+}
+
+.legend {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 16px;
+    font-size: 12px;
+    color: #475569;
+}
+
+.dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+}
+
+.dot.orange {
+    background: #f97316;
+}
+
+.dot.gray {
+    background: #cbd5e1;
+}
+
+/* STATIONS PARAMETERS */
+.station {
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.01);
+}
+
+.station-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.progress {
+    background: #e2e8f0;
+    height: 6px;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =========================
+   QUICK ACTIONS
+========================= */
+/* =========================
+   QUICK ACTIONS
+========================= */
+/* BASE */
+.actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.action {
+    aspect-ratio: 1/1;
+    border-radius: 24px;
+    background: #dbe9fe;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    font-weight: 600;
+    /* Subtle font weight boost for better micro-copy readability */
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    /* Clean base shadow */
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.25s ease;
+}
+
+/* ICON BASE */
+.action .icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.25s ease;
+}
+
+/* -------------------------
+   HOVER & INTERACTION STATES
+   ------------------------- */
+.action:hover {
+    transform: translateY(-5px);
+    /* Smooth vertical lift */
+    box-shadow: 0 12px 20px rgba(15, 28, 44, 0.1);
+    /* Deep drop shadow on elevation */
+}
+
+/* Hover effect filtering inside icon container */
+.action:hover .icon {
+    transform: scale(1.12);
+    /* Clean spring scale up for the icon */
+    background: rgba(255, 255, 255, 0.85);
+    /* Slightly brightens the icon circle background */
+}
+
+/* Active/Click State Feedback */
+.action:active {
+    transform: translateY(-1px);
+    /* Pushes down slightly on click for tactile response */
+    box-shadow: 0 6px 10px rgba(15, 28, 44, 0.06);
+}
+
+/* Color Modifier Specific Overrides for Hover Stability */
+.action-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.action-danger .icon {
+    color: #ef4444;
+}
+
+.action-danger:hover {
+    background: #fca5a5;
+}
+
+/* Slight deeper tint on hover */
+
+.action-primary {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.action-primary .icon {
+    color: #3b82f6;
+}
+
+.action-primary:hover {
+    background: #93c5fd;
+}
+
+.action-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.action-success .icon {
+    color: #22c55e;
+}
+
+.action-success:hover {
+    background: #86efac;
+}
+
+.action-dark {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.action-dark .icon {
+    color: #334155;
+}
+
+.action-dark:hover {
+    background: #cbd5e1;
+}
+
+/* =========================
+   POPUP MODAL OVERLAY
+========================= */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.3);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-box {
+    background: #ffffff;
+    width: 100%;
+    max-width: 440px;
+    padding: 24px;
+    border-radius: 24px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.modal-box h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.modal-box .sub {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 12px;
+}
+
+.modal-box input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1.5px solid #3b82f6;
+    outline: none;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.list {
+    max-height: 220px;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item span {
+    font-size: 11px;
+    background: #f1f5f9;
+    padding: 3px 8px;
+    border-radius: 6px;
+    color: #64748b;
+}
+
+.list-item:hover {
+    background: #f8fafc;
+}
+
+.list-item.selected {
+    background: #eff6ff;
+    border-left: 3px solid #3b82f6;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.modal-actions button {
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#cancelBtn {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+#confirmBtn {
+    background: #3b82f6;
+    color: white;
+}
+
+/* ========================================================
+   NEW CARDS DESIGN STRIP SPECIFIC (BELOW BLUE HERO)
+   ======================================================== */
+.dashboard-metrics-strip {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.new-sub-card {
+  flex: 1;
+  background: #ffffff;
+  padding: 16px 20px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.01);
+}
+
+.new-sub-card .sub-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* Custom background tints for icons */
+.new-sub-card:nth-child(1) .sub-card-icon { background: #e0f2fe; } /* Recharge */
+.new-sub-card:nth-child(2) .sub-card-icon { background: #fee2e2; } /* Extraction */
+.new-sub-card:nth-child(3) .sub-card-icon { background: #f0fdf4; } /* Future Availability */
+
+.sub-card-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sub-card-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+.sub-card-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f1c2c;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.sub-card-unit {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+/* ========================================================
+   DYNAMIC DISTRICT SITUATION BANNER
+   ======================================================== */
+.situation-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  margin-top: 20px;
+  margin-bottom: 24px;
+  width: 100%;
+  border: 1px solid transparent;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.banner-icon-wrap {
+  font-size: 22px;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.banner-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.banner-body h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f1c2c;
+}
+
+.banner-body p {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* STATE VARIATIONS (BACKEND LINKED) */
+.situation-banner.safe {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+.situation-banner.safe .banner-icon-wrap { 
+  background: #dcfce7; 
+}
+
+.situation-banner.semi-critical {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+.situation-banner.semi-critical .banner-icon-wrap { 
+  background: #fef3c7; 
+}
+
+.situation-banner.critical {
+  background: #fff5f5;
+  border-color: #fee2e2;
+  color: #991b1b;
+}
+.situation-banner.critical .banner-icon-wrap { 
+  background: #fee2e2; 
+}
+
+
