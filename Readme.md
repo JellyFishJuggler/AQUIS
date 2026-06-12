@@ -3,7 +3,7 @@
 A role-based groundwater monitoring platform built on the CGWB DWLR 2023 dataset.
 Published research: DOI [10.55041/IJSREM62854](https://ijsrem.com) · IJSREM Vol. 10, May 2026
 
-**Authors:** Dinesh Kumar, Srijan Anand Gupta, Utkarsh Srivastava — BPIT, Rohini, New Delhi
+**Authors:** Srijan Anand Gupta, Utkarsh Srivastava — BPIT, Rohini, New Delhi
 
 ---
 
@@ -223,6 +223,6 @@ curl -X POST http://localhost:3000/data \
 
 ## Paper
 
-> Dinesh Kumar, Srijan Anand Gupta, Utkarsh Srivastava.
+> Srijan Anand Gupta, Utkarsh Srivastava.
 > *AQUIS: A Role-Based Groundwater Monitoring and Information Interface for CGWB DWLR Data.*
 > IJSREM Vol. 10 Issue 05, May 2026. DOI: 10.55041/IJSREM62854
