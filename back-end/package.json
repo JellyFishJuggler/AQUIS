@@ -8,7 +8,10 @@
     "dev": "node --watch server.js",
     "migrate": "node scripts/migrate.js",
     "import": "node scripts/importData.js",
-    "setup": "npm run migrate && npm run import"
+    "import-assessments": "node scripts/ingestAssessments.js",
+    "import-telemetry": "node scripts/ingestTelemetry.js",
+    "setup": "npm run migrate && npm run import",
+    "test": "node --test test/"
   },
   "dependencies": {
     "cors": "^2.8.5",
