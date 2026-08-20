@@ -4,32 +4,48 @@
 !.env.example
 
 # Node
-node_modules/
+**/node_modules/
 npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
 
+# Next.js
+.next/
+front-end/.next/
+out/
+
 # Frontend
-front-end/node_modules/
 front-end/dist/
 front-end/build/
 front-end/.env
 front-end/.env.*
 !front-end/.env.example
 
+# Backend
+back-end/.env
+back-end/.env.*
+!back-end/.env.example
+
 # Python
 ml/venv/
-__pycache__/
+**/__pycache__/
 *.py[cod]
+*.pyo
 
 # ML data
-ml/data/raw/
-ml/data/processed/
+ml/data/raw/*
+ml/data/processed/*
+!ml/data/raw/.gitkeep
+!ml/data/processed/.gitkeep
 
 # ML models
-ml/models/saved_models/
+ml/models/saved_models/*
+!ml/models/saved_models/.gitkeep
 *.pkl
 *.joblib
+*.h5
+*.pt
+*.onnx
 
 # Jupyter
 .ipynb_checkpoints/
@@ -39,3 +55,6 @@ ml/models/saved_models/
 Thumbs.db
 .vscode/
 .idea/
+*.swp
+*.swo
+*~

@@ -3,3 +3,8 @@ numpy
 matplotlib
 scikit-learn
 requests
+flask
+flask-cors
+joblib
+scipy
+xgboost
