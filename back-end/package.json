@@ -11,7 +11,7 @@
     "import-assessments": "node scripts/ingestAssessments.js",
     "import-telemetry": "node scripts/ingestTelemetry.js",
     "setup": "npm run migrate && npm run import",
-    "test": "node --test test/"
+    "test": "node --test test/*.test.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
