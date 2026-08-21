@@ -3,14 +3,10 @@ numpy
 matplotlib
 scikit-learn
 requests
-<<<<<<< Updated upstream
 flask
 flask-cors
-joblib
 scipy
 xgboost
-=======
 joblib
 streamlit
 plotly
->>>>>>> Stashed changes
