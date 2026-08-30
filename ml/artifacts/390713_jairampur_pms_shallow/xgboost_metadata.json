@@ -1,0 +1,45 @@
+{
+  "station": "390713- Jairampur PMS -Shallow",
+  "slug": "390713_jairampur_pms_shallow",
+  "model_type": "xgboost_quantile",
+  "quantiles": [
+    0.05,
+    0.5,
+    0.95
+  ],
+  "use_seasonal": true,
+  "use_lags": true,
+  "features": [
+    "time_hours",
+    "sin_doy",
+    "cos_doy",
+    "year",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_28",
+    "lag_120",
+    "roll_28",
+    "roll_120"
+  ],
+  "trained_at": "2026-08-30T09:34:31.732308+00:00",
+  "train_size": 1124,
+  "test_size": 282,
+  "point_metrics": {
+    "rmse": 0.078,
+    "mae": 0.0589,
+    "r2": 0.8566
+  },
+  "quantile_metrics": {
+    "coverage_90": 0.2624,
+    "mean_interval_width": 0.0921,
+    "q50_metrics": {
+      "rmse": 0.0737,
+      "mae": 0.0541,
+      "r2": 0.872
+    }
+  },
+  "train_seconds": 5.35,
+  "duration": "5s"
+}

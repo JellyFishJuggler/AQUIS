@@ -1,0 +1,45 @@
+{
+  "station": "Azamgarh Pavai Velasiya",
+  "slug": "azamgarh_pavai_velasiya",
+  "model_type": "xgboost_quantile",
+  "quantiles": [
+    0.05,
+    0.5,
+    0.95
+  ],
+  "use_seasonal": true,
+  "use_lags": true,
+  "features": [
+    "time_hours",
+    "sin_doy",
+    "cos_doy",
+    "year",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_28",
+    "lag_120",
+    "roll_28",
+    "roll_120"
+  ],
+  "trained_at": "2026-08-30T09:32:17.771067+00:00",
+  "train_size": 2464,
+  "test_size": 617,
+  "point_metrics": {
+    "rmse": 0.2441,
+    "mae": 0.1646,
+    "r2": 0.9595
+  },
+  "quantile_metrics": {
+    "coverage_90": 0.8622,
+    "mean_interval_width": 0.7423,
+    "q50_metrics": {
+      "rmse": 0.2493,
+      "mae": 0.1697,
+      "r2": 0.9577
+    }
+  },
+  "train_seconds": 5.93,
+  "duration": "5s"
+}

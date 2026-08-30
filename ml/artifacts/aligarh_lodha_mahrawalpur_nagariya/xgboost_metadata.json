@@ -1,0 +1,45 @@
+{
+  "station": "Aligarh Lodha Mahrawalpur Nagariya",
+  "slug": "aligarh_lodha_mahrawalpur_nagariya",
+  "model_type": "xgboost_quantile",
+  "quantiles": [
+    0.05,
+    0.5,
+    0.95
+  ],
+  "use_seasonal": true,
+  "use_lags": true,
+  "features": [
+    "time_hours",
+    "sin_doy",
+    "cos_doy",
+    "year",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_28",
+    "lag_120",
+    "roll_28",
+    "roll_120"
+  ],
+  "trained_at": "2026-08-30T09:29:25.746584+00:00",
+  "train_size": 2686,
+  "test_size": 672,
+  "point_metrics": {
+    "rmse": 0.1685,
+    "mae": 0.08,
+    "r2": 0.9328
+  },
+  "quantile_metrics": {
+    "coverage_90": 0.7917,
+    "mean_interval_width": 0.3121,
+    "q50_metrics": {
+      "rmse": 0.1559,
+      "mae": 0.0735,
+      "r2": 0.9425
+    }
+  },
+  "train_seconds": 8.94,
+  "duration": "8s"
+}

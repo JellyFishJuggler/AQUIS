@@ -1,0 +1,45 @@
+{
+  "station": "BADHANI PRATHMIK VIDYALAYA",
+  "slug": "badhani_prathmik_vidyalaya",
+  "model_type": "xgboost_quantile",
+  "quantiles": [
+    0.05,
+    0.5,
+    0.95
+  ],
+  "use_seasonal": true,
+  "use_lags": true,
+  "features": [
+    "time_hours",
+    "sin_doy",
+    "cos_doy",
+    "year",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_28",
+    "lag_120",
+    "roll_28",
+    "roll_120"
+  ],
+  "trained_at": "2026-08-30T09:28:59.770588+00:00",
+  "train_size": 2768,
+  "test_size": 693,
+  "point_metrics": {
+    "rmse": 0.3274,
+    "mae": 0.2653,
+    "r2": 0.8102
+  },
+  "quantile_metrics": {
+    "coverage_90": 0.8153,
+    "mean_interval_width": 0.6749,
+    "q50_metrics": {
+      "rmse": 0.2496,
+      "mae": 0.1869,
+      "r2": 0.8898
+    }
+  },
+  "train_seconds": 4.23,
+  "duration": "4s"
+}

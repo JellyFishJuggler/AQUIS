@@ -1,0 +1,45 @@
+{
+  "station": "750128- PMS Sulemapur -Medium",
+  "slug": "750128_pms_sulemapur_medium",
+  "model_type": "xgboost_quantile",
+  "quantiles": [
+    0.05,
+    0.5,
+    0.95
+  ],
+  "use_seasonal": true,
+  "use_lags": true,
+  "features": [
+    "time_hours",
+    "sin_doy",
+    "cos_doy",
+    "year",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_28",
+    "lag_120",
+    "roll_28",
+    "roll_120"
+  ],
+  "trained_at": "2026-08-30T09:34:37.229819+00:00",
+  "train_size": 1109,
+  "test_size": 278,
+  "point_metrics": {
+    "rmse": 0.1567,
+    "mae": 0.0211,
+    "r2": 0.0833
+  },
+  "quantile_metrics": {
+    "coverage_90": 0.9748,
+    "mean_interval_width": 0.0655,
+    "q50_metrics": {
+      "rmse": 0.1562,
+      "mae": 0.0188,
+      "r2": 0.0884
+    }
+  },
+  "train_seconds": 5.35,
+  "duration": "5s"
+}

@@ -1,0 +1,45 @@
+{
+  "station": "Azamgarh Palhana Balahi Lahucha",
+  "slug": "azamgarh_palhana_balahi_lahucha",
+  "model_type": "xgboost_quantile",
+  "quantiles": [
+    0.05,
+    0.5,
+    0.95
+  ],
+  "use_seasonal": true,
+  "use_lags": true,
+  "features": [
+    "time_hours",
+    "sin_doy",
+    "cos_doy",
+    "year",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_28",
+    "lag_120",
+    "roll_28",
+    "roll_120"
+  ],
+  "trained_at": "2026-08-30T09:32:22.994545+00:00",
+  "train_size": 2448,
+  "test_size": 612,
+  "point_metrics": {
+    "rmse": 0.0754,
+    "mae": 0.0583,
+    "r2": -0.0797
+  },
+  "quantile_metrics": {
+    "coverage_90": 0.7304,
+    "mean_interval_width": 0.2026,
+    "q50_metrics": {
+      "rmse": 0.1236,
+      "mae": 0.1023,
+      "r2": -1.9027
+    }
+  },
+  "train_seconds": 5.07,
+  "duration": "5s"
+}

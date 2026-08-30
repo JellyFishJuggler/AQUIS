@@ -1,0 +1,45 @@
+{
+  "station": "Aaganwadi Kender Kakrawali",
+  "slug": "aaganwadi_kender_kakrawali",
+  "model_type": "xgboost_quantile",
+  "quantiles": [
+    0.05,
+    0.5,
+    0.95
+  ],
+  "use_seasonal": true,
+  "use_lags": true,
+  "features": [
+    "time_hours",
+    "sin_doy",
+    "cos_doy",
+    "year",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_28",
+    "lag_120",
+    "roll_28",
+    "roll_120"
+  ],
+  "trained_at": "2026-08-30T09:34:26.218870+00:00",
+  "train_size": 1149,
+  "test_size": 288,
+  "point_metrics": {
+    "rmse": 0.2596,
+    "mae": 0.2064,
+    "r2": 0.9405
+  },
+  "quantile_metrics": {
+    "coverage_90": 0.3264,
+    "mean_interval_width": 0.4266,
+    "q50_metrics": {
+      "rmse": 0.2398,
+      "mae": 0.1813,
+      "r2": 0.9492
+    }
+  },
+  "train_seconds": 12.61,
+  "duration": "12s"
+}

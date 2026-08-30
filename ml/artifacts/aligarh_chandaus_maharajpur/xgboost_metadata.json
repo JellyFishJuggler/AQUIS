@@ -1,0 +1,45 @@
+{
+  "station": "Aligarh Chandaus Maharajpur",
+  "slug": "aligarh_chandaus_maharajpur",
+  "model_type": "xgboost_quantile",
+  "quantiles": [
+    0.05,
+    0.5,
+    0.95
+  ],
+  "use_seasonal": true,
+  "use_lags": true,
+  "features": [
+    "time_hours",
+    "sin_doy",
+    "cos_doy",
+    "year",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_28",
+    "lag_120",
+    "roll_28",
+    "roll_120"
+  ],
+  "trained_at": "2026-08-30T09:33:07.442088+00:00",
+  "train_size": 2302,
+  "test_size": 576,
+  "point_metrics": {
+    "rmse": 0.2557,
+    "mae": 0.1247,
+    "r2": 0.9292
+  },
+  "quantile_metrics": {
+    "coverage_90": 0.974,
+    "mean_interval_width": 0.5659,
+    "q50_metrics": {
+      "rmse": 0.2522,
+      "mae": 0.103,
+      "r2": 0.9312
+    }
+  },
+  "train_seconds": 3.94,
+  "duration": "3s"
+}

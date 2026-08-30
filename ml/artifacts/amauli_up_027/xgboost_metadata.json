@@ -1,0 +1,45 @@
+{
+  "station": "Amauli (UP-027)",
+  "slug": "amauli_up_027",
+  "model_type": "xgboost_quantile",
+  "quantiles": [
+    0.05,
+    0.5,
+    0.95
+  ],
+  "use_seasonal": true,
+  "use_lags": true,
+  "features": [
+    "time_hours",
+    "sin_doy",
+    "cos_doy",
+    "year",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_28",
+    "lag_120",
+    "roll_28",
+    "roll_120"
+  ],
+  "trained_at": "2026-08-30T09:23:33.780403+00:00",
+  "train_size": 4492,
+  "test_size": 1124,
+  "point_metrics": {
+    "rmse": 0.1584,
+    "mae": 0.0519,
+    "r2": 0.977
+  },
+  "quantile_metrics": {
+    "coverage_90": 0.9671,
+    "mean_interval_width": 0.3984,
+    "q50_metrics": {
+      "rmse": 0.1553,
+      "mae": 0.0495,
+      "r2": 0.9779
+    }
+  },
+  "train_seconds": 9.07,
+  "duration": "9s"
+}

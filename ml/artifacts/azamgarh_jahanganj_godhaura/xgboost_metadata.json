@@ -1,0 +1,45 @@
+{
+  "station": "Azamgarh Jahanganj Godhaura",
+  "slug": "azamgarh_jahanganj_godhaura",
+  "model_type": "xgboost_quantile",
+  "quantiles": [
+    0.05,
+    0.5,
+    0.95
+  ],
+  "use_seasonal": true,
+  "use_lags": true,
+  "features": [
+    "time_hours",
+    "sin_doy",
+    "cos_doy",
+    "year",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_28",
+    "lag_120",
+    "roll_28",
+    "roll_120"
+  ],
+  "trained_at": "2026-08-30T09:32:57.838245+00:00",
+  "train_size": 2327,
+  "test_size": 582,
+  "point_metrics": {
+    "rmse": 0.0959,
+    "mae": 0.0784,
+    "r2": 0.0418
+  },
+  "quantile_metrics": {
+    "coverage_90": 0.4897,
+    "mean_interval_width": 0.114,
+    "q50_metrics": {
+      "rmse": 0.0626,
+      "mae": 0.0439,
+      "r2": 0.5911
+    }
+  },
+  "train_seconds": 7.32,
+  "duration": "7s"
+}

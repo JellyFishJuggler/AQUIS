@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+from datetime import timedelta
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
@@ -12,9 +13,107 @@ CORS(app)
 
 BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:3000")
 
+_bundle_cache = None
+
+
+def _get_bundle() -> dict:
+    """Load the XGBoost model bundle once (lazy; stays cached across calls)."""
+    global _bundle_cache
+    if _bundle_cache is None:
+        from ml.scripts.export_xgboost_models import load_bundle
+
+        _bundle_cache = load_bundle()
+        logger.info(
+            f"Loaded model bundle: {_bundle_cache['count']} stations, "
+            f"schema {_bundle_cache['schema']}, built {_bundle_cache['created_utc']}"
+        )
+    return _bundle_cache
+
+
 @app.route("/health", methods=["GET"])
 def health():
-    return jsonify({"status": "ok", "service": "aquis-ml", "version": "1.0.0"})
+    response = {"status": "ok", "service": "aquis-ml", "version": "1.0.0"}
+    if _bundle_cache is not None:
+        response["models"] = {
+            "loaded": True,
+            "engine": _bundle_cache["engine"],
+            "stations": _bundle_cache["count"],
+        }
+    return jsonify(response)
+
+
+@app.route("/forecast/xgb/<path:identifier>", methods=["GET"])
+def forecast_xgb(identifier):
+    """XGBoost forecast served from the model bundle.
+
+    ``identifier`` is a station slug or a substring of the station name.
+    Returns a daily projection from the station's last stored reading out
+    to ``horizon_days`` (default 90, max 180) as point + 90% interval.
+    """
+    try:
+        from ml.models.xgboost_quantile import DEFAULT_PARQUET
+        from ml.preprocessing.timeseries import TIME_COL
+        from ml.scripts.export_xgboost_models import (
+            _observed_buffer_for,
+            _series_for,
+            bundle_predict,
+        )
+
+        horizon_days = request.args.get("horizon_days", default=90, type=int)
+        horizon_days = max(1, min(horizon_days, 180))
+
+        bundle = _get_bundle()
+        stations = bundle["stations"]
+
+        query = identifier.strip().lower()
+        slug = query if query in stations else None
+        if slug is None:
+            matches = sorted(
+                s for s, e in stations.items()
+                if query in s or query in e["name"].lower()
+            )
+            if len(matches) == 1:
+                slug = matches[0]
+            elif len(matches) > 1:
+                return jsonify({"error": "ambiguous identifier", "matches": matches}), 400
+            else:
+                return jsonify(
+                    {"error": f"unknown station '{identifier}'", "station_count": bundle["count"]}
+                ), 404
+
+        entry = stations[slug]
+        buffer = _observed_buffer_for(str(DEFAULT_PARQUET), entry["name"])
+        series = _series_for(str(DEFAULT_PARQUET), entry["name"])
+        last_pos = max(buffer)
+        last_observed_value = float(buffer[last_pos])
+        anchor = series[TIME_COL].iloc[last_pos].to_pydatetime()
+
+        steps = bundle["sampling_hours"]  # grid step hours (6)
+        day_steps = 24 // steps
+        times = [float((last_pos + k * day_steps) * steps) for k in range(1, horizon_days + 1)]
+        pred = bundle_predict(bundle, slug, times)
+
+        dates = [
+            (anchor + timedelta(days=k)).isoformat(timespec="minutes")
+            for k in range(1, horizon_days + 1)
+        ]
+        return jsonify({
+            "engine": bundle["engine"],
+            "schema": bundle["schema"],
+            "station": entry["name"],
+            "slug": slug,
+            "anchor": anchor.isoformat(timespec="seconds"),
+            "last_observed_value": last_observed_value,
+            "horizon_days": horizon_days,
+            "quantiles": bundle["quantiles"],
+            "dates": dates,
+            "point": [float(v) for v in pred["point"]],
+            "lower": [float(v) for v in pred["lower"]],
+            "upper": [float(v) for v in pred["upper"]],
+        })
+    except Exception as e:
+        logger.error(f"XGB forecast error for '{identifier}': {e}")
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/forecast/<int:station_id>", methods=["POST"])

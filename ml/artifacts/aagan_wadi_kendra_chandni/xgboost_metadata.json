@@ -1,0 +1,45 @@
+{
+  "station": "Aagan Wadi Kendra Chandni",
+  "slug": "aagan_wadi_kendra_chandni",
+  "model_type": "xgboost_quantile",
+  "quantiles": [
+    0.05,
+    0.5,
+    0.95
+  ],
+  "use_seasonal": true,
+  "use_lags": true,
+  "features": [
+    "time_hours",
+    "sin_doy",
+    "cos_doy",
+    "year",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_28",
+    "lag_120",
+    "roll_28",
+    "roll_120"
+  ],
+  "trained_at": "2026-08-30T09:33:49.712843+00:00",
+  "train_size": 1391,
+  "test_size": 348,
+  "point_metrics": {
+    "rmse": 0.3297,
+    "mae": 0.2127,
+    "r2": 0.971
+  },
+  "quantile_metrics": {
+    "coverage_90": 0.4282,
+    "mean_interval_width": 3.054,
+    "q50_metrics": {
+      "rmse": 0.2067,
+      "mae": 0.0861,
+      "r2": 0.9886
+    }
+  },
+  "train_seconds": 2.2,
+  "duration": "2s"
+}

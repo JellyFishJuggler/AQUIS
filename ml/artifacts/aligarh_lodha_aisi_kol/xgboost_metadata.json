@@ -1,0 +1,45 @@
+{
+  "station": "Aligarh Lodha Aisi Kol",
+  "slug": "aligarh_lodha_aisi_kol",
+  "model_type": "xgboost_quantile",
+  "quantiles": [
+    0.05,
+    0.5,
+    0.95
+  ],
+  "use_seasonal": true,
+  "use_lags": true,
+  "features": [
+    "time_hours",
+    "sin_doy",
+    "cos_doy",
+    "year",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_28",
+    "lag_120",
+    "roll_28",
+    "roll_120"
+  ],
+  "trained_at": "2026-08-30T09:29:34.749237+00:00",
+  "train_size": 2678,
+  "test_size": 670,
+  "point_metrics": {
+    "rmse": 1.4941,
+    "mae": 0.7673,
+    "r2": -22.7536
+  },
+  "quantile_metrics": {
+    "coverage_90": 0.5836,
+    "mean_interval_width": 0.3724,
+    "q50_metrics": {
+      "rmse": 0.239,
+      "mae": 0.1544,
+      "r2": 0.3923
+    }
+  },
+  "train_seconds": 8.86,
+  "duration": "8s"
+}

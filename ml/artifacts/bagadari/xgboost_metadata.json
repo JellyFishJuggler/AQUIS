@@ -1,0 +1,45 @@
+{
+  "station": "Bagadari",
+  "slug": "bagadari",
+  "model_type": "xgboost_quantile",
+  "quantiles": [
+    0.05,
+    0.5,
+    0.95
+  ],
+  "use_seasonal": true,
+  "use_lags": true,
+  "features": [
+    "time_hours",
+    "sin_doy",
+    "cos_doy",
+    "year",
+    "lag_1",
+    "lag_2",
+    "lag_3",
+    "lag_4",
+    "lag_28",
+    "lag_120",
+    "roll_28",
+    "roll_120"
+  ],
+  "trained_at": "2026-08-30T09:26:33.065472+00:00",
+  "train_size": 3411,
+  "test_size": 853,
+  "point_metrics": {
+    "rmse": 24.5119,
+    "mae": 16.6522,
+    "r2": -1.0363
+  },
+  "quantile_metrics": {
+    "coverage_90": 0.5182,
+    "mean_interval_width": 0.5763,
+    "q50_metrics": {
+      "rmse": 22.8241,
+      "mae": 15.0451,
+      "r2": -0.7656
+    }
+  },
+  "train_seconds": 15.75,
+  "duration": "15s"
+}
