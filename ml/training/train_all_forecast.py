@@ -29,6 +29,7 @@ import pandas as pd  # noqa: E402
 from ml.models.xgboost_quantile import train_xgb_quantile_for_station  # noqa: E402
 from ml.preprocessing.timeseries import station_slug  # noqa: E402
 from ml.scripts.export_xgboost_models import export_bundle  # noqa: E402
+from ml.services.forecast_snapshots import SNAPSHOT_FILE, write_dashboard_forecasts  # noqa: E402
 from ml.utils import format_duration  # noqa: E402
 
 ARTIFACTS = _ML_ROOT / "artifacts"
@@ -36,6 +37,7 @@ PARQUET = _ML_ROOT / "data" / "processed" / "common.parquet"
 PROGRESS_PATH = ARTIFACTS / "xgb_training_progress.json"
 FAILED_PATH = ARTIFACTS / "xgb_failed_stations.json"
 BUNDLE_PATH = ARTIFACTS / "xgboost_bundle.joblib"
+SNAPSHOT_PATH = ARTIFACTS / SNAPSHOT_FILE
 
 
 def load_progress() -> dict:
@@ -154,6 +156,9 @@ def main() -> None:
         if not BUNDLE_PATH.is_file():
             print("Bundle missing; exporting from existing artifacts...")
             export_bundle()
+        if not SNAPSHOT_PATH.is_file():
+            print("Snapshot missing; exporting dashboard forecast snapshot (slow)...")
+            write_dashboard_forecasts(SNAPSHOT_PATH)
         return
 
     batch_start = time.monotonic()
@@ -254,6 +259,13 @@ def main() -> None:
             print(f"  Bundle export failed: {exc}")
     else:
         print("\nNo stations trained; bundle left as-is.")
+
+    if batch_done or not SNAPSHOT_PATH.is_file():
+        print("\nRefreshing dashboard forecast snapshot (slow)...")
+        try:
+            write_dashboard_forecasts(SNAPSHOT_PATH)
+        except Exception as exc:
+            print(f"  Snapshot export failed: {exc}")
 
 
 if __name__ == "__main__":

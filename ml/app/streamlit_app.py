@@ -38,6 +38,7 @@ if str(_ML_ROOT.parent) not in sys.path:
 
 _PARQUET_PATH = _ML_ROOT / "data" / "processed" / "common.parquet"
 _ARTIFACTS = _ML_ROOT / "artifacts"
+_SNAPSHOT_CSV = _ARTIFACTS / "dashboard_forecasts.csv"
 
 st.set_page_config(
     page_title="GWL Forecast Inspector",
@@ -60,6 +61,10 @@ from ml.preprocessing.timeseries import (  # noqa: E402
     TIME_COL,
     resolve_slug_dir,
 )
+from ml.services.forecast_snapshots import (  # noqa: E402
+    future_preds_from_df,
+    test_preds_from_df,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -68,6 +73,21 @@ from ml.preprocessing.timeseries import (  # noqa: E402
 @st.cache_data(show_spinner=False)
 def load_common():
     return pd.read_parquet(_PARQUET_PATH)
+
+
+@st.cache_data(show_spinner=False)
+def _snapshot_df():
+    """Precomputed dashboard forecast snapshot (model curves as fallback)."""
+    if not _SNAPSHOT_CSV.is_file():
+        return None
+    return pd.read_csv(
+        _SNAPSHOT_CSV, dtype={"found_2026": "Int64", "last_obs_value": "Float64"}
+    )
+
+
+def _weights_present(station: str) -> bool:
+    station_dir = resolve_slug_dir(_ARTIFACTS, station)
+    return station_dir is not None and (station_dir / POINT_MODEL_FILE).is_file()
 
 
 @st.cache_data(show_spinner=False)
@@ -91,7 +111,8 @@ def load_test_predictions(station: str, _version: float) -> dict | None:
     try:
         return get_test_predictions(station)
     except FileNotFoundError:
-        return None
+        # Cloud deploys may lack the LFS-shipped weights -> snapshot fallback.
+        return test_preds_from_df(_snapshot_df(), station)
 
 
 @st.cache_data(show_spinner=False)
@@ -775,7 +796,16 @@ def _future_forecast(station, mver, pver, today, future_days=90, tail_days=90) -
     tail = station_df[ts >= stored_end - pd.Timedelta(days=tail_days)]
     try:
         res = predict_xgb_quantile(future_hours, station)
-    except (FileNotFoundError, ValueError):
+    except FileNotFoundError:
+        # Cloud deploys may lack the LFS-shipped weights -> snapshot fallback.
+        snap = future_preds_from_df(_snapshot_df(), station)
+        if snap is None:
+            return None
+        tail = station_df[ts >= stored_end - pd.Timedelta(days=tail_days)]
+        snap["tail_time"] = tail[TIME_COL].reset_index(drop=True)
+        snap["tail_gwl"] = tail[GWL_COL].reset_index(drop=True)
+        return snap
+    except ValueError:
         return None
     return {
         "tail_time": tail[TIME_COL].reset_index(drop=True),
@@ -887,6 +917,12 @@ def forecast_card(station, station_df, meta, test_preds, dec, artifacts_version)
            clearly explained.
     """
     st.subheader(f"Forecast — {station}")
+
+    if not _weights_present(station) and _SNAPSHOT_CSV.is_file():
+        st.caption(
+            ":material/cloud_off: Live model weights are not available on this "
+            "deployment — showing precomputed snapshot forecasts."
+        )
 
     left, right = st.columns(2)
 
