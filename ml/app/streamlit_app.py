@@ -396,11 +396,12 @@ def _status_tile(dec, level, caution, critical) -> None:
         st.caption(context)
 
 
-def _primary_kpis(station_df, dec) -> None:
+def _primary_kpis(station_df, dec, sum_row=None) -> None:
     """Overview KPI row — primary numbers for the selected station.
 
     Answers in order: what is the current level, what is the forecast, is
-    the trend improving/worsening, and what is the status / priority.
+    the trend improving/worsening, how accurate is the model, and what is
+    the status / priority.
     """
     last_gwl = float(station_df[GWL_COL].iloc[-1]) if len(station_df) else None
     if dec is not None and not np.isnan(dec["level_now"]):
@@ -441,6 +442,25 @@ def _primary_kpis(station_df, dec) -> None:
             border=True,
         )
         st.metric("Trend", trend_value, trend_delta, border=True)
+        if sum_row is not None and _num(sum_row.get("r2")) is not None:
+            _r2 = _num(sum_row["r2"])
+            _rmse = _num(sum_row.get("rmse"))
+            st.metric(
+                "XGB accuracy (R²)",
+                f"{_r2:.3f}",
+                (
+                    f"RMSE {_rmse:.3f} m "
+                    if _rmse is not None
+                    else None
+                ),
+                border=True,
+                help=(
+                    "How accurately the XGBoost model reproduces real readings "
+                    "(one step ahead on held-out data). R² = 1.0 is perfect, "
+                    "0.0 = no better than predicting the average. RMSE is the "
+                    "typical error in metres — e.g. 0.03 m ≈ 3 cm."
+                ),
+            )
         _status_tile(dec, level, caution, critical)
 
 
@@ -467,17 +487,47 @@ def _secondary_stats(station_df, meta, sw_row, sum_row, pres_row) -> None:
             st.metric("Total points", f"{n:,}", border=True)
             st.metric("Date range (days)", f"{date_span:,}", border=True)
             st.metric("Gaps detected", f"{n_gaps:,}", border=True)
-            st.metric("One-step R²", _fmt_num(one_r2), border=True)
-            st.metric("Multi-step R²", _fmt_num(multi_r2), border=True)
+            st.metric(
+                "One-step R²",
+                _fmt_num(one_r2),
+                border=True,
+                help=(
+                    "How well the model predicts 1 step ahead on unseen data. "
+                    "1.0 = perfect, 0.0 = no better than the average. "
+                    ">0.9 = excellent, <0.5 = weak."
+                ),
+            )
+            st.metric(
+                "Multi-step R²",
+                _fmt_num(multi_r2),
+                border=True,
+                help=(
+                    "How well the model predicts when it feeds its own "
+                    "predictions back in (recursive / long-range). Usually much "
+                    "lower than one-step — this is the honest number for "
+                    "months-ahead forecasts."
+                ),
+            )
             st.metric(
                 "Multi-step 90% cov.",
                 _fmt_pct(multi_cov),
                 border=True,
+                help=(
+                    "Share of real readings that fall inside the model's 90% "
+                    "prediction interval over a long recursive forecast. "
+                    "Target is 90%; well below that means the interval is "
+                    "too narrow to trust."
+                ),
             )
             st.metric(
                 "2026 records",
                 f"{int(n_records):,}" if n_records is not None else "—",
                 border=True,
+                help=(
+                    "Live 2026 readings found via the NWIC API. Data is fetched "
+                    "in batches from separate 2021-2025 and 2026-2030 NWIC "
+                    "resources — not streamed in real time."
+                ),
             )
     st.session_state._n_gaps = n_gaps
     st.session_state._gap_mask = gap_mask
@@ -575,7 +625,15 @@ def status_health_card(dec) -> None:
                     else None
                 ),
             )
-            f3.metric("90% multi-step coverage", _fmt_pct(mc))
+            f3.metric(
+                "90% multi-step coverage",
+                _fmt_pct(mc),
+                help=(
+                    "Share of real readings the model's 90% interval actually "
+                    "covered over a long recursive forecast. Target 90%; below "
+                    "60% the projection is only directional."
+                ),
+            )
 
         st.markdown("**Interpretation**")
         if mc is not None and mc < 0.60:
@@ -941,10 +999,39 @@ def forecast_card(station, station_df, meta, test_preds, dec, artifacts_version)
                     pm = meta["point_metrics"]
                     qm = meta["quantile_metrics"]
                     with st.container(horizontal=True):
-                        st.metric("Test RMSE", f"{pm['rmse']:.4f} m", border=True)
-                        st.metric("Test MAE", f"{pm['mae']:.4f} m", border=True)
-                        st.metric("Test R²", f"{pm['r2']:.4f}", border=True)
-                        st.metric("90% PI coverage", f"{qm['coverage_90']:.1%}", border=True)
+                        st.metric(
+                            "Test RMSE",
+                            f"{pm['rmse']:.4f} m",
+                            border=True,
+                            help="Typical size of the model's error on unseen "
+                            "data, in metres. Lower is better (0.03 m ≈ 3 cm).",
+                        )
+                        st.metric(
+                            "Test MAE",
+                            f"{pm['mae']:.4f} m",
+                            border=True,
+                            help="Average absolute error on unseen data, in "
+                            "metres. Lower is better.",
+                        )
+                        st.metric(
+                            "Test R²",
+                            f"{pm['r2']:.4f}",
+                            border=True,
+                            help="Accuracy score: 1.0 = perfect, 0.0 = no "
+                            "better than predicting the average.",
+                        )
+                        st.metric(
+                            "90% PI coverage",
+                            f"{qm['coverage_90']:.1%}",
+                            border=True,
+                            help="Share of real readings that actually fell "
+                            "inside the model's 90% interval. Target ≈ 90%.",
+                        )
+                    st.caption(
+                        "These test metrics are one-step (each row keeps its "
+                        "real lagged data). The long-range projection panel on "
+                        "the right is much harder — see the note below."
+                    )
 
     with right:
         with st.container(border=True):
@@ -985,11 +1072,19 @@ def forecast_card(station, station_df, meta, test_preds, dec, artifacts_version)
                         border=True,
                     )
                 st.caption(
-                    f"Observed = stored 2021–2025 archive; its readings end "
-                    f"{ff['stored_end']:%Y-%m-%d}. Everything after that is a "
-                    f"model projection through {ff['today']:%Y-%m-%d} (+90d). "
-                    "Real 2026 readings exist only in the live NWIC feed, not "
-                    "stored locally (see Diagnostics → 2026 coverage)."
+                    f"Observed = stored **2021–2025** telemetry; readings end "
+                    f"{ff['stored_end']:%Y-%m-%d}. Everything after the dashed "
+                    f"line is a **model projection** through {ff['today']:%Y-%m-%d} "
+                    f"(+90d). Data is fetched in batches from NWIC's separate "
+                    f"2021-2025 and 2026-2030 resources — not streamed in real "
+                    "time."
+                )
+                st.caption(
+                    ":material/timeline: **Why the projection can diverge from "
+                    "the last reading:** for long-range forecasts the model "
+                    "re-uses its own previous predictions as inputs (recursive "
+                    "forecasting), so small errors build up step by step. A jump "
+                    "right at the dashed line is expected, not a bug."
                 )
                 if not ff["found_2026"]:
                     st.caption(
@@ -1002,67 +1097,6 @@ def forecast_card(station, station_df, meta, test_preds, dec, artifacts_version)
                         f"{ff['feed_ts']:%Y-%m-%d}; the projection continues to "
                         f"{ff['today']:%Y-%m-%d} by assumption."
                     )
-
-
-def interactive_forecast(station, meta) -> None:
-    """Layer 5b — on-demand forecast for arbitrary horizons."""
-    st.subheader("Interactive forecast")
-    if meta is None:
-        st.info("Train the model first to enable predictions.")
-        return
-
-    time_input = st.text_input(
-        "Time values (hours since first reading, comma-separated)",
-        placeholder="e.g. 1000, 2000, 3000",
-    )
-
-    if st.button("Predict"):
-        try:
-            times = [float(x.strip()) for x in time_input.split(",") if x.strip()]
-        except ValueError:
-            st.error("Invalid input. Enter numeric values separated by commas.")
-            times = []
-
-        if times:
-            res = predict_xgb_quantile(times, station)
-            with st.container(horizontal=True):
-                for t, p, lo, hi in zip(times, res["point"], res["lower"], res["upper"]):
-                    st.metric(
-                        label=f"t={t:.0f}h",
-                        value=f"{p:.4f} m",
-                        delta=f"[{lo:.4f}, {hi:.4f}] (90%)",
-                        border=True,
-                    )
-            fig_pred = go.Figure()
-            fig_pred.add_trace(
-                go.Scatter(
-                    x=times,
-                    y=res["point"],
-                    mode="markers",
-                    error_y=dict(
-                        type="data",
-                        symmetric=False,
-                        array=res["upper"] - res["point"],
-                        arrayminus=res["point"] - res["lower"],
-                        visible=True,
-                    ),
-                    name="Prediction",
-                    marker=dict(size=10, color="#f0883e"),
-                    hovertemplate=(
-                        "t=%{x:.0f} h<br>pred %{y:.4f} m<br>"
-                        "90% [%{error_y.arrayminus:.4f}, %{error_y.array:.4f}] m"
-                        "<extra></extra>"
-                    ),
-                )
-            )
-            fig_pred.update_layout(
-                xaxis_title="Time (hours since first reading)",
-                yaxis_title="Predicted GWL (m)",
-                height=380,
-                margin=dict(l=56, r=20, t=30, b=44),
-                showlegend=False,
-            )
-            st.plotly_chart(fig_pred, width="stretch")
 
 
 def model_card(station, meta) -> None:
@@ -1112,14 +1146,38 @@ def model_card(station, meta) -> None:
         qm = meta["quantile_metrics"]
         with st.container(border=True):
             st.markdown("**Test performance (held-out)**")
+            st.caption(
+                "This is how accurately the model re-creates real readings it "
+                "was NOT shown during training. Hover any metric for meaning."
+            )
             with st.container(horizontal=True):
-                st.metric("RMSE", f"{pm['rmse']:.4f} m", border=True)
-                st.metric("MAE", f"{pm['mae']:.4f} m", border=True)
-                st.metric("R²", f"{pm['r2']:.4f}", border=True)
+                st.metric(
+                    "RMSE",
+                    f"{pm['rmse']:.4f} m",
+                    border=True,
+                    help="Root mean squared error — typical size of the model's "
+                    "mistake, in metres. Lower is better (0.03 m ≈ 3 cm).",
+                )
+                st.metric(
+                    "MAE",
+                    f"{pm['mae']:.4f} m",
+                    border=True,
+                    help="Mean absolute error — average absolute mistake in "
+                    "metres. More intuitive than RMSE. Lower is better.",
+                )
+                st.metric(
+                    "R²",
+                    f"{pm['r2']:.4f}",
+                    border=True,
+                    help="Variance explained: 1.0 = perfect, 0.0 = no better "
+                    "than predicting the average. This station's accuracy score.",
+                )
                 st.metric(
                     "90% PI mean width",
                     f"{qm['mean_interval_width']:.4f} m",
                     border=True,
+                    help="Average width of the 90% prediction interval. A real "
+                    "reading has 90% chance to fall inside this band.",
                 )
 
         with st.expander("Model details / technical info", icon=":material/tune:"):
@@ -1156,15 +1214,15 @@ def model_card(station, meta) -> None:
 
 
 def diagnostics_section(stations_total, xgb_summary, stepwise, presence) -> None:
-    """Diagnostics & validation — fleet validation summary + collapsible details.
+    """Diagnostics & validation — fleet validation summary + 2026 coverage.
 
-    The summary is visible by default; detailed diagnostics (recursive
-    comparison, bottom-10 table, 2026 coverage) sit behind expanders.
+    Summaries are visible by default; the 2026 coverage detail sits behind an
+    expander.
     """
     st.subheader("Diagnostics & validation")
     st.caption(
-        f"Fleet-wide model validation across all {stations_total} stations. "
-        "Recursive (multi-step) is the honest out-of-sample mode."
+        f"Fleet-wide XGBoost accuracy across all {stations_total} stations — "
+        "and which stations still report in the 2026 NWIC feed."
     )
 
     @st.cache_data(show_spinner=False)
@@ -1183,10 +1241,19 @@ def diagnostics_section(stations_total, xgb_summary, stepwise, presence) -> None
             buckets = classify_r2(xgb_summary["r2"])
             with st.container(horizontal=True):
                 for label, value in buckets.items():
-                    st.metric(f"One-step R² {label}", value, border=True)
+                    st.metric(
+                        f"One-step R² {label}",
+                        value,
+                        border=True,
+                        help=(
+                            "Number of stations whose one-step accuracy (R²) "
+                            "falls in this range. R² near 1 = model matches "
+                            "real readings almost perfectly."
+                        ),
+                    )
             st.caption(
-                f"Median one-step R²: **{xgb_summary['r2'].median():.4f}**  |  "
-                f"Median RMSE: **{xgb_summary['rmse'].median():.4f} m**  "
+                f"Median one-step accuracy (R²): **{xgb_summary['r2'].median():.4f}**  "
+                f"|  Median error (RMSE): **{xgb_summary['rmse'].median():.4f} m**  "
                 f"({len(xgb_summary)} stations)"
             )
         else:
@@ -1200,97 +1267,28 @@ def diagnostics_section(stations_total, xgb_summary, stepwise, presence) -> None
                         "Multi-step median R²",
                         f"{sw['multi_step_r2'].median():.4f}",
                         border=True,
+                        help=(
+                            "Median accuracy for months-ahead forecasts, where "
+                            "the model feeds its own predictions back. Expected "
+                            "to be much lower than one-step — the honest "
+                            "long-range number."
+                        ),
                     )
                     st.metric(
                         "Multi-step median 90% coverage",
                         f"{sw['multi_coverage_90'].median():.1%}",
                         border=True,
+                        help=(
+                            "Median share of real readings inside the model's "
+                            "90% interval over a long recursive forecast. "
+                            "Target 90%; well below that = intervals too narrow."
+                        ),
                     )
                 st.warning(
                     "Recursive (multi-step) forecasting — the honest "
                     "out-of-sample mode — collapses well below nominal 90% "
                     "coverage. One-step metrics are overly optimistic."
                 )
-
-    with st.expander(
-        "One-step vs multi-step — recursive comparison", icon=":material/scatter_plot:"
-    ):
-        if stepwise is not None and len(stepwise):
-            sw = stepwise.dropna(subset=["one_step_r2", "multi_step_r2"])
-            if len(sw):
-                fig_sw = go.Figure()
-                fig_sw.add_trace(
-                    go.Scatter(
-                        x=sw["one_step_r2"],
-                        y=sw["multi_step_r2"],
-                        mode="markers",
-                        text=sw["station"],
-                        hovertemplate="%{text}<br>one-step R²=%{x:.3f}<br>"
-                        "multi-step R²=%{y:.3f}<extra></extra>",
-                        marker=dict(size=8, color="#58a6ff"),
-                        name="stations",
-                    )
-                )
-                fig_sw.add_hline(y=0, line_dash="dash", line_color="#8b949e")
-                fig_sw.update_layout(
-                    xaxis_title="One-step R²",
-                    yaxis_title="Multi-step R² (true recursive)",
-                    height=420,
-                    margin=dict(l=56, r=20, t=36, b=48),
-                )
-                st.plotly_chart(fig_sw, width="stretch")
-                st.write(
-                    "Worst 12 stations by multi-step 90% coverage (of actual "
-                    "points inside the recursive interval):"
-                )
-                st.dataframe(
-                    sw.sort_values("multi_coverage_90")
-                    .head(12)[
-                        ["station", "n_test", "one_step_r2", "multi_step_r2",
-                         "multi_coverage_90"]
-                    ]
-                    .reset_index(drop=True),
-                    width="stretch",
-                    height=380,
-                    hide_index=True,
-                    column_config={
-                        "station": st.column_config.TextColumn("Station"),
-                        "n_test": st.column_config.NumberColumn("n test", format="%d"),
-                        "one_step_r2": st.column_config.NumberColumn("One-step R²", format="%.4f"),
-                        "multi_step_r2": st.column_config.NumberColumn("Multi-step R²", format="%.4f"),
-                        "multi_coverage_90": st.column_config.ProgressColumn("90% cov", min_value=0.0, max_value=1.0, format="%.0f"),
-                    },
-                )
-            else:
-                st.info("No valid stepwise-comparison rows.")
-        else:
-            st.info("stepwise_comparison.csv not found. Run "
-                    "`python -m ml.scripts.verify_stepwise` first.")
-
-    with st.expander(
-        "One-step R² distribution — bottom 10", icon=":material/bar_chart:"
-    ):
-        if xgb_summary is not None and len(xgb_summary):
-            st.caption(
-                "One-step R² buckets across the fleet: `>0.9`, `0.5–0.9`, "
-                "`0–0.5`, `≤0`. The bottom 10 highlight corrupt / stuck-sensor "
-                "stations."
-            )
-            st.dataframe(
-                xgb_summary.sort_values("r2").head(10).reset_index(drop=True),
-                width="stretch",
-                height=380,
-                hide_index=True,
-                column_config={
-                    "station": st.column_config.TextColumn("Station"),
-                    "rmse": st.column_config.NumberColumn("RMSE (m)", format="%.4f"),
-                    "mae": st.column_config.NumberColumn("MAE (m)", format="%.4f"),
-                    "r2": st.column_config.NumberColumn("R²", format="%.4f"),
-                    "cover": st.column_config.ProgressColumn("90% cover", min_value=0.0, max_value=1.0, format="%.2f"),
-                },
-            )
-        else:
-            st.info("xgboost_summary.csv not found. Run a batch training first.")
 
     with st.expander("2026 NWIC live-data coverage", icon=":material/cloud:"):
         if presence is not None and len(presence):
@@ -1408,117 +1406,43 @@ Trends use a robust Theil–Sen slope over the last 2 years.
     with st.expander("About the metrics", icon=":material/info:"):
         st.markdown(
             """
-- **One-step R²** — held-out prediction quality one sample ahead. Groups in
-  the validation summary: `>0.9`, `0.5–0.9`, `0–0.5`, `≤0`.
+- **One-step R²** — held-out prediction quality one sample ahead (each
+  prediction still sees the real readings right before it). This is the
+  "accuracy" number shown in the KPIs.
+- **Multi-step / recursive R² & coverage** — the honest number for long
+  forecasts: the model feeds its own predictions back, error accumulates,
+  so it is typically much lower.
 - **RMSE / MAE** — root mean squared / mean absolute error on the held-out
-  test set (m).
+  test set (m). RMSE ≈ typical mistake in metres.
 - **90% PI coverage** — share of true held-out points that fall inside the
-  model's 90% prediction interval.
-- **Bottom 10 by one-step R²** highlights corrupt / stuck-sensor stations.
+  model's 90% prediction interval (target ~90%).
+
+**The jump at the forecast start:** in the *Next 2–3 Months* panel the model
+must extend from the last stored reading. Its very first projected steps can
+diverge from the observed values because beyond the last real point it predicts
+from its own outputs (recursive), not from real telemetry. This is normal and
+expected — verify against the dashed line marking where data ends.
 """
         )
     with st.expander("Data source & coverage", icon=":material/cloud:"):
         st.markdown(
             """
-Training data is the station telemetry held in `common.parquet`. The
-**2026 NWIC coverage** section checks which stations still appear in the live
-NWIC 2026 resource — stations missing there are typically telemetry gaps or
-renames.
+Telemetry is fetched from the **NWIC (National Water Information Centre)**
+API in **batches** — it is not streamed in real time. A one-shot paginated
+fetch (~336K records, 93 stations, 6-hourly cadence) is stored locally in
+`common.parquet`, and the models are trained on that archive.
+
+NWIC publishes data in **separate time-bucketed resources**: the 
+**2021–2025** set used for training, and a distinct **2026–2030** resource.
+The 2026 resource is live-checked here only for coverage validation
+(which stations still report) — it is deliberately not merged into the
+training data, which is why stored readings end in 2025 and everything
+beyond is a projection.
+
+The **2026 NWIC coverage** expander shows which stations still appear in the
+2026 resource — stations missing there are typically telemetry gaps or renames.
 """
         )
-
-
-def data_explorer_section(decision, selected_station) -> None:
-    """All-stations data explorer — collapsed by default (secondary feature).
-
-    Keeps the full decision-support grid and every station narrative reachable,
-    without dominating the selected-station dashboard.
-    """
-    st.subheader("All stations / data explorer")
-    st.caption(
-        "Complete decision-support grid for every station — the row for the "
-        "station selected above is bolded. Use the global selector at the top "
-        "to re-focus the dashboard on any station."
-    )
-    if decision is None or not len(decision):
-        with st.container(border=True):
-            st.info(
-                "decision_support.csv not found. Run "
-                "`python -m ml.scripts.decision_support` to build the "
-                "decision-support layer."
-            )
-        return
-
-    with st.expander("Open the all-stations explorer", expanded=False, icon=":material/table_rows:"):
-        d = decision.copy()
-        prio_counts = d["priority"].value_counts()
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("PRIORITY", int(prio_counts.get("PRIORITY", 0)))
-        c2.metric("MONITOR", int(prio_counts.get("MONITOR", 0)))
-        c3.metric("OK", int(prio_counts.get("OK", 0)))
-        c4.metric("Total", len(d))
-        st.caption(
-            "Priority grid from each station's own history: **critical** = "
-            "deepest 10% of past readings, **caution** = deepest 30%. "
-            "Declining table into the caution zone → MONITOR; already below "
-            "critical (or projected there in 180 d) → PRIORITY."
-        )
-        pf = st.selectbox(
-            "Filter by priority",
-            ["All", "PRIORITY", "MONITOR", "OK", "INSUFFICIENT"],
-            key="explorer_prio_filter",
-        )
-        dd = d.copy()
-        if pf != "All":
-            dd = dd[dd["priority"] == pf]
-        order = {"PRIORITY": 0, "MONITOR": 1, "OK": 2, "INSUFFICIENT": 3}
-        dd = dd.assign(_o=dd["priority"].map(order))
-        dd = dd.sort_values(["_o", "station"], kind="stable").drop(columns=["_o"])
-
-        def _prio_style(v):
-            return {
-                "PRIORITY": "background-color:rgba(248,81,73,0.16);",
-                "MONITOR": "background-color:rgba(210,153,34,0.14);",
-                "OK": "background-color:rgba(63,185,80,0.14);",
-            }.get(str(v).upper(), "")
-
-        def _sel_style(r):
-            if r["station"] == selected_station:
-                return ["font-weight:700;"] * len(r)
-            return [""] * len(r)
-
-        st.dataframe(
-            dd.style.map(_prio_style, subset=["priority"]).apply(_sel_style, axis=1),
-            width="stretch",
-            height=460,
-            hide_index=True,
-            column_config={
-                "station": st.column_config.TextColumn("Station"),
-                "trend_direction": st.column_config.TextColumn("Trend dir"),
-                "trend_m_yr": st.column_config.NumberColumn("Trend (m/yr)", format="%.3f"),
-                "level_now": st.column_config.NumberColumn("Level (m)", format="%.2f"),
-                "proj_90d": st.column_config.NumberColumn("+90d (m)", format="%.2f"),
-                "lo_90d": st.column_config.NumberColumn("lo 90d (m)", format="%.2f"),
-                "hi_90d": st.column_config.NumberColumn("hi 90d (m)", format="%.2f"),
-                "proj_180d": st.column_config.NumberColumn("+180d (m)", format="%.2f"),
-                "lo_180d": st.column_config.NumberColumn("lo 180d (m)", format="%.2f"),
-                "hi_180d": st.column_config.NumberColumn("hi 180d (m)", format="%.2f"),
-                "caution": st.column_config.NumberColumn("Caution (m)", format="%.2f"),
-                "critical": st.column_config.NumberColumn("Critical (m)", format="%.2f"),
-                "multi_cov_90": st.column_config.ProgressColumn("90% cov", min_value=0.0, max_value=1.0, format="%.0f"),
-                "priority": st.column_config.TextColumn("Priority"),
-                "narrative": st.column_config.TextColumn("Narrative"),
-            },
-        )
-        if len(dd):
-            with st.expander("Station narratives (filtered)", icon=":material/note_alt:"):
-                with st.container(height=220):
-                    for _, row in dd.iterrows():
-                        selected = row["station"] == selected_station
-                        marker = "**" if selected else ""
-                        st.markdown(
-                            f"- {marker}{row['station']}{marker}: {row['narrative']}"
-                        )
 
 
 # ---------------------------------------------------------------------------
@@ -1562,7 +1486,7 @@ pres_row = _row_for(presence, selected_station)
 
 # --- Layer 2: overview KPIs ----------------------------------------------
 st.subheader(f"Selected station overview — {selected_station}")
-_primary_kpis(station_df, dec)
+_primary_kpis(station_df, dec, sum_row)
 _secondary_stats(station_df, meta, sw_row, sum_row, pres_row)
 
 # --- Layer 3: station health (selected station) --------------------------
@@ -1573,7 +1497,6 @@ time_series_card(selected_station, station_df, test_preds, dec)
 
 # --- Layer 5: forecast ---------------------------------------------------
 forecast_card(selected_station, station_df, meta, test_preds, dec, _artifacts_version)
-interactive_forecast(selected_station, meta)
 
 # --- Layer 6: model / prediction information -----------------------------
 model_card(selected_station, meta)
@@ -1594,6 +1517,3 @@ observations_section(selected_station, station_df, gap_mask, time_diffs, n_gaps)
 
 # --- Layer 9: notes -------------------------------------------------------
 notes_section()
-
-# --- Layer 10: all-stations data explorer (collapsed) ---------------------
-data_explorer_section(decision, selected_station)
