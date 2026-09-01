@@ -1,77 +1,121 @@
-"""Fleet-wide honest-forecast diagnosis: classifies every station's multi-step
-forecast as reliable / directional-only / weak, using the calibrated recursive
-held-out coverage.
-
-Writes ``ml/artifacts/multistep_diagnosis.csv`` with one row per station.
-"""
+"""Fleet-wide diagnosis: calibrate and classify all 93 stations."""
 
 import json
+import sys
+import time
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 
-from ml.models.xgboost_quantile import (
+_ML_ROOT = Path(__file__).resolve().parent.parent
+if str(_ML_ROOT.parent) not in sys.path:
+    sys.path.insert(0, str(_ML_ROOT.parent))
+
+from ml.models.xgboost_quantile import (  # noqa: E402
     ARTIFACTS_DIR,
-    DEFAULT_PARQUET,
-    _load_config,
-    _load_models,
-    get_station_series,
+    load_models,
+    station_dirs,
 )
-from ml.services.interval_calibration import _station_artifact_dir, diagnose_station
+from ml.preprocessing.timeseries import (  # noqa: E402
+    full_pipeline,
+)
+from ml.services.interval_calibration import (  # noqa: E402
+    diagnose_station,
+    estimate_calibration,
+)
 
-OUT = Path(__file__).resolve().parents[1] / "artifacts" / "multistep_diagnosis.csv"
+DIAGNOSIS_FILE = ARTIFACTS_DIR / "multistep_diagnosis.csv"
+PROGRESS_FILE = ARTIFACTS_DIR / "diagnose_progress.json"
+FAILURES_FILE = ARTIFACTS_DIR / "diagnose_failures.json"
 
 
-def station_dirs(root) -> list[Path]:
-    dirs = []
-    for d in root.iterdir():
-        if (d / "features.json").is_file() and (d / "xgb_point.joblib").is_file():
-            meta_file = d / "xgboost_metadata.json"
-            if meta_file.is_file():
-                dirs.append(d)
-    return dirs
+def save_progress(done: list[str], failed: list[dict]) -> None:
+    with open(PROGRESS_FILE, "w") as f:
+        json.dump({"done": done, "failed": failed, "timestamp": time.time()}, f)
+
+
+def load_progress() -> tuple[list[str], list[dict]]:
+    if PROGRESS_FILE.exists():
+        with open(PROGRESS_FILE) as f:
+            data = json.load(f)
+        return data.get("done", []), data.get("failed", [])
+    return [], []
 
 
 def main() -> None:
-    rows = []
-    for d in station_dirs(ARTIFACTS_DIR):
-        meta = json.load(open(d / "xgboost_metadata.json"))
-        station = meta.get("station")
+    ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    done, failed = load_progress()
+    print(f"Resuming: {len(done)} done, {len(failed)} failed")
+
+    pipe = full_pipeline(
+        _ML_ROOT.parent / "ml" / "data" / "processed" / "common.parquet",
+        _ML_ROOT.parent / "back-end" / "db" / "data.csv",
+    )
+    feature_cols = pipe["feature_cols"]
+    full_train_df = pipe["train"]
+
+    all_station_dirs = station_dirs()
+    total = len(all_station_dirs)
+    print(f"Total stations: {total}")
+
+    results = []
+
+    if DIAGNOSIS_FILE.exists():
+        existing = pd.read_csv(DIAGNOSIS_FILE)
+        results = existing.to_dict("records")
+
+    for i, out_dir in enumerate(all_station_dirs):
+        slug = out_dir.name
+        if slug in done:
+            continue
+
+        print(f"[{i+1}/{total}] Diagnosing {slug}...", flush=True)
+        start = time.time()
+
         try:
-            cfg = _load_config(d)
-            models = _load_models(d)
-            sdf = get_station_series(DEFAULT_PARQUET, cfg.get("station", station))
-            diag = diagnose_station(cfg, models, sdf)
-            rows.append(
-                {
-                    "station": station,
-                    "label": diag["label"],
-                    "reason": diag["reason"],
-                    "coverage": round(diag["coverage"], 4),
-                    "shallow_error": round(diag["shallow_error"], 4),
-                    "gwl_span": round(diag["gwl_span"], 4),
-                    "n_obs": diag["n_obs"],
-                    "tail_half_width": round(diag["tail_half_width"], 4),
-                    "half_width_at_horizon": round(diag["half_width_at_horizon"], 4),
-                    "horizon_days": diag["horizon_days"],
-                    "max_depth": diag["max_depth"],
-                }
-            )
-            print(
-                f"{station[:44]:46s} {diag['label']:12s} cov={diag['coverage']:.0%} "
-                f"shallow={diag['shallow_error']:.2f} hw@{diag['horizon_days']:.0f}d={diag['half_width_at_horizon']:.2f}"
-            )
-        except Exception as e:  # noqa: BLE001
-            rows.append({"station": station, "label": "error", "reason": str(e)[:120],
-                         "coverage": "", "shallow_error": "", "gwl_span": "",
-                         "n_obs": "", "tail_half_width": "", "half_width_at_horizon": "",
-                         "horizon_days": "", "max_depth": ""})
-            print(f"{station[:44]:46s} ERROR {e}")
+            cfg = {}
+            models = load_models(out_dir)
 
-    import pandas as pd
+            station_df = full_train_df[full_train_df["slug"] == slug].copy()
+            if station_df.empty:
+                print(f"  No training data for {slug}, skipping")
+                failed.append({"slug": slug, "reason": "no training data"})
+                save_progress(done, failed)
+                continue
 
-    pd.DataFrame(rows).to_csv(OUT, index=False)
-    print(f"\nwrote {OUT} ({len(rows)} stations)")
+            diag = diagnose_station(cfg, models, station_df, feature_cols)
+            diag["slug"] = slug
+            results.append(diag)
+            done.append(slug)
+
+            elapsed = time.time() - start
+            print(f"  -> {diag['label'].upper()} (coverage={diag['coverage']:.3f}, 1-step R2={diag['one_step_r2']:.3f}, multi R2={diag['multi_step_r2']:.3f}) in {elapsed:.1f}s")
+
+        except Exception as e:
+            print(f"  FAILED: {e}")
+            failed.append({"slug": slug, "reason": str(e)})
+
+        save_progress(done, failed)
+
+    df = pd.DataFrame(results)
+    df.to_csv(DIAGNOSIS_FILE, index=False)
+    print(f"\nSaved diagnosis for {len(results)} stations to {DIAGNOSIS_FILE}")
+
+    if results:
+        labels = pd.Series([r["label"] for r in results]).value_counts()
+        print("\nLabel distribution:")
+        for lbl, cnt in labels.items():
+            print(f"  {lbl}: {cnt}")
+        print(f"\nMedian calibrated coverage: {df['coverage'].median():.4f}")
+        print(f"Median one-step R2: {df['one_step_r2'].median():.4f}")
+        print(f"Median multi-step R2: {df['multi_step_r2'].median():.4f}")
+
+    if failed:
+        with open(FAILURES_FILE, "w") as f:
+            json.dump(failed, f, indent=2)
+        print(f"\nFailures ({len(failed)}): saved to {FAILURES_FILE}")
 
 
 if __name__ == "__main__":

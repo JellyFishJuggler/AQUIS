@@ -1,431 +1,390 @@
-"""
-XGBoost + quantile-regression forecasting for groundwater level time series.
-
-Point prediction:  ``XGBRegressor(objective="reg:squarederror")``.
-Uncertainty:       three quantile models at q = 0.05 / 0.5 / 0.95 via the
-                   native ``reg:quantileerror`` objective -> 90% prediction
-                   interval.  (Approach follows Alkon et al. 2024, Environ.
-                   Res. Lett. and subsequent GWPZ-modelling literature.)
-
-Features (tree models are scale-invariant, so no scaling is needed):
-    * ``time_hours``                 - hours since first reading (always)
-    * ``sin_doy`` / ``cos_doy`` / year  - seasonal encoding (optional)
-    * ``lag_{L}`` + ``roll_{W}``     - causal autoregressive features
-      (L in {1,2,3,4,28,120} 6-hour steps = 1-24h, 7d, 30d; W in {28,120}
-      = trailing 7d / 30d means).  These are the primary drivers of short-
-      horizon accuracy and interval calibration on the chronological holdout.
-
-Artifacts per station (``artifacts/<slug>/``):
-    xgb_point.joblib, xgb_q05.joblib, xgb_q50.joblib, xgb_q95.joblib
-    features.json, xgboost_metadata.json
-
-Public API:
-    train_xgb_quantile_for_station()
-    predict_xgb_quantile()      (recursive forecasting; works for any t)
-    get_test_predictions()      (test-period actuals vs predictions)
-"""
+"""XGBoost Quantile Regression models with hybrid direct/recursive multi-step forecasting."""
 
 import json
-import time
-from datetime import datetime, timedelta, timezone
+import warnings
 from pathlib import Path
+from typing import Any
 
 import joblib
 import numpy as np
 import pandas as pd
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from xgboost import XGBRegressor
 
-_ML_ROOT = Path(__file__).resolve().parent.parent
+warnings.filterwarnings("ignore", category=UserWarning, module="xgboost")
 
 from ml.preprocessing.timeseries import (  # noqa: E402
-    ARTIFACTS_DIR,
     GWL_COL,
     TIME_COL,
-    TRAIN_RATIO,
-    build_time_index,
-    get_station_series,
-    resolve_slug_dir,
-    unique_station_dir,
+    STATION_COL,
+    prepare_feature_matrix,
 )
-from ml.utils import format_duration  # noqa: E402
 
-DEFAULT_PARQUET = _ML_ROOT / "data" / "processed" / "common.parquet"
-
-SAMPLING_HOURS = 6  # data cadence: 6-hourly telemetry
-LAG_STEPS = [1, 2, 3, 4, 28, 120]
-ROLL_WINDOWS = [28, 120]
-
-DEFAULT_PARAMS: dict = {
-    "n_estimators": 300,
-    "max_depth": 5,
-    "learning_rate": 0.08,
-    "subsample": 0.8,
-    "colsample_bytree": 0.8,
-    "min_child_weight": 2,
-    "reg_lambda": 1.0,
-    "random_state": 42,
-    "n_jobs": -1,
-}
-QUANTILES = [0.05, 0.5, 0.95]
-POINT_FILES = {
+ARTIFACTS_DIR = Path(__file__).resolve().parent.parent / "artifacts"
+POINT_MODEL_FILE = "xgb_point.joblib"
+QUANTILE_MODEL_FILES = {
     0.05: "xgb_q05.joblib",
-    0.5: "xgb_q50.joblib",
+    0.50: "xgb_q50.joblib",
     0.95: "xgb_q95.joblib",
 }
-POINT_MODEL_FILE = "xgb_point.joblib"
+FEATURES_FILE = "features.json"
+METADATA_FILE = "xgboost_metadata.json"
 
 
-def build_xgb_point(params: dict | None = None) -> XGBRegressor:
-    """Point-prediction model (conditional mean)."""
-    p = {**DEFAULT_PARAMS, **(params or {})}
-    p.pop("quantile_alpha", None)
-    return XGBRegressor(objective="reg:squarederror", **p)
-
-
-def build_xgb_quantile(quantile: float, params: dict | None = None) -> XGBRegressor:
-    """Quantile-regression model using XGBoost's native quantile error loss."""
-    p = {**DEFAULT_PARAMS, **(params or {})}
-    p.pop("quantile_alpha", None)
-    return XGBRegressor(
-        objective="reg:quantileerror", quantile_alpha=quantile, **p
+def station_dirs(artifacts_root: Path | None = None) -> list[Path]:
+    """Trained station directories (have a point model + metadata)."""
+    root = Path(artifacts_root) if artifacts_root else ARTIFACTS_DIR
+    return sorted(
+        p
+        for p in root.iterdir()
+        if p.is_dir() and (p / "recursive" / POINT_MODEL_FILE).is_file() and (p / METADATA_FILE).is_file()
     )
 
+DEFAULT_PARAMS = {
+    "n_estimators": 400,
+    "max_depth": 6,
+    "learning_rate": 0.06,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "min_child_weight": 3,
+    "reg_lambda": 1.5,
+    "random_state": 42,
+    "n_jobs": -1,
+    "tree_method": "hist",
+}
 
-def build_feature_dataframe(
-    station_df: pd.DataFrame,
-    use_seasonal: bool = True,
-    use_lags: bool = True,
-) -> pd.DataFrame:
-    """Build the model feature matrix for a station's series.
-
-    ``time_hours`` is intentionally unscaled: tree ensembles are invariant
-    to monotone feature transforms, so no StandardScaler is needed.
-
-    Lag / rolling features are causal (computed from earlier observations
-    only), so the matrix remains valid for genuine forecasting.
-    """
-    if "time_hours" not in station_df.columns:
-        station_df = build_time_index(station_df)
-
-    t = pd.to_datetime(station_df[TIME_COL].values)
-    data = {"time_hours": station_df["time_hours"].values}
-
-    if use_seasonal:
-        doy = t.dayofyear.to_numpy()
-        data["sin_doy"] = np.sin(2 * np.pi * doy / 365.25)
-        data["cos_doy"] = np.cos(2 * np.pi * doy / 365.25)
-        data["year"] = t.year.astype(float).to_numpy()
-
-    if use_lags:
-        y = station_df[GWL_COL]
-        for step in LAG_STEPS:
-            data[f"lag_{step}"] = y.shift(step)
-        for win in ROLL_WINDOWS:
-            data[f"roll_{win}"] = y.rolling(win).mean()
-
-    return pd.DataFrame(data)
+DIRECT_HORIZONS = list(range(1, 8)) + ["8_14", "15_21", "22_30"]
+RECURSIVE_HORIZON_START = 31
+MAX_HORIZON = 90
 
 
-def split_series(
-    station_df: pd.DataFrame,
-    use_seasonal: bool = True,
-    use_lags: bool = True,
-    train_ratio: float = TRAIN_RATIO,
-):
-    """Align features with valid targets and split chronologically.
-
-    Rows are dropped when the target OR any feature is NaN (warm-up lags),
-    then split at ``train_ratio``.  Returns
-    ``(X_train, X_test, y_train, y_test, t_train, t_test)``.
-    """
-    X = build_feature_dataframe(station_df, use_seasonal, use_lags)
-    y = station_df[GWL_COL].values.astype(float)
-    valid = ~np.isnan(y) & X.notna().all(axis=1).to_numpy()
-    timestamps = pd.to_datetime(station_df[TIME_COL].values[valid])
-    X = X[valid].reset_index(drop=True)
-    y = y[valid]
-    split = int(len(y) * train_ratio)
-    return (
-        X.iloc[:split],
-        X.iloc[split:],
-        y[:split],
-        y[split:],
-        timestamps[:split],
-        timestamps[split:],
-    )
+def _make_point_model(**kwargs) -> XGBRegressor:
+    params = {**DEFAULT_PARAMS, **kwargs, "objective": "reg:squarederror"}
+    return XGBRegressor(**params)
 
 
-def _round_metrics(metrics: dict) -> dict:
-    return {k: round(float(v), 4) for k, v in metrics.items()}
+def _make_quantile_model(alpha: float, **kwargs) -> XGBRegressor:
+    params = {**DEFAULT_PARAMS, **kwargs, "objective": "reg:quantileerror", "quantile_alpha": alpha}
+    return XGBRegressor(**params)
 
 
-def _load_config(out_dir: Path) -> dict:
-    with open(out_dir / "features.json") as f:
+def train_models_for_station(
+    train_df: pd.DataFrame,
+    feature_cols: list[str],
+    station_slug: str,
+    artifact_dir: Path,
+    use_direct: bool = True,
+    use_recursive: bool = True,
+    use_error_correction: bool = True,
+) -> dict[str, Any]:
+    """Train all models for a station: direct (1-30d), recursive (31-90d), error-correction."""
+    artifact_dir.mkdir(parents=True, exist_ok=True)
+
+    train_data = train_df[feature_cols + [GWL_COL]].copy()
+    valid_mask = train_data[feature_cols].notna().all(axis=1) & train_data[GWL_COL].notna()
+    train_data = train_data[valid_mask]
+    
+    X_train, y_train, _ = prepare_feature_matrix(train_data)
+
+    models = {"direct": {}, "recursive": {}, "error_correction": None}
+
+    if use_direct:
+        for h in DIRECT_HORIZONS:
+            if isinstance(h, int):
+                h_str = str(h)
+                target_shift = h * 4
+            else:
+                h_str = h
+                start, end = map(int, h.split("_"))
+                target_shift = start * 4
+
+            y_shifted = np.roll(y_train, -target_shift)
+            y_shifted[-target_shift:] = np.nan
+            valid = ~np.isnan(y_shifted)
+
+            if valid.sum() < 50:
+                continue
+
+            X_h = X_train[valid]
+            y_h = y_shifted[valid]
+
+            point_model = _make_point_model()
+            point_model.fit(X_h, y_h)
+            models["direct"][h_str] = {"point": point_model}
+
+            for alpha in [0.05, 0.50, 0.95]:
+                q_model = _make_quantile_model(alpha)
+                q_model.fit(X_h, y_h)
+                models["direct"][h_str][f"q{int(alpha*100):02d}"] = q_model
+
+    if use_recursive:
+        point_model = _make_point_model()
+        point_model.fit(X_train, y_train)
+        models["recursive"]["point"] = point_model
+
+        for alpha in [0.05, 0.50, 0.95]:
+            q_model = _make_quantile_model(alpha)
+            q_model.fit(X_train, y_train)
+            models["recursive"][f"q{int(alpha*100):02d}"] = q_model
+
+    if use_error_correction and use_recursive:
+        models["error_correction"] = train_error_correction_head(train_df, feature_cols, models["recursive"]["point"])
+
+    save_models(models, artifact_dir, station_slug)
+    return models
+
+
+def train_error_correction_head(
+    train_df: pd.DataFrame,
+    feature_cols: list[str],
+    recursive_point_model: XGBRegressor,
+    max_horizon: int = MAX_HORIZON,
+) -> Any:
+    """Train a lightweight model to correct recursive drift residuals vs horizon depth."""
+    from sklearn.ensemble import RandomForestRegressor
+    from sklearn.linear_model import Ridge
+
+    station_residuals = []
+    station_features = []
+
+    for station, grp in train_df.groupby(STATION_COL):
+        grp = grp.sort_values(TIME_COL)
+        gwl = grp[GWL_COL].values
+        feats = grp[feature_cols].values
+        n = len(gwl)
+
+        if n < 200:
+            continue
+
+        for start_idx in range(100, n - max_horizon, 50):
+            last_known = feats[start_idx].copy()
+            true_future = gwl[start_idx + 1:start_idx + max_horizon + 1]
+
+            pred_future = []
+            current_feats = last_known.copy()
+            for step in range(max_horizon):
+                pred = recursive_point_model.predict(current_feats.reshape(1, -1))[0]
+                pred_future.append(pred)
+                current_feats = update_features_recursive(current_feats, pred, feature_cols)
+
+            pred_future = np.array(pred_future)
+            residuals = true_future - pred_future
+            depths = np.arange(1, len(residuals) + 1)
+
+            for d, r in zip(depths, residuals, strict=False):
+                correction_feats = np.concatenate([
+                    [d / max_horizon],
+                    [pred_future[min(d-1, len(pred_future)-1)]],
+                    last_known[-10:],
+                ])
+                station_features.append(correction_feats)
+                station_residuals.append(r)
+
+    if len(station_residuals) < 100:
+        return None
+
+    X_corr = np.array(station_features)
+    y_corr = np.array(station_residuals)
+
+    corr_model = Ridge(alpha=1.0, random_state=42)
+    corr_model.fit(X_corr, y_corr)
+
+    return corr_model
+
+
+def update_features_recursive(features: np.ndarray, new_pred: float, feature_cols: list[str]) -> np.ndarray:
+    """Update feature vector for recursive step: shift lags, insert new prediction."""
+    new_feats = features.copy()
+    lag_cols = [c for c in feature_cols if c.startswith("lag_")]
+    lag_indices = {c: i for i, c in enumerate(feature_cols) if c.startswith("lag_")}
+
+    sorted_lags = sorted(lag_indices.items(), key=lambda x: int(x[0].split("_")[1]))
+    for i, (col, idx) in enumerate(sorted_lags):
+        if i == 0:
+            new_feats[idx] = new_pred
+        else:
+            prev_col, prev_idx = sorted_lags[i - 1]
+            new_feats[idx] = features[prev_idx]
+
+    roll_cols = [c for c in feature_cols if c.startswith("roll_") and c.endswith("_mean")]
+    for col in roll_cols:
+        idx = feature_cols.index(col)
+        window = int(col.split("_")[1])
+        available_lags = [features[lag_indices[f"lag_{i}"]] for i in range(1, window + 1) if f"lag_{i}" in lag_indices]
+        if available_lags:
+            new_feats[idx] = np.mean(available_lags)
+
+    return new_feats
+
+
+def predict_direct(models: dict, X: np.ndarray, horizon: int | str) -> dict[str, float]:
+    """Predict using direct model for a specific horizon."""
+    h_str = str(horizon)
+    if h_str not in models["direct"]:
+        if isinstance(horizon, int) and horizon <= 7:
+            h_str = str(horizon)
+        elif isinstance(horizon, int) and 8 <= horizon <= 14:
+            h_str = "8_14"
+        elif isinstance(horizon, int) and 15 <= horizon <= 21:
+            h_str = "15_21"
+        elif isinstance(horizon, int) and 22 <= horizon <= 30:
+            h_str = "22_30"
+        else:
+            raise ValueError(f"No direct model for horizon {horizon}")
+
+    m = models["direct"][h_str]
+    return {
+        "point": float(m["point"].predict(X)[0]),
+        "q05": float(m["q05"].predict(X)[0]),
+        "q50": float(m["q50"].predict(X)[0]),
+        "q95": float(m["q95"].predict(X)[0]),
+    }
+
+
+def predict_recursive(
+    models: dict,
+    last_features: np.ndarray,
+    n_steps: int,
+    feature_cols: list[str],
+    error_correction_model: Any = None,
+) -> dict[str, list[float]]:
+    """Recursive multi-step forecast with optional error correction."""
+    point_model = models["recursive"]["point"]
+    q05_model = models["recursive"]["q05"]
+    q50_model = models["recursive"]["q50"]
+    q95_model = models["recursive"]["q95"]
+
+    points = []
+    q05s = []
+    q50s = []
+    q95s = []
+
+    current_feats = last_features.copy()
+
+    for step in range(n_steps):
+        pt = point_model.predict(current_feats.reshape(1, -1))[0]
+        q05 = q05_model.predict(current_feats.reshape(1, -1))[0]
+        q50 = q50_model.predict(current_feats.reshape(1, -1))[0]
+        q95 = q95_model.predict(current_feats.reshape(1, -1))[0]
+
+        if error_correction_model is not None:
+            corr_feats = np.concatenate([
+                [(step + 1) / MAX_HORIZON],
+                [pt],
+                current_feats[-10:],
+            ])
+            correction = error_correction_model.predict(corr_feats.reshape(1, -1))[0]
+            pt = pt + correction
+
+        points.append(float(pt))
+        q05s.append(float(q05))
+        q50s.append(float(q50))
+        q95s.append(float(q95))
+
+        current_feats = update_features_recursive(current_feats, pt, feature_cols)
+
+    return {"point": points, "q05": q05s, "q50": q50s, "q95": q95s}
+
+
+def save_models(models: dict, artifact_dir: Path, station_slug: str) -> None:
+    """Save all models and metadata to artifact directory."""
+    direct_dir = artifact_dir / "direct"
+    recursive_dir = artifact_dir / "recursive"
+    direct_dir.mkdir(parents=True, exist_ok=True)
+    recursive_dir.mkdir(parents=True, exist_ok=True)
+
+    for h_str, m in models["direct"].items():
+        joblib.dump(m["point"], direct_dir / f"h{h_str}_point.joblib")
+        for alpha in [0.05, 0.50, 0.95]:
+            joblib.dump(m[f"q{int(alpha*100):02d}"], direct_dir / f"h{h_str}_q{int(alpha*100):02d}.joblib")
+
+    joblib.dump(models["recursive"]["point"], recursive_dir / "xgb_point.joblib")
+    for alpha in [0.05, 0.50, 0.95]:
+        joblib.dump(models["recursive"][f"q{int(alpha*100):02d}"], recursive_dir / f"xgb_q{int(alpha*100):02d}.joblib")
+
+    if models["error_correction"] is not None:
+        joblib.dump(models["error_correction"], recursive_dir / "error_correction_head.joblib")
+
+    feature_cols = [c for c in models.get("feature_cols", []) if not c.startswith("lag_") and not c.startswith("roll_") and c not in ["trend_28", "trend_60"]]
+    with open(artifact_dir / FEATURES_FILE, "w") as f:
+        json.dump({"feature_cols": feature_cols, "direct_horizons": list(models["direct"].keys())}, f)
+
+
+def load_models(artifact_dir: Path) -> dict[str, Any]:
+    """Load all models for a station."""
+    direct_dir = artifact_dir / "direct"
+    recursive_dir = artifact_dir / "recursive"
+
+    models = {"direct": {}, "recursive": {}, "error_correction": None}
+
+    if direct_dir.exists():
+        for point_file in direct_dir.glob("h*_point.joblib"):
+            h_str = point_file.stem.replace("h", "").replace("_point", "")
+            models["direct"][h_str] = {"point": joblib.load(point_file)}
+            for alpha in [0.05, 0.50, 0.95]:
+                q_file = direct_dir / f"h{h_str}_q{int(alpha*100):02d}.joblib"
+                if q_file.exists():
+                    models["direct"][h_str][f"q{int(alpha*100):02d}"] = joblib.load(q_file)
+
+    if (recursive_dir / "xgb_point.joblib").exists():
+        models["recursive"]["point"] = joblib.load(recursive_dir / "xgb_point.joblib")
+        for alpha in [0.05, 0.50, 0.95]:
+            q_file = recursive_dir / f"xgb_q{int(alpha*100):02d}.joblib"
+            if q_file.exists():
+                models["recursive"][f"q{int(alpha*100):02d}"] = joblib.load(q_file)
+
+    ec_file = recursive_dir / "error_correction_head.joblib"
+    if ec_file.exists():
+        models["error_correction"] = joblib.load(ec_file)
+
+    return models
+
+
+def _load_config(artifact_dir: Path) -> dict:
+    with open(artifact_dir / METADATA_FILE) as f:
         return json.load(f)
 
 
-def _load_models(out_dir: Path) -> dict:
-    return {
-        "point": joblib.load(out_dir / POINT_MODEL_FILE),
-        **{q: joblib.load(out_dir / POINT_FILES[q]) for q in QUANTILES},
-    }
+def get_station_series(parquet_path: Path | str, station_display_name: str) -> pd.DataFrame:
+    """Get full series for a station by display name."""
+    from ml.preprocessing.timeseries import load_and_clean, station_slug
+    df = load_and_clean(parquet_path)
+    df["slug"] = df.apply(lambda r: station_slug(r[STATION_COL], r["Agency"], r["SlNo"]), axis=1)
+    return df[df[STATION_COL] == station_display_name].sort_values(TIME_COL).reset_index(drop=True)
 
 
-def _resolve_station_dir(station: str, artifacts_root: Path | None = None) -> Path:
-    root = artifacts_root or ARTIFACTS_DIR
-    resolved = resolve_slug_dir(root, station)
-    if resolved is not None and (resolved / POINT_MODEL_FILE).is_file():
-        return resolved
-    as_slug = root / station
-    if (as_slug / POINT_MODEL_FILE).is_file():
-        return as_slug
-    raise FileNotFoundError(
-        f"No XGBoost model for '{station}' (looked in {root}). "
-        "Train it first: python -m ml.training.train_forecast --station '...'"
-    )
+def get_default_paths() -> tuple[Path, Path]:
+    """Get default parquet and backend paths."""
+    root = Path(__file__).resolve().parent.parent.parent
+    return root / "ml" / "data" / "processed" / "common.parquet", root / "ml" / "back-end" / "db" / "data.csv"
 
 
-def _observed_buffer(station_df: pd.DataFrame) -> dict:
-    """Map {sample_index: observed_value} for all non-NaN observations."""
-    vals = station_df[GWL_COL].values.astype(float)
-    return {i: float(v) for i, v in enumerate(vals) if not np.isnan(v)}
+def get_test_predictions(station_slug: str, parquet_path: Path | str = None) -> dict[str, np.ndarray]:
+    """One-step predictions on test set for dashboard snapshot."""
+    from ml.preprocessing.timeseries import full_pipeline
+    from ml.models.xgboost_quantile import load_models
 
+    if parquet_path is None:
+        parquet_path = Path(__file__).resolve().parent.parent / "data" / "processed" / "common.parquet"
 
-def _position(time_hours: float) -> int:
-    """Sample position for a time (hours since first reading)."""
-    return int(np.floor(time_hours / SAMPLING_HOURS))
+    pipe = full_pipeline(parquet_path, station_slug_filter=station_slug)
+    test_df = pipe["test"]
+    feature_cols = pipe["feature_cols"]
 
+    artifact_dir = ARTIFACTS_DIR / station_slug
+    models = load_models(artifact_dir)
 
-def _features_at(cfg: dict, buffer: dict, pos: int, time_hours: float) -> pd.DataFrame:
-    """Build one feature row at grid-``pos`` (target ``time_hours``)."""
-    min_known = min(buffer)
-    pad = buffer[min_known]
-    t0 = pd.to_datetime(cfg["t0"])
-    ts = t0 + timedelta(hours=float(time_hours))
+    X_test, y_test, _ = prepare_feature_matrix(test_df[feature_cols + [GWL_COL]])
 
-    data: dict = {"time_hours": float(time_hours)}
-    if cfg["use_seasonal"]:
-        doy = ts.timetuple().tm_yday
-        data["sin_doy"] = np.sin(2 * np.pi * doy / 365.25)
-        data["cos_doy"] = np.cos(2 * np.pi * doy / 365.25)
-        data["year"] = float(ts.year)
-
-    if cfg["use_lags"]:
-        for step in cfg["lag_steps"]:
-            data[f"lag_{step}"] = buffer.get(pos - step, pad)
-        for win in cfg["roll_windows"]:
-            recent = []
-            j = pos - 1
-            while j >= min_known and len(recent) < win:
-                if j in buffer:
-                    recent.insert(0, buffer[j])
-                j -= 1
-            while len(recent) < win:
-                recent.insert(0, pad)
-            data[f"roll_{win}"] = float(np.mean(recent))
-
-    return pd.DataFrame([data])[cfg["features"]]
-
-
-def _fill_buffer_until(cfg: dict, buffer: dict, target_pos: int, point_model) -> None:
-    """Recursively forecast observations up to ``target_pos - 1``."""
-    max_known = max(buffer)
-    while max_known < target_pos - 1:
-        nxt = max_known + 1
-        X = _features_at(cfg, buffer, nxt, nxt * SAMPLING_HOURS)
-        buffer[nxt] = float(point_model.predict(X)[0])
-        max_known = nxt
-
-
-def _predict_for_times(cfg: dict, buffer: dict, time_hours, models) -> dict:
-    th = np.asarray(time_hours, dtype=float)
-    rows: list[pd.DataFrame] = []
-    for t in th:
-        pos = _position(float(t))
-        if pos > max(buffer) + 1:
-            _fill_buffer_until(cfg, buffer, pos, models["point"])
-        rows.append(_features_at(cfg, buffer, pos, float(t)))
-    X = pd.concat(rows, ignore_index=True) if rows else pd.DataFrame(
-        [], columns=cfg["features"]
-    )
-    return {
-        "time_hours": th,
-        "point": models["point"].predict(X),
-        "lower": models[0.05].predict(X),
-        "upper": models[0.95].predict(X),
-    }
-
-
-def train_xgb_quantile_for_station(
-    station: str,
-    params: dict | None = None,
-    use_seasonal: bool = True,
-    use_lags: bool = True,
-    parquet_path: str | Path | None = None,
-    artifacts_root: str | Path | None = None,
-    verbose: bool = True,
-) -> dict:
-    """Train point + {0.05, 0.5, 0.95} quantile XGBoost models for a station.
-
-    Saves the four models plus ``features.json`` and ``xgboost_metadata.json``
-    into ``artifacts/<station_slug>/``.
-
-    Returns metrics, coverage, training duration, and artifact dir.
-    """
-    parquet_path = Path(parquet_path) if parquet_path else DEFAULT_PARQUET
-    root = Path(artifacts_root) if artifacts_root else ARTIFACTS_DIR
-    out_dir = unique_station_dir(root, station)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    slug = out_dir.name
-
-    def _log(msg: str) -> None:
-        if verbose:
-            print(msg)
-
-    station_df = get_station_series(parquet_path, station)
-    X_train, X_test, y_train, y_test, _, t_test = split_series(
-        station_df, use_seasonal=use_seasonal, use_lags=use_lags
-    )
-
-    start = time.monotonic()
-    point = build_xgb_point(params).fit(X_train, y_train)
-    quantile_models = {
-        q: build_xgb_quantile(q, params).fit(X_train, y_train)
-        for q in QUANTILES
-    }
-    train_seconds = time.monotonic() - start
-
-    yte = y_test
-    pred_point = point.predict(X_test)
-    pred_q = {q: m.predict(X_test) for q, m in quantile_models.items()}
-
-    point_metrics = {
-        "rmse": float(np.sqrt(mean_squared_error(yte, pred_point))),
-        "mae": float(mean_absolute_error(yte, pred_point)),
-        "r2": float(r2_score(yte, pred_point)),
-    }
-    q50_metrics = {
-        "rmse": float(np.sqrt(mean_squared_error(yte, pred_q[0.5]))),
-        "mae": float(mean_absolute_error(yte, pred_q[0.5])),
-        "r2": float(r2_score(yte, pred_q[0.5])),
-    }
-    inside = (yte >= pred_q[0.05]) & (yte <= pred_q[0.95])
-    coverage = float(np.mean(inside))
-    interval_width = float(np.mean(pred_q[0.95] - pred_q[0.05]))
-
-    joblib.dump(point, out_dir / POINT_MODEL_FILE)
-    for q in QUANTILES:
-        joblib.dump(quantile_models[q], out_dir / POINT_FILES[q])
-
-    cfg = {
-        "station": station,
-        "use_seasonal": bool(use_seasonal),
-        "use_lags": bool(use_lags),
-        "lag_steps": LAG_STEPS,
-        "roll_windows": ROLL_WINDOWS,
-        "features": list(X_train.columns),
-        "t0": pd.to_datetime(station_df[TIME_COL].min()).isoformat(),
-        "train_ratio": TRAIN_RATIO,
-    }
-    with open(out_dir / "features.json", "w") as f:
-        json.dump(cfg, f, indent=2)
-
-    metadata = {
-        "station": station,
-        "slug": slug,
-        "model_type": "xgboost_quantile",
-        "quantiles": QUANTILES,
-        "use_seasonal": cfg["use_seasonal"],
-        "use_lags": cfg["use_lags"],
-        "features": cfg["features"],
-        "trained_at": datetime.now(timezone.utc).isoformat(),
-        "train_size": int(len(y_train)),
-        "test_size": int(len(yte)),
-        "point_metrics": _round_metrics(point_metrics),
-        "quantile_metrics": {
-            "coverage_90": round(coverage, 4),
-            "mean_interval_width": round(interval_width, 4),
-            "q50_metrics": _round_metrics(q50_metrics),
-        },
-        "train_seconds": round(train_seconds, 2),
-        "duration": format_duration(train_seconds),
-    }
-    with open(out_dir / "xgboost_metadata.json", "w") as f:
-        json.dump(metadata, f, indent=2)
-
-    _log(f"  Train: {len(y_train):,}  |  Test: {len(yte):,}")
-    _log(
-        f"  Point  RMSE: {point_metrics['rmse']:.4f}  "
-        f"MAE: {point_metrics['mae']:.4f}  R²: {point_metrics['r2']:.4f}"
-    )
-    _log(
-        f"  90% PI     coverage: {coverage:.1%}   "
-        f"mean width: {interval_width:.4f} m"
-    )
-    _log(f"  Training time: {format_duration(train_seconds)}")
+    point_model = models["recursive"]["point"]
+    q05_model = models["recursive"]["q05"]
+    q50_model = models["recursive"]["q50"]
+    q95_model = models["recursive"]["q95"]
 
     return {
-        "station": station,
-        "slug": slug,
-        "point_metrics": point_metrics,
-        "quantile_metrics": {
-            "coverage_90": coverage,
-            "mean_interval_width": interval_width,
-            "q50_metrics": q50_metrics,
-        },
-        "duration": format_duration(train_seconds),
-        "train_seconds": train_seconds,
-        "artifact_dir": str(out_dir),
-        "test_times": t_test,
-        "test_predictions": pred_point,
-        "test_lower": pred_q[0.05],
-        "test_upper": pred_q[0.95],
-        "test_actual": yte,
-    }
-
-
-def predict_xgb_quantile(
-    time_hours,
-    station: str,
-    artifacts_root: str | Path | None = None,
-) -> dict:
-    """Point prediction + 90% interval (q05..q95) for given time-hours.
-
-    ``time_hours`` is hours elapsed since the station's first reading.
-    Works for historical points, missing-data gaps, and future horizons
-    (recursive forecasting).  Returns arrays ``point``, ``lower``, ``upper``.
-    """
-    out_dir = _resolve_station_dir(station, artifacts_root)
-    cfg = _load_config(out_dir)
-    models = _load_models(out_dir)
-
-    station_df = get_station_series(DEFAULT_PARQUET, cfg.get("station", station))
-    buffer = _observed_buffer(station_df)
-    if not buffer:
-        raise ValueError(f"No valid observations for station '{station}'.")
-
-    return _predict_for_times(cfg, buffer, time_hours, models)
-
-
-def get_test_predictions(
-    station: str,
-    artifacts_root: str | Path | None = None,
-) -> dict:
-    """Actual vs predicted in the held-out test period (for plotting)."""
-    out_dir = _resolve_station_dir(station, artifacts_root)
-    cfg = _load_config(out_dir)
-    models = _load_models(out_dir)
-
-    station_df = get_station_series(DEFAULT_PARQUET, cfg.get("station", station))
-    _, X_test, _, y_test, _, t_test = split_series(
-        station_df, use_seasonal=cfg["use_seasonal"], use_lags=cfg["use_lags"]
-    )
-
-    return {
-        "time": t_test,
+        "time": test_df.loc[~test_df[feature_cols].isna().any(axis=1), TIME_COL].values,
         "actual": y_test,
-        "point": models["point"].predict(X_test),
-        "lower": models[0.05].predict(X_test),
-        "upper": models[0.95].predict(X_test),
+        "point": point_model.predict(X_test),
+        "lower": q05_model.predict(X_test),
+        "median": q50_model.predict(X_test),
+        "upper": q95_model.predict(X_test),
     }
