@@ -45,9 +45,11 @@ from ml.models.xgboost_quantile import (  # noqa: E402
     _load_config,
     get_station_series,
     get_test_predictions,
-    predict_xgb_quantile,
 )
 from ml.preprocessing.timeseries import GWL_COL, TIME_COL  # noqa: E402
+from ml.services.interval_calibration import (
+    calibrate_and_widen,
+)  # noqa: E402
 
 SNAPSHOT_FILE = "dashboard_forecasts.csv"
 _ROUND = 4
@@ -123,7 +125,9 @@ def _future_from_models(
 
     base_hour = float((start - first).total_seconds() / 3600)
     future_hours = base_hour + np.arange(len(future_dates), dtype=float) * 24.0
-    res = predict_xgb_quantile(future_hours, slug)
+    # Widen the future (recursive, multi-step) interval so it honestly covers
+    # ~90% of outcomes.  The point line is unchanged; only lower/upper widen.
+    res = calibrate_and_widen(cfg.get("station", slug), future_hours)
     return {
         "stored_end": stored_end,
         "projection_start": start,

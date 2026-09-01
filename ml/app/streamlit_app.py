@@ -53,7 +53,6 @@ st.set_page_config(
 from ml.models.xgboost_quantile import (  # noqa: E402
     POINT_MODEL_FILE,
     get_test_predictions,
-    predict_xgb_quantile,
     train_xgb_quantile_for_station,
 )
 from ml.preprocessing.timeseries import (  # noqa: E402
@@ -65,6 +64,7 @@ from ml.services.forecast_snapshots import (  # noqa: E402
     future_preds_from_df,
     test_preds_from_df,
 )
+from ml.services.interval_calibration import calibrate_and_widen  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -136,6 +136,14 @@ def load_presence(_version: float):
 @st.cache_data(show_spinner=False)
 def load_stepwise(_version: float):
     path = _ARTIFACTS / "stepwise_comparison.csv"
+    if not path.is_file():
+        return None
+    return pd.read_csv(path)
+
+
+@st.cache_data(show_spinner=False)
+def load_diagnosis(_version: float):
+    path = _ARTIFACTS / "multistep_diagnosis.csv"
     if not path.is_file():
         return None
     return pd.read_csv(path)
@@ -456,9 +464,11 @@ def _primary_kpis(station_df, dec, sum_row=None) -> None:
                 border=True,
                 help=(
                     "How accurately the XGBoost model reproduces real readings "
-                    "(one step ahead on held-out data). R² = 1.0 is perfect, "
-                    "0.0 = no better than predicting the average. RMSE is the "
-                    "typical error in metres — e.g. 0.03 m ≈ 3 cm."
+                    "(one step ahead — short range, ~1–14 days — on held-out "
+                    "data). R² = 1.0 is perfect, 0.0 = no better than predicting "
+                    "the average. RMSE is the typical error in metres. This is "
+                    "the reliable headline number; months-ahead forecasts are "
+                    "directional only."
                 ),
             )
         _status_tile(dec, level, caution, critical)
@@ -830,8 +840,9 @@ def _future_forecast(station, mver, pver, today, future_days=90, tail_days=90) -
 
     The projection runs continuously from the station's LAST STORED reading
     (zero gap) through ``today`` and forward ~``future_days`` — everything
-    past the stored-data archive is model-generated, never observed.  Reuses
-    predict_xgb_quantile() unchanged; only the window is chosen here.
+    past the stored-data archive is model-generated, never observed.  The
+    recursive interval is widened (calibrated) so it honestly covers ~90% of
+    multi-step outcomes; the point projection is unchanged.
     Returns None when the model is untrained or the station has no data.
     """
     station_df = load_series(station)
@@ -853,7 +864,7 @@ def _future_forecast(station, mver, pver, today, future_days=90, tail_days=90) -
     future_hours = base_hour + np.arange(len(future_dates), dtype=float) * 24.0
     tail = station_df[ts >= stored_end - pd.Timedelta(days=tail_days)]
     try:
-        res = predict_xgb_quantile(future_hours, station)
+        res = calibrate_and_widen(station, future_hours)
     except FileNotFoundError:
         # Cloud deploys may lack the LFS-shipped weights -> snapshot fallback.
         snap = future_preds_from_df(_snapshot_df(), station)
@@ -965,7 +976,39 @@ def _future_forecast_figure(ff) -> go.Figure:
     return fig
 
 
-def forecast_card(station, station_df, meta, test_preds, dec, artifacts_version) -> None:
+def _render_trust_badge(diag_row) -> None:
+    """Per-station honest-forecast badge (reliable / directional / weak).
+
+    Reads the fleet diagnosis (held-out calibrated multi-step coverage) and
+    renders a clear, color-coded trust statement for this station's long-range
+    forecast.  Quietly does nothing when the row is missing.
+    """
+    label = str(diag_row.get("label", "")).strip().lower()
+    reason = str(diag_row.get("reason", "")).strip()
+    cov = diag_row.get("coverage")
+    cov_txt = f" {float(cov):.0%}" if cov is not None and not (
+        isinstance(cov, str) and cov == ""
+    ) else ""
+    if label == "reliable":
+        st.success(
+            f":material/verified: **Reliable forecast**{cov_txt} — calibrated "
+            f"multi-step coverage is at target. Short-range is trustworthy; "
+            f"long-range bands honestly reflect uncertainty."
+        )
+    elif label == "directional":
+        st.warning(
+            f":material/trending_up: **Directional only**{cov_txt} — use for "
+            f"trend, not exact levels. {reason.capitalize() if reason else 'Long-range bands are wide.'}"
+        )
+    elif label == "weak":
+        st.error(
+            f":material/error: **Weak / data-quality issue** — {reason or 'forecast not reliable for this station.'}"
+        )
+    else:
+        return
+
+
+def forecast_card(station, station_df, meta, test_preds, dec, artifacts_version, diag_row=None) -> None:
     """Layer 5 — forecasting module (two coordinated panels).
 
     LEFT:  "Forecast — Test Period"       -> historical backtest (unchanged).
@@ -981,6 +1024,9 @@ def forecast_card(station, station_df, meta, test_preds, dec, artifacts_version)
             ":material/cloud_off: Live model weights are not available on this "
             "deployment — showing precomputed snapshot forecasts."
         )
+
+    if diag_row is not None and pd.notna(diag_row.get("label")):
+        _render_trust_badge(diag_row)
 
     left, right = st.columns(2)
 
@@ -1070,7 +1116,20 @@ def forecast_card(station, station_df, meta, test_preds, dec, artifacts_version)
                         "90% PI (horizon)",
                         f"{float(ff['lower'][-1]):.2f}–{float(ff['upper'][-1]):.2f} m",
                         border=True,
+                        help=(
+                            "Honest 90% band at the far end of this projection, "
+                            "widened to reflect the uncertainty that accrues the "
+                            "further out the model predicts. The wider it is, the "
+                            "more uncertain that +90d level truly is."
+                        ),
                     )
+                st.caption(
+                    ":material/trending_up: **This long-range panel is directional "
+                    "trend only — levels are uncertain.** The point line is the "
+                    "model's best-guess projection, but individual values far out "
+                    "are not reliable; treat them as a trend, not a precise "
+                    "prediction. The shaded band is the honest ~90% range."
+                )
                 st.caption(
                     f"Observed = stored **2021–2025** telemetry; readings end "
                     f"{ff['stored_end']:%Y-%m-%d}. Everything after the dashed "
@@ -1213,7 +1272,7 @@ def model_card(station, meta) -> None:
             )
 
 
-def diagnostics_section(stations_total, xgb_summary, stepwise, presence) -> None:
+def diagnostics_section(stations_total, xgb_summary, stepwise, presence, diagnosis) -> None:
     """Diagnostics & validation — fleet validation summary + 2026 coverage.
 
     Summaries are visible by default; the 2026 coverage detail sits behind an
@@ -1279,15 +1338,37 @@ def diagnostics_section(stations_total, xgb_summary, stepwise, presence) -> None
                         f"{sw['multi_coverage_90'].median():.1%}",
                         border=True,
                         help=(
-                            "Median share of real readings inside the model's "
-                            "90% interval over a long recursive forecast. "
-                            "Target 90%; well below that = intervals too narrow."
+                            "Share of real readings inside the model's raw 90% "
+                            "interval over a long recursive forecast, before "
+                            "calibration. This is why calibration is needed; "
+                            "see the calibrated coverage below."
                         ),
                     )
-                st.warning(
-                    "Recursive (multi-step) forecasting — the honest "
-                    "out-of-sample mode — collapses well below nominal 90% "
-                    "coverage. One-step metrics are overly optimistic."
+                if diagnosis is not None and len(diagnosis):
+                    dc = diagnosis["coverage"].dropna()
+                    dw = int((diagnosis["label"] == "weak").sum())
+                    dd = int((diagnosis["label"] == "directional").sum())
+                    dr = int((diagnosis["label"] == "reliable").sum())
+                    with st.container(horizontal=True):
+                        st.metric(
+                            "Calibrated median 90% coverage",
+                            f"{dc.median():.1%}",
+                            border=True,
+                            help=(
+                                "Median held-out multi-step coverage AFTER honest "
+                                "interval calibration. Target ~90%."
+                            ),
+                        )
+                        st.metric("Reliable stations", f"{dr}", border=True)
+                        st.metric("Directional-only", f"{dd}", border=True)
+                        st.metric("Weak / data issues", f"{dw}", border=True)
+                st.caption(
+                    "Long-range (multi-step) forecasts are **directional trend "
+                    "only**. The raw 90% band is too narrow for months out; the "
+                    "dashboard **calibrates (widens)** it, so it honestly covers "
+                    "~90% of real outcomes. Wide bands = genuine uncertainty, "
+                    "not a bug. One-step accuracy (short range) is the reliable "
+                    "headline number."
                 )
 
     with st.expander("2026 NWIC live-data coverage", icon=":material/cloud:"):
@@ -1382,16 +1463,19 @@ def notes_section() -> None:
     with st.expander("How to read the forecast & validation", icon=":material/science:"):
         st.markdown(
             """
-The test period is the **held-out tail** of the station's series — the model
-never saw it during training. The forecast card overlays observed values,
-the model's point forecast, and a **90% prediction interval** (5th–95th
-percentiles).
+**Short range (~1–14 days) is the reliable headline.** Day-to-day and the
+next 1–2 weeks the model is genuinely accurate; that is the number shown in
+the overview.
 
-**Honest validation note:** recursive (multi-step) forecasting — the honest
-out-of-sample mode — collapses well below nominal 90% coverage. One-step
-metrics are overly optimistic. Where a station's recursive 90% coverage is
-below 60%, the dashboard marks its long-horizon projections as *directional
-only*.
+**Long range is directional trend only — levels are uncertain.** Months-ahead,
+the model re-uses its own predictions (recursive forecasting) so error
+accumulates. The shaded **90% band is widened (calibrated) to be honest**: it
+covers ~90% of real outcomes at that horizon, which means it can look wide —
+that wide band *is* the uncertainty, not a bug.
+
+The forecast card overlays observed values, the model's point forecast, and
+that honest 90% prediction interval. Where a station's calibrated multi-step
+coverage is weak, its card is marked **directional only** or **weak**.
 """
         )
     with st.expander("How the priority grid works", icon=":material/rule:"):
@@ -1406,16 +1490,19 @@ Trends use a robust Theil–Sen slope over the last 2 years.
     with st.expander("About the metrics", icon=":material/info:"):
         st.markdown(
             """
-- **One-step R²** — held-out prediction quality one sample ahead (each
-  prediction still sees the real readings right before it). This is the
-  "accuracy" number shown in the KPIs.
+- **One-step R²** — held-out prediction quality one sample ahead (short
+  range, ~1–14 days; each prediction still sees the real readings right
+  before it). This is the **reliable** "accuracy" number shown in the KPIs.
 - **Multi-step / recursive R² & coverage** — the honest number for long
-  forecasts: the model feeds its own predictions back, error accumulates,
-  so it is typically much lower.
+  forecasts: the model feeds its own predictions back, error accumulates.
+  The 90% interval is **calibrated** so it truly covers ~90% of real
+  multi-step outcomes (widened accordingly). A station is **reliable**,
+  **directional only**, or **weak** based on this held-out coverage and its
+  interval width relative to its observed range.
 - **RMSE / MAE** — root mean squared / mean absolute error on the held-out
   test set (m). RMSE ≈ typical mistake in metres.
 - **90% PI coverage** — share of true held-out points that fall inside the
-  model's 90% prediction interval (target ~90%).
+  model's 90% prediction interval (target ~90%, met after calibration).
 
 **The jump at the forecast start:** in the *Next 2–3 Months* panel the model
 must extend from the last stored reading. Its very first projected steps can
@@ -1456,6 +1543,7 @@ _diag_files = [
     _ARTIFACTS / "stepwise_comparison.csv",
     _ARTIFACTS / "xgboost_summary.csv",
     _ARTIFACTS / "decision_support.csv",
+    _ARTIFACTS / "multistep_diagnosis.csv",
 ]
 _present_files = [p for p in _diag_files if p.is_file()]
 _artifacts_version = (
@@ -1466,6 +1554,7 @@ presence = load_presence(_artifacts_version)
 stepwise = load_stepwise(_artifacts_version)
 xgb_summary = load_xgb_summary(_artifacts_version)
 decision = load_decision_support(_artifacts_version)
+diagnosis = load_diagnosis(_artifacts_version)
 
 stations = sorted(df["Station"].unique())
 GAP_THRESHOLD_HOURS = 9.0
@@ -1483,6 +1572,7 @@ dec = _station_decision(decision, selected_station)
 sw_row = _row_for(stepwise, selected_station)
 sum_row = _row_for(xgb_summary, selected_station)
 pres_row = _row_for(presence, selected_station)
+diag_row = _row_for(diagnosis, selected_station)
 
 # --- Layer 2: overview KPIs ----------------------------------------------
 st.subheader(f"Selected station overview — {selected_station}")
@@ -1496,13 +1586,13 @@ status_health_card(dec)
 time_series_card(selected_station, station_df, test_preds, dec)
 
 # --- Layer 5: forecast ---------------------------------------------------
-forecast_card(selected_station, station_df, meta, test_preds, dec, _artifacts_version)
+forecast_card(selected_station, station_df, meta, test_preds, dec, _artifacts_version, diag_row)
 
 # --- Layer 6: model / prediction information -----------------------------
 model_card(selected_station, meta)
 
 # --- Layer 7: diagnostics & validation (fleet) ---------------------------
-diagnostics_section(len(stations), xgb_summary, stepwise, presence)
+diagnostics_section(len(stations), xgb_summary, stepwise, presence, diagnosis)
 
 # --- Layer 8: observations -----------------------------------------------
 n_gaps = int(st.session_state.get("_n_gaps", 0))
