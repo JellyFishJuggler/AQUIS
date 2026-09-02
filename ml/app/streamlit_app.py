@@ -40,6 +40,7 @@ from ml.scripts.diagnose_fleet import (  # noqa: E402
 )
 from ml.services.interval_calibration import (  # noqa: E402
     calibrate_and_widen,
+    diagnose_station,
     estimate_calibration,
     widen,
 )
@@ -547,31 +548,81 @@ def _future_forecast(
         return None
 
 
-def _train_station_ui(slug: str, display: str) -> None:
-    """Train button UI for a station."""
+def _train_station_ui(display: str, slug: str, train_df: pd.DataFrame, test_df: pd.DataFrame, feature_cols: list[str]) -> None:
+    """Train button UI for a station — trains in-process, streams live debug progress,
+    and IMMEDIATELY runs per-station diagnosis so the user sees the station's quality
+    classification right after training (no separate fleet-diagnosis run required).
+    """
     artifact_dir = ARTIFACTS_DIR / slug
     if artifact_dir.exists():
         st.info(f"Models already exist for {display}. Delete artifact folder to retrain.")
         return
 
     if st.button(f"🚀 Train models for {display}", type="primary", width="stretch"):
-        with st.spinner(f"Training {display}... (this may take 30-60s)"):
-            start = time.time()
-            import subprocess
-            result = subprocess.run([
-                sys.executable, "-m", "ml.training.train_forecast",
-                "--station", slug,
-                "--parquet", str(_ML_ROOT / "data" / "processed" / "common.parquet"),
-                "--backend", str(_ML_ROOT.parent / "back-end" / "db" / "data.csv"),
-                "--artifacts", str(ARTIFACTS_DIR),
-            ], capture_output=True, text=True, cwd=_ML_ROOT.parent)
-            elapsed = time.time() - start
+        st.toast(f"⚙️ Training {display}...")
+        start = time.time()
 
-            if result.returncode == 0:
-                st.success(f"✅ Trained {display} in {elapsed:.1f}s")
-                st.rerun()
-            else:
-                st.error(f"Training failed: {result.stderr[:500]}")
+        with st.status(f"🔧 Training {display} — streaming debug live...", expanded=True) as status:
+            try:
+                st.write(f"⚡ Station: **{display}**")
+                st.write(f"⚡ Slug: `{slug}`")
+                st.write(f"📦 Train samples: **{len(train_df)}** | Test samples: **{len(test_df)}** | Features: **{len(feature_cols)}**")
+                status.update(label="Preparing feature matrix…")
+
+                with tempfile.TemporaryDirectory(prefix=f"aquis_retrain_{slug[:12]}_") as tmp:
+                    st.write("🧪 Training into a temporary directory (discarded after training — server stays lightweight).")
+                    status.update(label="Training XGBoost quantile models (direct 1-30d, recursive 31-90d, error-correction)…")
+
+                    t0 = time.time()
+                    models = train_models_for_station(train_df, feature_cols, slug, Path(tmp) / slug)
+                    train_s = time.time() - t0
+                    st.write(f"✅ Models trained in **{train_s:.1f}s**.")
+                    status.update(label="Calibrating prediction intervals…")
+
+                    t0 = time.time()
+                    calibration = estimate_calibration({}, models, train_df, feature_cols)
+                    st.write(f"✅ Calibrated {len(calibration.half_widths)} horizons in **{time.time() - t0:.1f}s**.")
+
+                    st.write("🔍 Running per-station DIAGNOSIS immediately…")
+                    status.update(label="Running diagnosis (reliable / directional / weak classification)…")
+                    t0 = time.time()
+                    diag = diagnose_station({}, models, train_df, feature_cols, test_df=test_df)
+                    diag_s = time.time() - t0
+                    st.write(f"✅ Diagnosis computed in **{diag_s:.1f}s**.")
+
+                elapsed = time.time() - start
+                status.update(label=f"✅ Trained + diagnosed {display} in {elapsed:.1f}s", state="complete")
+
+                st.success(f"✅ Trained **{display}** in {elapsed:.1f}s")
+
+                # Inline diagnosis result — trust badge + metrics straight away.
+                st.markdown("#### 📊 Immediate Diagnosis")
+                label = diag["label"]
+                if label == "reliable":
+                    st.success(f"🟢 **RELIABLE** — Calibrated coverage: {diag['coverage']:.1%}, 1-step R²: {diag['one_step_r2']:.3f}")
+                elif label == "directional":
+                    st.warning(f"🟡 **DIRECTIONAL** — Coverage: {diag['coverage']:.1%}, 1-step R²: {diag['one_step_r2']:.3f}")
+                else:
+                    st.error(f"🔴 **WEAK** — Coverage: {diag['coverage']:.1%}, 1-step R²: {diag['one_step_r2']:.3f}")
+                st.caption(f"**Reason:** {diag['reason']}")
+
+                c1, c2, c3, c4, c5 = st.columns(5)
+                c1.metric("Calibrated Coverage", f"{diag['coverage']:.1%}")
+                c2.metric("1-step R²", f"{diag['one_step_r2']:.3f}")
+                c3.metric("1-step RMSE", f"{diag['one_step_rmse']:.3f} m")
+                c4.metric("Multi-step RMSE", f"{diag['multi_step_rmse']:.3f} m")
+                c5.metric("GWL Span", f"{diag['gwl_span']:.2f} m")
+
+                with st.expander("Diagnosis details"):
+                    st.json(diag)
+
+                st.caption("ℹ️ Trained models were temporary (in-process) and NOT saved to `ml/artifacts`. To persist them, the app auto-loads pre-trained artifacts when present.")
+
+            except Exception as e:
+                status.update(label=f"❌ Training failed: {e}", state="error")
+                st.error(f"Training failed: {e}")
+
+        st.rerun()
 
 
 def _metric_cards(y_true: np.ndarray, y_pred: np.ndarray, y_low: np.ndarray, y_high: np.ndarray) -> dict:
@@ -995,7 +1046,7 @@ def main() -> None:
             st.json(meta.get("params", {}))
 
     with tab5:
-        _train_station_ui(selected_slug, selected_display)
+        _train_station_ui(selected_display, selected_slug, train_df, test_df, feature_cols)
 
         if st.button("🗑️ Delete artifacts (force retrain)", type="secondary"):
             import shutil
