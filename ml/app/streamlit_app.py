@@ -520,6 +520,30 @@ def _diagnosis_for_station(
     return diag
 
 
+@st.cache_resource(show_spinner=False)
+def _fleet_diag_for(display: str, slug: str) -> dict | None:
+    """On-demand trust classification for ONE fleet station on the Home tab.
+
+    Used as a fallback when the pre-generated fleet diagnosis CSV is absent (deployed
+    host — the CSV lives in the git-ignored ``ml/artifacts``). Loads the station's
+    cached pipeline + models and runs the SAME ``diagnose_station`` classification the
+    fleet CSV uses, keyed by slug so each station diagnoses once per process. Only
+    meaningful for stations that actually have model artifacts; unchanged stations (no
+    CSV, no models) return None and render as "—" on the Home page.
+    """
+    artifact_dir = ARTIFACTS_DIR / slug
+    if not (artifact_dir / "recursive" / "xgb_point.joblib").is_file():
+        return None
+    try:
+        pipe = _get_pipeline(slug)
+        models = load_models(artifact_dir)
+        return _diagnosis_for_station(
+            None, display, pipe["full"], pipe["test"], pipe["feature_cols"], models,
+        )
+    except Exception:
+        return None
+
+
 def _render_trust_badge(diag_row: dict | None) -> None:
     if diag_row is None:
         st.info("No diagnosis available — run fleet diagnosis")
@@ -1345,6 +1369,14 @@ def _render_home_tab(stations: list[dict], diag_df: pd.DataFrame | None) -> None
     if diag_df is not None and not diag_df.empty:
         for _, r in diag_df.iterrows():
             diag_map[str(r["station"])] = r.to_dict()
+    # Deployed hosts have no git-ignored fleet diagnosis CSV. Fill the trust label
+    # on-demand (cached per station) for stations that actually have model artifacts,
+    # so Reliable/Directional/Weak counts are not misleadingly zero.
+    for s in trained:
+        if s["display"] not in diag_map and s.get("has_model"):
+            d = _fleet_diag_for(s["display"], s["slug"])
+            if d:
+                diag_map[s["display"]] = d
 
     # ---- Row-level aggregation for the status table ---------------------------
     rows = []
