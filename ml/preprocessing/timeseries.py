@@ -300,13 +300,54 @@ def prepare_feature_matrix(df: pd.DataFrame, target_col: str = GWL_COL) -> tuple
     return X, y, feature_cols
 
 
+def _clean_table(table) -> pd.DataFrame:
+    """Apply the same cleaning/typed-parse as ``load_and_clean`` to an Arrow table."""
+    df = table.to_pandas()
+    df[TIME_COL] = pd.to_datetime(df[TIME_COL], errors="coerce")
+    df = df.dropna(subset=[TIME_COL, GWL_COL, STATION_COL])
+    df = df.drop_duplicates(subset=[STATION_COL, TIME_COL])
+    return df.sort_values([STATION_COL, TIME_COL]).reset_index(drop=True)
+
+
+def _read_for_pipeline(parquet_path: str | Path, station_slug_filter: str | None) -> pd.DataFrame:
+    """Read the master parquet, memory-scoped to one station when a slug filter is given.
+
+    The slug is not a stored column, so without a station filter we fall back to the
+    existing full ``load_and_clean``. With a filter we first read ONLY the Station/Agency
+    metadata (tiny) to resolve which physical Station rows the slug refers to, then read
+    just those rows via a pyarrow predicate pushdown — so the whole 5M-row frame is never
+    materialised for a single-station pipeline (which previously peaked ~2.7 GB RSS).
+    """
+    if not station_slug_filter:
+        return load_and_clean(parquet_path)
+
+    import pyarrow.parquet as pq
+    pf = pq.ParquetFile(parquet_path)
+
+    # Resolve slug -> physical Station value(s). The slug only depends on (Station, Agency).
+    meta = pf.read(columns=[STATION_COL, AGENCY_COL]).to_pandas() \
+        .drop_duplicates(subset=[STATION_COL, AGENCY_COL]) \
+        .dropna(subset=[STATION_COL, AGENCY_COL]) \
+        .reset_index(drop=True)
+    hits = []
+    for row in meta.itertuples(index=False):
+        if station_slug(str(row[0]), str(row[1]), 0) == station_slug_filter:
+            hits.append(str(row[0]))
+    if not hits:
+        return load_and_clean(parquet_path)  # let full_pipeline raise the friendly "no data" error
+
+    # Predicate pushdown: read only rows whose Station is in the hit set.
+    table = pq.read_table(parquet_path, columns=None, filters=[(STATION_COL, "in", hits)])
+    return _clean_table(table)
+
+
 def full_pipeline(
     parquet_path: str | Path,
     backend_csv: str | Path,
     station_slug_filter: str | None = None,
 ) -> dict[str, Any]:
     """Full preprocessing pipeline for a station (or all)."""
-    df = load_and_clean(parquet_path)
+    df = _read_for_pipeline(parquet_path, station_slug_filter)
 
     df["slug"] = station_slugs(df)
 

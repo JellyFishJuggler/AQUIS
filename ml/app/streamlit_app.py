@@ -23,6 +23,7 @@ from ml.models.xgboost_quantile import (  # noqa: E402
     station_dirs,
 )
 from ml.preprocessing.timeseries import (  # noqa: E402
+    AGENCY_COL,
     GWL_COL,
     TIME_COL,
     STATION_COL,
@@ -50,20 +51,35 @@ DIAG_FILES = [
 
 @st.cache_data(show_spinner=False)
 def load_station_list() -> list[dict]:
-    """Load all stations with display names and slugs that have a trained model."""
-    df = load_and_clean(_ML_ROOT.parent / "ml" / "data" / "processed" / "common.parquet")
+    """Load all stations (display, slug, district, agency, state) that have a trained model.
+
+    Memory-light: reads ONLY the metadata columns from the parquet (not the full
+    telemetry) and dedupes by station, so startup stays small even when common.parquet
+    holds ~1.3k stations / 5M rows. The tracked columns are projected via pyarrow so the
+    whole 5M-row frame is never materialised for discovery.
+    """
+    import pyarrow.parquet as pq
     trained = {d.name for d in station_dirs()}
+    if not trained:
+        return []
+
+    meta_cols = [STATION_COL, "Agency", "SlNo", "District", "State"]
+    t = pq.ParquetFile(_ML_ROOT.parent / "ml" / "data" / "processed" / "common.parquet") \
+           .read(columns=meta_cols) \
+           .to_pandas()
+    t = t.drop_duplicates(subset=[STATION_COL, AGENCY_COL]).dropna(subset=[STATION_COL, "Agency"])
+
     stations = []
-    for _, row in df.drop_duplicates(STATION_COL).iterrows():
-        slug = station_slug(row[STATION_COL], row["Agency"], row["SlNo"])
+    for row in t.itertuples(index=False):
+        slug = station_slug(str(row.Station), str(row.Agency), getattr(row, "SlNo", 0))
         if slug not in trained:
             continue
         stations.append({
-            "display": row[STATION_COL],
+            "display": str(row.Station),
             "slug": slug,
-            "district": row["District"],
-            "agency": row["Agency"],
-            "state": row["State"],
+            "district": str(row.District) if pd.notna(getattr(row, "District", None)) else "",
+            "agency": str(row.Agency),
+            "state": str(row.State) if pd.notna(getattr(row, "State", None)) else "",
         })
     return sorted(stations, key=lambda x: x["display"])
 
@@ -75,6 +91,21 @@ def load_diagnosis() -> pd.DataFrame | None:
         if path.exists():
             return pd.read_csv(path)
     return None
+
+
+@st.cache_data(show_spinner=False)
+def _get_pipeline(slug: str) -> dict:
+    """Cached full pipeline for a station slug.
+
+    Caching stops every widget interaction (filter/horizon/station change) from
+    re-running the heavy per-station pipeline — and re-spiking memory to ~1.3 GB —
+    on a memory-constrained host. The returned frames are reused across runs.
+    """
+    return full_pipeline(
+        _ML_ROOT.parent / "ml" / "data" / "processed" / "common.parquet",
+        _ML_ROOT.parent / "back-end" / "db" / "data.csv",
+        station_slug_filter=slug,
+    )
 
 
 def _row_for(diag_df: pd.DataFrame | None, station_display: str) -> dict | None:
@@ -523,11 +554,7 @@ def main() -> None:
     selected_display = st.selectbox("Select Station", display_names, index=default_idx)
     selected_slug = display_meta[selected_display]["slug"]
 
-    pipe = full_pipeline(
-        _ML_ROOT.parent / "ml" / "data" / "processed" / "common.parquet",
-        _ML_ROOT.parent / "back-end" / "db" / "data.csv",
-        station_slug_filter=selected_slug,
-    )
+    pipe = _get_pipeline(selected_slug)
     train_df = pipe["train"]
     test_df = pipe["test"]
     full_df = pipe["full"]
