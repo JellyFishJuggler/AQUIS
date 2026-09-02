@@ -3,6 +3,7 @@
 import sys
 import time
 import logging
+import tempfile
 from pathlib import Path
 
 import numpy as np
@@ -22,6 +23,7 @@ from ml.models.xgboost_quantile import (  # noqa: E402
     predict_direct,
     predict_recursive,
     station_dirs,
+    train_models_for_station,
 )
 from ml.preprocessing.timeseries import (  # noqa: E402
     AGENCY_COL,
@@ -59,34 +61,32 @@ STATION_TRAINED_COUNT: int = 0
 
 @st.cache_data(show_spinner=False)
 def load_station_list() -> list[dict]:
-    """Load all stations (display, slug, district, agency, state) that have a trained model.
+    """Load ALL stations (display, slug, district, agency, state) from the parquet.
 
     Memory-light: reads ONLY the metadata columns from the parquet (not the full
     telemetry) and dedupes by station, so startup stays small even when common.parquet
     holds ~1.3k stations / 5M rows. The tracked columns are projected via pyarrow so the
     whole 5M-row frame is never materialised for discovery.
 
-    On a broken deployment (missing artifact dirs, missing parquet, schema mismatch)
-    this raises a visible error via ``STATION_LOAD_ERROR`` instead of silently returning
-    an empty list — so the UI can tell the user the filters are unavailable and why.
+    Discovery is driven by the PARQUET, not by the artifacts directory. A station does
+    not need a pre-trained model to be selectable — ``has_model`` records whether one
+    already exists, and the app trains on demand for the selected station if not. This
+    lets a fresh deployed host (which has no git-ignored ``ml/artifacts``) still list
+    stations and build models lazily.
+
+    Only failures that truly block discovery (missing parquet, unreadable/schema-mismatched
+    file) set ``STATION_LOAD_ERROR`` so the UI can surface why — instead of silently
+    showing empty dropdowns.
     """
     global STATION_LOAD_ERROR, STATION_TRAINED_COUNT
     import pyarrow.parquet as pq
 
-    trained = {d.name for d in station_dirs()}
-    STATION_TRAINED_COUNT = len(trained)
-    if not trained:
-        STATION_LOAD_ERROR = (
-            "No trained model artifacts found under ml/artifacts/*/ "
-            "(each needs recursive/xgb_point.joblib + xgboost_metadata.json). "
-            "These are git-ignored, so they must be transferred to the deployment separately."
-        )
-        return []
-
+    STATION_LOAD_ERROR = None
     if not STATION_META_PATH.exists():
         STATION_LOAD_ERROR = (
             f"Station metadata file missing: {STATION_META_PATH}. "
-            "common.parquet is git-ignored and must be present on the deployment."
+            "common.parquet is git-ignored and must be present on the deployment "
+            "(100MB — too large to push to GitHub)."
         )
         return []
 
@@ -108,19 +108,21 @@ def load_station_list() -> list[dict]:
         )
         return []
 
+    trained = {d.name for d in station_dirs()}
+    STATION_TRAINED_COUNT = len(trained)
+
     t = t.drop_duplicates(subset=[STATION_COL, AGENCY_COL]).dropna(subset=[STATION_COL, "Agency"])
 
     stations = []
     for row in t.itertuples(index=False):
         slug = station_slug(str(row.Station), str(row.Agency), getattr(row, "SlNo", 0))
-        if slug not in trained:
-            continue
         stations.append({
             "display": str(row.Station),
             "slug": slug,
             "district": str(row.District) if pd.notna(getattr(row, "District", None)) else "",
             "agency": str(row.Agency),
             "state": str(row.State) if pd.notna(getattr(row, "State", None)) else "",
+            "has_model": slug in trained,
         })
     STATION_LOAD_ERROR = None
     return sorted(stations, key=lambda x: x["display"])
@@ -148,6 +150,39 @@ def _get_pipeline(slug: str) -> dict:
         _ML_ROOT.parent / "back-end" / "db" / "data.csv",
         station_slug_filter=slug,
     )
+
+
+@st.cache_resource(show_spinner=False)
+def _train_models_on_demand(
+    slug: str, display: str, train_df: pd.DataFrame, test_df: pd.DataFrame,
+    feature_cols: list[str],
+) -> tuple[dict, object, bool, float]:
+    """Train a station's models lazily, in-process, into a TEMPORARY directory.
+
+    Used when a deployed host has no pre-trained ``ml/artifacts`` (they are git-ignored
+    and far too large to push). The models are kept in Streamlit's process cache keyed by
+    slug (so a station trains once per server process, not on every rerun), written to a
+    throwaway ``tempfile`` dir that is removed on process exit — never accumulating the
+    4 GB of artifact blobs on the server.
+
+    Returns (models, calibration, trained_here, elapsed_sec). Trained models are NOT
+    persisted to ``ml/artifacts``; they only live for this process.
+    """
+    import shutil
+    from ml.services.interval_calibration import estimate_calibration as _estimate_cal
+
+    with tempfile.TemporaryDirectory(prefix=f"aquis_models_{slug[:12]}_") as tmp:
+        artifact_dir = Path(tmp) / slug
+        start = time.time()
+        models = train_models_for_station(train_df, feature_cols, slug, artifact_dir)
+        elapsed = time.time() - start
+        calibration = _estimate_cal({}, models, train_df, feature_cols)
+
+    logging.getLogger("aquis").info(
+        "trained on demand %s (%s): %d features, %.1fs into temp dir",
+        slug, display, len(feature_cols), elapsed,
+    )
+    return models, calibration, True, elapsed
 
 
 def _row_for(diag_df: pd.DataFrame | None, station_display: str) -> dict | None:
@@ -658,21 +693,19 @@ def main() -> None:
     stations = load_station_list()
     diag_df = load_diagnosis()
 
-    # Surfaces the real cause when filters/station discovery are empty on a
-    # broken deployment — instead of silently showing "No options to select".
+    # Surfaces the real cause when station discovery is empty — the only thing that
+    # can truly block it now is the parquet data file being missing/unreadable on the
+    # deployed host (missing model artifacts no longer block discovery; models build
+    # on demand). Instead of silently showing "No options to select".
     if not stations:
         st.error("⚠️ **Station metadata unavailable — filters are disabled.**")
         if STATION_LOAD_ERROR:
             st.error(STATION_LOAD_ERROR)
-        if STATION_TRAINED_COUNT == 0:
-            st.markdown(
-                "No trained station models were found on this host. The models live in "
-                "`ml/artifacts/*/` (git-ignored) and must be copied to the deployment "
-                "alongside `ml/data/processed/common.parquet`."
-            )
         st.markdown(
-            "Fix the deployment (transfer artifacts + parquet, or retrain), then refresh. "
-            "If the issue persists, check the station metadata file schema."
+            "The station list is built from `ml/data/processed/common.parquet` (git-ignored, "
+            "~100MB — too large to push to GitHub). Copy it to the deployed host next to the "
+            "repo, then refresh. Model files themselves are optional: the app trains the "
+            "selected station on demand if no pre-trained model is present."
         )
         st.stop()
 
@@ -740,15 +773,20 @@ def main() -> None:
                 st.write(f"  • {g['start']} → {g['end'] or 'end'} ({g['duration_hours']:.1f}h)")
 
     artifact_dir = ARTIFACTS_DIR / selected_slug
-    models_exist = artifact_dir.exists()
+    models_exist = (artifact_dir / "recursive" / "xgb_point.joblib").is_file()
 
     if not models_exist:
-        st.warning("⚠️ No trained models found for this station.")
-        _train_station_ui(selected_slug, selected_display)
-        st.stop()
-
-    models = load_models(artifact_dir)
-    calibration = estimate_calibration({}, models, train_df, feature_cols)
+        # Deployed host without the (git-ignored, 4GB) model artifacts: train the
+        # selected station on demand, in-process, into a temporary dir. The models
+        # live only in this process's cache — they do not persist to ml/artifacts.
+        with st.spinner(f"⏳ No pre-trained model for {selected_display} — training on demand... this is a one-time cost while the app runs."):
+            models, calibration, _trained_here, train_elapsed = _train_models_on_demand(
+                selected_slug, selected_display, train_df, test_df, feature_cols,
+            )
+        st.caption(f"⚡ **DEBUG — trained on demand in {train_elapsed:.1f}s** (temporary models for the running process; not saved to `ml/artifacts`, so the server stays lightweight).")
+    else:
+        models = load_models(artifact_dir)
+        calibration = estimate_calibration({}, models, train_df, feature_cols)
 
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "📈 Forecast — Test Period (1-step)",
