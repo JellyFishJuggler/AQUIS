@@ -27,11 +27,13 @@ from ml.models.xgboost_quantile import (  # noqa: E402
 )
 from ml.preprocessing.timeseries import (  # noqa: E402
     AGENCY_COL,
+    DISTRICT_COL,
     GWL_COL,
     TIME_COL,
     STATION_COL,
     full_pipeline,
     load_and_clean,
+    normalize_district,
     prepare_feature_matrix,
     station_slug,
 )
@@ -58,6 +60,222 @@ DIAG_FILES = [
 STATION_META_PATH = _ML_ROOT.parent / "ml" / "data" / "processed" / "common.parquet"
 STATION_LOAD_ERROR: str | None = None
 STATION_TRAINED_COUNT: int = 0
+
+# ---------------------------------------------------------------------------
+# CGWB stage-of-extraction classification thresholds (percent) and their
+# visual treatment. A station's classification comes from its DISTRICTS
+# year-2022 "Stage of Ground Water Extraction (%)" figure (already joined onto
+# every row of the pipeline as ``district_extraction_stage_pct``).
+# ---------------------------------------------------------------------------
+CGWB_STAGES = [
+    ("Safe", 0.0, 70.0, "green"),
+    ("Semi-Critical", 70.0, 90.0, "orange"),
+    ("Critical", 90.0, 100.0, "orange"),
+    ("Over-Exploited", 100.0, float("inf"), "red"),
+]
+STAGE_BAND_ORDER = {name: i for i, (name, *_rest) in enumerate(CGWB_STAGES)}
+
+
+def classify_stage(pct: float | None) -> dict:
+    """Map a stage-of-extraction percent to a CGWB class + material color.
+
+    Returns ``{"label", "color", "index"}`` where ``index`` is the position in
+    the 4-band ordering (Safe=0 .. Over-Exploited=3) so "next worse band" is
+    just ``index + 1``.
+    """
+    if pct is None or pd.isna(pct):
+        return {"label": "Unknown", "color": "gray", "index": -1}
+    for i, (label, lo, hi, color) in enumerate(CGWB_STAGES):
+        if lo <= pct < hi:
+            return {"label": label, "color": color, "index": i}
+    return {"label": "Over-Exploited", "color": "red", "index": 3}
+
+
+# Data-freshness thresholds (days since last observation).
+FRESH_DAYS = 7
+STALE_DAYS = 30
+
+
+def freshness_status(days_ago: int) -> dict:
+    """Freshness tag based on how many days since the last live reading."""
+    if days_ago <= FRESH_DAYS:
+        return {"label": f"Live — {days_ago}d ago", "color": "green"}
+    if days_ago <= STALE_DAYS:
+        return {"label": f"Stale — {days_ago}d ago", "color": "orange"}
+    return {"label": f"⚠ Extended gap — {days_ago}d ago", "color": "red"}
+
+
+def confidence_tag(gap_days: int, band_width: float | None, span: float) -> dict:
+    """Simple, documented confidence label from gap length + band width vs GWL span.
+
+    High: near-fresh telemetry AND a band no wider than ~40% of the observed
+    level range. Medium: one of the two degraded. Low: long gap or very wide
+    band. Deliberately no scoring model — these thresholds are the whole rule.
+    """
+    long_gap = gap_days > FRESH_DAYS
+    wide_band = band_width is not None and span > 0 and (band_width / span) > 0.40
+    if not long_gap and not wide_band:
+        return {"label": "High confidence", "color": "green"}
+    if long_gap and wide_band:
+        return {"label": "Low confidence — extended estimate", "color": "red"}
+    return {"label": "Medium confidence", "color": "orange"}
+
+
+def time_to_worse_band(
+    point: np.ndarray,
+    obs_levels: np.ndarray,
+    boundary_frac: float = 0.10,
+) -> tuple[int | None, float | None]:
+    """Days until the forward forecast first reaches the station's deep warning level.
+
+    The CGWB bands are defined on district *extraction %* (static), which a level
+    forecast cannot move — so we never claim the forecast crosses those bands.
+    Instead this reports the first forecast day whose projected level is deeper
+    than the station's OBSERVED dry extreme (the ``boundary_frac`` deepest
+    percentile of its own history). It is computed only over the days the model
+    actually produced and is labelled "vs historical dry extreme" to stay honest.
+
+    Returns ``(days, boundary_level)`` or ``(None, None)`` if never reached.
+    """
+    obs = np.asarray(obs_levels)
+    obs = obs[np.isfinite(obs)]
+    if len(obs) < 5:
+        return None, None
+    boundary = float(np.quantile(obs, min(boundary_frac, 0.5)))
+    for i, v in enumerate(np.asarray(point)):
+        if np.isfinite(v) and v <= boundary:
+            return i + 1, boundary
+    return None, boundary
+
+
+@st.cache_data(show_spinner=False)
+def load_district_classifications() -> dict[str, dict]:
+    """Per-district CGWB stage-of-extraction percent from back-end data.csv.
+
+    Keyed by normalized district name (uppercase). A helper so several stations
+    in the same district share one lookup (cached). Returns the current class
+    badge and band index.
+    """
+    import pandas as _pd
+
+    df = _pd.read_csv(_ML_ROOT.parent / "back-end" / "db" / "data.csv")
+    col = "Stage of Ground Water Extraction (%)_Total_Total"
+    up = df[df.get("STATE") == "UTTAR PRADESH"].copy()
+    if col not in up.columns:
+        return {}
+    up[col] = _pd.to_numeric(up[col], errors="coerce")
+    out: dict[str, dict] = {}
+    for _, r in up.iterrows():
+        nm = str(r.get("DISTRICT", "")).upper()
+        if not nm:
+            continue
+        cls = classify_stage(r[col])
+        out[nm] = {
+            "stage_pct": float(r[col]) if _pd.notna(r[col]) else None,
+            "label": cls["label"],
+            "color": cls["color"],
+            "index": cls["index"],
+        }
+    return out
+
+
+def _district_stage(pipe_full: pd.DataFrame) -> dict | None:
+    """Stage-of-extraction% for the selected station's district (from its own rows)."""
+    stage = pipe_full["district_extraction_stage_pct"].dropna().iloc[0] if "district_extraction_stage_pct" in pipe_full.columns and not pipe_full["district_extraction_stage_pct"].dropna().empty else None
+    if stage is None:
+        return None
+    return classify_stage(stage) | {"stage_pct": float(stage)}
+
+
+def _peer_vs_district(pipe_full: pd.DataFrame) -> dict | None:
+    """Compare the station's last observed level to its district's median level.
+
+    {level, district_avg, delta_m, pct_diff, n_district}. ``pct_diff`` is the
+    percent by which the station's level differs from the district median
+    (negative = shallower/deeper according to sign of ``delta_m``; normally a
+    more-negative GWL is deeper/better-exploited, so a positive delta_m means the
+    station sits shallower than its peers). Returns None if data is missing.
+    """
+    df = pipe_full.dropna(subset=[GWL_COL])
+    if df.empty:
+        return None
+    level = float(df[GWL_COL].iloc[-1])
+    district = str(df[DISTRICT_COL].iloc[0]) if DISTRICT_COL in df.columns else None
+
+    stats = district_level_stats().get(district) if district else None
+    if not stats or not np.isfinite(stats["median"]):
+        return {"level": level, "district": district, "delta_m": None,
+                "pct_diff": None, "n_district": 0}
+
+    district_avg = stats["median"]
+    delta_m = level - district_avg
+    pct_diff = (delta_m / abs(district_avg)) * 100 if abs(district_avg) > 1e-9 else None
+    return {
+        "level": level,
+        "district": district,
+        "district_avg": district_avg,
+        "delta_m": delta_m,
+        "pct_diff": pct_diff,
+        "n_district": stats["n_stations"],
+    }
+
+
+@st.cache_data(show_spinner=False)
+def district_level_stats() -> dict[str, dict]:
+    """Per-district median of each station's LAST observed level (from parquet).
+
+    Memory-light: projects only the columns needed (Station, District, Time,
+    Level) via pyarrow, keeps the last observation per station, then groups by
+    district. A cheap peer benchmark for the overview panel.
+    """
+    import pyarrow.parquet as pq
+
+    if not STATION_META_PATH.exists():
+        return {}
+    try:
+        t = pq.ParquetFile(STATION_META_PATH) \
+               .read(columns=[STATION_COL, DISTRICT_COL, TIME_COL, GWL_COL]) \
+               .to_pandas()
+    except Exception:
+        return {}
+    t = t.dropna(subset=[GWL_COL, DISTRICT_COL])
+    if t.empty:
+        return {}
+    t = t.sort_values(TIME_COL)
+    last = t.groupby(STATION_COL).tail(1)
+    out: dict[str, dict] = {}
+    for nm, grp in last.groupby(DISTRICT_COL):
+        v = grp[GWL_COL].dropna()
+        if v.empty:
+            continue
+        out[str(nm)] = {
+            "median": float(v.median()),
+            "mean": float(v.mean()),
+            "n_stations": int(len(v)),
+            "min": float(v.min()),
+            "max": float(v.max()),
+        }
+    return out
+
+
+@st.cache_data(show_spinner=False)
+def _district_watchlist() -> list[dict]:
+    """Districts already Critical / Over-Exploited by CGWB stage-of-extraction%.
+    
+    Lightweight fleet-level alert strip — reuses the cached per-district
+    classification (no reforecasting/re-training of the fleet). Sorted by
+    descending extraction % so the most stressed districts are listed first.
+    """
+    cls = load_district_classifications()
+    if not cls:
+        return []
+    flagged = [
+        {"district": nm, "label": d["label"], "color": d["color"], "pct": d["stage_pct"]}
+        for nm, d in cls.items()
+        if d.get("index", -1) >= 2  # Critical(2) or Over-Exploited(3)
+    ]
+    flagged.sort(key=lambda r: r["pct"] if r["pct"] is not None else -1, reverse=True)
+    return flagged
 
 
 @st.cache_data(show_spinner=False)
@@ -791,6 +1009,179 @@ def _render_analysis_tab(
     st.caption(f"Scored over **{m['n']}** forecast days inside the selected window — forecast made 'as of' {anchor_d} and checked against actuals.")
 
 
+# Overview panel horizon (matches Live Outlook default; the forecast is computed
+# once here and reused for the sparkline + time-to-threshold + confidence tag).
+OVERVIEW_HORIZON_DAYS = 30
+
+
+def _render_status_pill(label: str, color: str, icon: str = "●") -> str:
+    """A compact colored status pill (uses Material symbol marker)."""
+    return f":{color}[{icon} {label}]"
+
+
+def _render_overview_tab(
+    display: str,
+    slug: str,
+    full_df: pd.DataFrame,
+    models: dict,
+    calibration,
+    feature_cols: list[str],
+) -> None:
+    """Single-screen, information-dense station overview (trading-platform style).
+
+    Reuses the existing forecast path (``_future_forecast`` -> ``_forecast_from``)
+    and the existing plotting logic (``_plot_forecast``); every helper is a small,
+    documented function prefixed ``_`` or named in the helper block above. This is a
+    stopgap until the dedicated React Native UI — no rainfall / scenario reasoning.
+    """
+    df = full_df.dropna(subset=[TIME_COL, GWL_COL]).copy()
+    if df.empty:
+        st.error("No observed telemetry for this station.")
+        return
+
+    last = df.iloc[-1]
+    last_gwl = float(last[GWL_COL])
+    last_date = pd.Timestamp(last[TIME_COL])
+    today = pd.Timestamp.now().normalize()
+    days_ago = int((today - last_date.normalize()).days)
+
+    # 1) Status badge (CGWB class from district stage-of-extraction %).
+    stage = _district_stage(full_df)
+    cls = stage if stage else {"label": "Unknown", "color": "gray", "index": -1}
+
+    # 2) Current level + change over 7 and 30 days.
+    obs_sorted = df.sort_values(TIME_COL)
+    def _delta(days: int) -> float | None:
+        cutoff = last_date.normalize() - pd.Timedelta(days=days)
+        prior = obs_sorted[obs_sorted[TIME_COL] < cutoff]
+        if prior.empty:
+            return None
+        return float(last_gwl - prior[GWL_COL].iloc[-1])
+
+    d7 = _delta(7)
+    d30 = _delta(30)
+
+    # 3) Freshness pill.
+    fresh = freshness_status(days_ago)
+
+    # 4) Mini forecast sparkline — reuse existing forecast + plotting.
+    ff = _future_forecast(display, slug, feature_cols, full_df, models, calibration, OVERVIEW_HORIZON_DAYS)
+    gap_days = ff.get("gap_days", 0) if ff else 0
+
+    forward_band = None
+    if ff is not None and len(ff["point"]):
+        forward_band = float(ff["upper"][-1] - ff["lower"][-1])
+
+    # Historical range context (#8) + null-safe min/max.
+    gwl = df[GWL_COL].dropna()
+    gwl_min, gwl_max = float(gwl.min()), float(gwl.max())
+    gwl_span = gwl_max - gwl_min
+
+    # 5) Time-to-threshold (vs station's own deep historical extreme).
+    obs_levels = df[GWL_COL].values
+    tt_days, tt_boundary = time_to_worse_band(
+        ff["point"] if ff else np.array([]), obs_levels,
+    )
+
+    # 6) Confidence tag from gap length + calibrated band width vs observed span.
+    conf = confidence_tag(gap_days, forward_band, gwl_span)
+
+    # 7) Peer comparison vs district median level.
+    peer = _peer_vs_district(full_df)
+
+    # ------------------------------------------------------------------ render
+    st.markdown(f"### {display}")
+    c_top = st.columns([1, 1, 1, 1, 1])
+    with c_top[0]:
+        c = cls["color"]
+        st.markdown(f"**CGWB Status**")
+        st.markdown(_render_status_pill(cls["label"], c) +
+                    (f" — {stage['stage_pct']:.0f}%" if stage and stage.get("stage_pct") is not None else ""))
+        if stage and stage.get("stage_pct") is not None:
+            st.caption(f"District extraction {stage['stage_pct']:.0f}%")
+    with c_top[1]:
+        st.markdown("**Current Level**")
+        st.metric(last_date.strftime("%Y-%m-%d"),
+                  f"{last_gwl:.2f} m",
+                  delta=None)
+        st.caption(f"Last reading {days_ago}d ago")
+    with c_top[2]:
+        st.markdown("**Δ 7d / 30d**")
+        st.metric("7d", f"{d7:+.3f} m" if d7 is not None else "—",
+                  delta=f"{(d7 or 0)/7:.3f}/d" if d7 is not None else None)
+        st.caption(f"30d: {d30:+.3f} m" if d30 is not None else "30d: —")
+    with c_top[3]:
+        st.markdown("**Freshness**")
+        st.markdown(_render_status_pill(fresh["label"], fresh["color"]))
+    with c_top[4]:
+        st.markdown("**Confidence**")
+        st.markdown(_render_status_pill(conf["label"], conf["color"]))
+
+    # Row 2: mini sparkline + key countdown metrics.
+    if ff is not None:
+        fig = _plot_forecast(
+            f"{display} — next {OVERVIEW_HORIZON_DAYS} days (overview)",
+            df[TIME_COL].values,
+            df[GWL_COL].values,
+            ff["future_dates"].values,
+            ff["point"],
+            ff["lower"],
+            ff["upper"],
+        )
+    else:
+        fig = _plot_forecast(
+            f"{display} — observed only",
+            df[TIME_COL].values,
+            df[GWL_COL].values,
+            np.array([]), np.array([]), np.array([]), np.array([]),
+        )
+
+    col_a, col_b = st.columns([2, 1])
+    with col_a:
+        st.plotly_chart(fig, width="stretch")
+    with col_b:
+        st.markdown("#### Key Signals")
+        # Time to threshold
+        if tt_days is not None:
+            st.metric("Est. time to deep extreme", f"{tt_days}d",
+                      help=f"First forecast day the projected level crosses the station's deepest historical value ({tt_boundary:.2f} m). Directional only — CGWB bands are extraction%, which levels cannot move.")
+            st.caption(f"Boundary: {tt_boundary:.2f} m (10th-%ile of observed history)")
+        else:
+            st.metric("Est. time to deep extreme", "None in window",
+                      help="No forecast day reaches the station's deepest historical %ile within the model's horizon.")
+
+        # Peer comparison
+        if peer:
+            if peer.get("delta_m") is not None and peer.get("district_avg") is not None:
+                st.metric("vs district median",
+                          f"{peer['level']:.2f} m",
+                          delta=f"{peer['delta_m']:+.3f} vs {peer['district_avg']:.2f}")
+                st.caption(f"{peer['district']}: median of {peer['n_district']} stations")
+            else:
+                st.metric("vs district", f"n/a ({peer['district'] or 'unknown'})")
+
+        # Historical range
+        st.markdown("#### Historical Range")
+        st.metric("Current", f"{last_gwl:.2f} m")
+        st.markdown(f"Range: **{gwl_min:.2f}** to **{gwl_max:.2f}** m "
+                    f"(span {gwl_span:.2f} m; station is "
+                    f"{((last_gwl-gwl_min)/gwl_span*100) if gwl_span>0 else 0:.0f}% of its historical depth)")
+
+    # Fleet-level alert strip (reuses district stage data, no reforecasting).
+    st.markdown("---")
+    st.markdown("#### 🚨 District Watchlist (existing classification, not a new model)")
+    watch = _district_watchlist()
+    if watch:
+        top = watch[:6]
+        st.markdown(" | ".join(
+            f":{row['color']}[**{row['district']}** ({row['label']}, {row['pct']:.0f}%)]"
+            for row in top
+        ))
+        st.caption("Stations in these districts are under aquifer stress per CGWB stage-of-extraction \u2265 90% (Critical / Over-Exploited).")
+    else:
+        st.caption("No district currently flagged Critical/Over-Exploited.")
+
+
 def main() -> None:
     st.title("🌊 AQUIS Groundwater Level Forecasting")
 
@@ -892,13 +1283,17 @@ def main() -> None:
         models = load_models(artifact_dir)
         calibration = estimate_calibration({}, models, train_df, feature_cols)
 
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    tab1, tab_overview, tab2, tab3, tab4, tab5 = st.tabs([
         "📈 Forecast — Test Period (1-step)",
+        "🏠 Station Overview",
         "🔮 Live Outlook — Next N Days",
         "🔬 Historical Backtest (NOT live)",
         "📋 Model Info",
         "⚙️ Retrain",
     ])
+
+    with tab_overview:
+        _render_overview_tab(selected_display, selected_slug, full_df, models, calibration, feature_cols)
 
     with tab1:
         st.markdown("### One-step backtest on held-out test set (reliable short-range accuracy)")
