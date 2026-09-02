@@ -321,7 +321,7 @@ def diagnose_station(
 
     Evaluates on the held-out test split (``test_df``) when provided so the
     reported metrics agree with the dashboard's Test Period panel. Falls back
-    to an in-house 80/20 split of ``station_df`` when ``test_df`` is None.
+    to an in-house 90/10 split of ``station_df`` when ``test_df`` is None.
     """
     calibration = estimate_calibration(cfg, models, station_df, feature_cols, alpha)
 
@@ -334,7 +334,7 @@ def diagnose_station(
         X_test, y_test, _ = prepare_feature_matrix(test_df[feature_cols + [GWL_COL]])
     else:
         X_all, y_all, _ = prepare_feature_matrix(station_df[feature_cols + [GWL_COL]])
-        split = int(len(X_all) * 0.8)
+        split = int(len(X_all) * 0.9)
         X_test = X_all[split:]
         y_test = y_all[split:]
 

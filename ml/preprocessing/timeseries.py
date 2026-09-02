@@ -269,8 +269,8 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def time_split(df: pd.DataFrame, train_frac: float = 0.8) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Chronological 80/20 split per station. No shuffle."""
+def time_split(df: pd.DataFrame, train_frac: float = 0.9) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Chronological 90/10 split per station. No shuffle."""
     train_parts = []
     test_parts = []
     for station, grp in df.groupby(STATION_COL):

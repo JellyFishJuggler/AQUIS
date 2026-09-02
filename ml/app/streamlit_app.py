@@ -490,6 +490,36 @@ def _row_for(diag_df: pd.DataFrame | None, station_display: str) -> dict | None:
     return row.iloc[0].to_dict() if not row.empty else None
 
 
+def _diagnosis_for_station(
+    diag_df: pd.DataFrame | None,
+    display: str,
+    full_df: pd.DataFrame,
+    test_df: pd.DataFrame,
+    feature_cols: list[str],
+    models: dict,
+) -> dict | None:
+    """Trust classification (reliable / directional / weak) for ONE station.
+
+    Prefers the pre-generated fleet diagnosis CSV (``_row_for``). On a deployed host
+    that CSV lives inside the git-ignored ``ml/artifacts`` and is absent, so the
+    badge would previously read "No diagnosis available — run fleet diagnosis".
+    Instead, when no CSV row exists we recompute the SAME classification on-demand
+    via ``diagnose_station`` (identical logic / thresholds to the fleet run) using
+    the station's freshly loaded/trained models and its real train/test split. This
+    makes the trust badge + Home trust column work without the CSV.
+    """
+    row = _row_for(diag_df, display)
+    if row is not None:
+        return row
+    try:
+        diag = diagnose_station({}, models, full_df, feature_cols, test_df=test_df)
+    except Exception:
+        return None
+    if diag is None or not diag.get("label"):
+        return None
+    return diag
+
+
 def _render_trust_badge(diag_row: dict | None) -> None:
     if diag_row is None:
         st.info("No diagnosis available — run fleet diagnosis")
@@ -1570,14 +1600,10 @@ def main() -> None:
     gaps = pipe["gaps"].get(selected_display, [])
     sentinel_excluded = pipe["sentinel_excluded"]
 
-    diag_row = _row_for(diag_df, selected_display)
-
     col1, col2 = st.columns([3, 1])
     with col1:
         st.subheader(selected_display)
         st.caption(f"State: {slug_meta[selected_slug]['state']} | District: {slug_meta[selected_slug]['district']} | Agency: {slug_meta[selected_slug]['agency']} | Slug: {selected_slug}")
-    with col2:
-        _render_trust_badge(diag_row)
 
     with st.expander("📊 Preprocessing Summary", expanded=False):
         c1, c2, c3, c4 = st.columns(4)
@@ -1605,6 +1631,15 @@ def main() -> None:
     else:
         models = load_models(artifact_dir)
         calibration = estimate_calibration({}, models, train_df, feature_cols)
+
+    # Trust classification: prefer the pre-generated fleet diagnosis CSV, but on a
+    # deployed host (no git-ignored ml/artifacts CSV) recompute on-demand so we never
+    # show the uninformative "No diagnosis available" badge.
+    diag_row = _diagnosis_for_station(
+        diag_df, selected_display, full_df, test_df, feature_cols, models,
+    )
+    with col2:
+        _render_trust_badge(diag_row)
 
     tab_home, tab_station, tab_analysis = st.tabs([
         "🏠 Home",
