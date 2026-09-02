@@ -396,6 +396,20 @@ def _forecast_from(
 
     horizon = int(future_days)
 
+    # Each coarse direct bucket is trained on a SINGLE target lead-day. Its model
+    # output is only genuinely valid at that bucket's anchor day; reusing it for
+    # every day in the bucket (as the old code did) produces an artificial flat
+    # plateau (e.g. days 8-14 all identical) that hides the model's real multi-day
+    # trend (the later buckets often DO capture the trend, but it was masked by the
+    # knee of the staircase). We therefore treat each bucket model as an anchor
+    # point at its lead-day and linearly interpolate the trajectory between anchors,
+    # so the forecast follows the model's true gradient instead of step-bouncing.
+    # Days 1-7 are true daily models (anchor == day), used verbatim.
+    BUCKET_ANCHOR_DAY = {
+        "1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7,
+        "8_14": 8, "15_21": 15, "22_30": 22,
+    }
+
     def _horizon_key(day: int) -> str:
         if day <= 7:
             return str(day)
@@ -406,18 +420,57 @@ def _forecast_from(
         return "22_30"
 
     def _chain(n_steps: int, damping_steps: int) -> dict:
-        """One continuous model-driven chain of ``n_steps`` from the anchor."""
-        # Days 1..30 use the direct models, keyed by lead-day bucket.
-        direct = {"point": [], "lower": [], "upper": []}
+        """One continuous model-driven chain of ``n_steps`` from the anchor.
+
+        Days 1..min(30,) come from the DIRECT models; days 31.. come from the
+        recursive + error-correction path (spliced over direct). The direct segment
+        is interpolated between each bucket's anchor lead-day so it renders as a
+        smooth trajectory rather than flat plateaus. We never extrapolate beyond the
+        bucket model's anchor day inside the direct domain (days 23-30 hold the
+        ``22_30`` anchor value), and days 31+ are genuinely recursive.
+        """
         first30 = min(n_steps, 30)
-        for i in range(first30):
-            day = i + 1
-            key = _horizon_key(day)
-            if key in models["direct"]:
-                pr = predict_direct(models, last_feats.reshape(1, -1), day)
-                direct["point"].append(pr["point"])
-                direct["lower"].append(pr["q05"])
-                direct["upper"].append(pr["q95"])
+
+        # Collect the bucket anchor points available. Anchors BEYOND the requested
+        # horizon are still included: a day-14 forecast is genuinely partway between
+        # the day-8 and day-15 anchor forecasts, so interpolating toward the next
+        # anchor exposes the model's real trend instead of clamping to the last
+        # in-window anchor (which was the old flat-plateau bug).
+        anchor_days = []
+        anchor_pt = []
+        anchor_lo = []
+        anchor_hi = []
+        for key, aday in BUCKET_ANCHOR_DAY.items():
+            if key not in models["direct"]:
+                continue
+            pr = predict_direct(models, last_feats.reshape(1, -1), aday)
+            anchor_days.append(aday)
+            anchor_pt.append(pr["point"])
+            anchor_lo.append(pr["q05"])
+            anchor_hi.append(pr["q95"])
+
+        # Sort anchors ascending so np.interp works.
+        order = np.argsort(anchor_days)
+        xp = np.asarray(anchor_days)[order]
+        yp = {"point": np.asarray(anchor_pt)[order],
+              "lower": np.asarray(anchor_lo)[order],
+              "upper": np.asarray(anchor_hi)[order]}
+
+        if len(xp) == 0:
+            # No direct models at all (e.g. trained with --no-direct): fall back to
+            # the recursive anchor for the whole direct domain so we never crash.
+            direct = {
+                "point": np.full(first30, last_gwl),
+                "lower": np.full(first30, last_gwl),
+                "upper": np.full(first30, last_gwl),
+            }
+        else:
+            x_new = np.arange(1, first30 + 1)
+            direct = {
+                "point": np.interp(x_new, xp, yp["point"]),
+                "lower": np.interp(x_new, xp, yp["lower"]),
+                "upper": np.interp(x_new, xp, yp["upper"]),
+            }
 
         # Days 31..H use the recursive + error-correction path (spliced over direct).
         rec = {"point": [], "lower": [], "upper": []}
@@ -431,9 +484,9 @@ def _forecast_from(
             rec["upper"] = rec_full["q95"][30:]
 
         return {
-            "point": np.array(direct["point"] + rec["point"]),
-            "lower": np.array(direct["lower"] + rec["lower"]),
-            "upper": np.array(direct["upper"] + rec["upper"]),
+            "point": np.concatenate([direct["point"], rec["point"]]),
+            "lower": np.concatenate([direct["lower"], rec["lower"]]),
+            "upper": np.concatenate([direct["upper"], rec["upper"]]),
             "direct_count": len(direct["point"]),
         }
 
