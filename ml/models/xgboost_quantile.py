@@ -39,6 +39,22 @@ def station_dirs(artifacts_root: Path | None = None) -> list[Path]:
         if p.is_dir() and (p / "recursive" / POINT_MODEL_FILE).is_file() and (p / METADATA_FILE).is_file()
     )
 
+
+def get_all_station_slugs(parquet_path: Path | str) -> list[str]:
+    """Get all station slugs from the parquet file."""
+    from ml.preprocessing.timeseries import (
+        AGENCY_COL,
+        SLNO_COL,
+        STATION_COL,
+        load_and_clean,
+        station_slug,
+    )
+    df = load_and_clean(parquet_path)
+    slugs = df.drop_duplicates(STATION_COL).apply(
+        lambda r: station_slug(r[STATION_COL], r[AGENCY_COL], r[SLNO_COL]), axis=1
+    ).tolist()
+    return sorted(slugs)
+
 DEFAULT_PARAMS = {
     "n_estimators": 400,
     "max_depth": 6,
@@ -48,7 +64,7 @@ DEFAULT_PARAMS = {
     "min_child_weight": 3,
     "reg_lambda": 1.5,
     "random_state": 42,
-    "n_jobs": -1,
+    "n_jobs": 4,
     "tree_method": "hist",
 }
 
@@ -75,17 +91,40 @@ def train_models_for_station(
     use_direct: bool = True,
     use_recursive: bool = True,
     use_error_correction: bool = True,
+    delta_mode: bool = True,
 ) -> dict[str, Any]:
-    """Train all models for a station: direct (1-30d), recursive (31-90d), error-correction."""
+    """Train all models for a station: direct (1-30d), recursive (31-90d), error-correction.
+
+    When ``delta_mode`` is enabled the models predict the groundwater-level *change*
+    rather than the absolute level:
+      recursive  target d_t = y_t - y_{t-1}   (reconstructed y_t = y_{t-1} + d_t)
+      direct     target d_h = y_{t+h} - y_t
+    The background level y_{t-1}/y_t is taken from the ``lag_1`` feature when present,
+    otherwise from the previous observation. This stabilises R2 on near-flat wells and
+    bounds recursive error accumulation on deep horizons.
+    """
     artifact_dir.mkdir(parents=True, exist_ok=True)
 
     train_data = train_df[feature_cols + [GWL_COL]].copy()
     valid_mask = train_data[feature_cols].notna().all(axis=1) & train_data[GWL_COL].notna()
     train_data = train_data[valid_mask]
-    
+
     X_train, y_train, _ = prepare_feature_matrix(train_data)
 
-    models = {"direct": {}, "recursive": {}, "error_correction": None}
+    models = {"direct": {}, "recursive": {}, "error_correction": None,
+              "delta_mode": bool(delta_mode), "lag1_index": None}
+
+    lag1_idx = _lag1_index(feature_cols)
+    models["lag1_index"] = lag1_idx
+
+    if delta_mode:
+        # Background level for each target row: lag_1 if available else previous non-nan y.
+        if lag1_idx is not None:
+            base_level = X_train[:, lag1_idx]
+        else:
+            base_level = np.concatenate([[y_train[0]], y_train[:-1]])
+            models["lag1_index"] = None
+        delta_train = y_train - base_level
 
     if use_direct:
         for h in DIRECT_HORIZONS:
@@ -105,7 +144,11 @@ def train_models_for_station(
                 continue
 
             X_h = X_train[valid]
-            y_h = y_shifted[valid]
+            if delta_mode:
+                y_base = base_level[valid]
+                y_h = y_shifted[valid] - y_base
+            else:
+                y_h = y_shifted[valid]
 
             point_model = _make_point_model()
             point_model.fit(X_h, y_h)
@@ -117,17 +160,18 @@ def train_models_for_station(
                 models["direct"][h_str][f"q{int(alpha*100):02d}"] = q_model
 
     if use_recursive:
+        train_target = delta_train if delta_mode else y_train
         point_model = _make_point_model()
-        point_model.fit(X_train, y_train)
+        point_model.fit(X_train, train_target)
         models["recursive"]["point"] = point_model
 
         for alpha in [0.05, 0.50, 0.95]:
             q_model = _make_quantile_model(alpha)
-            q_model.fit(X_train, y_train)
+            q_model.fit(X_train, train_target)
             models["recursive"][f"q{int(alpha*100):02d}"] = q_model
 
     if use_error_correction and use_recursive:
-        models["error_correction"] = train_error_correction_head(train_df, feature_cols, models["recursive"]["point"])
+        models["error_correction"] = train_error_correction_head(train_df, feature_cols, models)
 
     save_models(models, artifact_dir, station_slug)
     return models
@@ -136,15 +180,27 @@ def train_models_for_station(
 def train_error_correction_head(
     train_df: pd.DataFrame,
     feature_cols: list[str],
-    recursive_point_model: XGBRegressor,
+    models: dict,
     max_horizon: int = MAX_HORIZON,
 ) -> Any:
-    """Train a lightweight model to correct recursive drift residuals vs horizon depth."""
-    from sklearn.ensemble import RandomForestRegressor
+    """Train a lightweight model to correct recursive drift residuals vs horizon depth.
+
+    ``models`` must contain the trained recursive point model plus ``delta_mode`` and
+    ``lag1_index`` so that residuals are computed on reconstructed absolute levels.
+    """
     from sklearn.linear_model import Ridge
+
+    recursive_point_model = models["recursive"]["point"]
+    delta_mode = bool(models.get("delta_mode"))
+    lag1_idx = models.get("lag1_index")
 
     station_residuals = []
     station_features = []
+
+    def _to_level(feats: np.ndarray, raw: float) -> float:
+        if delta_mode and lag1_idx is not None:
+            return float(feats[lag1_idx]) + float(raw)
+        return float(raw)
 
     for station, grp in train_df.groupby(STATION_COL):
         grp = grp.sort_values(TIME_COL)
@@ -162,9 +218,10 @@ def train_error_correction_head(
             pred_future = []
             current_feats = last_known.copy()
             for step in range(max_horizon):
-                pred = recursive_point_model.predict(current_feats.reshape(1, -1))[0]
-                pred_future.append(pred)
-                current_feats = update_features_recursive(current_feats, pred, feature_cols)
+                raw_pred = recursive_point_model.predict(current_feats.reshape(1, -1))[0]
+                level_pred = _to_level(current_feats, raw_pred)
+                pred_future.append(level_pred)
+                current_feats = update_features_recursive(current_feats, level_pred, feature_cols)
 
             pred_future = np.array(pred_future)
             residuals = true_future - pred_future
@@ -217,7 +274,12 @@ def update_features_recursive(features: np.ndarray, new_pred: float, feature_col
 
 
 def predict_direct(models: dict, X: np.ndarray, horizon: int | str) -> dict[str, float]:
-    """Predict using direct model for a specific horizon."""
+    """Predict using direct model for a specific horizon.
+
+    When the model was trained in delta mode the raw output is a level *change*,
+    which is added back to the background level (``lag_1``) before returning so the
+    result is always an absolute groundwater level.
+    """
     h_str = str(horizon)
     if h_str not in models["direct"]:
         if isinstance(horizon, int) and horizon <= 7:
@@ -232,11 +294,19 @@ def predict_direct(models: dict, X: np.ndarray, horizon: int | str) -> dict[str,
             raise ValueError(f"No direct model for horizon {horizon}")
 
     m = models["direct"][h_str]
+
+    def _recon(raw: np.ndarray, base_level: np.ndarray) -> np.ndarray:
+        if models.get("delta_mode") and models.get("lag1_index") is not None:
+            return base_level + np.asarray(raw)
+        return np.asarray(raw)
+
+    base_level = X[:, models["lag1_index"]] if (models.get("delta_mode") and models.get("lag1_index") is not None) else None
+    pt = _recon(m["point"].predict(X), base_level)[0]
     return {
-        "point": float(m["point"].predict(X)[0]),
-        "q05": float(m["q05"].predict(X)[0]),
-        "q50": float(m["q50"].predict(X)[0]),
-        "q95": float(m["q95"].predict(X)[0]),
+        "point": float(pt),
+        "q05": float(_recon(m["q05"].predict(X), base_level)[0]),
+        "q50": float(_recon(m["q50"].predict(X), base_level)[0]),
+        "q95": float(_recon(m["q95"].predict(X), base_level)[0]),
     }
 
 
@@ -246,8 +316,17 @@ def predict_recursive(
     n_steps: int,
     feature_cols: list[str],
     error_correction_model: Any = None,
+    damping_steps: int = 30,
 ) -> dict[str, list[float]]:
-    """Recursive multi-step forecast with optional error correction."""
+    """Recursive multi-step forecast with optional error correction + Damped Anchor Persistence.
+
+    Uses Damped Anchor Persistence (Rule 5.2): the recursive output is blended toward
+    the local persistence anchor (the starting level) with a causal, depth-dependent
+    weight ``w = min(1, (d-1)/damping_steps)``. This bounds deep-horizon error
+    accumulation while preserving the recursive architecture. At ``d=1`` the weight is 0
+    (pure model) so there is no boundary discontinuity; long horizons smoothly revert
+    toward the anchor.
+    """
     point_model = models["recursive"]["point"]
     q05_model = models["recursive"]["q05"]
     q50_model = models["recursive"]["q50"]
@@ -259,30 +338,66 @@ def predict_recursive(
     q95s = []
 
     current_feats = last_features.copy()
+    delta_mode = bool(models.get("delta_mode"))
+    lag1_idx = models.get("lag1_index")
+
+    # Persistence anchor = groundwater level at the start of the recursion.
+    if lag1_idx is not None:
+        anchor = float(current_feats[lag1_idx])
+    else:
+        anchor = float(point_model.predict(current_feats.reshape(1, -1))[0])
+
+    def _to_level(raw: float) -> float:
+        if delta_mode and lag1_idx is not None:
+            return float(current_feats[lag1_idx]) + float(raw)
+        return float(raw)
+
+    def _damped(model_out: float, d: int) -> float:
+        w = min(1.0, (d - 1) / max(1, damping_steps))
+        return (1.0 - w) * model_out + w * anchor
 
     for step in range(n_steps):
-        pt = point_model.predict(current_feats.reshape(1, -1))[0]
-        q05 = q05_model.predict(current_feats.reshape(1, -1))[0]
-        q50 = q50_model.predict(current_feats.reshape(1, -1))[0]
-        q95 = q95_model.predict(current_feats.reshape(1, -1))[0]
+        d = step + 1
+        pt_raw = float(point_model.predict(current_feats.reshape(1, -1))[0])
+        q05_raw = float(q05_model.predict(current_feats.reshape(1, -1))[0])
+        q50_raw = float(q50_model.predict(current_feats.reshape(1, -1))[0])
+        q95_raw = float(q95_model.predict(current_feats.reshape(1, -1))[0])
+
+        pt = _to_level(pt_raw)
+        q05 = _to_level(q05_raw)
+        q50 = _to_level(q50_raw)
+        q95 = _to_level(q95_raw)
 
         if error_correction_model is not None:
             corr_feats = np.concatenate([
-                [(step + 1) / MAX_HORIZON],
+                [d / MAX_HORIZON],
                 [pt],
                 current_feats[-10:],
             ])
-            correction = error_correction_model.predict(corr_feats.reshape(1, -1))[0]
-            pt = pt + correction
+            correction = float(error_correction_model.predict(corr_feats.reshape(1, -1))[0])
+            pt += correction
 
-        points.append(float(pt))
-        q05s.append(float(q05))
-        q50s.append(float(q50))
-        q95s.append(float(q95))
+        pt = _damped(pt, d)
+        q05 = _damped(q05, d)
+        q50 = _damped(q50, d)
+        q95 = _damped(q95, d)
+
+        points.append(pt)
+        q05s.append(q05)
+        q50s.append(q50)
+        q95s.append(q95)
 
         current_feats = update_features_recursive(current_feats, pt, feature_cols)
 
     return {"point": points, "q05": q05s, "q50": q50s, "q95": q95s}
+
+
+def _lag1_index(feature_cols: list[str]) -> int | None:
+    """Index of the `lag_1` feature (previous observation level) if present."""
+    for i, c in enumerate(feature_cols):
+        if c == "lag_1":
+            return i
+    return None
 
 
 def save_models(models: dict, artifact_dir: Path, station_slug: str) -> None:
@@ -306,7 +421,12 @@ def save_models(models: dict, artifact_dir: Path, station_slug: str) -> None:
 
     feature_cols = [c for c in models.get("feature_cols", []) if not c.startswith("lag_") and not c.startswith("roll_") and c not in ["trend_28", "trend_60"]]
     with open(artifact_dir / FEATURES_FILE, "w") as f:
-        json.dump({"feature_cols": feature_cols, "direct_horizons": list(models["direct"].keys())}, f)
+        json.dump({
+            "feature_cols": feature_cols,
+            "direct_horizons": list(models["direct"].keys()),
+            "delta_mode": bool(models.get("delta_mode", False)),
+            "lag1_index": models.get("lag1_index"),
+        }, f)
 
 
 def load_models(artifact_dir: Path) -> dict[str, Any]:
@@ -335,6 +455,17 @@ def load_models(artifact_dir: Path) -> dict[str, Any]:
     ec_file = recursive_dir / "error_correction_head.joblib"
     if ec_file.exists():
         models["error_correction"] = joblib.load(ec_file)
+
+    meta = {"delta_mode": False, "lag1_index": None}
+    features_file = artifact_dir / FEATURES_FILE
+    if features_file.exists():
+        try:
+            with open(features_file) as f:
+                meta = json.load(f)
+        except Exception:
+            meta = {"delta_mode": False, "lag1_index": None}
+    models["delta_mode"] = bool(meta.get("delta_mode", False))
+    models["lag1_index"] = meta.get("lag1_index")
 
     return models
 
@@ -380,11 +511,24 @@ def get_test_predictions(station_slug: str, parquet_path: Path | str = None) -> 
     q50_model = models["recursive"]["q50"]
     q95_model = models["recursive"]["q95"]
 
+    delta_mode = bool(models.get("delta_mode"))
+    lag1_idx = models.get("lag1_index")
+
+    def _recon(raw: np.ndarray) -> np.ndarray:
+        if delta_mode and lag1_idx is not None and len(X_test) > 0:
+            return X_test[:, lag1_idx] + raw
+        return raw
+
+    point = _recon(point_model.predict(X_test))
+    lower = _recon(q05_model.predict(X_test))
+    median = _recon(q50_model.predict(X_test))
+    upper = _recon(q95_model.predict(X_test))
+
     return {
         "time": test_df.loc[~test_df[feature_cols].isna().any(axis=1), TIME_COL].values,
         "actual": y_test,
-        "point": point_model.predict(X_test),
-        "lower": q05_model.predict(X_test),
-        "median": q50_model.predict(X_test),
-        "upper": q95_model.predict(X_test),
+        "point": point,
+        "lower": lower,
+        "median": median,
+        "upper": upper,
     }

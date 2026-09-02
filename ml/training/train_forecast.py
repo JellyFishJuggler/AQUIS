@@ -83,7 +83,7 @@ def main() -> None:
 
     cfg = {}
     calibration = estimate_calibration(cfg, models, train_df, feature_cols)
-    diag = diagnose_station(cfg, models, train_df, feature_cols)
+    diag = diagnose_station(cfg, models, train_df, feature_cols, test_df=pipe["test"])
 
     metadata = {
         "station": train_df["Station"].iloc[0],

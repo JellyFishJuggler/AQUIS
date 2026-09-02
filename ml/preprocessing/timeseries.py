@@ -53,6 +53,23 @@ def station_slug(station_name: str, agency: str, sl_no: int) -> str:
     return f"{slug}_{hash_suffix}"
 
 
+def station_slugs(df: pd.DataFrame) -> pd.Series:
+    """Vectorized station_slug for a frame (build per unique station, then map by label).
+
+    station_slug ignores SlNo, so it only depends on (Station, Agency); mapping the
+    slug for every row from the unique pairs avoids a slow per-row Python apply.
+    """
+    import hashlib
+    pairs = df[[STATION_COL, AGENCY_COL]].drop_duplicates()
+    rows = []
+    for _, r in pairs.iterrows():
+        base = f"{r[STATION_COL]}_{r[AGENCY_COL]}"
+        slug = base[:180]
+        rows.append((r[STATION_COL], r[AGENCY_COL], f"{slug}_{hashlib.md5(base.encode()).hexdigest()[:8]}"))
+    umap = pd.DataFrame(rows, columns=[STATION_COL, AGENCY_COL, "slug"])
+    return df[[STATION_COL, AGENCY_COL]].merge(umap, on=[STATION_COL, AGENCY_COL])["slug"]
+
+
 def build_time_index(df: pd.DataFrame) -> pd.DataFrame:
     """Add time_hours = hours since station's first reading."""
     df = df.copy()
@@ -85,14 +102,22 @@ def detect_gaps(df: pd.DataFrame, threshold_hours: float = 72.0) -> dict[str, li
     return gaps
 
 
-def detect_sentinel_values(df: pd.DataFrame, repeat_threshold: int = 10) -> pd.Series:
+def detect_sentinel_values(df: pd.DataFrame, repeat_threshold: int = 5, max_jump: float = 5.0) -> pd.Series:
     """
     Flag sentinel/corrupted values per station using IQR on diffs + repeated values.
-    Returns boolean mask (True = valid, False = sentinel).
+    Adds an absolute physical bound, short flat-run detection, and a max-consecutive-jump
+    bound (physical: real daily GWL never moves more than ``max_jump`` meters) to catch
+    readings (e.g. -1000 m, stuck sensors, datum errors / sign flips) that slip past the
+    diff-based checks. Only the outlier points are dropped; surrounding valid segments are
+    preserved. Returns boolean mask (True = valid, False = sentinel).
     """
+    ABS_MAX_GWL = 500.0
     valid_mask = pd.Series(True, index=df.index)
 
+    has_time = TIME_COL in df.columns
+
     for station, grp in df.groupby(STATION_COL):
+        grp = grp.sort_values(TIME_COL) if has_time else grp
         idx = grp.index
         gwl = grp[GWL_COL].values
         diffs = np.diff(gwl, prepend=gwl[0])
@@ -109,7 +134,39 @@ def detect_sentinel_values(df: pd.DataFrame, repeat_threshold: int = 10) -> pd.S
             lambda x: 1 if x.nunique() == 1 else 0
         ).fillna(0).astype(bool).values
 
-        station_invalid = sentinel_diff | repeated
+        out_of_bounds = np.abs(gwl) > ABS_MAX_GWL
+
+        # Skip readings already invalidated by the other checks when scanning.
+        run_invalid = sentinel_diff | repeated | out_of_bounds
+        vals = np.where(run_invalid, np.nan, gwl)
+
+        # Break-point scan: flag the FIRST reading of each contiguous jump-run whose
+        # deviation from the previous retained baseline exceeds the physical bound.
+        # This drops the outlier break point at each corruption boundary (datum errors,
+        # sign flips) while preserving the surrounding valid segments as separate regimes.
+        jump_invalid = np.zeros(len(gwl), dtype=bool)
+        prev_valid = None
+        i = 0
+        while i < len(gwl):
+            if np.isnan(vals[i]):
+                i += 1
+                continue
+            if prev_valid is None:
+                prev_valid = vals[i]
+                i += 1
+                continue
+            if abs(vals[i] - prev_valid) > max_jump:
+                jump_invalid[i] = True
+                j = i
+                while j + 1 < len(gwl) and not np.isnan(vals[j + 1]) and abs(vals[j + 1] - vals[j]) > max_jump * 0.5:
+                    j += 1
+                prev_valid = vals[j]
+                i = j + 1
+            else:
+                prev_valid = vals[i]
+                i += 1
+
+        station_invalid = run_invalid | jump_invalid
         valid_mask.loc[idx] = ~station_invalid
 
     return valid_mask
@@ -251,8 +308,11 @@ def full_pipeline(
     """Full preprocessing pipeline for a station (or all)."""
     df = load_and_clean(parquet_path)
 
-    df["slug"] = df.apply(lambda r: station_slug(r[STATION_COL], r[AGENCY_COL], r[SLNO_COL]), axis=1)
+    df["slug"] = station_slugs(df)
 
+    # Filter to the requested station up-front so the per-station cost of the steps
+    # below (sentinel scan, feature build) is paid only for that station instead of
+    # for the whole fleet (critical once common.parquet holds ~1.3k stations / 5M rows).
     if station_slug_filter:
         df = df[df["slug"] == station_slug_filter].copy()
         if df.empty:
@@ -280,6 +340,7 @@ def full_pipeline(
     return {
         "train": train_df,
         "test": test_df,
+        "full": df,
         "gaps": gaps,
         "sentinel_excluded": (~sentinel_mask).sum(),
         "stations": df["slug"].unique().tolist(),

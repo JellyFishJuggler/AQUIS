@@ -12,6 +12,7 @@ if str(_ML_ROOT.parent) not in sys.path:
 
 from ml.models.xgboost_quantile import (  # noqa: E402
     ARTIFACTS_DIR,
+    get_all_station_slugs,
     station_dirs,
 )
 from ml.preprocessing.timeseries import (  # noqa: E402
@@ -24,14 +25,20 @@ PROGRESS_FILE = ARTIFACTS_DIR / "train_all_progress.json"
 FAILURES_FILE = ARTIFACTS_DIR / "train_all_failures.json"
 
 
-def save_progress(done: list[str], failed: list[dict]) -> None:
-    with open(PROGRESS_FILE, "w") as f:
+def _progress_files(artifacts_root: Path) -> tuple[Path, Path]:
+    return artifacts_root / "train_all_progress.json", artifacts_root / "train_all_failures.json"
+
+
+def save_progress(done: list[str], failed: list[dict], artifacts_root: Path) -> None:
+    pfile, _ = _progress_files(artifacts_root)
+    with open(pfile, "w") as f:
         json.dump({"done": done, "failed": failed, "timestamp": time.time()}, f)
 
 
-def load_progress() -> tuple[list[str], list[dict]]:
-    if PROGRESS_FILE.exists():
-        with open(PROGRESS_FILE) as f:
+def load_progress(artifacts_root: Path | None = None) -> tuple[list[str], list[dict]]:
+    pfile, _ = _progress_files(artifacts_root or ARTIFACTS_DIR)
+    if pfile.exists():
+        with open(pfile) as f:
             data = json.load(f)
         return data.get("done", []), data.get("failed", [])
     return [], []
@@ -61,6 +68,8 @@ def main() -> None:
     parser.add_argument("--parquet", type=Path, default=None)
     parser.add_argument("--backend", type=Path, default=None)
     parser.add_argument("--station", nargs="+", help="Specific stations to train")
+    parser.add_argument("--station-file", type=Path, default=None,
+                        help="Newline-delimited file of exact station slugs to train")
     args = parser.parse_args()
 
     artifacts_root = args.artifacts or ARTIFACTS_DIR
@@ -69,16 +78,28 @@ def main() -> None:
 
     ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
 
-    all_dirs = station_dirs(artifacts_root)
-    if args.station:
+    all_dirs = [Path(d) for d in get_all_station_slugs(parquet_path)]
+    if args.station_file is not None:
+        items = [ln.strip() for ln in args.station_file.read_text().splitlines() if ln.strip()]
+        all_dirs = [Path(s) for s in items]
+    elif args.station:
         all_dirs = [d for d in all_dirs if d.name in args.station]
 
-    done, failed = load_progress()
+    done, failed = load_progress(artifacts_root)
+
+    already_trained = {d.name for d in station_dirs(artifacts_root)}
+    for slug in already_trained:
+        if slug not in done:
+            done.append(slug)
+
     print(f"Resuming: {len(done)} done, {len(failed)} failed")
 
     remaining = [d for d in all_dirs if d.name not in done]
     total = len(all_dirs)
     print(f"Total: {total}, Remaining: {len(remaining)}")
+
+    for d in remaining:
+        (artifacts_root / d.name).mkdir(parents=True, exist_ok=True)
 
     if args.workers > 1 and len(remaining) > 1:
         print(f"Using {args.workers} parallel workers...")
@@ -100,7 +121,7 @@ def main() -> None:
                     failed.append({"slug": slug, "reason": str(e)})
                     print(f"[{i+1}/{len(remaining)}] {slug} EXCEPTION: {e}")
 
-                save_progress(done, failed)
+                save_progress(done, failed, artifacts_root)
     else:
         print("Running sequentially...")
         for i, out_dir in enumerate(remaining):
@@ -127,15 +148,16 @@ def main() -> None:
                 failed.append({"slug": slug, "reason": str(e)})
                 print(f"  EXCEPTION: {e}")
 
-            save_progress(done, failed)
+            save_progress(done, failed, artifacts_root)
 
     print(f"\n=== SUMMARY ===")
     print(f"Total: {total}")
     print(f"Successful: {len(done)}")
     print(f"Failed: {len(failed)}")
     if failed:
-        print(f"Failures saved to {FAILURES_FILE}")
-        with open(FAILURES_FILE, "w") as f:
+        f_final = artifacts_root / "train_all_failures.json"
+        print(f"Failures saved to {f_final}")
+        with open(f_final, "w") as f:
             json.dump(failed, f, indent=2)
 
 

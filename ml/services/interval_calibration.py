@@ -315,8 +315,14 @@ def diagnose_station(
     alpha: float = 0.90,
     coverage_floor: float = 0.75,
     horizon_days: int = 90,
+    test_df: pd.DataFrame | None = None,
 ) -> dict[str, Any]:
-    """Classify station as reliable / directional / weak."""
+    """Classify station as reliable / directional / weak.
+
+    Evaluates on the held-out test split (``test_df``) when provided so the
+    reported metrics agree with the dashboard's Test Period panel. Falls back
+    to an in-house 80/20 split of ``station_df`` when ``test_df`` is None.
+    """
     calibration = estimate_calibration(cfg, models, station_df, feature_cols, alpha)
 
     point_model = models["recursive"]["point"]
@@ -324,14 +330,51 @@ def diagnose_station(
     q95_model = models["recursive"]["q95"]
     ec_model = models.get("error_correction")
 
-    X_all, y_all, _ = prepare_feature_matrix(station_df[feature_cols + [GWL_COL]])
-    split = int(len(X_all) * 0.8)
-    X_test = X_all[split:]
-    y_test = y_all[split:]
+    if test_df is not None and len(test_df) > 0:
+        X_test, y_test, _ = prepare_feature_matrix(test_df[feature_cols + [GWL_COL]])
+    else:
+        X_all, y_all, _ = prepare_feature_matrix(station_df[feature_cols + [GWL_COL]])
+        split = int(len(X_all) * 0.8)
+        X_test = X_all[split:]
+        y_test = y_all[split:]
+
+    if len(X_test) == 0:
+        return {
+            "station": station_df["Station"].iloc[0],
+            "slug": station_df["slug"].iloc[0] if "slug" in station_df.columns else station_df["Station"].iloc[0],
+            "label": "weak",
+            "reason": "no evaluation data",
+            "coverage": 0.0,
+            "one_step_coverage": 0.0,
+            "one_step_rmse": 0.0,
+            "one_step_mae": 0.0,
+            "one_step_r2": 0.0,
+            "one_step_nrmse": 1.0,
+            "multi_step_rmse": 0.0,
+            "multi_step_r2": 0.0,
+            "multi_step_nrmse": 1.0,
+            "r2_meaningful": False,
+            "metric_note": "no evaluation data",
+            "shallow_error": 1.0,
+            "gwl_span": 0.0,
+            "n_obs": int(len(station_df)),
+            "tail_half_width": 0.0,
+            "half_width_at_horizon": 0.0,
+            "horizon_days": horizon_days,
+            "max_depth": min(horizon_days * 4, MAX_HORIZON),
+            "calibration": {"alpha": calibration.alpha, "half_widths": {}},
+        }
 
     one_step_point = point_model.predict(X_test)
-    one_step_lower = q05_model.predict(X_test)
-    one_step_upper = q95_model.predict(X_test)
+
+    def _recon(raw: np.ndarray) -> np.ndarray:
+        if models.get("delta_mode") and models.get("lag1_index") is not None and len(X_test) > 0:
+            return X_test[:, models["lag1_index"]] + raw
+        return raw
+
+    one_step_point = _recon(one_step_point)
+    one_step_lower = _recon(q05_model.predict(X_test))
+    one_step_upper = _recon(q95_model.predict(X_test))
 
     one_step_cov = np.mean((y_test >= one_step_lower) & (y_test <= one_step_upper))
     one_step_rmse = float(np.sqrt(np.mean((y_test - one_step_point) ** 2)))
@@ -374,6 +417,16 @@ def diagnose_station(
     tail_half_width = calibration.half_width_at(max_depth)
     horizon_half_width = calibration.half_width_at_horizon(horizon_days)
 
+    # Rule 5.1: on near-flat wells (gwl_span < 0.75 m) R2 is dominated by a tiny SS_tot
+    # denominator and is NOT meaningful. NRMSE = RMSE / gwl_span is the honest scale metric.
+    r2_meaningful = bool(gwl_span >= 0.75)
+    one_nrmse = float(one_step_rmse / gwl_span) if gwl_span > 0 else 1.0
+    multi_nrmse = float(multi_rmse / gwl_span) if gwl_span > 0 else 1.0
+    if not r2_meaningful:
+        metric_note = "low target variance (gwl_span<0.75 m): R2 unreliable; use RMSE/MAE/NRMSE"
+    else:
+        metric_note = "R2 meaningful (gwl_span>=0.75 m)"
+
     if calibrated_coverage >= coverage_floor and shallow_error < 0.15 and horizon_half_width / gwl_span < 0.5:
         label = "reliable"
         reason = f"coverage={calibrated_coverage:.2f}, shallow_err/GWL={shallow_error:.2f}, horizon_width/GWL={horizon_half_width/gwl_span:.2f}"
@@ -394,8 +447,12 @@ def diagnose_station(
         "one_step_rmse": one_step_rmse,
         "one_step_mae": one_step_mae,
         "one_step_r2": one_step_r2,
+        "one_step_nrmse": one_nrmse,
         "multi_step_rmse": multi_rmse,
         "multi_step_r2": multi_r2,
+        "multi_step_nrmse": multi_nrmse,
+        "r2_meaningful": r2_meaningful,
+        "metric_note": metric_note,
         "shallow_error": shallow_error,
         "gwl_span": gwl_span,
         "n_obs": int(len(station_df)),

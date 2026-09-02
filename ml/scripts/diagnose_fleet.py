@@ -55,6 +55,7 @@ def main() -> None:
     )
     feature_cols = pipe["feature_cols"]
     full_train_df = pipe["train"]
+    full_test_df = pipe["test"]
 
     all_station_dirs = station_dirs()
     total = len(all_station_dirs)
@@ -85,7 +86,7 @@ def main() -> None:
                 save_progress(done, failed)
                 continue
 
-            diag = diagnose_station(cfg, models, station_df, feature_cols)
+            diag = diagnose_station(cfg, models, station_df, feature_cols, test_df=full_test_df[full_test_df["slug"] == slug])
             diag["slug"] = slug
             results.append(diag)
             done.append(slug)
@@ -111,6 +112,13 @@ def main() -> None:
         print(f"\nMedian calibrated coverage: {df['coverage'].median():.4f}")
         print(f"Median one-step R2: {df['one_step_r2'].median():.4f}")
         print(f"Median multi-step R2: {df['multi_step_r2'].median():.4f}")
+
+        if "gwl_span" in df.columns:
+            n_flat = int((df.get("gwl_span", pd.Series([0.0])) < 0.75).sum())
+            print(f"Flat wells (gwl_span<0.75 m, R2 NOT meaningful): {n_flat}/{len(df)}")
+            flat = df.loc[~df.get("r2_meaningful", pd.Series([False] * len(df))), "one_step_nrmse"]
+            if len(flat):
+                print(f"Median one-step NRMSE on flat wells: {flat.median():.4f}")
 
     if failed:
         with open(FAILURES_FILE, "w") as f:
