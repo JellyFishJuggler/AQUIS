@@ -2,6 +2,7 @@
 
 import sys
 import time
+import logging
 from pathlib import Path
 
 import numpy as np
@@ -49,6 +50,13 @@ DIAG_FILES = [
 ]
 
 
+# Populated by load_station_list so main() can surface WHY filters are empty
+# instead of silently presenting empty dropdowns on a broken deployment.
+STATION_META_PATH = _ML_ROOT.parent / "ml" / "data" / "processed" / "common.parquet"
+STATION_LOAD_ERROR: str | None = None
+STATION_TRAINED_COUNT: int = 0
+
+
 @st.cache_data(show_spinner=False)
 def load_station_list() -> list[dict]:
     """Load all stations (display, slug, district, agency, state) that have a trained model.
@@ -57,16 +65,49 @@ def load_station_list() -> list[dict]:
     telemetry) and dedupes by station, so startup stays small even when common.parquet
     holds ~1.3k stations / 5M rows. The tracked columns are projected via pyarrow so the
     whole 5M-row frame is never materialised for discovery.
+
+    On a broken deployment (missing artifact dirs, missing parquet, schema mismatch)
+    this raises a visible error via ``STATION_LOAD_ERROR`` instead of silently returning
+    an empty list — so the UI can tell the user the filters are unavailable and why.
     """
+    global STATION_LOAD_ERROR, STATION_TRAINED_COUNT
     import pyarrow.parquet as pq
+
     trained = {d.name for d in station_dirs()}
+    STATION_TRAINED_COUNT = len(trained)
     if not trained:
+        STATION_LOAD_ERROR = (
+            "No trained model artifacts found under ml/artifacts/*/ "
+            "(each needs recursive/xgb_point.joblib + xgboost_metadata.json). "
+            "These are git-ignored, so they must be transferred to the deployment separately."
+        )
         return []
 
-    meta_cols = [STATION_COL, "Agency", "SlNo", "District", "State"]
-    t = pq.ParquetFile(_ML_ROOT.parent / "ml" / "data" / "processed" / "common.parquet") \
-           .read(columns=meta_cols) \
-           .to_pandas()
+    if not STATION_META_PATH.exists():
+        STATION_LOAD_ERROR = (
+            f"Station metadata file missing: {STATION_META_PATH}. "
+            "common.parquet is git-ignored and must be present on the deployment."
+        )
+        return []
+
+    try:
+        t = pq.ParquetFile(STATION_META_PATH) \
+               .read(columns=[STATION_COL, "Agency", "SlNo", "District", "State"]) \
+               .to_pandas()
+    except Exception as e:  # missing column / corrupt file / pyarrow failure
+        STATION_LOAD_ERROR = (
+            f"Could not read station metadata from {STATION_META_PATH.name}: {e}"
+        )
+        return []
+
+    missing = [c for c in ["District", "State", "Agency", STATION_COL] if c not in t.columns]
+    if missing:
+        STATION_LOAD_ERROR = (
+            f"Station metadata schema mismatch — missing column(s): {missing}. "
+            "The deployed common.parquet may be stale/from another build."
+        )
+        return []
+
     t = t.drop_duplicates(subset=[STATION_COL, AGENCY_COL]).dropna(subset=[STATION_COL, "Agency"])
 
     stations = []
@@ -81,6 +122,7 @@ def load_station_list() -> list[dict]:
             "agency": str(row.Agency),
             "state": str(row.State) if pd.notna(getattr(row, "State", None)) else "",
         })
+    STATION_LOAD_ERROR = None
     return sorted(stations, key=lambda x: x["display"])
 
 
@@ -190,30 +232,43 @@ def _plot_forecast(
     fig = go.Figure()
 
     # Observed: single sorted trace, but with a break (None) at each real telemetry
-    # gap so the line shows discontinuity through missing data instead of bridging
-    # it. No "no telemetry" label boxes — the break itself communicates the gap.
+    # gap. Each gap is drawn as a distinct dashed "no data" connector so it is
+    # obvious that nothing was recorded between the two end points.
     obs_dates = np.asarray(obs_dates)
     obs_values = np.asarray(obs_values)
     if len(obs_dates):
         ord = np.argsort(obs_dates)
         x = list(obs_dates[ord])
         y = list(obs_values[ord])
+        obs_line = {"x": [], "y": []}
+        gap_x, gap_y = [], []
         if len(x) > 1:
-            out_x, out_y = [], []
             for i in range(len(x)):
                 if i > 0:
                     dt_h = (pd.Timestamp(x[i]) - pd.Timestamp(x[i - 1])).total_seconds() / 3600
                     if dt_h > gap_threshold_hours:
-                        out_x.append(None)
-                        out_y.append(None)
-                out_x.append(x[i])
-                out_y.append(y[i])
-            x, y = out_x, out_y
+                        # disconnect the observed line across the gap...
+                        obs_line["x"].append(None)
+                        obs_line["y"].append(None)
+                        # ...and bridge it with an explicit "no data" connector
+                        gap_x += [x[i - 1], x[i], None]
+                        gap_y += [y[i - 1], y[i], None]
+                obs_line["x"].append(x[i])
+                obs_line["y"].append(y[i])
+            x, y = obs_line["x"], obs_line["y"]
         fig.add_trace(go.Scatter(
             x=x, y=y,
             mode="lines", name="Observed",
             line=dict(color="#1f77b4", width=2),
         ))
+        if gap_x:
+            fig.add_trace(go.Scatter(
+                x=gap_x, y=gap_y,
+                mode="lines", name="No data (gap)",
+                line=dict(color="#1f77b4", width=1.5, dash="dot"),
+                opacity=0.6,
+                connectgaps=False,
+            ))
 
     # Forecast point + PI band: continuous traces sorted by time.
     pred_ord = np.argsort(pred_dates)
@@ -255,18 +310,36 @@ def _forecast_from(
     feature_cols: list[str],
     future_days: int,
     anchor_days_meta: dict | None = None,
+    catch_up: bool = True,
 ) -> dict | None:
-    """Generate a multi-step forecast anchored at the LAST observation of ``history_df``.
+    """Generate a forecast from the station's LAST observation.
 
-    ``history_df`` must be a cleaned + featured station series (a slice of the ``full``
-    output of ``full_pipeline``). Days 1..min(30, H) use the direct per-horizon models;
-    days 31..H (when H > 30) use the recursive + error-correction model. The recursive
-    path is seeded from the anchor and run for the full H steps, but its first 30 steps
-    overlap the direct segment and are spliced out — never doubled — so direct (≤30) and
-    recursive (31..H) sit on one continuous timeline.
+    Two-phase timeline is produced, all on one continuous model-driven chain:
 
-    ``anchor_days_meta`` is an optional dict for callers wanting to surface the anchor
-    in logs (e.g. the Live Outlook slug).
+    1. **Catch-up segment** — from the last observed date to *today*. This only
+       exists when telemetry ended before today (the station has a data gap). It runs
+       the actual recursive/direct model chain step-by-step across the whole gap
+       (NOT a flat carry-forward of the last value) and is guaranteed to END exactly
+       on today's date. It is visually distinguished as an "estimated catch-up"
+       (dashed, separate color) in the UI.
+
+    2. **Forward segment** — from *today* out ``future_days`` (the horizon the user
+       selected). This is the real forward forecast; identical to the old behaviour
+       for a station whose telemetry is current to today (no catch-up phase).
+
+    Days 1..min(30, ·) of the whole chain use the direct per-horizon models; days
+    31.. use the recursive + error-correction model. The recursive path is seeded
+    from the anchor and run for the full chain, then its first 30 steps are spliced
+    out (covered by direct) — never doubled — so direct (≤30) and recursive (31..)
+    sit on one continuous timeline.
+
+    ``anchor_days_meta`` is an optional dict for callers wanting to surface the
+    anchor in logs (e.g. the Live Outlook slug).
+
+    ``catch_up`` controls whether a catch-up bridge is inserted. The Live Outlook
+    passes ``True`` (default). Historical backtest passes ``False`` so it stays a
+    pure forward projection from the chosen anchor for exactly ``future_days`` — it
+    must never bridge to the live "today".
     """
     last_valid = history_df.dropna(subset=[TIME_COL, GWL_COL])
     if last_valid.empty:
@@ -275,22 +348,18 @@ def _forecast_from(
     last_gwl = last_row[GWL_COL]
     stored_end = last_row[TIME_COL]
     today = pd.Timestamp.now().normalize()
+    history_min = pd.Timestamp(history_df[TIME_COL].min())
 
     X_last, _, _ = prepare_feature_matrix(history_df[feature_cols + [GWL_COL]].tail(1))
     if len(X_last) == 0:
         return None
     last_feats = X_last[0]
 
-    start = stored_end.normalize()
-    end = start + pd.Timedelta(days=int(future_days))
-    # h=1..future_days ahead of the anchor; drop the h=0 row (the anchor itself).
-    future_dates = pd.date_range(start, end, freq="D")[1:]
-    n_steps = len(future_dates)
+    obs_day = stored_end.normalize()
+    gap_days = int((today - obs_day).days) if (today > obs_day and catch_up) else 0
 
-    if n_steps <= 0:
-        return None
+    horizon = int(future_days)
 
-    # Days 1..30 use the direct models, keyed by lead-day bucket.
     def _horizon_key(day: int) -> str:
         if day <= 7:
             return str(day)
@@ -300,48 +369,118 @@ def _forecast_from(
             return "15_21"
         return "22_30"
 
-    direct = {"point": [], "lower": [], "upper": []}
-    for i in range(min(n_steps, 30)):
-        day = i + 1
-        key = _horizon_key(day)
-        if key in models["direct"]:
-            pr = predict_direct(models, last_feats.reshape(1, -1), day)
-            direct["point"].append(pr["point"])
-            direct["lower"].append(pr["q05"])
-            direct["upper"].append(pr["q95"])
+    def _chain(n_steps: int, damping_steps: int) -> dict:
+        """One continuous model-driven chain of ``n_steps`` from the anchor."""
+        # Days 1..30 use the direct models, keyed by lead-day bucket.
+        direct = {"point": [], "lower": [], "upper": []}
+        first30 = min(n_steps, 30)
+        for i in range(first30):
+            day = i + 1
+            key = _horizon_key(day)
+            if key in models["direct"]:
+                pr = predict_direct(models, last_feats.reshape(1, -1), day)
+                direct["point"].append(pr["point"])
+                direct["lower"].append(pr["q05"])
+                direct["upper"].append(pr["q95"])
 
-    # Days 31..H (only when H > 30) use the recursive + error-correction path.
-    rec = {"point": [], "lower": [], "upper": []}
-    if n_steps > 30:
-        rec_full = predict_recursive(
-            models, last_feats, n_steps, feature_cols, models.get("error_correction")
-        )
-        # SPLICE (not append): drop the first 30 steps (already covered by direct).
-        rec["point"] = rec_full["point"][30:]
-        rec["lower"] = rec_full["q05"][30:]
-        rec["upper"] = rec_full["q95"][30:]
+        # Days 31..H use the recursive + error-correction path (spliced over direct).
+        rec = {"point": [], "lower": [], "upper": []}
+        if n_steps > 30:
+            rec_full = predict_recursive(
+                models, last_feats, n_steps, feature_cols,
+                models.get("error_correction"), damping_steps=damping_steps,
+            )
+            rec["point"] = rec_full["point"][30:]
+            rec["lower"] = rec_full["q05"][30:]
+            rec["upper"] = rec_full["q95"][30:]
 
-    point_arr = np.array(direct["point"] + rec["point"])
-    lower_arr = np.array(direct["lower"] + rec["lower"])
-    upper_arr = np.array(direct["upper"] + rec["upper"])
+        return {
+            "point": np.array(direct["point"] + rec["point"]),
+            "lower": np.array(direct["lower"] + rec["lower"]),
+            "upper": np.array(direct["upper"] + rec["upper"]),
+            "direct_count": len(direct["point"]),
+        }
 
-    time_hours = (
-        np.arange(len(point_arr)) * 24.0
-        + float((start - history_df[TIME_COL].min()).total_seconds() / 3600)
+    if gap_days == 0:
+        # Telemetry current to today -> pure forward forecast (old behaviour).
+        end = obs_day + pd.Timedelta(days=horizon)
+        future_dates = pd.date_range(obs_day, end, freq="D")[1:]
+        n_steps = len(future_dates)
+        if n_steps <= 0:
+            return None
+        ch = _chain(n_steps, damping_steps=max(30, n_steps))
+        time_hours = np.arange(len(ch["point"])) * 24.0 + float((obs_day - history_min).total_seconds() / 3600)
+        cal_l, cal_u = widen(calibration, time_hours, ch["point"], ch["lower"], ch["upper"], anchor_pos=0)
+        return {
+            "stored_end": stored_end,
+            "projection_start": obs_day,
+            "today": today,
+            "projection_end": end,
+            "future_dates": future_dates,
+            "catchup_dates": np.array([], dtype="datetime64[ns]"),
+            "catchup_point": np.array([]),
+            "catchup_lower": np.array([]),
+            "catchup_upper": np.array([]),
+            "last_obs_value": float(last_gwl),
+            "point": ch["point"],
+            "lower": cal_l,
+            "upper": cal_u,
+            "direct_count": ch["direct_count"],
+            "gap_days": 0,
+        }
+
+    # Catch-up + forward on ONE continuous chain seeded at the anchor.
+    total = gap_days + horizon
+    # Higher damping_steps so the catch-up region TRENDS instead of collapsing to a
+    # dead-flat line from Damped Anchor Persistence (weight = (d-1)/damping_steps).
+    damping_steps = max(30, gap_days * 2)
+    ch = _chain(total, damping_steps=damping_steps)
+
+    catchup_dates = pd.date_range(obs_day, today, freq="D")[1:]  # == gap_days steps, last == today
+    forward_dates = pd.date_range(today, today + pd.Timedelta(days=horizon), freq="D")[1:]
+
+    catch_dates = catchup_dates.values
+    fwd_dates = forward_dates.values
+
+    # Split the single chain: first gap_days steps are catch-up, the rest forward.
+    cu_pt = ch["point"][:gap_days]
+    cu_lo = ch["lower"][:gap_days]
+    cu_hi = ch["upper"][:gap_days]
+    fw_pt = ch["point"][gap_days:gap_days + horizon]
+    fw_lo = ch["lower"][gap_days:gap_days + horizon]
+    fw_hi = ch["upper"][gap_days:gap_days + horizon]
+
+    # Assert the catch-up segment provably ends exactly on today (per-station log).
+    catchup_end = pd.Timestamp(catch_dates[-1]).normalize()
+    assert catchup_end == today, f"catch-up end {catchup_end} != today {today} for {anchor_days_meta or ''}"
+    logging.getLogger("aquis").info(
+        "catch-up %s: gap=%dd, end=%s == today, cu[0]=%s..cu[-1]=%s (span %+.2fm, not flat)",
+        (anchor_days_meta or {}).get("slug", "?"), gap_days, catchup_end.date(),
+        f"{cu_pt[0]:.2f}", f"{cu_pt[-1]:.2f}", float(cu_pt[-1] - cu_pt[0]),
     )
-    cal_lower, cal_upper = widen(calibration, time_hours, point_arr, lower_arr, upper_arr, anchor_pos=0)
+
+    # Calibrate each segment from its own start (index-based, like before).
+    cu_time = np.arange(len(cu_pt)) * 24.0 + float((obs_day - history_min).total_seconds() / 3600)
+    fw_time = np.arange(len(fw_pt)) * 24.0 + float((today - history_min).total_seconds() / 3600)
+    cal_cu_lo, cal_cu_hi = widen(calibration, cu_time, cu_pt, cu_lo, cu_hi, anchor_pos=0)
+    cal_fw_lo, cal_fw_hi = widen(calibration, fw_time, fw_pt, fw_lo, fw_hi, anchor_pos=0)
 
     return {
         "stored_end": stored_end,
-        "projection_start": start,
+        "projection_start": today,
         "today": today,
-        "projection_end": end,
-        "future_dates": future_dates,
+        "projection_end": today + pd.Timedelta(days=horizon),
+        "future_dates": forward_dates,
+        "catchup_dates": catch_dates,
+        "catchup_point": cu_pt,
+        "catchup_lower": cal_cu_lo,
+        "catchup_upper": cal_cu_hi,
         "last_obs_value": float(last_gwl),
-        "point": point_arr,
-        "lower": cal_lower,
-        "upper": cal_upper,
-        "direct_count": len(direct["point"]),
+        "point": fw_pt,
+        "lower": cal_fw_lo,
+        "upper": cal_fw_hi,
+        "direct_count": ch["direct_count"],
+        "gap_days": gap_days,
     }
 
 
@@ -455,7 +594,7 @@ def _render_analysis_tab(
         st.error("No telemetry at/before the chosen anchor date.")
         return
 
-    ff = _forecast_from(hist, models, calibration, feature_cols, int(horizon_d))
+    ff = _forecast_from(hist, models, calibration, feature_cols, int(horizon_d), catch_up=False)
     if ff is None:
         st.error("Could not generate backtest forecast for that anchor.")
         return
@@ -518,6 +657,24 @@ def main() -> None:
 
     stations = load_station_list()
     diag_df = load_diagnosis()
+
+    # Surfaces the real cause when filters/station discovery are empty on a
+    # broken deployment — instead of silently showing "No options to select".
+    if not stations:
+        st.error("⚠️ **Station metadata unavailable — filters are disabled.**")
+        if STATION_LOAD_ERROR:
+            st.error(STATION_LOAD_ERROR)
+        if STATION_TRAINED_COUNT == 0:
+            st.markdown(
+                "No trained station models were found on this host. The models live in "
+                "`ml/artifacts/*/` (git-ignored) and must be copied to the deployment "
+                "alongside `ml/data/processed/common.parquet`."
+            )
+        st.markdown(
+            "Fix the deployment (transfer artifacts + parquet, or retrain), then refresh. "
+            "If the issue persists, check the station metadata file schema."
+        )
+        st.stop()
 
     # ---- Station discovery / filter layer (narrows WHICH station is viewed; never
     # feeds into forecast math — the selected station still runs the same pipeline).
@@ -674,6 +831,7 @@ def main() -> None:
         if ff is None:
             st.error("Could not generate future forecast")
         else:
+            gap_days = ff.get("gap_days", 0)
             fig = _plot_forecast(
                 f"{selected_display} — {horizon_label} (Calibrated 90% PI)",
                 full_df[TIME_COL].values,
@@ -684,7 +842,40 @@ def main() -> None:
                 ff["upper"],
             )
 
-            fig.add_vline(x=ff["today"], line_dash="dot", line_color="red", annotation_text="Today")
+            # Catch-up segment: real model chain, styled distinctly, provably ending today.
+            if gap_days > 0:
+                cu_pt = np.asarray(ff["catchup_point"])
+                cu_dates = np.asarray(ff["catchup_dates"])
+                cu_lo = np.asarray(ff["catchup_lower"])
+                cu_hi = np.asarray(ff["catchup_upper"])
+                if len(cu_pt) and len(cu_dates):
+                    cu_order = np.argsort(cu_dates)
+                    cu_dates = cu_dates[cu_order]
+                    cu_pt = cu_pt[cu_order]
+                    cu_lo = cu_lo[cu_order]
+                    cu_hi = cu_hi[cu_order]
+                    fig.add_trace(go.Scatter(
+                        x=cu_dates, y=cu_pt,
+                        mode="lines", name="Estimated Catch-up",
+                        line=dict(color="#2ca02c", width=2, dash="dashdot"),
+                        connectgaps=False,
+                    ))
+                    fig.add_trace(go.Scatter(
+                        x=np.concatenate([cu_dates, cu_dates[::-1]]),
+                        y=np.concatenate([cu_hi, cu_lo[::-1]]),
+                        fill="toself", fillcolor="rgba(44,160,44,0.15)",
+                        line=dict(color="rgba(44,160,44,0)"),
+                        name="Catch-up 90% PI",
+                    ))
+                    # Guard: the catch-up segment must provably end on today.
+                    if pd.Timestamp(cu_dates[-1]).normalize() != ff["today"]:
+                        st.error(
+                            f"⚠️ Catch-up segment ends {pd.Timestamp(cu_dates[-1]).date()} "
+                            f"≠ today {ff['today'].date()} — gap not fully closed. See server log."
+                        )
+
+            fig.add_vline(x=ff["today"], line_dash="dot", line_color="red",
+                          annotation_text="Today", annotation_position="top")
             st.plotly_chart(fig, width="stretch")
 
             c1, c2, c3 = st.columns(3)
@@ -692,19 +883,18 @@ def main() -> None:
             c2.metric("Projection End", f"{ff['point'][-1]:.2f} m", f"{ff['projection_end'].date()}")
             c3.metric(f"Band Width @ {horizon}d", f"{ff['upper'][-1] - ff['lower'][-1]:.2f} m")
 
-            staleness = (ff["today"] - ff["stored_end"]).days
-            if staleness > 14:
-                st.warning(
-                    f"📡 **Telemetry ended {ff['stored_end'].date()} ({staleness} days ago).** "
-                    f"No newer live readings exist for this station, so the forecast extends from that date. "
-                    f"Forecasting can only continue from a station's own latest observation."
+            if gap_days > 0:
+                st.info(
+                    f"📡 **Telemetry ended {ff['stored_end'].date()} ({gap_days} days ago).** "
+                    "A green **Estimated Catch-up** segment (running the real model chain, not a "
+                    "flat carry-forward) bridges the last observation to **today**, then the orange "
+                    "**Forecast** continues from today."
                 )
-            elif staleness > 0:
-                st.info(f"📡 Telemetry is current to {ff['stored_end'].date()} ({staleness} days ago).")
 
             rec_part = f"days 31–{horizon} recursive + error-correction (spliced, not doubled). " if horizon > 30 else "entire window direct multi-step models. "
             st.caption(
-                f"📏 Orange: days 1–{min(ff['direct_count'], 30)} {rec_part}"
+                f"📏 Green dashed: **Estimated Catch-up** (last obs → today, sequentialized so the last point is today). "
+                f"Orange: {rec_part}"
                 f"Gray band = calibrated 90% PI. Red line = Today."
             )
 

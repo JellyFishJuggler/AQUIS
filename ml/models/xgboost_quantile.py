@@ -31,8 +31,15 @@ METADATA_FILE = "xgboost_metadata.json"
 
 
 def station_dirs(artifacts_root: Path | None = None) -> list[Path]:
-    """Trained station directories (have a point model + metadata)."""
+    """Trained station directories (have a point model + metadata).
+
+    Returns an empty list (rather than raising) when the artifacts root does not
+    exist — the caller (e.g. the dashboard station filter) should then surface a
+    clear "models not deployed" message instead of crashing on discovery.
+    """
     root = Path(artifacts_root) if artifacts_root else ARTIFACTS_DIR
+    if not root.is_dir():
+        return []
     return sorted(
         p
         for p in root.iterdir()
