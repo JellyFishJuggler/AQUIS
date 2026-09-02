@@ -279,6 +279,83 @@ def _district_watchlist() -> list[dict]:
 
 
 @st.cache_data(show_spinner=False)
+def _global_data_freshness() -> dict:
+    """Latest observed timestamp across the ENTIRE loaded parquet (all depths/rows).
+
+    Compared against "today" to flag a stale/deployed build. The whole point of the
+    2026-data issue is that the deployed ``common.parquet`` is an old snapshot that ends
+    in 2025 while the app computes "today" as 2026 — so every station's last observation
+    is treated as a gap and the green *Estimated Catch-up* trace fills the 2026 region
+    where real readings actually exist in the newer local build. This helper makes the
+    discrepancy visible instead of silently drawing forecast over missing real data.
+
+    Only the single Time column is projected (memory-light), roughly a 5M-row read of a
+    numeric-like column fits comfortably.
+    """
+    import pyarrow.parquet as pq
+    if not STATION_META_PATH.exists():
+        return {"available": False}
+    try:
+        ts = pd.to_datetime(
+            pq.ParquetFile(STATION_META_PATH)
+              .read(columns=[TIME_COL]).to_pandas()[TIME_COL]
+        )
+    except Exception:
+        return {"available": False}
+    if ts.empty:
+        return {"available": False}
+    max_d = pd.Timestamp(ts.max()).normalize()
+    today = pd.Timestamp.now().normalize()
+    return {
+        "available": True,
+        "max_date": max_d,
+        "today": today,
+        "days_behind": int((today - max_d).days),
+        "stale": (today - max_d).days > 30,
+        "has_2026": max_d >= pd.Timestamp("2026-01-01"),
+        "rows": int(len(ts)),
+    }
+
+
+def _latest_obs(df: pd.DataFrame) -> pd.Series | None:
+    """The LAST genuine observed reading (actual telemetry row) of a station frame.
+
+    Rule #4 guarantee: the dashboard's "Current Level", "Last reading", "Freshness",
+    and forecast anchor must ALL derive from this actual observation — never from the
+    forecast horizon. Drop NaN observations and take the newest sorted row.
+    """
+    if df is None or df.empty:
+        return None
+    v = df.dropna(subset=[TIME_COL, GWL_COL])
+    if v.empty:
+        return None
+    return v.sort_values(TIME_COL).iloc[-1]
+
+
+def _render_data_stale_banner() -> None:
+    """Global warning when the loaded dataset is behind the current date.
+
+    This turns the previously-silent "green forecast filling 2026" symptom into an
+    explicit, diagnosable condition for the operator. It never modifies data or
+    forecasting — it only explains WHY observed 2026 readings are missing.
+    """
+    gf = _global_data_freshness()
+    if not gf.get("available"):
+        return
+    if not gf.get("has_2026", False) or gf.get("stale", False):
+        st.warning(
+            f"📆 **Dataset is dated {gf['max_date'].date()} — {gf['days_behind']} days "
+            f"behind today ({gf['today'].date()}).** "
+            "The 2026 region is drawn as an **Estimated Catch-up** (green) because the "
+            "loaded `common.parquet` ends in 2025; it does **not** contain the 2026 "
+            "observed readings that the newer build has. These are NOT real observations. "
+            "Refresh the deployed data with `ml/scripts/refresh_deployed_data.py` (or "
+            "replace `common.parquet` with a build whose readings extend into 2026), then "
+            "restart. See *Detailed Analysis → Data freshness* for per-station impact."
+        )
+
+
+@st.cache_data(show_spinner=False)
 def load_station_list() -> list[dict]:
     """Load ALL stations (display, slug, district, agency, state) from the parquet.
 
@@ -1039,7 +1116,7 @@ def _render_overview_tab(
         st.error("No observed telemetry for this station.")
         return
 
-    last = df.iloc[-1]
+    last = _latest_obs(df)
     last_gwl = float(last[GWL_COL])
     last_date = pd.Timestamp(last[TIME_COL])
     today = pd.Timestamp.now().normalize()
@@ -1167,23 +1244,269 @@ def _render_overview_tab(
                     f"(span {gwl_span:.2f} m; station is "
                     f"{((last_gwl-gwl_min)/gwl_span*100) if gwl_span>0 else 0:.0f}% of its historical depth)")
 
-    # Fleet-level alert strip (reuses district stage data, no reforecasting).
-    st.markdown("---")
-    st.markdown("#### 🚨 District Watchlist (existing classification, not a new model)")
-    watch = _district_watchlist()
-    if watch:
-        top = watch[:6]
-        st.markdown(" | ".join(
-            f":{row['color']}[**{row['district']}** ({row['label']}, {row['pct']:.0f}%)]"
-            for row in top
-        ))
-        st.caption("Stations in these districts are under aquifer stress per CGWB stage-of-extraction \u2265 90% (Critical / Over-Exploited).")
+    # Station-specific footer only — this page is exclusively about the selected
+    # station. Fleet/district alerts live on the Home tab, not here.
+    st.caption(
+        f"All figures above are for **{display}** only. "
+        f"Latest actual reading: **{last_date.date()}** ({days_ago}d ago). "
+        "District-wide alerts and other stations are on the **🏠 Home** tab."
+    )
+
+
+@st.cache_data(show_spinner=False)
+def _fleet_latest_readings() -> dict[str, dict]:
+    """Latest observed (date, value) per station from the parquet.
+
+    Memory-light fleet pass used by the Home dashboard: projects ONLY the columns
+    needed to resolve each station's last reading (Station — Time column projection
+    with a per-Station groupby would be heavier; we read Station+Time+Level and keep
+    the max-Time row per Station). This is the OBSERVED source of truth for freshness,
+    current level, and deltas across the fleet — never forecast values.
+    """
+    import pyarrow.parquet as pq
+    if not STATION_META_PATH.exists():
+        return {}
+    try:
+        t = pq.ParquetFile(STATION_META_PATH) \
+               .read(columns=[STATION_COL, TIME_COL, GWL_COL]).to_pandas()
+    except Exception:
+        return {}
+    t = t.dropna(subset=[STATION_COL, TIME_COL, GWL_COL])
+    if t.empty:
+        return {}
+    t[TIME_COL] = pd.to_datetime(t[TIME_COL], errors="coerce")
+    t = t.dropna(subset=[TIME_COL])
+    t = t.sort_values(TIME_COL)
+    last = t.groupby(STATION_COL).tail(1)
+    today = pd.Timestamp.now().normalize()
+    out: dict[str, dict] = {}
+    for _, row in last.iterrows():
+        d = pd.Timestamp(row[TIME_COL]).normalize()
+        out[str(row[STATION_COL])] = {
+            "last_date": d,
+            "last_value": float(row[GWL_COL]),
+            "days_ago": int((today - d).days),
+        }
+    return out
+
+
+def _render_home_tab(stations: list[dict], diag_df: pd.DataFrame | None) -> None:
+    """Operational summary across ALL trained stations (Home tab).
+
+    HOME = "What is happening across my fleet, and what needs my attention?"
+
+    Uses ONLY existing metrics — trust labels from the fleet diagnosis CSV, CGWB
+    class from the cached district classification, freshness/latest-readings from the
+    parquet observed rows. No new scoring/model is introduced and no per-station
+    forecast is run for the whole fleet (that lives in Detailed Analysis).
+    """
+    today = pd.Timestamp.now().normalize()
+
+    # Trained population = stations with a usable model artifact (has_model).
+    trained = [s for s in stations if s.get("has_model")]
+    # Fall back to all stations if none are flagged trained (e.g. diagnosis absent on
+    # a host where model dirs exist but the flag source differs).
+    if not trained and stations:
+        trained = stations
+
+    readings = _fleet_latest_readings()
+    cls = load_district_classifications()  # keyed by normalized district
+    diag_map = {}
+    if diag_df is not None and not diag_df.empty:
+        for _, r in diag_df.iterrows():
+            diag_map[str(r["station"])] = r.to_dict()
+
+    # ---- Row-level aggregation for the status table ---------------------------
+    rows = []
+    for s in trained:
+        disp = s["display"]
+        dist_raw = s.get("district", "")
+        dist_norm = normalize_district(dist_raw) if dist_raw else dist_raw.upper()
+        dclass = cls.get(dist_norm, {})
+
+        rd = readings.get(disp, {})
+        days_ago = rd.get("days_ago")
+        last_value = rd.get("last_value")
+        last_date = rd.get("last_date")
+
+        diag = diag_map.get(disp, {})
+        label = diag.get("label", "—")
+        reason = diag.get("reason", "")
+
+        # Freshness bucket.
+        if days_ago is None:
+            fresh_label, fresh_color = "no data", "gray"
+        elif days_ago <= 2:
+            fresh_label, fresh_color = "Fresh", "green"
+        elif days_ago <= 14:
+            fresh_label, fresh_color = "Stale", "orange"
+        else:
+            fresh_label, fresh_color = "Missing", "red"
+
+        # Rapid change: |30d change| heuristic — computed from last two observed
+        # points if available (needs history, so fall back to '—' otherwise). We
+        # approximate with the gap: not computed here to keep fleet pass cheap.
+        rapid = "—"
+
+        # Action / attention indicator.
+        attention = []
+        if label == "weak":
+            attention.append("weak model")
+        if dclass.get("index", -1) >= 2:  # Critical/Over-Exploited
+            attention.append("critical district")
+        if fresh_color == "red":
+            attention.append("stale data")
+        if fresh_color == "orange":
+            attention.append("aging data")
+        action = (", ".join(attention)) if attention else "ok"
+
+        rows.append({
+            "station": disp,
+            "district": dist_raw,
+            "agency": s.get("agency", ""),
+            "last_value": last_value,
+            "last_date": last_date.strftime("%Y-%m-%d") if last_date is not None else "—",
+            "days_ago": days_ago,
+            "freshness": fresh_label,
+            "fresh_color": fresh_color,
+            "cgwb": dclass.get("label", "—"),
+            "cgwb_color": dclass.get("color", "gray"),
+            "trust": label,
+            "action": action,
+            "one_step_r2": diag.get("one_step_r2"),
+            "multi_step_r2": diag.get("multi_step_r2"),
+            "coverage": diag.get("coverage"),
+        })
+
+    # ---- KPI counts -----------------------------------------------------------
+    n_total = len(rows)
+    n_reliable = sum(1 for r in rows if r["trust"] == "reliable")
+    n_directional = sum(1 for r in rows if r["trust"] == "directional")
+    n_weak = sum(1 for r in rows if r["trust"] == "weak")
+    n_untrained = len(stations) - n_total
+    n_stale = sum(1 for r in rows if r["fresh_color"] in ("orange", "red"))
+    n_critical = sum(1 for r in rows if r["cgwb"] in ("Critical", "Over-Exploited"))
+    n_attention = sum(1 for r in rows if r["action"] != "ok")
+
+    # ---- Render summary -------------------------------------------------------
+    st.markdown("### 🏠 Fleet Overview")
+    st.caption(
+        f"Snapshot of **{n_total}** trained stations (of {len(stations)} in the current "
+        f"filter). Model trust from the fleet diagnosis; status from observed data. "
+        "Home stays fleet-level — pick a station to drill into its forecast."
+    )
+
+    k1, k2, k3, k4, k5, k6 = st.columns(6)
+    k1.metric("Trained", n_total)
+    k2.metric("Reliable", n_reliable)
+    k3.metric("Directional", n_directional)
+    k4.metric("Weak", n_weak)
+    k5.metric("Need Attention", n_attention)
+    k6.metric("Stale/Missing", n_stale)
+    if n_untrained > 0:
+        st.caption(f"ℹ️ {n_untrained} additional stations present in the data but not yet trained "
+                   "(no model artifact) — not counted as 'trained' above.")
+
+    # ---- Filters for the status table -----------------------------------------
+    st.markdown("#### Station Status")
+    ctrl = st.columns([1, 1, 1, 2])
+    f_tr = ctrl[0].selectbox("Model trust", ["All", "reliable", "directional", "weak"])
+    f_fresh = ctrl[1].selectbox("Freshness", ["All", "Fresh", "Stale", "Missing"])
+    f_cgwb = ctrl[2].selectbox("CGWB status", ["All", "Safe", "Semi-Critical", "Critical", "Over-Exploited"])
+    f_att = ctrl[3].selectbox("Attention", ["All", "Needs attention", "OK"])
+
+    def _row_keep(r: dict) -> bool:
+        if f_tr != "All" and r["trust"] != f_tr:
+            return False
+        if f_fresh != "All" and r["freshness"] != f_fresh:
+            return False
+        if f_cgwb != "All" and r["cgwb"] != f_cgwb:
+            return False
+        if f_att == "Needs attention" and r["action"] == "ok":
+            return False
+        if f_att == "OK" and r["action"] != "ok":
+            return False
+        return True
+
+    view = [r for r in rows if _row_keep(r)]
+    view.sort(key=lambda r: (r["action"] != "ok", -(r["days_ago"] or 0)))
+
+    if view:
+        # Compact, colored status table (sortable by column header).
+        table = st.dataframe(
+            pd.DataFrame([{
+                "Station": r["station"],
+                "District": r["district"],
+                "Agency": r["agency"],
+                "Last Reading (m)": (f"{r['last_value']:.2f}" if r["last_value"] is not None else "—"),
+                "Reading Date": r["last_date"],
+                "Days Ago": r["days_ago"] if r["days_ago"] is not None else "—",
+                "Freshness": r["freshness"],
+                "CGWB": r["cgwb"],
+                "Trust": r["trust"],
+                "Action": r["action"],
+            } for r in view]),
+            width="stretch",
+            hide_index=True,
+        )
+        st.caption(f"Showing {len(view)} of {len(rows)} trained stations.")
     else:
-        st.caption("No district currently flagged Critical/Over-Exploited.")
+        st.info("No trained stations match the current filters.")
+
+    # ---- Attention / action section -------------------------------------------
+    st.markdown("#### ⚠️ Needs Attention")
+    attn = [r for r in rows if r["action"] != "ok"]
+    if attn:
+        attn.sort(key=lambda r: -(r["days_ago"] or 999), reverse=True)
+        for r in attn[:8]:
+            why = r["action"]
+            f = r["fresh_color"]
+            st.markdown(
+                f"- **{r['station']}** ({r['district']})"
+                f" — :{f}[{r['freshness']}] · :{r['cgwb_color']}[{r['cgwb']}] · "
+                f"trust :{('green' if r['trust']=='reliable' else 'orange' if r['trust']=='directional' else 'red')}[{r['trust']}] · "
+                f"**{why}**"
+            )
+    else:
+        st.caption("All trained stations are currently healthy. 🎉")
+
+    # ---- Overall trends -------------------------------------------------------
+    st.markdown("#### Trend Snapshot")
+    tg = st.columns(3)
+    rmse_well = [r["one_step_r2"] for r in rows if r["one_step_r2"] is not None]
+    cov_well = [r["coverage"] for r in rows if r["coverage"] is not None]
+    tg[0].metric("Median 1-step R²",
+                 (f"{float(np.median(rmse_well)):.3f}" if rmse_well else "—"))
+    tg[1].metric("Median calibrated coverage",
+                 (f"{float(np.median(cov_well)):.2%}" if cov_well else "—"))
+    tg[2].metric("Critical/Over-Exploited districts", f"{n_critical}")
+
+    # Fleet-level district watchlist (relocated here from Station Overview — this is
+    # district-wide, so it belongs on the Home dashboard, not a single-station page).
+    with st.expander("🚨 District Watchlist — Critical / Over-Exploited"):
+        watch = _district_watchlist()
+        if watch:
+            st.markdown(" | ".join(
+                f":{row['color']}[**{row['district']}** ({row['label']}, {row['pct']:.0f}%)]"
+                for row in watch
+            ))
+            st.caption("Districts with CGWB stage-of-extraction \u2265 90% (Critical / Over-Exploited). "
+                       "Stations in these districts are under the highest aquifer stress.")
+        else:
+            st.caption("No district currently flagged Critical/Over-Exploited.")
+
+    dist_summary = pd.Series([r["district"] for r in rows]).value_counts().head(8)
+    with st.expander("Stations per district (top)"):
+        st.dataframe(dist_summary.rename("stations"), width="stretch")
+
+    st.caption("Tip: use the **Select Station** control to open one station's "
+               "Station Overview and Detailed Analysis (Test / Live Outlook / "
+               "Backtest / Model Info / Retrain).")
 
 
 def main() -> None:
     st.title("🌊 AQUIS Groundwater Level Forecasting")
+    _render_data_stale_banner()
 
     stations = load_station_list()
     diag_df = load_diagnosis()
@@ -1283,19 +1606,31 @@ def main() -> None:
         models = load_models(artifact_dir)
         calibration = estimate_calibration({}, models, train_df, feature_cols)
 
-    tab1, tab_overview, tab2, tab3, tab4, tab5 = st.tabs([
-        "📈 Forecast — Test Period (1-step)",
-        "🏠 Station Overview",
-        "🔮 Live Outlook — Next N Days",
-        "🔬 Historical Backtest (NOT live)",
-        "📋 Model Info",
-        "⚙️ Retrain",
+    tab_home, tab_station, tab_analysis = st.tabs([
+        "🏠 Home",
+        f"🛰 Station Overview — {selected_display}",
+        "📊 Detailed Analysis",
     ])
 
-    with tab_overview:
+    # ---- HOME: fleet-wide operational summary (all trained stations). -------
+    with tab_home:
+        _render_home_tab(filtered, diag_df)
+
+    # ---- STATION OVERVIEW: selected station ONLY. --------------------------
+    with tab_station:
         _render_overview_tab(selected_display, selected_slug, full_df, models, calibration, feature_cols)
 
-    with tab1:
+    # ---- DETAILED ANALYSIS: per-station deep dive (nested tabs). -----------
+    with tab_analysis:
+        at1, at2, at3, at4, at5 = st.tabs([
+            "📈 Test Period (1-step)",
+            "🔮 Live Outlook — Next N Days",
+            "🔬 Historical Backtest (NOT live)",
+            "📋 Model Info",
+            "⚙️ Retrain",
+        ])
+
+    with at1:
         st.markdown("### One-step backtest on held-out test set (reliable short-range accuracy)")
 
         X_test, y_test, _ = prepare_feature_matrix(test_df[feature_cols + [GWL_COL]])
@@ -1348,7 +1683,7 @@ def main() -> None:
 
         st.caption("✅ **Reliable short-range (1-14 day) accuracy** — This is the headline metric. One-step forecasts are well-calibrated and accurate.")
 
-    with tab2:
+    with at2:
         st.markdown("### Live Outlook — next days from last observation")
         st.caption("⚠️ **Short-range levels are reliable near-term.** Days 1–30 use direct multi-step models; 31–90 use recursive + error correction. Bands are calibrated to 90% coverage. **No date picker — anchor is always the station's latest reading.**")
 
@@ -1435,10 +1770,10 @@ def main() -> None:
                 f"Gray band = calibrated 90% PI. Red line = Today."
             )
 
-    with tab3:
+    with at3:
         _render_analysis_tab(selected_display, full_df, models, calibration, feature_cols)
 
-    with tab4:
+    with at4:
         st.markdown("### Model Information")
 
         meta = {}
@@ -1493,7 +1828,7 @@ def main() -> None:
         with st.expander("XGBoost parameters"):
             st.json(meta.get("params", {}))
 
-    with tab5:
+    with at5:
         _train_station_ui(selected_display, selected_slug, train_df, test_df, feature_cols)
 
         if st.button("🗑️ Delete artifacts (force retrain)", type="secondary"):
@@ -1502,26 +1837,24 @@ def main() -> None:
             st.success("Artifacts deleted. Refresh to retrain.")
             st.rerun()
 
-    st.divider()
-    st.markdown("""
-    ### How to Read This Dashboard
-    
+    with st.expander("❓ How to Read This Dashboard"):
+        st.markdown("""
     **Short-Range Panel (Test Period)** — One-step-ahead forecasts on the held-out test set.
     - **Reliable accuracy**: These forecasts use the model in its validated one-step mode.
     - **R² ~0.5-0.6** is typical for groundwater — this is the trustworthy number.
     - **90% PI**: Calibrated intervals that actually cover ~90% of outcomes.
-    
-    **Live Outlook (Next N Days)** — Anchored on the station's **latest reading** (no date picker — this is deliberate, to stop the start-date reintroducing the anchoring bug).
+
+    **Live Outlook (Next N Days)** — Anchored on the station's **latest observed reading** (no date picker — deliberate, to stop the start-date reintroducing the anchoring bug).
     - Days 1–30: **direct multi-step models** (a separate model per horizon: 1-7, 8-14, 15-21, 22-30).
     - Days 31–90: **recursive + error-correction** path, spliced (not doubled) onto the direct segment.
     - Horizon selector exposes 7 / 14 / 30 / 60 / 90 days.
-    
+
     **Historical Backtest (Analysis Mode)** — 🔬 **NOT a live forecast.**
     - Pick any **arbitrary as-of (anchor) date**; the model forecasts forward from there as if it were "today", overlaid on the real observed readings that followed.
     - Scoped RMSE / MAE / R² / calibrated coverage are computed over the selected window.
     - This mode deliberately allows free date selection because it is framed as retrospective validation — it never reports present-day conditions.
-    
-    **Trust Badge** (top-right):
+
+    **Trust Badge** (Station Overview top-right):
     - 🟢 **Reliable**: Good coverage, narrow bands, low error relative to GWL range.
     - 🟡 **Directional**: Coverage OK but wider uncertainty — use for trend only.
     - 🔴 **Weak**: Calibration failed or intervals too wide — treat with caution.
