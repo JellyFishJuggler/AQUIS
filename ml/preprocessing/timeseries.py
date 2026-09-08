@@ -7,6 +7,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from ml.preprocessing.spatial import attach_spatial_features, station_spatial_table  # noqa: E402
+
 GWL_COL = "Groundwater Level Telemetry 6 Hourly (meter)"
 TIME_COL = "Data Acquisition Time"
 STATION_COL = "Station"
@@ -309,6 +311,24 @@ def _clean_table(table) -> pd.DataFrame:
     return df.sort_values([STATION_COL, TIME_COL]).reset_index(drop=True)
 
 
+def attach_fleet_spatial_features(df: pd.DataFrame, parquet_path: str | Path) -> pd.DataFrame:
+    """Attach static spatial-augmentation features using the FLEET station catalogue.
+
+    Reads only the (Station, Latitude, Longitude, RL_MSL) metadata from the master
+    parquet (small), computes the k-nearest-station spatial textures, and attaches
+    them to every row of ``df`` (the station(s) being processed).
+    """
+    try:
+        import pyarrow.parquet as pq
+        meta_cols = [STATION_COL, "Latitude", "Longitude", "RL_MSL"]
+        meta = pq.ParquetFile(parquet_path).read(columns=meta_cols).to_pandas()
+        meta = meta.drop_duplicates(subset=[STATION_COL]).reset_index(drop=True)
+        spat = station_spatial_table(meta, k=5)
+    except Exception:  # noqa: BLE001 - spatial features are additive; never crash the pipeline
+        spat = None
+    return attach_spatial_features(df, spat)
+
+
 def _read_for_pipeline(parquet_path: str | Path, station_slug_filter: str | None) -> pd.DataFrame:
     """Read the master parquet, memory-scoped to one station when a slug filter is given.
 
@@ -366,6 +386,10 @@ def full_pipeline(
 
     exog = load_exogenous_features(backend_csv)
     df = attach_exogenous_features(df, exog)
+
+    # Spatial augmentation (paper's XGB-SF concept): static neighbourhood textures
+    # computed from the FLEET station coordinates/elevation, attached per station.
+    df = attach_fleet_spatial_features(df, parquet_path)
 
     df = build_features(df)
 

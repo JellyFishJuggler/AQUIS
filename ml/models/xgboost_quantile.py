@@ -90,6 +90,11 @@ def _make_quantile_model(alpha: float, **kwargs) -> XGBRegressor:
     return XGBRegressor(**params)
 
 
+def _make_linear_model():
+    from sklearn.linear_model import LinearRegression
+    return LinearRegression()
+
+
 def train_models_for_station(
     train_df: pd.DataFrame,
     feature_cols: list[str],
@@ -98,6 +103,7 @@ def train_models_for_station(
     use_direct: bool = True,
     use_recursive: bool = True,
     use_error_correction: bool = True,
+    use_linear: bool = True,
     delta_mode: bool = True,
 ) -> dict[str, Any]:
     """Train all models for a station: direct (1-30d), recursive (31-90d), error-correction.
@@ -118,7 +124,7 @@ def train_models_for_station(
 
     X_train, y_train, _ = prepare_feature_matrix(train_data)
 
-    models = {"direct": {}, "recursive": {}, "error_correction": None,
+    models = {"direct": {}, "recursive": {}, "error_correction": None, "linear": None,
               "delta_mode": bool(delta_mode), "lag1_index": None}
 
     lag1_idx = _lag1_index(feature_cols)
@@ -176,6 +182,11 @@ def train_models_for_station(
             q_model = _make_quantile_model(alpha)
             q_model.fit(X_train, train_target)
             models["recursive"][f"q{int(alpha*100):02d}"] = q_model
+
+        if use_linear:
+            lin = _make_linear_model()
+            lin.fit(X_train, train_target)
+            models["linear"] = lin
 
     if use_error_correction and use_recursive:
         models["error_correction"] = train_error_correction_head(train_df, feature_cols, models)
@@ -399,6 +410,49 @@ def predict_recursive(
     return {"point": points, "q05": q05s, "q50": q50s, "q95": q95s}
 
 
+def predict_linear_recursive(
+    models: dict,
+    last_features: np.ndarray,
+    n_steps: int,
+    feature_cols: list[str],
+    damping_steps: int = 30,
+) -> list[float]:
+    """Linear-regression point forecast mirroring ``predict_recursive`` (point only).
+
+    Uses the trained linear model (``models["linear"]``) on the SAME feature dynamics
+    (lags + rolling means, with Damped Anchor Persistence) as the recursive XGBoost
+    path, so the two are directly comparable as an apples-to-apples model comparison.
+    Returns a list of absolute-level point forecasts.
+    """
+    lin = models.get("linear")
+    if lin is None:
+        return []
+    delta_mode = bool(models.get("delta_mode"))
+    lag1_idx = models.get("lag1_index")
+
+    current_feats = last_features.copy()
+    if lag1_idx is not None:
+        anchor = float(current_feats[lag1_idx])
+    else:
+        anchor = float(lin.predict(current_feats.reshape(1, -1))[0])
+
+    def _to_level(raw: float) -> float:
+        if delta_mode and lag1_idx is not None:
+            return float(current_feats[lag1_idx]) + float(raw)
+        return float(raw)
+
+    points = []
+    for step in range(n_steps):
+        d = step + 1
+        raw = float(lin.predict(current_feats.reshape(1, -1))[0])
+        pt = _to_level(raw)
+        w = min(1.0, (d - 1) / max(1, damping_steps))
+        pt = (1.0 - w) * pt + w * anchor
+        points.append(pt)
+        current_feats = update_features_recursive(current_feats, pt, feature_cols)
+    return points
+
+
 def _lag1_index(feature_cols: list[str]) -> int | None:
     """Index of the `lag_1` feature (previous observation level) if present."""
     for i, c in enumerate(feature_cols):
@@ -425,6 +479,9 @@ def save_models(models: dict, artifact_dir: Path, station_slug: str) -> None:
 
     if models["error_correction"] is not None:
         joblib.dump(models["error_correction"], recursive_dir / "error_correction_head.joblib")
+
+    if models.get("linear") is not None:
+        joblib.dump(models["linear"], recursive_dir / "linear_point.joblib")
 
     feature_cols = [c for c in models.get("feature_cols", []) if not c.startswith("lag_") and not c.startswith("roll_") and c not in ["trend_28", "trend_60"]]
     with open(artifact_dir / FEATURES_FILE, "w") as f:
@@ -462,6 +519,12 @@ def load_models(artifact_dir: Path) -> dict[str, Any]:
     ec_file = recursive_dir / "error_correction_head.joblib"
     if ec_file.exists():
         models["error_correction"] = joblib.load(ec_file)
+
+    lin_file = recursive_dir / "linear_point.joblib"
+    if lin_file.exists():
+        models["linear"] = joblib.load(lin_file)
+    else:
+        models["linear"] = None
 
     meta = {"delta_mode": False, "lag1_index": None}
     features_file = artifact_dir / FEATURES_FILE

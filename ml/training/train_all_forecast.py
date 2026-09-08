@@ -70,6 +70,8 @@ def main() -> None:
     parser.add_argument("--station", nargs="+", help="Specific stations to train")
     parser.add_argument("--station-file", type=Path, default=None,
                         help="Newline-delimited file of exact station slugs to train")
+    parser.add_argument("--force", action="store_true",
+                        help="Re-train ALL listed stations, ignoring existing artifacts/progress")
     args = parser.parse_args()
 
     artifacts_root = args.artifacts or ARTIFACTS_DIR
@@ -86,11 +88,14 @@ def main() -> None:
         all_dirs = [d for d in all_dirs if d.name in args.station]
 
     done, failed = load_progress(artifacts_root)
+    if args.force:
+        done = []
 
     already_trained = {d.name for d in station_dirs(artifacts_root)}
-    for slug in already_trained:
-        if slug not in done:
-            done.append(slug)
+    if not args.force:
+        for slug in already_trained:
+            if slug not in done:
+                done.append(slug)
 
     print(f"Resuming: {len(done)} done, {len(failed)} failed")
 

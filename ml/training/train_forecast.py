@@ -26,6 +26,34 @@ from ml.services.interval_calibration import (  # noqa: E402
     diagnose_station,
     estimate_calibration,
 )
+from ml.services.interpretability import (  # noqa: E402
+    permutation_importance_report,
+    vif_report,
+)
+from ml.preprocessing.timeseries import prepare_feature_matrix  # noqa: E402
+
+
+def build_interpretability(models, train_df, test_df, feature_cols):
+    """Compute and return the interpretive diagnostics for a trained station.
+
+    Uses the trained recursive point model. Returns a serialisable dict or None
+    when the required models/data are unavailable. Additive only — never affects
+    the forecasts themselves.
+    """
+    try:
+        pmod = models["recursive"].get("point")
+        if pmod is None or not feature_cols:
+            return None
+        Xtr, _, _ = prepare_feature_matrix(train_df[feature_cols + ["Groundwater Level Telemetry 6 Hourly (meter)"]])
+        Xte, yte, _ = prepare_feature_matrix(test_df[feature_cols + ["Groundwater Level Telemetry 6 Hourly (meter)"]])
+        if Xtr.shape[0] == 0 or len(feature_cols) == 0 or Xtr.shape[0] < 2:
+            return None
+        perm = permutation_importance_report(pmod, Xte, yte, feature_cols,
+                                             n_repeats=5, seed=42)
+        vif = vif_report(Xtr, feature_cols)
+        return {"permutation_importance": perm, "vif": vif}
+    except Exception as e:  # noqa: BLE001 - diagnostics must not break training
+        return {"error": str(e)}
 
 
 def main() -> None:
@@ -85,6 +113,9 @@ def main() -> None:
     calibration = estimate_calibration(cfg, models, train_df, feature_cols)
     diag = diagnose_station(cfg, models, train_df, feature_cols, test_df=pipe["test"])
 
+    # ---- Interpretability (paper's feature-importance / VIF suite) ---------
+    interpretability = build_interpretability(models, train_df, pipe["test"], feature_cols)
+
     metadata = {
         "station": train_df["Station"].iloc[0],
         "slug": args.station,
@@ -97,6 +128,9 @@ def main() -> None:
         "one_step_rmse": diag["one_step_rmse"],
         "one_step_mae": diag["one_step_mae"],
         "one_step_r2": diag["one_step_r2"],
+        "linear_one_step_rmse": diag.get("linear_one_step_rmse", 0.0),
+        "linear_one_step_mae": diag.get("linear_one_step_mae", 0.0),
+        "linear_one_step_r2": diag.get("linear_one_step_r2", 0.0),
         "multi_step_rmse": diag["multi_step_rmse"],
         "multi_step_r2": diag["multi_step_r2"],
         "calibrated_coverage": diag["coverage"],
@@ -108,6 +142,10 @@ def main() -> None:
 
     with open(artifact_dir / METADATA_FILE, "w") as f:
         json.dump(metadata, f, indent=2)
+
+    if interpretability is not None:
+        with open(artifact_dir / "interpretability.json", "w") as f:
+            json.dump(interpretability, f, indent=2, default=float)
 
     print(f"Metadata saved to {artifact_dir / METADATA_FILE}")
     print(f"Label: {diag['label'].upper()} (coverage={diag['coverage']:.3f})")

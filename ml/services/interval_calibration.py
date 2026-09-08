@@ -381,6 +381,16 @@ def diagnose_station(
     one_step_mae = float(np.mean(np.abs(y_test - one_step_point)))
     one_step_r2 = float(1 - np.sum((y_test - one_step_point) ** 2) / np.sum((y_test - np.mean(y_test)) ** 2))
 
+    # Linear-regression baseline on the SAME test matrix (apples-to-apples).
+    lin = models.get("linear")
+    if lin is not None:
+        lin_point = _recon(lin.predict(X_test))
+        linear_one_step_rmse = float(np.sqrt(np.mean((y_test - lin_point) ** 2)))
+        linear_one_step_mae = float(np.mean(np.abs(y_test - lin_point)))
+        linear_one_step_r2 = float(1 - np.sum((y_test - lin_point) ** 2) / np.sum((y_test - np.mean(y_test)) ** 2))
+    else:
+        linear_one_step_rmse = linear_one_step_mae = linear_one_step_r2 = 0.0
+
     gwl_span = float(np.max(y_test) - np.min(y_test))
 
     shallow_rmse = one_step_rmse
@@ -448,6 +458,9 @@ def diagnose_station(
         "one_step_mae": one_step_mae,
         "one_step_r2": one_step_r2,
         "one_step_nrmse": one_nrmse,
+        "linear_one_step_rmse": linear_one_step_rmse,
+        "linear_one_step_mae": linear_one_step_mae,
+        "linear_one_step_r2": linear_one_step_r2,
         "multi_step_rmse": multi_rmse,
         "multi_step_r2": multi_r2,
         "multi_step_nrmse": multi_nrmse,

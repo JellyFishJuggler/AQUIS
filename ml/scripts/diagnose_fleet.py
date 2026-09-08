@@ -24,6 +24,9 @@ from ml.services.interval_calibration import (  # noqa: E402
     diagnose_station,
     estimate_calibration,
 )
+from ml.services.interpretability import (  # noqa: E402
+    residual_autocorrelation,
+)
 
 DIAGNOSIS_FILE = ARTIFACTS_DIR / "multistep_diagnosis.csv"
 PROGRESS_FILE = ARTIFACTS_DIR / "diagnose_progress.json"
@@ -124,6 +127,68 @@ def main() -> None:
         with open(FAILURES_FILE, "w") as f:
             json.dump(failed, f, indent=2)
         print(f"\nFailures ({len(failed)}): saved to {FAILURES_FILE}")
+
+    # ---- Fleet spatial-error autocorrelation (paper's residual Moran's I) ----
+    write_fleet_spatial_error(df)
+
+    # ---- Fleet model comparison: XGBoost vs Linear baseline ----
+    write_fleet_model_comparison(df)
+
+
+def write_fleet_model_comparison(df: pd.DataFrame) -> None:
+    """Persist + summarise the XGBoost-vs-Linear one-step comparison fleet-wide."""
+    if df.empty or "linear_one_step_r2" not in df.columns:
+        return
+    cols = ["slug", "one_step_rmse", "one_step_mae", "one_step_r2",
+            "linear_one_step_rmse", "linear_one_step_mae", "linear_one_step_r2"]
+    out = df[[c for c in cols if c in df.columns]].copy()
+    out["xgb_wins_rmse"] = out["one_step_rmse"] < out["linear_one_step_rmse"]
+    out_path = ARTIFACTS_DIR / "model_comparison.csv"
+    out.to_csv(out_path, index=False)
+    n = len(out)
+    xgb_win = int(out["xgb_wins_rmse"].sum()) if "xgb_wins_rmse" in out else 0
+    print("\nFleet model comparison (one-step, held-out test):")
+    print(f"  Median XGB R² : {out['one_step_r2'].median():.4f}   (RMSE {out['one_step_rmse'].median():.4f})")
+    print(f"  Median Lin R² : {out['linear_one_step_r2'].median():.4f}   (RMSE {out['linear_one_step_rmse'].median():.4f})")
+    print(f"  XGBoost beats Linear RMSE on {xgb_win}/{n} stations ({100*xgb_win/n:.0f}%)")
+    print(f"  Saved per-station comparison to {out_path}")
+
+
+def write_fleet_spatial_error(df: pd.DataFrame) -> None:
+    """Compute and persist spatial autocorrelation of per-station model error.
+
+    Uses each station's one-step error magnitude (one_step_nrmse) mapped to its
+    (Longitude, Latitude). A significant positive Moran's I means model error
+    clusters in space — a signal that spatial structure is under-modelled.
+    """
+    import pyarrow.parquet as pq
+    try:
+        if df.empty or "slug" not in df.columns or "one_step_nrmse" not in df.columns:
+            return
+        meta = pq.ParquetFile(
+            _ML_ROOT.parent / "ml" / "data" / "processed" / "common.parquet"
+        ).read(columns=["Station", "Agency", "Latitude", "Longitude"]).to_pandas()
+        from ml.preprocessing.timeseries import station_slug
+        meta["slug"] = meta.apply(
+            lambda r: station_slug(r["Station"], r["Agency"], 0), axis=1
+        )
+        m = meta.dropna(subset=["Latitude", "Longitude"]).drop_duplicates("slug")
+        joined = df[["slug", "one_step_nrmse"]].merge(
+            m[["slug", "Longitude", "Latitude"]], on="slug", how="inner"
+        )
+        if len(joined) < 8:
+            return
+        coords = joined[["Longitude", "Latitude"]].to_numpy(dtype=float)
+        err = joined["one_step_nrmse"].to_numpy(dtype=float)
+        report = residual_autocorrelation(err, coords, k=5, n_sim=999)
+        report["n_stations"] = int(len(joined))
+        with open(ARTIFACTS_DIR / "residual_autocorrelation.json", "w") as f:
+            json.dump(report, f, indent=2)
+        print("\nFleet residual spatial autocorrelation (one_step_nrmse):")
+        print(f"  Moran's I = {report['moran_I']:.4f} (p={report['moran_p']:.4f})")
+        print(f"  Geary's C = {report['geary_C']:.4f} (p={report['geary_p']:.4f})")
+    except Exception as e:  # noqa: BLE001 - additive diagnostic only
+        print(f"\nFleet residual spatial autocorrelation skipped: {e}")
 
 
 if __name__ == "__main__":
