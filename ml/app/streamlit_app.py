@@ -21,9 +21,14 @@ from ml.models.xgboost_quantile import (  # noqa: E402
     MAX_HORIZON,
     load_models,
     predict_direct,
+    predict_linear_recursive,
     predict_recursive,
     station_dirs,
     train_models_for_station,
+)
+from ml.services.interpretability import (  # noqa: E402
+    permutation_importance_report,
+    vif_report,
 )
 from ml.preprocessing.timeseries import (  # noqa: E402
     AGENCY_COL,
@@ -33,7 +38,6 @@ from ml.preprocessing.timeseries import (  # noqa: E402
     STATION_COL,
     full_pipeline,
     load_and_clean,
-    normalize_district,
     prepare_feature_matrix,
     station_slug,
 )
@@ -148,37 +152,6 @@ def time_to_worse_band(
     return None, boundary
 
 
-@st.cache_data(show_spinner=False)
-def load_district_classifications() -> dict[str, dict]:
-    """Per-district CGWB stage-of-extraction percent from back-end data.csv.
-
-    Keyed by normalized district name (uppercase). A helper so several stations
-    in the same district share one lookup (cached). Returns the current class
-    badge and band index.
-    """
-    import pandas as _pd
-
-    df = _pd.read_csv(_ML_ROOT.parent / "back-end" / "db" / "data.csv")
-    col = "Stage of Ground Water Extraction (%)_Total_Total"
-    up = df[df.get("STATE") == "UTTAR PRADESH"].copy()
-    if col not in up.columns:
-        return {}
-    up[col] = _pd.to_numeric(up[col], errors="coerce")
-    out: dict[str, dict] = {}
-    for _, r in up.iterrows():
-        nm = str(r.get("DISTRICT", "")).upper()
-        if not nm:
-            continue
-        cls = classify_stage(r[col])
-        out[nm] = {
-            "stage_pct": float(r[col]) if _pd.notna(r[col]) else None,
-            "label": cls["label"],
-            "color": cls["color"],
-            "index": cls["index"],
-        }
-    return out
-
-
 def _district_stage(pipe_full: pd.DataFrame) -> dict | None:
     """Stage-of-extraction% for the selected station's district (from its own rows)."""
     stage = pipe_full["district_extraction_stage_pct"].dropna().iloc[0] if "district_extraction_stage_pct" in pipe_full.columns and not pipe_full["district_extraction_stage_pct"].dropna().empty else None
@@ -259,26 +232,6 @@ def district_level_stats() -> dict[str, dict]:
 
 
 @st.cache_data(show_spinner=False)
-def _district_watchlist() -> list[dict]:
-    """Districts already Critical / Over-Exploited by CGWB stage-of-extraction%.
-    
-    Lightweight fleet-level alert strip — reuses the cached per-district
-    classification (no reforecasting/re-training of the fleet). Sorted by
-    descending extraction % so the most stressed districts are listed first.
-    """
-    cls = load_district_classifications()
-    if not cls:
-        return []
-    flagged = [
-        {"district": nm, "label": d["label"], "color": d["color"], "pct": d["stage_pct"]}
-        for nm, d in cls.items()
-        if d.get("index", -1) >= 2  # Critical(2) or Over-Exploited(3)
-    ]
-    flagged.sort(key=lambda r: r["pct"] if r["pct"] is not None else -1, reverse=True)
-    return flagged
-
-
-@st.cache_data(show_spinner=False)
 def _global_data_freshness() -> dict:
     """Latest observed timestamp across the ENTIRE loaded parquet (all depths/rows).
 
@@ -355,6 +308,12 @@ def _render_data_stale_banner() -> None:
         )
 
 
+def _recency_sort_key(s: dict):
+    """Newest last-update first; missing recency sinks to the bottom (then alphabetical)."""
+    epoch = s.get("last_epoch")
+    return (-(epoch if epoch is not None else -1e18), s.get("display", ""))
+
+
 @st.cache_data(show_spinner=False)
 def load_station_list() -> list[dict]:
     """Load ALL stations (display, slug, district, agency, state) from the parquet.
@@ -388,7 +347,7 @@ def load_station_list() -> list[dict]:
 
     try:
         t = pq.ParquetFile(STATION_META_PATH) \
-               .read(columns=[STATION_COL, "Agency", "SlNo", "District", "State"]) \
+               .read(columns=[STATION_COL, "Agency", "SlNo", "District", "State", TIME_COL]) \
                .to_pandas()
     except Exception as e:  # missing column / corrupt file / pyarrow failure
         STATION_LOAD_ERROR = (
@@ -407,11 +366,31 @@ def load_station_list() -> list[dict]:
     trained = {d.name for d in station_dirs()}
     STATION_TRAINED_COUNT = len(trained)
 
+    # Recency: newest Data Acquisition Time per (Station, Agency) — computed on the
+    # FULL frame BEFORE dedup (dedup keeps the first/oldest row, so it must not shrink
+    # the time window). Enables the station picker/filters to show the most recently
+    # updated entries at the top.
+    if TIME_COL in t.columns:
+        ordered = t.sort_values(TIME_COL)
+        last_by_key = ordered.groupby([STATION_COL, AGENCY_COL])[TIME_COL].last()
+    else:
+        last_by_key = None
+
     t = t.drop_duplicates(subset=[STATION_COL, AGENCY_COL]).dropna(subset=[STATION_COL, "Agency"])
 
     stations = []
     for row in t.itertuples(index=False):
         slug = station_slug(str(row.Station), str(row.Agency), getattr(row, "SlNo", 0))
+        last_ts = None
+        if last_by_key is not None:
+            try:
+                last_ts = last_by_key.get((str(row.Station), str(row.Agency)), None)
+            except Exception:
+                last_ts = None
+        try:
+            last_epoch = float(pd.Timestamp(last_ts).timestamp()) if last_ts is not None and pd.notna(last_ts) else None
+        except Exception:
+            last_epoch = None
         stations.append({
             "display": str(row.Station),
             "slug": slug,
@@ -419,9 +398,11 @@ def load_station_list() -> list[dict]:
             "agency": str(row.Agency),
             "state": str(row.State) if pd.notna(getattr(row, "State", None)) else "",
             "has_model": slug in trained,
+            "last_ts": str(last_ts) if last_epoch is not None else "",
+            "last_epoch": last_epoch,
         })
     STATION_LOAD_ERROR = None
-    return sorted(stations, key=lambda x: x["display"])
+    return sorted(stations, key=_recency_sort_key)
 
 
 @st.cache_data(show_spinner=False)
@@ -506,7 +487,7 @@ def _diagnosis_for_station(
     Instead, when no CSV row exists we recompute the SAME classification on-demand
     via ``diagnose_station`` (identical logic / thresholds to the fleet run) using
     the station's freshly loaded/trained models and its real train/test split. This
-    makes the trust badge + Home trust column work without the CSV.
+    makes the trust badge work without the CSV.
     """
     row = _row_for(diag_df, display)
     if row is not None:
@@ -518,30 +499,6 @@ def _diagnosis_for_station(
     if diag is None or not diag.get("label"):
         return None
     return diag
-
-
-@st.cache_resource(show_spinner=False)
-def _fleet_diag_for(display: str, slug: str) -> dict | None:
-    """On-demand trust classification for ONE fleet station on the Home tab.
-
-    Used as a fallback when the pre-generated fleet diagnosis CSV is absent (deployed
-    host — the CSV lives in the git-ignored ``ml/artifacts``). Loads the station's
-    cached pipeline + models and runs the SAME ``diagnose_station`` classification the
-    fleet CSV uses, keyed by slug so each station diagnoses once per process. Only
-    meaningful for stations that actually have model artifacts; unchanged stations (no
-    CSV, no models) return None and render as "—" on the Home page.
-    """
-    artifact_dir = ARTIFACTS_DIR / slug
-    if not (artifact_dir / "recursive" / "xgb_point.joblib").is_file():
-        return None
-    try:
-        pipe = _get_pipeline(slug)
-        models = load_models(artifact_dir)
-        return _diagnosis_for_station(
-            None, display, pipe["full"], pipe["test"], pipe["feature_cols"], models,
-        )
-    except Exception:
-        return None
 
 
 def _render_trust_badge(diag_row: dict | None) -> None:
@@ -1045,6 +1002,61 @@ def _metric_cards(y_true: np.ndarray, y_pred: np.ndarray, y_low: np.ndarray, y_h
     }
 
 
+def _render_interpretability(artifact_dir: Path, models: dict, feature_cols: list[str], test_df: pd.DataFrame) -> None:
+    """Render the paper-style interpretability: permutation importance + VIF.
+
+    Loads the saved ``interpretability.json`` when present (produced at training
+    time); otherwise computes it on the fly from the trained recursive model.
+    This is additive — never alters the forecast.
+    """
+    import json
+    st.markdown("#### Interpretability (permutation importance + collinearity)")
+    report = None
+    ifp = artifact_dir / "interpretability.json"
+    if ifp.exists():
+        try:
+            with open(ifp) as f:
+                report = json.load(f)
+        except Exception:  # noqa: BLE001
+            report = None
+    if report is None or "permutation_importance" not in report:
+        try:
+            pmod = models["recursive"].get("point")
+            Xte, yte, _ = prepare_feature_matrix(
+                test_df[feature_cols + [GWL_COL]]
+            ) if len(test_df) and feature_cols else (None, None, None)
+            if pmod is not None and Xte is not None and len(Xte):
+                report = {"permutation_importance": permutation_importance_report(
+                    pmod, Xte, yte, feature_cols, n_repeats=5, seed=42)}
+        except Exception:  # noqa: BLE001
+            report = None
+    if not report or "permutation_importance" not in report:
+        st.info("Interpretability not available — retrain this station to compute feature importance and VIF.")
+        return
+    perm = report["permutation_importance"]
+    if isinstance(perm, list) and perm:
+        top = perm[:12]
+        fig = go.Figure(go.Bar(
+            x=[r["importance_mean"] for r in top],
+            y=[r["feature"] for r in top],
+            orientation="h",
+            marker_color="#1f77b4",
+        ))
+        fig.update_layout(
+            title="Top features by permutation importance (1-step)",
+            xaxis_title="Mean RMSE increase when shuffled",
+            yaxis_title=None, height=380, margin=dict(l=10, r=10, t=40, b=10),
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    if "vif" in report and report.get("vif"):
+        v = report["vif"]
+        flagged = v.get("highly_correlated_gt10", [])
+        st.write(f"**VIF > 10 (collinearity)**: "
+                 f"{', '.join(flagged) if flagged else 'none detected'}")
+        with st.expander("VIF per feature"):
+            st.write({f: round(vv, 2) for f, vv in zip(v["feature"], v["vif"])})
+
+
 def _render_analysis_tab(
     display: str, full_df: pd.DataFrame, models: dict, calibration, feature_cols: list[str],
 ) -> None:
@@ -1109,6 +1121,22 @@ def _render_analysis_tab(
         ))
 
     fig.add_vline(x=anchor_ts, line_dash="dot", line_color="#888", annotation_text="Anchor (as-of)")
+
+    # Linear-regression baseline overlay (point forecast only) for comparison.
+    try:
+        X_last2, _, _ = prepare_feature_matrix(hist[feature_cols + [GWL_COL]].tail(1))
+        if len(X_last2) and models.get("linear") is not None:
+            lin_fc = predict_linear_recursive(models, X_last2[0], int(horizon_d), feature_cols)
+            if len(lin_fc) == len(ff["point"]):
+                fig.add_trace(go.Scatter(
+                    x=ff["future_dates"].values, y=lin_fc,
+                    mode="lines+markers", name="Linear (baseline)",
+                    line=dict(color="#e377c2", dash="dash", width=2),
+                    marker=dict(size=5), legendrank=4,
+                ))
+    except Exception:  # noqa: BLE001 - overlay must never break the forecast
+        pass
+
     st.plotly_chart(fig, width="stretch")
 
     # Scoped metrics over overlapping forecast dates that have observed readings.
@@ -1299,271 +1327,178 @@ def _render_overview_tab(
                     f"{((last_gwl-gwl_min)/gwl_span*100) if gwl_span>0 else 0:.0f}% of its historical depth)")
 
     # Station-specific footer only — this page is exclusively about the selected
-    # station. Fleet/district alerts live on the Home tab, not here.
+    # station.
     st.caption(
         f"All figures above are for **{display}** only. "
         f"Latest actual reading: **{last_date.date()}** ({days_ago}d ago). "
-        "District-wide alerts and other stations are on the **🏠 Home** tab."
+        "Change the station from the **Select Station** dropdown on the left to compare."
     )
 
 
-@st.cache_data(show_spinner=False)
-def _fleet_latest_readings() -> dict[str, dict]:
-    """Latest observed (date, value) per station from the parquet.
+def _render_data_retrieval(selected_display: str = "", selected_slug: str = "", selected_district: str = "") -> None:
+    """Instant data-retrieval panel — dropdowns, deterministic, NO LLM wait.
 
-    Memory-light fleet pass used by the Home dashboard: projects ONLY the columns
-    needed to resolve each station's last reading (Station — Time column projection
-    with a per-Station groupby would be heavier; we read Station+Time+Level and keep
-    the max-Time row per Station). This is the OBSERVED source of truth for freshness,
-    current level, and deltas across the fleet — never forecast values.
+    Renders observed facts (latest level, trend, forecast-ready station notes) for
+    a chosen station or district straight from the parquet. Fast + always works,
+    even if the Ollama/LLM service is unavailable.
     """
-    import pyarrow.parquet as pq
-    if not STATION_META_PATH.exists():
-        return {}
+    from ml.agent.data_assistant import DataAssistant, _get_df
+
+    st.markdown("#### 🔎 Data Retrieval (instant)")
+    st.caption("Pick a station or district to see its latest level, trend and stats — "
+               "no AI delay. Use the chat below for a natural-language summary.")
+
+    da = DataAssistant()
     try:
-        t = pq.ParquetFile(STATION_META_PATH) \
-               .read(columns=[STATION_COL, TIME_COL, GWL_COL]).to_pandas()
-    except Exception:
-        return {}
-    t = t.dropna(subset=[STATION_COL, TIME_COL, GWL_COL])
-    if t.empty:
-        return {}
-    t[TIME_COL] = pd.to_datetime(t[TIME_COL], errors="coerce")
-    t = t.dropna(subset=[TIME_COL])
-    t = t.sort_values(TIME_COL)
-    last = t.groupby(STATION_COL).tail(1)
-    today = pd.Timestamp.now().normalize()
-    out: dict[str, dict] = {}
-    for _, row in last.iterrows():
-        d = pd.Timestamp(row[TIME_COL]).normalize()
-        out[str(row[STATION_COL])] = {
-            "last_date": d,
-            "last_value": float(row[GWL_COL]),
-            "days_ago": int((today - d).days),
-        }
-    return out
+        df = _get_df()
+    except Exception:  # noqa: BLE001
+        st.error("Could not load AQUIS data.")
+        return
 
+    stations = sorted(df[df["Station"].notna()]["Station"].unique())
+    districts = sorted(df[df["District"].notna()]["District"].astype(str).unique())
 
-def _render_home_tab(stations: list[dict], diag_df: pd.DataFrame | None) -> None:
-    """Operational summary across ALL trained stations (Home tab).
+    # Keep the dropdowns consistent with global ordering: most recently updated
+    # station/district at the top (latest/updated first), then alphabetical.
+    try:
+        def _recency_map(group_col: str) -> dict:
+            gi = df.groupby(group_col)[TIME_COL].transform("max")
+            sub = df[df[TIME_COL] == gi][[group_col, TIME_COL]].drop_duplicates(group_col)
+            return {r[group_col]: float(pd.Timestamp(r[TIME_COL]).timestamp()) for _, r in sub.iterrows()}
 
-    HOME = "What is happening across my fleet, and what needs my attention?"
+        st_epoch = _recency_map("Station")
+        stations = sorted(stations, key=lambda s: (-st_epoch.get(s, -(10**18)), s))
+        d_epoch = _recency_map("District")
+        districts = sorted(districts, key=lambda d: (-d_epoch.get(d, -(10**18)), d))
+    except Exception:  # noqa: BLE001 - ordering is cosmetic; never break the panel
+        pass
 
-    Uses ONLY existing metrics — trust labels from the fleet diagnosis CSV, CGWB
-    class from the cached district classification, freshness/latest-readings from the
-    parquet observed rows. No new scoring/model is introduced and no per-station
-    forecast is run for the whole fleet (that lives in Detailed Analysis).
-    """
-    today = pd.Timestamp.now().normalize()
+    cA, cB, cC = st.columns([1, 2, 1])
+    with cA:
+        scope = st.radio("Scope", ["Station", "District"], horizontal=True, key="dr_scope")
+    if scope == "Station":
+        idx = next((i for i, s in enumerate(stations) if s == selected_display), 0)
+        with cB:
+            target = st.selectbox("Station", stations, index=idx, key="dr_station")
+        facts = da.fast_facts(station=target)
+    else:
+        idx = next((i for i, d in enumerate(districts) if d == selected_district), 0)
+        with cB:
+            target = st.selectbox("District", districts, index=idx, key="dr_district")
+        facts = da.fast_facts(district=target)
 
-    # Trained population = stations with a usable model artifact (has_model).
-    trained = [s for s in stations if s.get("has_model")]
-    # Fall back to all stations if none are flagged trained (e.g. diagnosis absent on
-    # a host where model dirs exist but the flag source differs).
-    if not trained and stations:
-        trained = stations
+    if not facts:
+        st.info("No data for that selection.")
+        return
 
-    readings = _fleet_latest_readings()
-    cls = load_district_classifications()  # keyed by normalized district
-    diag_map = {}
-    if diag_df is not None and not diag_df.empty:
-        for _, r in diag_df.iterrows():
-            diag_map[str(r["station"])] = r.to_dict()
-    # Deployed hosts have no git-ignored fleet diagnosis CSV. Fill the trust label
-    # on-demand (cached per station) for stations that actually have model artifacts,
-    # so Reliable/Directional/Weak counts are not misleadingly zero.
-    for s in trained:
-        if s["display"] not in diag_map and s.get("has_model"):
-            d = _fleet_diag_for(s["display"], s["slug"])
-            if d:
-                diag_map[s["display"]] = d
-
-    # ---- Row-level aggregation for the status table ---------------------------
-    rows = []
-    for s in trained:
-        disp = s["display"]
-        dist_raw = s.get("district", "")
-        dist_norm = normalize_district(dist_raw) if dist_raw else dist_raw.upper()
-        dclass = cls.get(dist_norm, {})
-
-        rd = readings.get(disp, {})
-        days_ago = rd.get("days_ago")
-        last_value = rd.get("last_value")
-        last_date = rd.get("last_date")
-
-        diag = diag_map.get(disp, {})
-        label = diag.get("label", "—")
-        reason = diag.get("reason", "")
-
-        # Freshness bucket.
-        if days_ago is None:
-            fresh_label, fresh_color = "no data", "gray"
-        elif days_ago <= 2:
-            fresh_label, fresh_color = "Fresh", "green"
-        elif days_ago <= 14:
-            fresh_label, fresh_color = "Stale", "orange"
+    if facts.get("level") == "station":
+        m1, m2, m3, m4, m5 = st.columns(5)
+        m1.metric("Latest level", f"{facts['last']:.2f} m", f"on {facts['last_date']}")
+        m2.metric("30-day change", _fmt_dr(facts.get("change_30d")))
+        m3.metric("7-day change", _fmt_dr(facts.get("change_7d")))
+        m4.metric("Obs. range", f"{facts['min']:.2f}–{facts['max']:.2f} m")
+        m5.metric("Samples", f"{facts['n_obs']:,}")
+        st.caption(
+            f"District **{facts.get('district')}** median {facts.get('district_median')} m "
+            f"across {facts.get('district_n_stations')} stations. "
+            "Rising = water level went up (GWL is a level in metres)."
+        )
+        # Forecast availability note
+        from ml.models.xgboost_quantile import ARTIFACTS_DIR as _AD
+        from ml.preprocessing.timeseries import station_slug as _slug
+        row = df[df["Station"] == facts["station"]].iloc[0]
+        sslug = _slug(row["Station"], row["Agency"], row["SlNo"])
+        has_fc = (_AD / sslug / "recursive" / "xgb_point.joblib").exists()
+        if has_fc:
+            st.success("A trained forecast model exists — ask in the chat below for a "
+                       "30-day forecast summary.")
         else:
-            fresh_label, fresh_color = "Missing", "red"
+            st.caption("No trained forecast model for this station yet (fleet partially "
+                       "trained) — observed trend shown.")
+    else:
+        m1, m2, m3, m4 = st.columns(4)
+        m1.metric("Stations", f"{facts['n_stations']}")
+        m2.metric("Rising (30d)", f"{facts['rising_30d']}")
+        m3.metric("Falling (30d)", f"{facts['falling_30d']}")
+        m4.metric("Latest median", f"{facts['district_median_latest']:.2f} m")
+        top = sorted(facts.get("stations", {}).items(),
+                     key=lambda kv: kv[1].get("change_30d", 0) or 0, reverse=True)[:5]
+        if top:
+            st.write("Largest 30-day rises:")
+            st.dataframe(pd.DataFrame(
+                [{"Station": k, "Latest": f"{v['last']:.2f} m",
+                  "30d change": f"{_fmt_dr(v.get('change_30d'))} m"} for k, v in top]
+            ), width="stretch")
 
-        # Rapid change: |30d change| heuristic — computed from last two observed
-        # points if available (needs history, so fall back to '—' otherwise). We
-        # approximate with the gap: not computed here to keep fleet pass cheap.
-        rapid = "—"
 
-        # Action / attention indicator.
-        attention = []
-        if label == "weak":
-            attention.append("weak model")
-        if dclass.get("index", -1) >= 2:  # Critical/Over-Exploited
-            attention.append("critical district")
-        if fresh_color == "red":
-            attention.append("stale data")
-        if fresh_color == "orange":
-            attention.append("aging data")
-        action = (", ".join(attention)) if attention else "ok"
+def _fmt_dr(x):
+    return "n/a" if x is None else f"{'+' if x >= 0 else ''}{x:.3f}"
 
-        rows.append({
-            "station": disp,
-            "district": dist_raw,
-            "agency": s.get("agency", ""),
-            "last_value": last_value,
-            "last_date": last_date.strftime("%Y-%m-%d") if last_date is not None else "—",
-            "days_ago": days_ago,
-            "freshness": fresh_label,
-            "fresh_color": fresh_color,
-            "cgwb": dclass.get("label", "—"),
-            "cgwb_color": dclass.get("color", "gray"),
-            "trust": label,
-            "action": action,
-            "one_step_r2": diag.get("one_step_r2"),
-            "multi_step_r2": diag.get("multi_step_r2"),
-            "coverage": diag.get("coverage"),
-        })
 
-    # ---- KPI counts -----------------------------------------------------------
-    n_total = len(rows)
-    n_reliable = sum(1 for r in rows if r["trust"] == "reliable")
-    n_directional = sum(1 for r in rows if r["trust"] == "directional")
-    n_weak = sum(1 for r in rows if r["trust"] == "weak")
-    n_untrained = len(stations) - n_total
-    n_stale = sum(1 for r in rows if r["fresh_color"] in ("orange", "red"))
-    n_critical = sum(1 for r in rows if r["cgwb"] in ("Critical", "Over-Exploited"))
-    n_attention = sum(1 for r in rows if r["action"] != "ok")
+def _render_ai_assistant(selected_display: str = "", selected_slug: str = "", selected_district: str = "") -> None:
+    """AI Assistant chat tab — scoped to the station selected in the sidebar.
 
-    # ---- Render summary -------------------------------------------------------
-    st.markdown("### 🏠 Fleet Overview")
+    Answers from the LIVE AQUIS data (parquet + trained models) for the currently
+    selected station ONLY — it never switches to another station or district. Uses
+    the open-source model (llama3.2:3b via Ollama + LangChain) only to phrase the
+    answer from deterministic computed facts.
+    """
+    st.markdown("### 🤖 AQUIS Assistant — trends & forecasts")
     st.caption(
-        f"Snapshot of **{n_total}** trained stations (of {len(stations)} in the current "
-        f"filter). Model trust from the fleet diagnosis; status from observed data. "
-        "Home stays fleet-level — pick a station to drill into its forecast."
+        f"Ask about **{selected_display}** (district **{selected_district}**) — "
+        "this assistant only talks about the station selected in the sidebar. "
+        "Local open-source model — nothing leaves your machine."
     )
 
-    k1, k2, k3, k4, k5, k6 = st.columns(6)
-    k1.metric("Trained", n_total)
-    k2.metric("Reliable", n_reliable)
-    k3.metric("Directional", n_directional)
-    k4.metric("Weak", n_weak)
-    k5.metric("Need Attention", n_attention)
-    k6.metric("Stale/Missing", n_stale)
-    if n_untrained > 0:
-        st.caption(f"ℹ️ {n_untrained} additional stations present in the data but not yet trained "
-                   "(no model artifact) — not counted as 'trained' above.")
+    _render_data_retrieval(selected_display, selected_slug, selected_district)
 
-    # ---- Filters for the status table -----------------------------------------
-    st.markdown("#### Station Status")
-    ctrl = st.columns([1, 1, 1, 2])
-    f_tr = ctrl[0].selectbox("Model trust", ["All", "reliable", "directional", "weak"])
-    f_fresh = ctrl[1].selectbox("Freshness", ["All", "Fresh", "Stale", "Missing"])
-    f_cgwb = ctrl[2].selectbox("CGWB status", ["All", "Safe", "Semi-Critical", "Critical", "Over-Exploited"])
-    f_att = ctrl[3].selectbox("Attention", ["All", "Needs attention", "OK"])
+    st.markdown("---")
 
-    def _row_keep(r: dict) -> bool:
-        if f_tr != "All" and r["trust"] != f_tr:
-            return False
-        if f_fresh != "All" and r["freshness"] != f_fresh:
-            return False
-        if f_cgwb != "All" and r["cgwb"] != f_cgwb:
-            return False
-        if f_att == "Needs attention" and r["action"] == "ok":
-            return False
-        if f_att == "OK" and r["action"] != "ok":
-            return False
-        return True
+    if "ai_messages" not in st.session_state:
+        st.session_state.ai_messages = [
+            {"role": "assistant", "content":
+             f"Hello! I can answer about the selected station "
+             f"**{selected_display}** (district {selected_district}). Ask e.g. "
+             f"“latest level”, “trend over 30 days”, or “60-day forecast” for it."}
+        ]
 
-    view = [r for r in rows if _row_keep(r)]
-    view.sort(key=lambda r: (r["action"] != "ok", -(r["days_ago"] or 0)))
+    for m in st.session_state.ai_messages:
+        with st.chat_message(m["role"]):
+            st.markdown(m["content"])
 
-    if view:
-        # Compact, colored status table (sortable by column header).
-        table = st.dataframe(
-            pd.DataFrame([{
-                "Station": r["station"],
-                "District": r["district"],
-                "Agency": r["agency"],
-                "Last Reading (m)": (f"{r['last_value']:.2f}" if r["last_value"] is not None else "—"),
-                "Reading Date": r["last_date"],
-                "Days Ago": r["days_ago"] if r["days_ago"] is not None else "—",
-                "Freshness": r["freshness"],
-                "CGWB": r["cgwb"],
-                "Trust": r["trust"],
-                "Action": r["action"],
-            } for r in view]),
-            width="stretch",
-            hide_index=True,
+    if prompt := st.chat_input(f"Ask about {selected_display}"):
+        st.session_state.ai_messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+        with st.chat_message("assistant"):
+            with st.spinner("Querying AQUIS data + generating answer (local model, ~15-60s)..."):
+                try:
+                    from ml.agent.data_assistant import DataAssistant
+
+                    assistant = DataAssistant()
+                    res = assistant.answer(prompt, station=selected_display, station_slug=selected_slug)
+                    answer = res.get("answer", "Sorry, could not generate an answer.")
+                except Exception as e:  # noqa: BLE001 - surface setup issues, don't crash
+                    answer = (
+                        "⚠️ **Could not reach the assistant.** "
+                        "Is the Ollama server running with `llama3.2:3b` pulled? "
+                        f"Error: `{e}`"
+                    )
+                st.markdown(answer)
+        st.session_state.ai_messages.append({"role": "assistant", "content": answer})
+
+    with st.expander("ℹ️ About this assistant"):
+        st.markdown(
+            "**Stack**: LangChain + Ollama (open-source, local).\n\n"
+            "- **Chat model**: `llama3.2:3b` (runs on the laptop GPU)\n"
+            "- **Data**: live `common.parquet` (observed trends, latest levels) + "
+            "trained forecast models (30-day prediction) for retrained stations\n"
+            "- **Scope**: always answers about the station selected in the sidebar — "
+            f"**{selected_display}** (district {selected_district})\n"
+            "- **Convention**: GWL values are water-table levels in metres — "
+            "rising level = value went up, declining = value went down\n\n"
+            "The LLM only phrases an answer from pre-computed facts (no made-up numbers)."
         )
-        st.caption(f"Showing {len(view)} of {len(rows)} trained stations.")
-    else:
-        st.info("No trained stations match the current filters.")
-
-    # ---- Attention / action section -------------------------------------------
-    st.markdown("#### ⚠️ Needs Attention")
-    attn = [r for r in rows if r["action"] != "ok"]
-    if attn:
-        attn.sort(key=lambda r: -(r["days_ago"] or 999), reverse=True)
-        for r in attn[:8]:
-            why = r["action"]
-            f = r["fresh_color"]
-            st.markdown(
-                f"- **{r['station']}** ({r['district']})"
-                f" — :{f}[{r['freshness']}] · :{r['cgwb_color']}[{r['cgwb']}] · "
-                f"trust :{('green' if r['trust']=='reliable' else 'orange' if r['trust']=='directional' else 'red')}[{r['trust']}] · "
-                f"**{why}**"
-            )
-    else:
-        st.caption("All trained stations are currently healthy. 🎉")
-
-    # ---- Overall trends -------------------------------------------------------
-    st.markdown("#### Trend Snapshot")
-    tg = st.columns(3)
-    rmse_well = [r["one_step_r2"] for r in rows if r["one_step_r2"] is not None]
-    cov_well = [r["coverage"] for r in rows if r["coverage"] is not None]
-    tg[0].metric("Median 1-step R²",
-                 (f"{float(np.median(rmse_well)):.3f}" if rmse_well else "—"))
-    tg[1].metric("Median calibrated coverage",
-                 (f"{float(np.median(cov_well)):.2%}" if cov_well else "—"))
-    tg[2].metric("Critical/Over-Exploited districts", f"{n_critical}")
-
-    # Fleet-level district watchlist (relocated here from Station Overview — this is
-    # district-wide, so it belongs on the Home dashboard, not a single-station page).
-    with st.expander("🚨 District Watchlist — Critical / Over-Exploited"):
-        watch = _district_watchlist()
-        if watch:
-            st.markdown(" | ".join(
-                f":{row['color']}[**{row['district']}** ({row['label']}, {row['pct']:.0f}%)]"
-                for row in watch
-            ))
-            st.caption("Districts with CGWB stage-of-extraction \u2265 90% (Critical / Over-Exploited). "
-                       "Stations in these districts are under the highest aquifer stress.")
-        else:
-            st.caption("No district currently flagged Critical/Over-Exploited.")
-
-    dist_summary = pd.Series([r["district"] for r in rows]).value_counts().head(8)
-    with st.expander("Stations per district (top)"):
-        st.dataframe(dist_summary.rename("stations"), width="stretch")
-
-    st.caption("Tip: use the **Select Station** control to open one station's "
-               "Station Overview and Detailed Analysis (Test / Live Outlook / "
-               "Backtest / Model Info / Retrain).")
 
 
 def main() -> None:
@@ -1592,7 +1527,13 @@ def main() -> None:
     # ---- Station discovery / filter layer (narrows WHICH station is viewed; never
     # feeds into forecast math — the selected station still runs the same pipeline).
     state_meta = sorted({s["state"] for s in stations if s.get("state")})
-    dist_meta = sorted({s["district"] for s in stations if s.get("district")})
+    dist_recency = {}
+    for s in stations:
+        dst = s.get("district") or ""
+        if dst:
+            dist_recency[dst] = max(dist_recency.get(dst, -(10**18)), s.get("last_epoch") or -(10**18))
+    dist_meta = sorted({s["district"] for s in stations if s.get("district")},
+                       key=lambda d: (-dist_recency[d], d))
     agency_meta = sorted({s["agency"] for s in stations if s.get("agency")})
 
     with st.sidebar:
@@ -1610,8 +1551,8 @@ def main() -> None:
             return False
         return True
 
-    filtered = [s for s in stations if _keep(s)]
-    filtered.sort(key=lambda s: s["display"])
+    filtered = [s for s in stations if _keep(s)]  # stations already recency-sorted
+    filtered.sort(key=_recency_sort_key)
     if not filtered:
         st.info("No stations match the current filters — clear or broaden District/Agency/State.")
         st.stop()
@@ -1619,7 +1560,8 @@ def main() -> None:
     display_meta = {s["display"]: s for s in filtered}
     slug_meta = {s["slug"]: s for s in filtered}
     display_names = [s["display"] for s in filtered]
-    default_idx = next((i for i, s in enumerate(filtered) if "Alipur" in s["display"]), 0)
+    # Default to the top of the (recency-sorted) list = the most recently updated station.
+    default_idx = 0
 
     selected_display = st.selectbox("Select Station", display_names, index=default_idx)
     selected_slug = display_meta[selected_display]["slug"]
@@ -1673,15 +1615,11 @@ def main() -> None:
     with col2:
         _render_trust_badge(diag_row)
 
-    tab_home, tab_station, tab_analysis = st.tabs([
-        "🏠 Home",
+    tab_station, tab_analysis, tab_ai = st.tabs([
         f"🛰 Station Overview — {selected_display}",
         "📊 Detailed Analysis",
+        "🤖 AI Assistant",
     ])
-
-    # ---- HOME: fleet-wide operational summary (all trained stations). -------
-    with tab_home:
-        _render_home_tab(filtered, diag_df)
 
     # ---- STATION OVERVIEW: selected station ONLY. --------------------------
     with tab_station:
@@ -1696,6 +1634,14 @@ def main() -> None:
             "📋 Model Info",
             "⚙️ Retrain",
         ])
+
+    # ---- AI ASSISTANT: data-aware Q&A over AQUIS districts/stations. -----------
+    with tab_ai:
+        _render_ai_assistant(
+            selected_display=selected_display,
+            selected_slug=selected_slug,
+            selected_district=slug_meta[selected_slug].get("district", ""),
+        )
 
     with at1:
         st.markdown("### One-step backtest on held-out test set (reliable short-range accuracy)")
@@ -1873,6 +1819,24 @@ def main() -> None:
         c6.metric("Multi-step R²", f"{meta.get('multi_step_r2', 0.0):.3f}")
         c7.metric("Reliability", f"{label_icon} {label_text}")
 
+        st.markdown("#### Model Comparison — XGBoost vs Linear Baseline (1-step)")
+        c1, c2, c3, c4, c5, c6 = st.columns(6)
+        c1.metric("XGB R²", f"{acc_r2:.3f}")
+        c2.metric("Linear R²", f"{meta.get('linear_one_step_r2', 0.0):.3f}")
+        c3.metric("XGB RMSE", f"{acc_rmse:.3f} m")
+        c4.metric("Linear RMSE", f"{meta.get('linear_one_step_rmse', 0.0):.3f} m")
+        c5.metric("XGB MAE", f"{acc_mae:.3f} m")
+        c6.metric("Linear MAE", f"{meta.get('linear_one_step_mae', 0.0):.3f} m")
+        xgb_r2 = acc_r2
+        lin_r2 = meta.get('linear_one_step_r2', 0.0)
+        st.caption(
+            "**Linear R² is the interpretable baseline** on the same feature set. "
+            f"XGBoost {'leads' if xgb_r2 >= lin_r2 else 'trails'} by "
+            f"{abs(xgb_r2 - lin_r2):.3f} R² here — this shows when the added complexity "
+            "of gradient boosting pays off, and when a simple linear model is competitive "
+            "for this station's dynamics."
+        )
+
         st.markdown("#### Training Information")
         c1, c2, c3 = st.columns(3)
         c1.metric("Train Samples", f"{meta.get('n_train', 0):,}")
@@ -1894,6 +1858,8 @@ def main() -> None:
         st.markdown("#### Hyperparameters")
         with st.expander("XGBoost parameters"):
             st.json(meta.get("params", {}))
+
+        _render_interpretability(artifact_dir, models, feature_cols, test_df)
 
     with at5:
         _train_station_ui(selected_display, selected_slug, train_df, test_df, feature_cols)

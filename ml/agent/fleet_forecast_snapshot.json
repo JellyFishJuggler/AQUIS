@@ -1,0 +1,925 @@
+{
+  "computed_at": "2026-09-08 00:51:14",
+  "stations": {
+    "750523- Kakalpur PMS -Medium_UPGW_0d39e8d9": {
+      "slug": "750523- Kakalpur PMS -Medium_UPGW_0d39e8d9",
+      "day7_pred": -11.966854221164459,
+      "day30_pred": -14.155244149479312,
+      "day60_pred": -14.233,
+      "change_30d_pred": -2.1184130771818133,
+      "change_60d_pred": -2.1961689277025016,
+      "direction": "expected decline",
+      "seconds": 6.4
+    },
+    "750128- PMS Sulemapur -Medium_UPGW_df2d1410": {
+      "slug": "750128- PMS Sulemapur -Medium_UPGW_df2d1410",
+      "day7_pred": -9.392861049801457,
+      "day30_pred": -9.388165847298609,
+      "day60_pred": -9.388,
+      "change_30d_pred": 0.008357637469023516,
+      "change_60d_pred": 0.008523484767632539,
+      "direction": "expected rise",
+      "seconds": 6.5
+    },
+    "750718- Primary Sch Matuka -Medium_UPGW_48d03f9d": {
+      "slug": "750718- Primary Sch Matuka -Medium_UPGW_48d03f9d",
+      "day7_pred": -15.620812255540649,
+      "day30_pred": -14.467974943641078,
+      "day60_pred": -14.436,
+      "change_30d_pred": 0.41941176160505833,
+      "change_60d_pred": 0.45138670524613644,
+      "direction": "expected rise",
+      "seconds": 6.5
+    },
+    "390713- Jairampur PMS -Shallow_UPGW_dae67f3f": {
+      "slug": "390713- Jairampur PMS -Shallow_UPGW_dae67f3f",
+      "day7_pred": -0.560658055967642,
+      "day30_pred": -0.7683964626119032,
+      "day60_pred": -0.775,
+      "change_30d_pred": -0.190594295374245,
+      "change_60d_pred": -0.19719783276234182,
+      "direction": "expected decline",
+      "seconds": 6.6
+    },
+    "Aadarsh Kisaan Inter College Bhabhuwa_UPGW_7154da63": {
+      "slug": "Aadarsh Kisaan Inter College Bhabhuwa_UPGW_7154da63",
+      "day7_pred": -14.607454341006354,
+      "day30_pred": -9.105109390477747,
+      "day60_pred": -8.905,
+      "change_30d_pred": 6.300978746889669,
+      "change_60d_pred": 6.501088137367416,
+      "direction": "expected rise",
+      "seconds": 3.7
+    },
+    "Aadarsh Prathmik Vidhyalaya Mahua_UPGW_eaeeb30a": {
+      "slug": "Aadarsh Prathmik Vidhyalaya Mahua_UPGW_eaeeb30a",
+      "day7_pred": -6.29815769620384,
+      "day30_pred": -7.549633916871998,
+      "day60_pred": -7.604,
+      "change_30d_pred": -1.1564372564785117,
+      "change_60d_pred": -1.2108033396065139,
+      "direction": "expected decline",
+      "seconds": 4.2
+    },
+    "750825- Primary Sch Shivrampur -Medium_UPGW_c0672bcb": {
+      "slug": "750825- Primary Sch Shivrampur -Medium_UPGW_c0672bcb",
+      "day7_pred": -12.951032463245156,
+      "day30_pred": -11.011111253465506,
+      "day60_pred": -10.956,
+      "change_30d_pred": 2.309674776621014,
+      "change_60d_pred": 2.3647860300865204,
+      "direction": "expected rise",
+      "seconds": 4.4
+    },
+    "ASHADHA PRATHMIK VIDYALAYA_UPGW_5f5b3671": {
+      "slug": "ASHADHA PRATHMIK VIDYALAYA_UPGW_5f5b3671",
+      "day7_pred": -5.9890472460606725,
+      "day30_pred": -6.4607423097434316,
+      "day60_pred": -6.478,
+      "change_30d_pred": 0.013902711912774812,
+      "change_60d_pred": -0.003354978343793391,
+      "direction": "expected decline",
+      "seconds": 4.5
+    },
+    "Aaganwadi Kender Kakrawali_UPGW_a060205f": {
+      "slug": "Aaganwadi Kender Kakrawali_UPGW_a060205f",
+      "day7_pred": -2.4368810892401482,
+      "day30_pred": -2.8128175548226526,
+      "day60_pred": -2.833,
+      "change_30d_pred": -0.785533187611513,
+      "change_60d_pred": -0.8057156327888606,
+      "direction": "expected decline",
+      "seconds": 4.4
+    },
+    "Aaganwadi Kender Khanjarpur_UPGW_21679f87": {
+      "slug": "Aaganwadi Kender Khanjarpur_UPGW_21679f87",
+      "day7_pred": -11.080171514117367,
+      "day30_pred": -10.46896216755406,
+      "day60_pred": -10.448,
+      "change_30d_pred": 0.5053250042096096,
+      "change_60d_pred": 0.5262871717636699,
+      "direction": "expected rise",
+      "seconds": 4.5
+    },
+    "Aagan Wadi Kendra Chandni_UPGW_7ceead1b": {
+      "slug": "Aagan Wadi Kendra Chandni_UPGW_7ceead1b",
+      "day7_pred": -0.2092174649302511,
+      "day30_pred": -1.0857173519642365,
+      "day60_pred": -1.115,
+      "change_30d_pred": -0.5633983988773079,
+      "change_60d_pred": -0.5926810469130714,
+      "direction": "expected decline",
+      "seconds": 4.8
+    },
+    "Aagan Waadi Kender Dwarkapur_UPGW_239fec31": {
+      "slug": "Aagan Waadi Kender Dwarkapur_UPGW_239fec31",
+      "day7_pred": -14.80733213755602,
+      "day30_pred": -17.491854386393356,
+      "day60_pred": -17.563,
+      "change_30d_pred": -1.23893709519756,
+      "change_60d_pred": -1.3100827088042024,
+      "direction": "expected decline",
+      "seconds": 5.4
+    },
+    "Aanganwadi Kendra_UPGW_af5faaa7": {
+      "slug": "Aanganwadi Kendra_UPGW_af5faaa7",
+      "day7_pred": -12.666503446089386,
+      "day30_pred": -11.37026393233256,
+      "day60_pred": -11.306,
+      "change_30d_pred": 1.0776752699025476,
+      "change_60d_pred": 1.1419392022351076,
+      "direction": "expected rise",
+      "seconds": 4.4
+    },
+    "Aaganwadi Kendra Pakri Bazaar_UPGW_e5c3ae90": {
+      "slug": "Aaganwadi Kendra Pakri Bazaar_UPGW_e5c3ae90",
+      "day7_pred": -3.8333207564114247,
+      "day30_pred": -3.8097128160237563,
+      "day60_pred": -3.809,
+      "change_30d_pred": 0.000901113830885869,
+      "change_60d_pred": 0.0016139298546420378,
+      "direction": "expected rise",
+      "seconds": 4.7
+    },
+    "Aanganwadi kendra, Barhara_UPGW_d575ae21": {
+      "slug": "Aanganwadi kendra, Barhara_UPGW_d575ae21",
+      "day7_pred": -17.359849180034388,
+      "day30_pred": -13.83393388257852,
+      "day60_pred": -13.646,
+      "change_30d_pred": 3.4368030954259012,
+      "change_60d_pred": 3.624736978004421,
+      "direction": "expected rise",
+      "seconds": 4.5
+    },
+    "Aanganwadi kendra_UPGW_5d843c8d": {
+      "slug": "Aanganwadi kendra_UPGW_5d843c8d",
+      "day7_pred": -33.86514735100881,
+      "day30_pred": -22.893423982308605,
+      "day60_pred": -22.539,
+      "change_30d_pred": 7.194595917725351,
+      "change_60d_pred": 7.549019900033954,
+      "direction": "expected rise",
+      "seconds": 4.6
+    },
+    "Aasao Pura_UPGW_38ff3f5d": {
+      "slug": "Aasao Pura_UPGW_38ff3f5d",
+      "day7_pred": -3.6413970866945053,
+      "day30_pred": -0.2658386381603053,
+      "day60_pred": -0.21,
+      "change_30d_pred": 1.86040908732645,
+      "change_60d_pred": 1.9162477254867554,
+      "direction": "expected rise",
+      "seconds": 3.6
+    },
+    "Adari_2_UPGW_2d068539": {
+      "slug": "Adari_2_UPGW_2d068539",
+      "day7_pred": 71418.74579503995,
+      "day30_pred": -425551.41001634696,
+      "day60_pred": -3.07,
+      "change_30d_pred": -425669.91815118014,
+      "change_60d_pred": -121.57813483316568,
+      "direction": "expected decline",
+      "seconds": 4.1
+    },
+    "Abdullahpur Primary School -Medium_UPGW_ded94f81": {
+      "slug": "Abdullahpur Primary School -Medium_UPGW_ded94f81",
+      "day7_pred": -18.908605471514477,
+      "day30_pred": -19.233623744966327,
+      "day60_pred": -19.241,
+      "change_30d_pred": -0.25501449038785395,
+      "change_60d_pred": -0.26239074542152707,
+      "direction": "expected decline",
+      "seconds": 4.4
+    },
+    "Abhauli (UP-153)_UPGW_dc3fb35c": {
+      "slug": "Abhauli (UP-153)_UPGW_dc3fb35c",
+      "day7_pred": -14.70410433987998,
+      "day30_pred": -13.729494555456734,
+      "day60_pred": -13.695,
+      "change_30d_pred": 0.8641270673869439,
+      "change_60d_pred": 0.8986216228436774,
+      "direction": "expected rise",
+      "seconds": 4.5
+    },
+    "Agan Wadi Kendra Kuchendu_UPGW_1c2dd704": {
+      "slug": "Agan Wadi Kendra Kuchendu_UPGW_1c2dd704",
+      "day7_pred": -29.935095905000423,
+      "day30_pred": -21.13324729646184,
+      "day60_pred": -20.781,
+      "change_30d_pred": 8.467592891410774,
+      "change_60d_pred": 8.819840187872614,
+      "direction": "expected rise",
+      "seconds": 3.3
+    },
+    "Adarsh Primary School, Dubar Kalan_UPGW_fdc21585": {
+      "slug": "Adarsh Primary School, Dubar Kalan_UPGW_fdc21585",
+      "day7_pred": -1.566154992335579,
+      "day30_pred": -2.098001010059333,
+      "day60_pred": -2.11,
+      "change_30d_pred": -0.20920252221760682,
+      "change_60d_pred": -0.22120151215827377,
+      "direction": "expected decline",
+      "seconds": 4.1
+    },
+    "Aganwadi Kendra Rupauli_UPGW_39b7f054": {
+      "slug": "Aganwadi Kendra Rupauli_UPGW_39b7f054",
+      "day7_pred": -11.159732262260178,
+      "day30_pred": -9.440727893661679,
+      "day60_pred": -9.363,
+      "change_30d_pred": 1.3950436404324567,
+      "change_60d_pred": 1.4727715340941359,
+      "direction": "expected rise",
+      "seconds": 3.4
+    },
+    "Agra City (UP-017)_UPGW_cb3c78f2": {
+      "slug": "Agra City (UP-017)_UPGW_cb3c78f2",
+      "day7_pred": -27.128135322002485,
+      "day30_pred": -26.64379219669761,
+      "day60_pred": -26.63,
+      "change_30d_pred": 0.3367385682911923,
+      "change_60d_pred": 0.35053076498880387,
+      "direction": "expected rise",
+      "seconds": 4.5
+    },
+    "Ahmad Ganj_UPGW_19c70a1d": {
+      "slug": "Ahmad Ganj_UPGW_19c70a1d",
+      "day7_pred": 8.162892519557808,
+      "day30_pred": -2.7262830353945824,
+      "day60_pred": -3.18,
+      "change_30d_pred": -4.11274948606898,
+      "change_60d_pred": -4.5664664506743975,
+      "direction": "expected decline",
+      "seconds": 3.6
+    },
+    "Ahmadpur Savant (UP-163)_UPGW_63ce1705": {
+      "slug": "Ahmadpur Savant (UP-163)_UPGW_63ce1705",
+      "day7_pred": -10.650268262376263,
+      "day30_pred": -10.534480649346945,
+      "day60_pred": -10.528,
+      "change_30d_pred": -0.32240075578739,
+      "change_60d_pred": -0.315920106440446,
+      "direction": "expected decline",
+      "seconds": 4.3
+    },
+    "Airayan  (UP-023)_UPGW_2afb4452": {
+      "slug": "Airayan  (UP-023)_UPGW_2afb4452",
+      "day7_pred": -21.113295804239243,
+      "day30_pred": -19.633926827777376,
+      "day60_pred": -19.59,
+      "change_30d_pred": 0.5922158399063022,
+      "change_60d_pred": 0.6361426676836786,
+      "direction": "expected rise",
+      "seconds": 4.5
+    },
+    "Alakchandra Inter college Bhinga_UPGW_e3ab1600": {
+      "slug": "Alakchandra Inter college Bhinga_UPGW_e3ab1600",
+      "day7_pred": -5.630124254715231,
+      "day30_pred": -5.274537948131117,
+      "day60_pred": -5.267,
+      "change_30d_pred": 0.4695541906066074,
+      "change_60d_pred": 0.47709213873772427,
+      "direction": "expected rise",
+      "seconds": 3.7
+    },
+    "Aligarh Chandaus  Somana_UPGW_c3961686": {
+      "slug": "Aligarh Chandaus  Somana_UPGW_c3961686",
+      "day7_pred": -4.3558681528909045,
+      "day30_pred": -6.403550207282486,
+      "day60_pred": -6.463,
+      "change_30d_pred": -1.4680807861055616,
+      "change_60d_pred": -1.5275305788230753,
+      "direction": "expected decline",
+      "seconds": 4.2
+    },
+    "Aligarh Chandaus Lohput_UPGW_39619e20": {
+      "slug": "Aligarh Chandaus Lohput_UPGW_39619e20",
+      "day7_pred": -14.757258121045048,
+      "day30_pred": -15.611041778882255,
+      "day60_pred": -15.654,
+      "change_30d_pred": -1.171162880634279,
+      "change_60d_pred": -1.2141211017520241,
+      "direction": "expected decline",
+      "seconds": 3.2
+    },
+    "Aligarh Chandaus Chuharpur_UPGW_d3881f9c": {
+      "slug": "Aligarh Chandaus Chuharpur_UPGW_d3881f9c",
+      "day7_pred": -7.028948689619954,
+      "day30_pred": -7.520742162294413,
+      "day60_pred": -7.537,
+      "change_30d_pred": -0.23515720915907323,
+      "change_60d_pred": -0.2514150468646603,
+      "direction": "expected decline",
+      "seconds": 3.6
+    },
+    "Aligarh Chandaus Maharajpur_UPGW_cbcbe904": {
+      "slug": "Aligarh Chandaus Maharajpur_UPGW_cbcbe904",
+      "day7_pred": -4.685337938195985,
+      "day30_pred": -6.946713955500747,
+      "day60_pred": -7.0,
+      "change_30d_pred": -1.3330661661107746,
+      "change_60d_pred": -1.3863522106100277,
+      "direction": "expected decline",
+      "seconds": 3.9
+    },
+    "Aligarh Gonda Chuhurpur Kinala_UPGW_eae773c6": {
+      "slug": "Aligarh Gonda Chuhurpur Kinala_UPGW_eae773c6",
+      "day7_pred": -3.0015919236752184,
+      "day30_pred": -2.9318272028252235,
+      "day60_pred": -2.931,
+      "change_30d_pred": 0.04148680681865091,
+      "change_60d_pred": 0.04231400964387433,
+      "direction": "expected rise",
+      "seconds": 4.2
+    },
+    "Aligarh Jawa Bahadurpur Kota_UPGW_8302d1d4": {
+      "slug": "Aligarh Jawa Bahadurpur Kota_UPGW_8302d1d4",
+      "day7_pred": -6.484463269903448,
+      "day30_pred": -7.912867778477448,
+      "day60_pred": -7.947,
+      "change_30d_pred": -0.5586306441498463,
+      "change_60d_pred": -0.5927628656723982,
+      "direction": "expected decline",
+      "seconds": 4.2
+    },
+    "Aligarh Jawa Jamalpur Siya_UPGW_f9f0b692": {
+      "slug": "Aligarh Jawa Jamalpur Siya_UPGW_f9f0b692",
+      "day7_pred": -13.626645567266829,
+      "day30_pred": -14.124232741927667,
+      "day60_pred": -14.135,
+      "change_30d_pred": -0.20888991269090873,
+      "change_60d_pred": -0.21965717076324154,
+      "direction": "expected decline",
+      "seconds": 4.1
+    },
+    "Aligarh Jawa Sogera_UPGW_5e02ab57": {
+      "slug": "Aligarh Jawa Sogera_UPGW_5e02ab57",
+      "day7_pred": -3.5242348093381435,
+      "day30_pred": -4.146438244210962,
+      "day60_pred": -4.163,
+      "change_30d_pred": -0.633088801043133,
+      "change_60d_pred": -0.6496505568321709,
+      "direction": "expected decline",
+      "seconds": 3.5
+    },
+    "Aligarh Khair Utwara_UPGW_26a8dfc7": {
+      "slug": "Aligarh Khair Utwara_UPGW_26a8dfc7",
+      "day7_pred": -5.16677777128077,
+      "day30_pred": -6.041296226489843,
+      "day60_pred": -6.075,
+      "change_30d_pred": -0.4723241906899238,
+      "change_60d_pred": -0.5060279642000811,
+      "direction": "expected decline",
+      "seconds": 3.8
+    },
+    "Aligarh Lodha Mahrawalpur Nagariya_UPGW_a3079d0a": {
+      "slug": "Aligarh Lodha Mahrawalpur Nagariya_UPGW_a3079d0a",
+      "day7_pred": -21.822979302996373,
+      "day30_pred": -22.665968561641108,
+      "day60_pred": -22.694,
+      "change_30d_pred": -0.5077813199890606,
+      "change_60d_pred": -0.5358127583479515,
+      "direction": "expected decline",
+      "seconds": 3.7
+    },
+    "Aligarh Lodha Aisi Kol_UPGW_6478a226": {
+      "slug": "Aligarh Lodha Aisi Kol_UPGW_6478a226",
+      "day7_pred": -23.445723737312274,
+      "day30_pred": -23.871513360523114,
+      "day60_pred": -23.885,
+      "change_30d_pred": -0.3539764240777714,
+      "change_60d_pred": -0.3674630635546592,
+      "direction": "expected decline",
+      "seconds": 4.3
+    },
+    "Aligarh Khair Arrana_UPGW_6bbb8ebf": {
+      "slug": "Aligarh Khair Arrana_UPGW_6bbb8ebf",
+      "day7_pred": -4.23898630710265,
+      "day30_pred": -5.172698781368468,
+      "day60_pred": -5.199,
+      "change_30d_pred": -0.3931265909914847,
+      "change_60d_pred": -0.4194278096230164,
+      "direction": "expected decline",
+      "seconds": 4.5
+    },
+    "Alipur Aterna_1_UPGW_3759e8f5": {
+      "slug": "Alipur Aterna_1_UPGW_3759e8f5",
+      "day7_pred": 20.392919338377517,
+      "day30_pred": -14.834364505986287,
+      "day60_pred": -16.54,
+      "change_30d_pred": -42.981854383783286,
+      "change_60d_pred": -44.687489877797006,
+      "direction": "expected decline",
+      "seconds": 2.9
+    },
+    "Allaiha Badhaiya_UPGW_50d33766": {
+      "slug": "Allaiha Badhaiya_UPGW_50d33766",
+      "day7_pred": -15.099669094779445,
+      "day30_pred": -1.1035896464581487,
+      "day60_pred": -1.07,
+      "change_30d_pred": 2.806821810693128,
+      "change_60d_pred": 2.8404114571512764,
+      "direction": "expected rise",
+      "seconds": 3.8
+    },
+    "Alipur_UPGW_6d7e7fc1": {
+      "slug": "Alipur_UPGW_6d7e7fc1",
+      "day7_pred": -2.3134525581839327,
+      "day30_pred": -1.9305743506665625,
+      "day60_pred": -1.919,
+      "change_30d_pred": 0.5774800046263961,
+      "change_60d_pred": 0.5890543552929586,
+      "direction": "expected rise",
+      "seconds": 3.9
+    },
+    "Allahabad City (UP-046)_UPGW_4d60da99": {
+      "slug": "Allahabad City (UP-046)_UPGW_4d60da99",
+      "day7_pred": -27.542793392824343,
+      "day30_pred": -25.90629312879754,
+      "day60_pred": -25.849,
+      "change_30d_pred": 1.44807212672589,
+      "change_60d_pred": 1.5053652555234294,
+      "direction": "expected rise",
+      "seconds": 4.0
+    },
+    "Amauli (UP-027)_UPGW_bb6a1899": {
+      "slug": "Amauli (UP-027)_UPGW_bb6a1899",
+      "day7_pred": -29.679069037164545,
+      "day30_pred": -28.496718581380343,
+      "day60_pred": -28.471,
+      "change_30d_pred": 0.22572566374012482,
+      "change_60d_pred": 0.25144424512046726,
+      "direction": "expected rise",
+      "seconds": 4.3
+    },
+    "Amliha_1_UPGW_cee4e113": {
+      "slug": "Amliha_1_UPGW_cee4e113",
+      "day7_pred": 4.093561987623819,
+      "day30_pred": -2.597576067973983,
+      "day60_pred": -2.84,
+      "change_30d_pred": -13.32934655239887,
+      "change_60d_pred": -13.571770484424889,
+      "direction": "expected decline",
+      "seconds": 2.8
+    },
+    "Amchurnirua_UPGW_ea138994": {
+      "slug": "Amchurnirua_UPGW_ea138994",
+      "day7_pred": -4.901464733027975,
+      "day30_pred": -1.178381078491698,
+      "day60_pred": -1.13,
+      "change_30d_pred": 1.090286737623987,
+      "change_60d_pred": 1.1386678161156851,
+      "direction": "expected rise",
+      "seconds": 4.1
+    },
+    "Amgaon (UP-067)_UPGW_8a9fbfe2": {
+      "slug": "Amgaon (UP-067)_UPGW_8a9fbfe2",
+      "day7_pred": -4.157479619030793,
+      "day30_pred": -15.307835201651162,
+      "day60_pred": -15.569,
+      "change_30d_pred": -9.111835749289346,
+      "change_60d_pred": -9.373000547638185,
+      "direction": "expected decline",
+      "seconds": 4.1
+    },
+    "Amroha Forest Department, Medium_UPGW_17e56af5": {
+      "slug": "Amroha Forest Department, Medium_UPGW_17e56af5",
+      "day7_pred": -15.461714676096133,
+      "day30_pred": -15.52675892501102,
+      "day60_pred": -15.534,
+      "change_30d_pred": 0.5843405928113121,
+      "change_60d_pred": 0.5770995178223313,
+      "direction": "expected rise",
+      "seconds": 3.7
+    },
+    "Amlour_UPGW_25c46736": {
+      "slug": "Amlour_UPGW_25c46736",
+      "day7_pred": -24.713459186211146,
+      "day30_pred": -22.361163781187944,
+      "day60_pred": -22.3,
+      "change_30d_pred": 1.5497237376317656,
+      "change_60d_pred": 1.610887518819709,
+      "direction": "expected rise",
+      "seconds": 4.3
+    },
+    "Anganwadi Kedra, Baini_UPGW_1b9c4d51": {
+      "slug": "Anganwadi Kedra, Baini_UPGW_1b9c4d51",
+      "day7_pred": 0.8099712516631894,
+      "day30_pred": -1.1726231523149644,
+      "day60_pred": -1.23,
+      "change_30d_pred": -1.229244603384287,
+      "change_60d_pred": -1.2866214510693226,
+      "direction": "expected decline",
+      "seconds": 3.7
+    },
+    "Amroha Forest Department, Shallow_UPGW_c0526ff7": {
+      "slug": "Amroha Forest Department, Shallow_UPGW_c0526ff7",
+      "day7_pred": -15.457026235392949,
+      "day30_pred": -15.56193918371921,
+      "day60_pred": -15.57,
+      "change_30d_pred": 0.5858516442357615,
+      "change_60d_pred": 0.5777908279549706,
+      "direction": "expected rise",
+      "seconds": 3.9
+    },
+    "Aryavart Madhyamik Vidhyalaya Sindhora_UPGW_01fdb03d": {
+      "slug": "Aryavart Madhyamik Vidhyalaya Sindhora_UPGW_01fdb03d",
+      "day7_pred": -6.713985472129179,
+      "day30_pred": -7.574182963835494,
+      "day60_pred": -7.594,
+      "change_30d_pred": -0.2987159518470195,
+      "change_60d_pred": -0.3185329880115262,
+      "direction": "expected decline",
+      "seconds": 4.1
+    },
+    "Ashapur Dak Banglow-Malawan-Medium_UPGW_d0df448d": {
+      "slug": "Ashapur Dak Banglow-Malawan-Medium_UPGW_d0df448d",
+      "day7_pred": -16.929584673408225,
+      "day30_pred": -16.573222921703152,
+      "day60_pred": -16.563,
+      "change_30d_pred": 0.23243464600793118,
+      "change_60d_pred": 0.2426575677110847,
+      "direction": "expected rise",
+      "seconds": 5.0
+    },
+    "Asafpur (UP-077)_UPGW_8b930a5c": {
+      "slug": "Asafpur (UP-077)_UPGW_8b930a5c",
+      "day7_pred": -16.83024583477511,
+      "day30_pred": -16.636470132028276,
+      "day60_pred": -16.632,
+      "change_30d_pred": 0.07701467762186454,
+      "change_60d_pred": 0.0814848096501386,
+      "direction": "expected rise",
+      "seconds": 5.7
+    },
+    "Ashapur Dak Banglow-Malawan-Shallow_UPGW_c8531d6d": {
+      "slug": "Ashapur Dak Banglow-Malawan-Shallow_UPGW_c8531d6d",
+      "day7_pred": -20.40559434448591,
+      "day30_pred": -20.03670334459526,
+      "day60_pred": -20.028,
+      "change_30d_pred": 0.28279761193815034,
+      "change_60d_pred": 0.2915009565334117,
+      "direction": "expected rise",
+      "seconds": 4.9
+    },
+    "Atrada Pi_1_UPGW_ea2d6bad": {
+      "slug": "Atrada Pi_1_UPGW_ea2d6bad",
+      "day7_pred": -189.71310980269976,
+      "day30_pred": 12.268465243051761,
+      "day60_pred": 1.0,
+      "change_30d_pred": -114.10860955401802,
+      "change_60d_pred": -125.37707479706978,
+      "direction": "expected decline",
+      "seconds": 3.2
+    },
+    "Aspur Deosara (UP-040)_UPGW_e440f332": {
+      "slug": "Aspur Deosara (UP-040)_UPGW_e440f332",
+      "day7_pred": -5.412198936254248,
+      "day30_pred": -5.097216088014629,
+      "day60_pred": -5.085,
+      "change_30d_pred": 0.21356283785631192,
+      "change_60d_pred": 0.22577892587094084,
+      "direction": "expected rise",
+      "seconds": 5.5
+    },
+    "Atarahat_UPGW_cd1083dd": {
+      "slug": "Atarahat_UPGW_cd1083dd",
+      "day7_pred": -21834.316711219304,
+      "day30_pred": -18681324.3752045,
+      "day60_pred": -19.685,
+      "change_30d_pred": -18680432.78179638,
+      "change_60d_pred": 871.9084081202238,
+      "direction": "expected rise",
+      "seconds": 3.7
+    },
+    "Aswaniya Pr. Vid._UPGW_970db86b": {
+      "slug": "Aswaniya Pr. Vid._UPGW_970db86b",
+      "day7_pred": -2.5548794961363854,
+      "day30_pred": -3.5102001297623286,
+      "day60_pred": -3.544,
+      "change_30d_pred": -0.180924034723291,
+      "change_60d_pred": -0.2147239049609624,
+      "direction": "expected decline",
+      "seconds": 4.2
+    },
+    "Azamgarh Ahiraula Bahera_UPGW_a4d38635": {
+      "slug": "Azamgarh Ahiraula Bahera_UPGW_a4d38635",
+      "day7_pred": -4.31974204051586,
+      "day30_pred": -4.556193776319854,
+      "day60_pred": -4.566,
+      "change_30d_pred": 0.01990018470674393,
+      "change_60d_pred": 0.010093961026598208,
+      "direction": "expected rise",
+      "seconds": 4.0
+    },
+    "Azamgarh Ahiraula Kandara_UPGW_d677112c": {
+      "slug": "Azamgarh Ahiraula Kandara_UPGW_d677112c",
+      "day7_pred": -3.424381653447326,
+      "day30_pred": -3.7896657784849173,
+      "day60_pred": -3.797,
+      "change_30d_pred": -0.2139943412533798,
+      "change_60d_pred": -0.2213285627684627,
+      "direction": "expected decline",
+      "seconds": 4.0
+    },
+    "Awagarh (UP-005)_UPGW_0ee3bd78": {
+      "slug": "Awagarh (UP-005)_UPGW_0ee3bd78",
+      "day7_pred": -18.52739722320207,
+      "day30_pred": -17.577982592136543,
+      "day60_pred": -17.566,
+      "change_30d_pred": 0.26304222297659763,
+      "change_60d_pred": 0.2750248151131416,
+      "direction": "expected rise",
+      "seconds": 4.8
+    },
+    "Aurai (UP-150)_UPGW_a6fa1626": {
+      "slug": "Aurai (UP-150)_UPGW_a6fa1626",
+      "day7_pred": -15.51160174264011,
+      "day30_pred": -14.815039422038891,
+      "day60_pred": -14.798,
+      "change_30d_pred": 1.3807031433583763,
+      "change_60d_pred": 1.3977425653972677,
+      "direction": "expected rise",
+      "seconds": 4.9
+    },
+    "Azamgarh Palhana Balahi Lahucha_UPGW_bdab0130": {
+      "slug": "Azamgarh Palhana Balahi Lahucha_UPGW_bdab0130",
+      "day7_pred": -5.398752557554273,
+      "day30_pred": -5.535640821143548,
+      "day60_pred": -5.54,
+      "change_30d_pred": -0.11895253906896563,
+      "change_60d_pred": -0.12331171792541795,
+      "direction": "expected decline",
+      "seconds": 4.1
+    },
+    "Azamgarh Atrauliya Atrauliya_UPGW_419e219b": {
+      "slug": "Azamgarh Atrauliya Atrauliya_UPGW_419e219b",
+      "day7_pred": -0.8360711453906755,
+      "day30_pred": -1.337128765689615,
+      "day60_pred": -1.355,
+      "change_30d_pred": 0.012338759506783648,
+      "change_60d_pred": -0.005532474803601417,
+      "direction": "expected decline",
+      "seconds": 4.6
+    },
+    "Azamgarh Lalganj Lalganj_UPGW_34e8b190": {
+      "slug": "Azamgarh Lalganj Lalganj_UPGW_34e8b190",
+      "day7_pred": -3.2884180175190747,
+      "day30_pred": -3.124959750327904,
+      "day60_pred": -3.12,
+      "change_30d_pred": 0.046507153900544385,
+      "change_60d_pred": 0.05146690422844813,
+      "direction": "expected rise",
+      "seconds": 4.2
+    },
+    "Azamgarh Jahanganj Godhaura_UPGW_48ccebef": {
+      "slug": "Azamgarh Jahanganj Godhaura_UPGW_48ccebef",
+      "day7_pred": -5.300277843418938,
+      "day30_pred": -5.407904068791771,
+      "day60_pred": -5.41,
+      "change_30d_pred": -0.1910771528767885,
+      "change_60d_pred": -0.19317308408501788,
+      "direction": "expected decline",
+      "seconds": 4.3
+    },
+    "Azamgarh Palhana Jamui Bhatauli_UPGW_bc1a6221": {
+      "slug": "Azamgarh Palhana Jamui Bhatauli_UPGW_bc1a6221",
+      "day7_pred": -1.773251002470966,
+      "day30_pred": -1.7522532772003432,
+      "day60_pred": -1.753,
+      "change_30d_pred": 0.21673245036299948,
+      "change_60d_pred": 0.21598572756334278,
+      "direction": "expected rise",
+      "seconds": 4.4
+    },
+    "Azamgarh Thekama Bardah_UPGW_bbfdde72": {
+      "slug": "Azamgarh Thekama Bardah_UPGW_bbfdde72",
+      "day7_pred": -4.105694796362333,
+      "day30_pred": -3.9402944461552196,
+      "day60_pred": -3.937,
+      "change_30d_pred": -0.03893268480777223,
+      "change_60d_pred": -0.035638238652552445,
+      "direction": "expected decline",
+      "seconds": 4.5
+    },
+    "Azamgarh Sathiyavn Gajahada_UPGW_05f6da82": {
+      "slug": "Azamgarh Sathiyavn Gajahada_UPGW_05f6da82",
+      "day7_pred": 0.21642676062397598,
+      "day30_pred": 0.3929103291617795,
+      "day60_pred": 0.395,
+      "change_30d_pred": 0.06635809082825594,
+      "change_60d_pred": 0.06844776166647648,
+      "direction": "expected rise",
+      "seconds": 4.6
+    },
+    "Azamgarh Pavai Velasiya_UPGW_e33b1fbd": {
+      "slug": "Azamgarh Pavai Velasiya_UPGW_e33b1fbd",
+      "day7_pred": 1.0436890801586036,
+      "day30_pred": -0.4683814179955156,
+      "day60_pred": -0.528,
+      "change_30d_pred": -0.14638824891681212,
+      "change_60d_pred": -0.20600683092129657,
+      "direction": "expected decline",
+      "seconds": 4.7
+    },
+    "BADHANI PRATHMIK VIDYALAYA_UPGW_88a32b98": {
+      "slug": "BADHANI PRATHMIK VIDYALAYA_UPGW_88a32b98",
+      "day7_pred": -2.887901200032306,
+      "day30_pred": -4.063780098109339,
+      "day60_pred": -4.104,
+      "change_30d_pred": -0.6839542221891834,
+      "change_60d_pred": -0.7241741240798447,
+      "direction": "expected decline",
+      "seconds": 3.9
+    },
+    "Babina Rular_UPGW_c2627db3": {
+      "slug": "Babina Rular_UPGW_c2627db3",
+      "day7_pred": 4.3067663249857855,
+      "day30_pred": -1.9715893983857635,
+      "day60_pred": -2.33,
+      "change_30d_pred": -6.443163356401742,
+      "change_60d_pred": -6.801573958015979,
+      "direction": "expected decline",
+      "seconds": 4.7
+    },
+    "Baba BelkharNath Dham (UP-045)_UPGW_7b3dc9af": {
+      "slug": "Baba BelkharNath Dham (UP-045)_UPGW_7b3dc9af",
+      "day7_pred": -8.901781213405474,
+      "day30_pred": -8.742604608600645,
+      "day60_pred": -8.738,
+      "change_30d_pred": 0.09735990322837829,
+      "change_60d_pred": 0.10196451182902422,
+      "direction": "expected rise",
+      "seconds": 5.0
+    },
+    "Badagaon (UP-049)_UPGW_63c24d8d": {
+      "slug": "Badagaon (UP-049)_UPGW_63c24d8d",
+      "day7_pred": -10.924938919719738,
+      "day30_pred": -11.690427204777652,
+      "day60_pred": -11.725,
+      "change_30d_pred": 0.23146649627341453,
+      "change_60d_pred": 0.19689370105106718,
+      "direction": "expected rise",
+      "seconds": 5.0
+    },
+    "Badagaon_1_UPGW_46f77dcb": {
+      "slug": "Badagaon_1_UPGW_46f77dcb",
+      "day7_pred": 36141.348625945095,
+      "day30_pred": -6908435.094498446,
+      "day60_pred": -23.7,
+      "change_30d_pred": -6908430.024250638,
+      "change_60d_pred": -18.629752191660373,
+      "direction": "expected decline",
+      "seconds": 3.2
+    },
+    "Badaun Salarpur BDO Office_UPGW_b5fe4962": {
+      "slug": "Badaun Salarpur BDO Office_UPGW_b5fe4962",
+      "day7_pred": -20.874705331469304,
+      "day30_pred": -20.867620316495863,
+      "day60_pred": -20.868,
+      "change_30d_pred": 0.06501102190068409,
+      "change_60d_pred": 0.06463133839654844,
+      "direction": "expected rise",
+      "seconds": 4.1
+    },
+    "Badaun Ujhani Sports Stadium_UPGW_5bf08017": {
+      "slug": "Badaun Ujhani Sports Stadium_UPGW_5bf08017",
+      "day7_pred": -15.05076038202472,
+      "day30_pred": -15.294848551557555,
+      "day60_pred": -15.303,
+      "change_30d_pred": -0.1219279853800952,
+      "change_60d_pred": -0.13007943382254084,
+      "direction": "expected decline",
+      "seconds": 4.0
+    },
+    "Badalpur (UP-091)_UPGW_1735bb75": {
+      "slug": "Badalpur (UP-091)_UPGW_1735bb75",
+      "day7_pred": -11.102939888150607,
+      "day30_pred": -11.500178390517712,
+      "day60_pred": -11.512,
+      "change_30d_pred": -0.30366378024731766,
+      "change_60d_pred": -0.3154853897296057,
+      "direction": "expected decline",
+      "seconds": 4.5
+    },
+    "Badaun Usawan BDO Office_UPGW_b39924ec": {
+      "slug": "Badaun Usawan BDO Office_UPGW_b39924ec",
+      "day7_pred": -21.649222391566962,
+      "day30_pred": -21.704161367288,
+      "day60_pred": -21.705,
+      "change_30d_pred": -0.0264862496910645,
+      "change_60d_pred": -0.02732488240306452,
+      "direction": "expected decline",
+      "seconds": 4.0
+    },
+    "Badhouli_UPGW_bbc69c62": {
+      "slug": "Badhouli_UPGW_bbc69c62",
+      "day7_pred": 173713.0609873329,
+      "day30_pred": -69197231.71223353,
+      "day60_pred": -28.36,
+      "change_30d_pred": -69199893.43630463,
+      "change_60d_pred": -2690.084071107405,
+      "direction": "expected decline",
+      "seconds": 3.0
+    },
+    "Bagadari_UPGW_1c6b80ae": {
+      "slug": "Bagadari_UPGW_1c6b80ae",
+      "day7_pred": -5.811269685066033,
+      "day30_pred": -6.137050114736201,
+      "day60_pred": -6.14,
+      "change_30d_pred": 0.3382451859398783,
+      "change_60d_pred": 0.33529530067607993,
+      "direction": "expected rise",
+      "seconds": 4.0
+    },
+    "Badhai Khurd Pr. Vid._UPGW_bfc9fe7e": {
+      "slug": "Badhai Khurd Pr. Vid._UPGW_bfc9fe7e",
+      "day7_pred": -7.629777348059765,
+      "day30_pred": -7.6829983478243715,
+      "day60_pred": -7.683,
+      "change_30d_pred": -0.003286818967010774,
+      "change_60d_pred": -0.0032884711426390822,
+      "direction": "expected decline",
+      "seconds": 4.3
+    },
+    "Baghora_1_UPGW_dfd55e32": {
+      "slug": "Baghora_1_UPGW_dfd55e32",
+      "day7_pred": -4.648306426262723,
+      "day30_pred": -3.5280141185246663,
+      "day60_pred": -3.51,
+      "change_30d_pred": 1.656547843911989,
+      "change_60d_pred": 1.6745619624366554,
+      "direction": "expected rise",
+      "seconds": 4.0
+    },
+    "Baghpat Sardhana Julaida_UPGW_726b1d3b": {
+      "slug": "Baghpat Sardhana Julaida_UPGW_726b1d3b",
+      "day7_pred": -4.308769013123327,
+      "day30_pred": -8.084156409421059,
+      "day60_pred": -8.314,
+      "change_30d_pred": -7.9771105265475875,
+      "change_60d_pred": -8.206954117126529,
+      "direction": "expected decline",
+      "seconds": 3.3
+    },
+    "Baghura_1_UPGW_1ca8361b": {
+      "slug": "Baghura_1_UPGW_1ca8361b",
+      "day7_pred": -40.93565999044637,
+      "day30_pred": -3.4556815544701998,
+      "day60_pred": -1.06,
+      "change_30d_pred": 34.768118175180035,
+      "change_60d_pred": 37.163799729650236,
+      "direction": "expected rise",
+      "seconds": 3.2
+    },
+    "Baghpat Meerut Kheda Balrampur Itiyara_UPGW_8a1e66dc": {
+      "slug": "Baghpat Meerut Kheda Balrampur Itiyara_UPGW_8a1e66dc",
+      "day7_pred": -11.898011700520698,
+      "day30_pred": -12.005707484772907,
+      "day60_pred": -12.01,
+      "change_30d_pred": 0.04081054557276076,
+      "change_60d_pred": 0.03651803034566825,
+      "direction": "expected rise",
+      "seconds": 4.6
+    },
+    "Baije mau_UPGW_2944dbf9": {
+      "slug": "Baije mau_UPGW_2944dbf9",
+      "day7_pred": -11.009252839582789,
+      "day30_pred": -26.661382187875333,
+      "day60_pred": -27.25,
+      "change_30d_pred": -16.84534542053403,
+      "change_60d_pred": -17.433963232658698,
+      "direction": "expected decline",
+      "seconds": 3.7
+    },
+    "Bahjoi (UP-128)_UPGW_994cf53f": {
+      "slug": "Bahjoi (UP-128)_UPGW_994cf53f",
+      "day7_pred": -15.455288378820004,
+      "day30_pred": -15.507391856023913,
+      "day60_pred": -15.512,
+      "change_30d_pred": 0.2227050843017384,
+      "change_60d_pred": 0.2180969403256512,
+      "direction": "expected rise",
+      "seconds": 5.8
+    },
+    "Bajehta_1_UPGW_8bd80911": {
+      "slug": "Bajehta_1_UPGW_8bd80911",
+      "day7_pred": -21.676301354772175,
+      "day30_pred": -14.672964811962522,
+      "day60_pred": -14.443,
+      "change_30d_pred": 4.221451694893297,
+      "change_60d_pred": 4.45141650685582,
+      "direction": "expected rise",
+      "seconds": 4.0
+    },
+    "Bahuwa (UP-024)_UPGW_22c9f762": {
+      "slug": "Bahuwa (UP-024)_UPGW_22c9f762",
+      "day7_pred": -4.112956824643943,
+      "day30_pred": -5.0117918276290645,
+      "day60_pred": -5.03,
+      "change_30d_pred": -0.5022450062991597,
+      "change_60d_pred": -0.5204531786700954,
+      "direction": "expected decline",
+      "seconds": 4.2
+    }
+  }
+}

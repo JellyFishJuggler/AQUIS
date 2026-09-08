@@ -53,6 +53,9 @@ ml/artifacts/*.log
 *.pt
 *.onnx
 
+# AI assistant embedding cache (regenerated on first index)
+ml/agent/cache/
+
 # Jupyter
 .ipynb_checkpoints/
 
