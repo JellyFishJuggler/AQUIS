@@ -149,9 +149,101 @@ async function getMLHealth(req, res, next) {
   } catch (err) { next(err); }
 }
 
+// ---------------------------------------------------------------------------
+// Live endpoints — thin passthroughs to the headless Python ML service
+// ---------------------------------------------------------------------------
+
+async function getLiveStations(req, res, next) {
+  try {
+    const r = await mlGateway.getStations({
+      district: req.query.district, q: req.query.q,
+      limit: req.query.limit,
+    });
+    if (!r.success) return res.status(502).json({ error: "ML service error", detail: r.error });
+    res.json(r.data);
+  } catch (err) { next(err); }
+}
+
+async function getLiveStation(req, res, next) {
+  try {
+    const r = await mlGateway.getStation(req.params.slug);
+    if (!r.success) return res.status(502).json({ error: "ML service error", detail: r.error });
+    res.status(r.data.error ? 404 : 200).json(r.data);
+  } catch (err) { next(err); }
+}
+
+async function getLiveDistricts(req, res, next) {
+  try {
+    const r = await mlGateway.getDistricts();
+    if (!r.success) return res.status(502).json({ error: "ML service error", detail: r.error });
+    res.json(r.data);
+  } catch (err) { next(err); }
+}
+
+async function getLiveForecast(req, res, next) {
+  try {
+    const r = await mlGateway.getLiveForecast(req.params.slug, req.query.days);
+    if (!r.success) return res.status(502).json({ error: "ML service error", detail: r.error });
+    res.status(r.data.error ? 404 : 200).json(r.data);
+  } catch (err) { next(err); }
+}
+
+async function getLiveFleetForecasts(req, res, next) {
+  try {
+    const r = await mlGateway.getFleetForecasts();
+    if (!r.success) return res.status(502).json({ error: "ML service error", detail: r.error });
+    res.status(r.data.error ? 404 : 200).json(r.data);
+  } catch (err) { next(err); }
+}
+
+async function getLiveFleetRecovery(req, res, next) {
+  try {
+    const r = await mlGateway.getFleetRecovery({
+      window_days: req.query.window_days, top: req.query.top,
+      min_stations: req.query.min_stations,
+    });
+    if (!r.success) return res.status(502).json({ error: "ML service error", detail: r.error });
+    res.json(r.data);
+  } catch (err) { next(err); }
+}
+
+async function getLiveFleetScan(req, res, next) {
+  try {
+    const r = await mlGateway.getFleetScan({
+      district: req.query.district, threshold: req.query.threshold,
+      horizon: req.query.horizon,
+    });
+    if (!r.success) return res.status(502).json({ error: "ML service error", detail: r.error });
+    res.json(r.data);
+  } catch (err) { next(err); }
+}
+
+async function getLiveModels(req, res, next) {
+  try {
+    const r = await mlGateway.getLiveModels();
+    if (!r.success) return res.status(502).json({ error: "ML service error", detail: r.error });
+    res.json(r.data);
+  } catch (err) { next(err); }
+}
+
+async function postAssistantChat(req, res, next) {
+  try {
+    const { question, station, station_slug, model } = req.body || {};
+    if (!question || !String(question).trim()) {
+      return res.status(400).json({ error: "bad request", detail: "`question` is required" });
+    }
+    const r = await mlGateway.assistantChat({ question, station, station_slug, model });
+    if (!r.success) return res.status(502).json({ error: "ML service error", detail: r.error });
+    res.status(r.data.error ? 503 : 200).json(r.data);
+  } catch (err) { next(err); }
+}
+
 module.exports = {
   getForecast, getAnomalies, getAnomalySummary,
   getRisk, getRiskSummary, getPriorityAreas,
   getModels, getModelByName, getModelMetrics, getModelComparison,
   getMLHealth,
+  getLiveStations, getLiveStation, getLiveDistricts, getLiveForecast,
+  getLiveFleetForecasts, getLiveFleetRecovery, getLiveFleetScan,
+  getLiveModels, postAssistantChat,
 };
