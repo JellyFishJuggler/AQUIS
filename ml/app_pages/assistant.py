@@ -9,7 +9,14 @@ panel above the chat always renders.
 import pandas as pd
 import streamlit as st
 
-from _assistant import StationAssistant, get_df, ollama_model, ollama_status
+from _assistant import (
+    StationAssistant,
+    get_df,
+    ollama_model,
+    ollama_status,
+    district_names,
+    station_names,
+)
 
 
 def _fmt_dr(x):
@@ -75,6 +82,72 @@ if facts:
 else:
     st.info("No data for that selection.")
 
+if facts:
+    tcol1, tcol2 = st.columns(2)
+    drivers = facts.get("drivers") or []
+    annual = facts.get("annual") or []
+    rain = facts.get("rain_recent") or {}
+    dc = facts.get("district_context") or {}
+    with tcol1:
+        with st.expander("Factors driving this station", icon=":material/science:"):
+            if drivers:
+                dtab = pd.DataFrame(drivers)[["driver", "corr", "p", "n"]]
+                dtab = dtab.rename(
+                    columns={"driver": "Factor", "corr": "Spearman r",
+                             "p": "p-value", "n": "pairs"})
+                st.dataframe(
+                    dtab, hide_index=True, use_container_width=True,
+                    column_config={
+                        "Spearman r": st.column_config.NumberColumn(format="%+.3f"),
+                        "p-value": st.column_config.NumberColumn(format="%.4f"),
+                    })
+                st.caption(
+                    "r = correlation between the factor and the station's GWL over its "
+                    "6h history (Spearman). The largest |r| tells you which factor "
+                    "moves the level the most here."
+                )
+            else:
+                st.caption("Not enough co-observed driver data for this station.")
+            if rain.get("rain_7d") is not None or rain.get("rain_30d") is not None:
+                st.markdown(
+                    f"**Recent rain**: 7d `{_fmt_dr(rain.get('rain_7d'))}`, "
+                    f"30d `{_fmt_dr(rain.get('rain_30d'))}`, "
+                    f"90d `{_fmt_dr(rain.get('rain_90d'))}` mm (last "
+                    f"{rain.get('last_rain_date')})."
+                )
+            if annual:
+                atab = pd.DataFrame(annual)[["year", "mean", "min", "max", "rain_mm", "n"]]
+                atab = atab.rename(
+                    columns={"year": "Year", "mean": "Mean (m)", "min": "Min (m)",
+                             "max": "Max (m)", "rain_mm": "Rain (mm)", "n": "n"})
+                st.dataframe(atab, hide_index=True, use_container_width=True)
+                st.caption("Mean/min/max GWL and total rain per calendar year — "
+                           "compare last 1-2 years to see which factor moved the level.")
+    with tcol2:
+        with st.expander("Precautions & strategy", icon=":material/health_and_safety:"):
+            prec = facts.get("precautions") or []
+            if prec:
+                for p in prec:
+                    icon = {
+                        "info": ":material/lightbulb:",
+                        "watch": ":material/warning:",
+                        "action": ":material/error:",
+                    }.get(p["level"], ":material/lightbulb:")
+                    level = {"info": "🔵", "watch": "🟡", "action": "🔴"}.get(p["level"], p["level"])
+                    st.markdown(f"**{level} {p['title']}**")
+                    st.markdown(p["why"])
+                    st.divider()
+                st.caption("Deterministic rule-based advisories. Ask the assistant "
+                           "e.g. “precautions for this station?” to get them phrased "
+                           "as concrete suggestions.")
+            else:
+                st.caption("No active advisories for this station right now.")
+            if dc.get("n_analysed"):
+                st.caption(
+                    f"District context: median **{facts.get('district_median'):.2f} m** "
+                    f"over {dc['n_analysed']} stations in {facts.get('district')}."
+                )
+
 st.markdown("---")
 
 if st.session_state.get("as_pinned_station") != station:
@@ -83,8 +156,9 @@ if st.session_state.get("as_pinned_station") != station:
     st.session_state.as_messages = [
         {"role": "assistant",
          "content": f"Hello! I can answer about the pinned station **{station}** "
-                    f"(district {district}). Ask e.g. “latest level”, "
-                    "“trend over 30 days”, or “what's the 30-day outlook?”"}
+                    f"(district {district}) or any station/district you name — e.g. "
+                    "“latest level”, “trend over 30 days”, “what's driving the level?”, "
+                    "“rain effect last 1-2 years?”, or “suggest precautions?”"}
     ]
 
 for msg in st.session_state.as_messages:
@@ -122,8 +196,11 @@ with st.expander("About this assistant", icon=":material/info:"):
         f"- **Model**: `{model_name}` (overridable with `AQUIS_OLLAMA_MODEL` in the repo `.env`)\n"
         "- **Data**: live `data/aligned/table_6h.parquet` (observed trends, latest levels)\n"
         "- **Forecast**: the app's pooled XGBoost 30-day change model (same as the Forecast page)\n"
-        "- **Scope**: always answers about the station selected above "
-        f"(**{station}**)\n"
+        "- **Factors**: Spearman correlations of rain/temp/river/canal/etc. vs GWL, per-station rain totals, and per-year annual trends (last 1-2 yrs)\n"
+        "- **Precautions**: deterministic rule-based advisories (decline, drawdown, weak recharge, forecast uncertainty)\n"
+        "- **Scope**: answers about the pinned station "
+        f"(**{station}**), plus any station/district you mention in the question "
+        f"({len(station_names())} stations / {len(district_names())} districts accessible)\n"
         "- **Convention**: GWL is a water-table level in metres — rising level = value up\n\n"
         "The LLM only phrases an answer from pre-computed facts (no made-up numbers)."
     )
