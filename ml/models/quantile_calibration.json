@@ -1,0 +1,16 @@
+{
+  "quantiles": [
+    "q05",
+    "q50",
+    "q95"
+  ],
+  "target_coverage_stride": 0.8,
+  "widen_factor_k": 1.0,
+  "coverage_stride": 0.911,
+  "coverage_raw": 0.9039,
+  "coverage_stride_raw_q": 0.911,
+  "half_width_median_m": 1.034,
+  "half_width_p90_m": 2.579,
+  "half_width_mean_m": 1.385,
+  "anchor_basis": "level = today's GWL + quantile(delta 30d)"
+}

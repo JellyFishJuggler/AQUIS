@@ -2,25 +2,31 @@
 
 Two HTTP services power the platform:
 
-| Service | URL | Used by |
+| Service | URL | Status |
 |---|---|---|
-| **Node.js API** (Express) | `http://localhost:3000` | Frontend, mobile clients |
-| **Python ML service** (Flask, headless) | `http://localhost:5000` | Backend only (proxied) |
+| **Node.js API** (Express) | `http://localhost:3000` | **Active** — frontend/mobile clients |
+| **Python ML service** (Flask, headless) | `http://localhost:5000` | **Planned / deferred** (`merge_later`) — not yet merged |
 
-The **frontend should talk to the Node API on `:3000`**. ML intelligence (recency‑sorted station/district lists, per‑station facts, XGBoost forecasts, fleet recovery ranking, and the LLM data assistant) is served by the Python service and proxied by the Node backend under `/ml/*`. `ML_SERVICE_URL` points the Node gateway at the Python service.
+The **frontend talks to the Node API on `:3000`**. ML intelligence (recency‑sorted station/district lists, per‑station facts, XGBoost forecasts, fleet recovery ranking, the LLM data assistant) is designed to be served by a headless Python service and proxied by the Node backend under `/ml/*`. **That Flask service is not part of the current `ml/` module** — it was deliberately deferred during the merge (see `merge_later` in the merge spec). Until it lands:
 
-> Legacy numeric endpoints (`GET /ml/forecast/:stationId`, `/ml/risk/:unitId`, `/ml/anomalies/...`) are **kept for backward compatibility but deprecated** — they read from the DB model registry, not the live ML stack. Prefer the `/ml/live/*` endpoints below.
+- `back-end/services/mlGateway.js` still resolves `ML_SERVICE_URL` (default `http://localhost:5000`).
+- `/ml/*` gateway routes return `{ "available": false, "error": "ML service unavailable" }` because nothing listens on `:5000` yet.
+- The **live analysis surface today is the Streamlit dashboard** — `cd ml && venv/bin/streamlit run app.py` (port 8501) — plus the artifacts/`JSON` outputs it renders (`ml/outputs/*.csv, ml/models/*.json`).
+
+> Legacy numeric endpoints (`GET /ml/forecast/:stationId`, `/ml/risk/:unitId`, `/ml/anomalies/...`) are **kept for backward compatibility but deprecated** — they read from the DB model registry, not the live ML stack.
+
+The remainder of this page documents the **target contract** for the deferred Flask service so the gateway can drop onto it cleanly, plus the currently-live Node endpoints.
 
 ---
 
 ## Conventions
 
 - **Encoding:** always JSON (`Content-Type: application/json`). Query parameters for GETs.
-- **Auth:** none currently — services run on localhost/LAN. CORS is open on both services.
+- **Auth:** none currently — services run on localhost/LAN. CORS open on both services.
 - **Errors:** every failure returns `{ "error": "...", "detail": "..." }` with an appropriate status code.
-- **Slugs:** ML endpoints identify stations by **slug** — `Station_Agency_shortHash`, e.g. `ASHADHA PRATHMIK VIDYALAYA_UPGW_5f5b3671`. Slugs contain spaces; **URL‑encode them** (`encodeURIComponent` in JS), e.g. `ASHADHA%20PRATHMIK%20VIDYALAYA_UPGW_5f5b3671`. Always fetch the current slug from `/ml/stations` — never hand‑type one.
+- **Slugs:** planned ML endpoints identify stations by **slug** — `Station_Agency_shortHash`, e.g. `ASHADHA PRATHMIK VIDYALAYA_UPGW_5f5b3671`. Slugs contain spaces; **URL‑encode them** (`encodeURIComponent` in JS): `ASHADHA%20PRATHMIK%20VIDYALAYA_UPGW_5f5b3671`. Always fetch the current slug from `/ml/stations` — never hand‑type one.
 
-### Status codes
+### Status codes (planned ML service)
 
 | Code | Meaning |
 |---|---|
@@ -28,222 +34,110 @@ The **frontend should talk to the Node API on `:3000`**. ML intelligence (recenc
 | 400 | Missing/invalid request (e.g. no `question` on chat) |
 | 404 | Unknown slug / no model trained / snapshot missing |
 | 500 | Internal Python error |
-| 502 | ML service down or unreachable (start `python ml/app.py`) |
+| 502 | ML service down or unreachable |
 | 503 | Assistant unavailable (Ollama not running) |
 
 ---
 
-## Frontend endpoints (Node `:3000`)
+## Frontend endpoints (Node `:3000`) — live
 
 ### 1. `GET /ml/health`
 Service status + model/Ollama health. Fast, call on app boot.
 
 ```json
 {
-  "available": true,
-  "status": {
-    "status": "ok", "service": "aquis-ml", "version": "2.0.0",
-    "trained_stations": 92,
-    "snapshot_age_seconds": 48724.09,
-    "ollama": false,
-    "dataset": "2026-09-05"
-  }
+  "available": false,
+  "error": "ML service unavailable"
 }
 ```
+`available:true` appears once the deferred Flask service is running on `:5000`; see [Python service contract](#python-service-contract---planned) below.
 
-### 2. `GET /ml/stations`
-**Recency‑sorted** station list (newest reading first). This is the canonical station picker source.
+### 2. Stations / telemetry / assessments / trends / ml-data / data-quality / ingestion
 
-| Param | Type | Default | Notes |
-|---|---|---|---|
-| `district` | string | — | Exact district name filter |
-| `q` | string | — | Case‑insensitive substring on station/district name |
-| `limit` | int | 200 | Max 2000 |
+All of these are served by the Express backend against PostgreSQL and are **live today**:
 
-```json
-{
-  "count": 200,
-  "stations": [
-    {
-      "slug": "ASHADHA PRATHMIK VIDYALAYA_UPGW_5f5b3671",
-      "display": "ASHADHA PRATHMIK VIDYALAYA",
-      "district": "KAUSHAMBI",
-      "agency": "UPGW",
-      "state": "Uttar Pradesh",
-      "has_model": true,
-      "last_ts": "2026-09-05 18:00:00",
-      "last_epoch": 1788631200.0
-    }
-  ]
-}
 ```
-
-Use `has_model` to decide whether the station can produce a forecast.
-
-### 3. `GET /ml/stations/:slug`
-Latest telemetry facts (no forecast, no LLM) for one station.
-
-```json
-{
-  "data": {
-    "level": "station",
-    "station": "ASHADHA PRATHMIK VIDYALAYA",
-    "district": "KAUSHAMBI",
-    "last": -0.785,
-    "change_7d": -0.029, "change_30d": -0.029, "change_60d": -0.128, "change_180d": -0.519,
-    "outliers": 0,
-    "district_median": -0.41,
-    "district_n_stations": 43,
-    "slug": "ASHADHA PRATHMIK VIDYALAYA_UPGW_5f5b3671",
-    "has_model": true
-  }
-}
+GET  /stations                          List all stations (paginated)
+GET  /stations/:stationId               Station details
+GET  /stations/nearby?lat=&lon=         Nearby stations
+GET  /stations/state-summary            Station count by state
+GET  /stations/district-summary         Station count by district
+GET  /telemetry                         All observations (filtered)
+GET  /telemetry/latest?stationId=       Latest observation for station
+GET  /telemetry/summary                 State/district summary
+GET  /telemetry/:stationId              History for station
+GET  /assessments                       Assessment records (filtered)
+GET  /assessments/:id                   Single record
+GET  /assessments/:unitId/history       Multi-year history for unit
+GET  /assessments/summary               State/year summary
+GET  /assessments/years                 Available assessment years
+GET  /trends/:stationId                 Mann-Kendall + Sen's slope for station
+GET  /trends/summary                    Trend summary across all stations
+GET  /ml-data/telemetry                 Clean telemetry dataset
+GET  /ml-data/telemetry/:stationId      Station-specific telemetry
+GET  /ml-data/assessment                Clean assessment dataset
+GET  /ml-data/assessment/:unitId        Unit-specific assessment history
+GET  /data-quality/:stationId           Station quality issues
+GET  /data-quality/telemetry            Telemetry quality summary
+GET  /data-quality/assessment           Assessment quality summary
+GET  /ingestion                         List ingestion runs
+GET  /ingestion/:id                     Run details
+POST /ingestion/telemetry               Trigger telemetry ingestion
+POST /ingestion/assessment              Trigger assessment ingestion
 ```
-
-`change_*` values are the observed level change over the window (m). Negative = falling/deepening.
-
-### 4. `GET /ml/districts`
-Districts sorted by most‑recent reading.
-
-```json
-{ "count": 34, "districts": [
-  { "district": "AGRA", "n_stations": 43, "last_ts": "2026-09-05 18:00:00", "last_epoch": 1788631200.0 }
-] }
-```
-
-### 5. `GET /ml/live/models`
-Trained XGBoost stations (slugs + `trained_at`). `count` = number of trained models.
-
-### 6. `GET /ml/live/forecast/:slug?days=30`
-Daily XGBoost forecast from the station's **last observed reading** (recursive point + q05/q95 quantiles, calibration‑widened 90% interval, plausible‑check).
-
-| Param | Type | Default | Range |
-|---|---|---|---|
-| `days` | int | 30 | 7–90 |
-
-```json
-{
-  "trained": true,
-  "slug": "ASHADHA PRATHMIK VIDYALAYA_UPGW_5f5b3671",
-  "station": "ASHADHA PRATHMIK VIDYALAYA",
-  "district": "KAUSHAMBI",
-  "as_of": "2026-09-05",
-  "last_obs": { "date": "2026-09-05", "value": -6.24 },
-  "horizon_days": 30,
-  "dates":   ["2026-09-06T00:00:00", "...", "2026-10-05T00:00:00"],
-  "point":   [-6.262, "...", -6.293],
-  "q50":     [-6.250, "...", -6.278],
-  "lower":   [-6.746, "...", -6.910],
-  "upper":   [-5.935, "...", -5.712],
-  "change_7d_pred": -0.0115,
-  "change_30d_pred": -0.0304,
-  "change_60d_pred": null,
-  "plausible": true,
-  "obs_min": -12.51,
-  "obs_max": -4.64
-}
-```
-
-Field notes:
-- `point` = best estimate; `lower`/`upper` = **calibrated** 90% interval (approx. q05/q95, widened to reach target coverage); `q50` = uncalibrated recursive median.
-- `plausible=false` means the model's level drifted outside the station's observed range — render with a "directional only" warning.
-- `404` `{error:"no model"}` when the station isn't trained.
-
-### 7. `GET /ml/live/fleet/forecasts`
-Precomputed fleet snapshot (built by `ml/agent/build_fleet_forecast.py`) — same shape the assistant answers "fleet forecast" questions from.
-
-```json
-{
-  "computed_at": "2026-09-08 14:21:10",
-  "stations": {
-    "<slug>": { "station": "...", "change_30d_pred": ..., "change_60d_pred": ...,
-                "day30_pred": ..., "day60_pred": ..., "plausible": true }
-  }
-}
-```
-
-### 8. `GET /ml/live/fleet/recovery`
-District **recovery ranking** — median observed level change over the window (rising = recovery). ~8s on first call per window; memoized after.
-
-| Param | Type | Default | Range |
-|---|---|---|---|
-| `window_days` | int | 60 | 7–365 |
-| `top` | int | 5 | 1–20 |
-| `min_stations` | int | 3 | — |
-
-### 9. `GET /ml/live/fleet/scan`
-Stations whose **forecast** predicts a decline ≥ `threshold` m at `horizon` days.
-
-| Param | Type | Default |
-|---|---|---|
-| `district` | string | — (all) |
-| `threshold` | float | 0.3 |
-| `horizon` | int | 60 |
-
-Returns `{ "available": true, "matches": [...], "unreliable": [...], "threshold": ... }`. Only stations with `plausible` forecasts are reported.
-
-### 10. `POST /ml/assistant/chat`
-Station‑locked natural‑language assistant (Ollama `llama3.2:3b` behind it). Answers are **grounded in live parquet + fleet facts** — the station is pinned by `station` or `station_slug` and refuses to change topic to another station.
-
-```json
-// Request
-{ "question": "tell me about this station", "station": "ASHADHA PRATHMIK VIDYALAYA" }
-// or
-{ "question": "why is it falling?", "station_slug": "ASHADHA PRATHMIK VIDYALAYA_UPGW_5f5b3671", "model": "llama3.2:3b" }
-```
-
-```json
-// Response
-{ "answer": "...", "station": "ASHADHA PRATHMIK VIDYALAYA", "station_slug": "...", "facts": { ... } }
-```
-
-- `503` when Ollama is down (`{"hint": "is Ollama running?...", "error": "assistant failed"}`).
 
 ---
 
-## Backend developers — Python service contract (`:5000`)
+## Python service contract — planned
 
-Internal service; the Node gateway proxies everything above. Run it with:
+The deferred Flask service will expose the surface below; **it does not exist yet in the repo**. The Node gateway (`back-end/services/mlGateway.js`) already forwards path + query string to `ML_SERVICE_URL`.
 
-```bash
-cd <repo-root>/ml
-ml/venv/bin/python ml/app.py          # http://localhost:5000 (PORT env to change)
+### Service surface
+
+```
+GET  /health                     status, version, trained_stations, snapshot_age_seconds, ollama, dataset
+GET  /stations                   ?district=&q=&limit=        recency-sorted station list (slugs)
+GET  /stations/:slug             latest telemetry facts for one station
+GET  /districts                  recency-sorted districts
+GET  /models                     trained artifact slugs
+GET  /forecast/:slug             ?days=7..90 (default 30)    forecast + calibrated 90% interval
+GET  /fleet/forecasts            precomputed fleet snapshot
+GET  /fleet/recovery             ?window_days=&top=&min_stations=   district recovery ranking
+GET  /fleet/scan                 ?district=&threshold=&horizon=     forecast-decline scan
+POST /assistant/chat             {question, station?, station_slug?, model?}   station-locked LLM answer
 ```
 
-| Endpoint | Method | Notes |
-|---|---|---|
-| `/health` | GET | same payload as `/ml/health` |
-| `/stations` | GET | `?district=&q=&limit=` |
-| `/stations/:slug` | GET | facts |
-| `/districts` | GET | recency‑sorted |
-| `/forecast/:slug` | GET | `?days=` |
-| `/fleet/forecasts` | GET | snapshot |
-| `/fleet/recovery` | GET | `?window_days=&top=&min_stations=` |
-| `/fleet/scan` | GET | `?district=&threshold=&horizon=` |
-| `/models` | GET | trained slugs |
-| `/assistant/chat` | POST | `{question, station, station_slug?, model?}` |
+How the current `ml/` module maps to this contract:
 
-Gateway wiring (Node, `back-end/services/mlGateway.js`): `ML_SERVICE_URL` (default `http://localhost:5000`), timeout `ML_TIMEOUT_MS` (default 60000). The gateway now forwards **query strings** (`pathname + search`).
-
-**Performance characteristics** (first call after server start):
-- `/stations`, `/districts`, `/stations/:slug` — a few seconds (as they build the full index).
-- `/forecast/:slug` — ~7–10 s first time per slug (feature pipeline + calibration); near‑instant after caching.
-- `/ml/live/fleet/recovery` — ~8 s per new window; memoized.
-- Everything else is sub‑second (snapshot, models, health).
+| Contract endpoint | Data today (in `ml/`) |
+|---|---|
+| `/health` | `models/model_metadata.json` (trained_at, dataset, metrics), `outputs/residual_acf.json` |
+| `/stations`, `/stations/:slug`, `/districts` | `data/meta/selected_gwl_stations.csv`, `station_summary.csv`, `fleet_forecast_snapshot.json` |
+| `/models` | `models/feature_config.json`, `quantile_calibration.json` |
+| `/forecast/:slug` | `_model.forward_forecast()` (pooled 30-day delta + calibrated band) |
+| `/fleet/forecasts` | `outputs/fleet_forecast.csv`, `fleet_forecast_snapshot.json` |
+| `/fleet/recovery` | `fleet_district.csv` |
+| `/fleet/scan` | `11_fleet.py` significant-movers logic (quality-gated) |
+| `/assistant/chat` | `_assistant.py` (station-pinned facts + Ollama) |
 
 ---
 
 ## Quickstarts
 
-**Find a station, then its forecast:**
+**Backend (live):**
 ```bash
-curl "http://localhost:3000/ml/stations?q=vidyalaya&limit=5"
-curl "http://localhost:3000/ml/live/forecast/ASHADHA%20PRATHMIK%20VIDYALAYA_UPGW_5f5b3671?days=30"
+curl "http://localhost:3000/stations?limit=5"
+curl "http://localhost:3000/telemetry/latest?stationId=<id>"
 ```
 
-**Typical frontend flow:**
-1. Boot → `GET /ml/health` (show offline banner if `available:false` / `ollama:false`).
-2. Station picker → `GET /ml/stations?q=...` (sort is recency; render `last_ts`).
+**ML dashboard (live today):**
+```bash
+cd ml && venv/bin/streamlit run app.py        # http://localhost:8501
+```
+
+**Typical frontend flow once the ML service lands:**
+1. Boot → `GET /ml/health` (EMPTY banner if `available:false`).
+2. Station picker → `GET /ml/stations?q=...` (sort by recency; render `last_ts`).
 3. Detail view → `GET /ml/stations/:slug` for KPIs.
 4. Forecast tab → `GET /ml/live/forecast/:slug?days=30`; chart `dates` vs `point` with `lower`/`upper` band.
 5. Fleet view → `GET /ml/live/fleet/recovery?window_days=60` and/or `GET /ml/live/fleet/scan`.

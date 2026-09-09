@@ -1,0 +1,274 @@
+{
+  "gwl": {
+    "enabled": true,
+    "archive": {
+      "id": "84bfda45-8ead-436d-9c8e-f7a93ee57522",
+      "ok": true,
+      "total": 7433230,
+      "value_col": "Groundwater Level Telemetry 6 Hourly (meter)"
+    },
+    "live": {
+      "id": "31c66a49-e110-405d-bcf0-a0ea0d9c8b0c",
+      "ok": true,
+      "total": 1582119,
+      "value_col": "Groundwater Level Telemetry 6 Hourly (meter)"
+    },
+    "agg": "mean",
+    "kind": "gwl"
+  },
+  "rainfall": {
+    "enabled": true,
+    "archive": {
+      "id": "2c0805b7-bc7c-4174-9c5f-cf7bc1ecd148",
+      "ok": true,
+      "total": 46648,
+      "value_col": "Telemetry Hourly Rainfall (mm)"
+    },
+    "live": {
+      "id": "46e9afa0-7deb-4fac-8fab-49e0b5b1b6d3",
+      "ok": true,
+      "total": 58756,
+      "value_col": "Telemetry Hourly Rainfall (mm)"
+    },
+    "agg": "sum",
+    "kind": "rain"
+  },
+  "temperature": {
+    "enabled": true,
+    "archive": {
+      "id": "feb54802-f6cc-4061-b873-8311ae04df0e",
+      "ok": true,
+      "total": 150891,
+      "value_col": "Air Temperature Telemetry Hourly (AoC)"
+    },
+    "live": {
+      "id": "c2c7b5fa-615d-4b95-8a2d-18eb5297f7b0",
+      "ok": true,
+      "total": 6377,
+      "value_col": "Air Temperature Telemetry Hourly (AoC)"
+    },
+    "agg": "mean",
+    "kind": "weather"
+  },
+  "river_level": {
+    "enabled": true,
+    "archive": {
+      "id": "9672a7e9-0bfe-43ac-9577-a4128792d070",
+      "ok": true,
+      "total": 671894,
+      "value_col": "River Water Level Telemetry Hourly (meter)"
+    },
+    "live": {
+      "id": "94b5345e-b0d2-45b8-94a4-d93cdede2025",
+      "ok": true,
+      "total": 6727,
+      "value_col": "River Water Level Telemetry Hourly (meter)"
+    },
+    "agg": "mean",
+    "kind": "river"
+  },
+  "humidity": {
+    "enabled": true,
+    "archive": {
+      "id": "14a3cfa8-3eb7-4e6e-8f94-c64693725779",
+      "ok": true,
+      "total": 157555,
+      "value_col": "Telemetry Hourly Relative Humidity (%)"
+    },
+    "live": {
+      "id": "0fcb6700-0ca1-43ad-8550-41397f417c8c",
+      "ok": true,
+      "total": 6377,
+      "value_col": "Telemetry Hourly Relative Humidity (%)"
+    },
+    "agg": "mean",
+    "kind": "weather"
+  },
+  "solar": {
+    "enabled": true,
+    "archive": {
+      "id": "6128c3ff-6d86-4058-b55f-5b2ef492e700",
+      "ok": true,
+      "total": 149582,
+      "value_col": "Solar Radiation (Watt/m2)"
+    },
+    "live": {
+      "id": "c1666f7a-81e8-4227-b856-39ec192ad004",
+      "ok": true,
+      "total": 6377,
+      "value_col": "Solar Radiation (Watt/m2)"
+    },
+    "agg": "mean",
+    "kind": "weather"
+  },
+  "wind_speed": {
+    "enabled": true,
+    "archive": {
+      "id": "fc1314ef-a47c-4ebe-b148-5b1ec7a90037",
+      "ok": true,
+      "total": 160611,
+      "value_col": "Telemetry Hourly Wind Speed (Km/Hr)"
+    },
+    "live": {
+      "id": "beb454fb-8400-44c1-aa92-bf8b4b282efa",
+      "ok": true,
+      "total": 7724,
+      "value_col": "Telemetry Hourly Wind Speed (Km/Hr)"
+    },
+    "agg": "mean",
+    "kind": "weather"
+  },
+  "wind_direction": {
+    "enabled": true,
+    "archive": {
+      "id": "b9acc862-92fd-40e4-b8e0-57d3580a75b6",
+      "ok": true,
+      "total": 152668,
+      "value_col": "Telemetry Hourly Wind Direction (Degree)"
+    },
+    "live": {
+      "id": "9e8132bc-97ff-480a-af05-adbac43f7b24",
+      "ok": true,
+      "total": 6377,
+      "value_col": "Telemetry Hourly Wind Direction (Degree)"
+    },
+    "agg": "mean",
+    "kind": "weather"
+  },
+  "pressure": {
+    "enabled": true,
+    "archive": {
+      "id": "32a8fd55-767a-48f6-9220-ac24c447f28a",
+      "ok": true,
+      "total": 150715,
+      "value_col": "Telemetry_Hourly_Atmospheric Pressure (mb)"
+    },
+    "live": {
+      "id": "3525c93c-6122-4174-96b4-3033fd21a645",
+      "ok": true,
+      "total": 5029,
+      "value_col": "Telemetry_Hourly_Atmospheric Pressure (mb)"
+    },
+    "agg": "mean",
+    "kind": "weather"
+  },
+  "canal_level": {
+    "enabled": true,
+    "archive": {
+      "id": "ea65ac74-1f6b-41d6-bf85-f927633def4d",
+      "ok": true,
+      "total": 47214,
+      "value_col": "Telemetry Hourly Canal Water Level (m)"
+    },
+    "live": {
+      "id": "8075a3b8-7973-4e60-ba7a-94b193f3936b",
+      "ok": true,
+      "total": 45685,
+      "value_col": "Telemetry Hourly Canal Water Level (m)"
+    },
+    "agg": "mean",
+    "kind": "canal"
+  },
+  "canal_discharge": {
+    "enabled": true,
+    "archive": {
+      "id": "a6158de8-089a-4908-9442-6cf5296f161a",
+      "ok": true,
+      "total": 8066,
+      "value_col": "Gate-1 Discharge (cusec)"
+    },
+    "live": {
+      "id": "14a80ee5-da51-4a97-8a57-1f5857b843ff",
+      "ok": true,
+      "total": 4186,
+      "value_col": "Gate-1 Discharge (cusec)"
+    },
+    "agg": "mean",
+    "kind": "canal"
+  },
+  "res_okhla": {
+    "enabled": true,
+    "archive": {
+      "id": "07e7248d-bedd-47b7-a16d-34eab4c489ec",
+      "ok": true,
+      "total": 2548,
+      "value_col": "Gate-1 Discharge (cusec)"
+    },
+    "live": {
+      "id": "76b5c177-2ab0-4909-a6fe-feb0b25eabf1",
+      "ok": true,
+      "total": 599,
+      "value_col": "Gate-1 Discharge (cusec)"
+    },
+    "agg": "mean",
+    "kind": "reservoir"
+  },
+  "res_okhla_agra_canal": {
+    "enabled": true,
+    "archive": {
+      "id": "29aac408-555d-4d3a-87c8-935e3ea3f57a",
+      "ok": true,
+      "total": 2551,
+      "value_col": "Gate-1 Discharge (cusec)"
+    },
+    "live": {
+      "id": "43a2ba27-8be6-488d-8cdb-7c4d23599696",
+      "ok": true,
+      "total": 605,
+      "value_col": "Gate-1 Discharge (cusec)"
+    },
+    "agg": "mean",
+    "kind": "reservoir"
+  },
+  "res_matatila": {
+    "enabled": true,
+    "archive": {
+      "id": "26b88468-256b-4a30-bca5-553600d09e30",
+      "ok": true,
+      "total": 436,
+      "value_col": "Gate-1 Discharge (cusec)"
+    },
+    "live": {
+      "id": "cd5160e6-7131-4776-adea-9565786f3870",
+      "ok": true,
+      "total": 766,
+      "value_col": "Gate-1 Discharge (cusec)"
+    },
+    "agg": "mean",
+    "kind": "reservoir"
+  },
+  "res_ganga_rmc": {
+    "enabled": true,
+    "archive": {
+      "id": "e8301a3d-1ced-4435-a805-f572d6b824db",
+      "ok": true,
+      "total": 992,
+      "value_col": "Gate-1 Discharge (cusec)"
+    },
+    "live": {
+      "id": "3eee06ec-522a-4d71-9495-9268629e852b",
+      "ok": true,
+      "total": 995,
+      "value_col": "Gate-1 Discharge (cusec)"
+    },
+    "agg": "mean",
+    "kind": "reservoir"
+  },
+  "res_ganga_1": {
+    "enabled": true,
+    "archive": {
+      "id": "ddc0ece2-a025-4d41-8a1d-5b67cf3a3696",
+      "ok": true,
+      "total": 988,
+      "value_col": "Gate-1 Discharge (cusec)"
+    },
+    "live": {
+      "id": "1939859c-acb0-4210-a4ab-02480e4e1d5c",
+      "ok": true,
+      "total": 993,
+      "value_col": "Gate-1 Discharge (cusec)"
+    },
+    "agg": "mean",
+    "kind": "reservoir"
+  }
+}

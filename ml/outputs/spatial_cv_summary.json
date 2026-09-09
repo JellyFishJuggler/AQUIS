@@ -1,0 +1,17 @@
+{
+  "n_blocks": 5,
+  "n_folds_evaluated": 5,
+  "pooled_test_rows": 378554,
+  "fold_rmse_mean": 1.9733,
+  "fold_rmse_median": 1.8191,
+  "fold_rmse_min": 0.6239,
+  "fold_rmse_max": 3.2049,
+  "fold_r2_mean": 0.8975,
+  "block_sizes": [
+    140,
+    129,
+    163,
+    106,
+    62
+  ]
+}

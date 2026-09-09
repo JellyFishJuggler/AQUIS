@@ -1,0 +1,298 @@
+{
+ "model": "xgb_multihorizon (pooled, delta 30d)",
+ "basis": "stride (non-overlap) test subset",
+ "n_stride_rows": 3371,
+ "permutation": [
+  {
+   "rank": 1,
+   "feature": "gwl_roll30_std",
+   "importance_mean": 0.002564279412749215,
+   "importance_std": 0.0014554001810844722
+  },
+  {
+   "rank": 2,
+   "feature": "temp_7d",
+   "importance_mean": 0.0015739750327817604,
+   "importance_std": 0.0004062222311640647
+  },
+  {
+   "rank": 3,
+   "feature": "hour_cos",
+   "importance_mean": 7.84959437563515e-05,
+   "importance_std": 2.581178304158808e-05
+  },
+  {
+   "rank": 4,
+   "feature": "lag4",
+   "importance_mean": 1.680886232833245e-05,
+   "importance_std": 2.1127362724183605e-05
+  },
+  {
+   "rank": 5,
+   "feature": "rain_7d",
+   "importance_mean": 6.630713778932318e-06,
+   "importance_std": 0.00015339231651301726
+  },
+  {
+   "rank": 6,
+   "feature": "month_cos",
+   "importance_mean": 0.0,
+   "importance_std": 0.0
+  },
+  {
+   "rank": 7,
+   "feature": "wind_speed",
+   "importance_mean": 0.0,
+   "importance_std": 0.0
+  },
+  {
+   "rank": 8,
+   "feature": "solar",
+   "importance_mean": 0.0,
+   "importance_std": 0.0
+  },
+  {
+   "rank": 9,
+   "feature": "humidity_7d",
+   "importance_mean": 0.0,
+   "importance_std": 0.0
+  },
+  {
+   "rank": 10,
+   "feature": "humidity",
+   "importance_mean": 0.0,
+   "importance_std": 0.0
+  },
+  {
+   "rank": 11,
+   "feature": "temp",
+   "importance_mean": 0.0,
+   "importance_std": 0.0
+  },
+  {
+   "rank": 12,
+   "feature": "rain_1d",
+   "importance_mean": 0.0,
+   "importance_std": 0.0
+  },
+  {
+   "rank": 13,
+   "feature": "pressure",
+   "importance_mean": 0.0,
+   "importance_std": 0.0
+  },
+  {
+   "rank": 14,
+   "feature": "river_level",
+   "importance_mean": 0.0,
+   "importance_std": 0.0
+  },
+  {
+   "rank": 15,
+   "feature": "canal_level",
+   "importance_mean": 0.0,
+   "importance_std": 0.0
+  },
+  {
+   "rank": 16,
+   "feature": "year",
+   "importance_mean": 0.0,
+   "importance_std": 0.0
+  },
+  {
+   "rank": 17,
+   "feature": "gwl_roll30_mean",
+   "importance_mean": -0.00011782327199583165,
+   "importance_std": 0.0007778109088568046
+  },
+  {
+   "rank": 18,
+   "feature": "st_id",
+   "importance_mean": -0.0001384376473808402,
+   "importance_std": 0.0003987802149837854
+  },
+  {
+   "rank": 19,
+   "feature": "lag8",
+   "importance_mean": -0.00015619661770678307,
+   "importance_std": 4.473378307305241e-05
+  },
+  {
+   "rank": 20,
+   "feature": "gwl_roll7_std",
+   "importance_mean": -0.0001836994243902268,
+   "importance_std": 0.0011257607659553013
+  },
+  {
+   "rank": 21,
+   "feature": "lag28",
+   "importance_mean": -0.00023332730746368214,
+   "importance_std": 6.319330275385682e-05
+  },
+  {
+   "rank": 22,
+   "feature": "hour_sin",
+   "importance_mean": -0.0003010768964060162,
+   "importance_std": 3.0147330050317196e-06
+  },
+  {
+   "rank": 23,
+   "feature": "month_sin",
+   "importance_mean": -0.00042928371281583113,
+   "importance_std": 0.00034148143454228115
+  },
+  {
+   "rank": 24,
+   "feature": "lag120",
+   "importance_mean": -0.002516115578153233,
+   "importance_std": 0.0004413768598756948
+  },
+  {
+   "rank": 25,
+   "feature": "dist_id",
+   "importance_mean": -0.00339126216994714,
+   "importance_std": 0.0004707367094999372
+  },
+  {
+   "rank": 26,
+   "feature": "lag1",
+   "importance_mean": -0.003682956394284531,
+   "importance_std": 0.0002819100259924893
+  },
+  {
+   "rank": 27,
+   "feature": "gwl_roll7_mean",
+   "importance_mean": -0.0038698716695400037,
+   "importance_std": 0.0005971267623433733
+  },
+  {
+   "rank": 28,
+   "feature": "rain_30d",
+   "importance_mean": -0.003924559535485627,
+   "importance_std": 0.0017412604123051962
+  },
+  {
+   "rank": 29,
+   "feature": "monsoon",
+   "importance_mean": -0.011044215627916288,
+   "importance_std": 0.0007728300994221453
+  },
+  {
+   "rank": 30,
+   "feature": "doy_sin",
+   "importance_mean": -0.012417248060259211,
+   "importance_std": 0.002097438969960751
+  },
+  {
+   "rank": 31,
+   "feature": "gwl",
+   "importance_mean": -0.018939294405251418,
+   "importance_std": 0.0008233039318051029
+  },
+  {
+   "rank": 32,
+   "feature": "doy_cos",
+   "importance_mean": -0.02756779470248034,
+   "importance_std": 0.0014128468394265417
+  }
+ ],
+ "vif": {
+  "feature": [
+   "gwl",
+   "lag1",
+   "lag4",
+   "lag8",
+   "lag28",
+   "lag120",
+   "gwl_roll7_mean",
+   "gwl_roll7_std",
+   "gwl_roll30_mean",
+   "gwl_roll30_std",
+   "rain_1d",
+   "rain_7d",
+   "rain_30d",
+   "temp",
+   "temp_7d",
+   "humidity",
+   "humidity_7d",
+   "solar",
+   "wind_speed",
+   "pressure",
+   "river_level",
+   "canal_level",
+   "year",
+   "month_sin",
+   "month_cos",
+   "doy_sin",
+   "doy_cos",
+   "hour_sin",
+   "hour_cos",
+   "monsoon",
+   "st_id",
+   "dist_id"
+  ],
+  "vif": [
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN,
+   NaN
+  ],
+  "constant_excluded": [
+   "year"
+  ],
+  "highly_correlated_gt10": []
+ },
+ "sensitivity": {
+  "features": [
+   "monsoon",
+   "gwl_roll7_std",
+   "doy_sin",
+   "gwl_roll30_std",
+   "year",
+   "doy_cos",
+   "lag1",
+   "gwl"
+  ],
+  "swing_mean_m": [
+   0.1323009580373764,
+   0.003815693547949195,
+   0.05925898253917694,
+   0.14616620540618896,
+   0.0,
+   0.38477104902267456,
+   0.056286897510290146,
+   0.1480863243341446
+  ],
+  "n_rows": 3371
+ },
+ "generated_at": "2026-09-09 19:45:19",
+ "seconds": 0.6
+}

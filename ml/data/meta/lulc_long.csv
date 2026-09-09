@@ -1,0 +1,1393 @@
+district,year,class,area_sqkm,pct
+AGRA,2011-12,"Builtup,Urban",142.61,3.541345915073256
+AGRA,2011-12,"Builtup,Rural",122.23,3.035261981624038
+AGRA,2011-12,"Builtup,Mining",0.0,0.0
+AGRA,2011-12,"Agriculture,Crop land",2996.66,74.41420412217532
+AGRA,2011-12,"Agriculture,Plantation",11.31,0.28085423392103304
+AGRA,2011-12,"Agriculture,Fallow",108.29,2.6890985845542588
+AGRA,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+AGRA,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+AGRA,2011-12,"Forest,Deciduous",137.41,3.412217531661286
+AGRA,2011-12,"Forest,Forest Plantation",0.08,0.0019865905140302956
+AGRA,2011-12,"Forest,Scrub Forest",234.58,5.825180034765334
+AGRA,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+AGRA,2011-12,Grass/Grazing,0.96,0.023839086168363548
+AGRA,2011-12,"Barren/Wastelands, Salt Affected",9.54,0.2369009187981127
+AGRA,2011-12,"Barren/Wastelands, Gullied/Ravinus",127.62,3.169108517506829
+AGRA,2011-12,"Barren/Wastelands, Scrub land",60.36,1.4988825428358579
+AGRA,2011-12,"Barren/Wastelands, Sandy area",0.13,0.00322820958529923
+AGRA,2011-12,"Barren/Wastelands, Barren rocky",11.41,0.2833374720635709
+AGRA,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+AGRA,2011-12,"Wetlands/Water, Inland Wetland",0.12,0.0029798857710454435
+AGRA,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+AGRA,2011-12,"Wetlands/Water, River/Stream/Canal",55.42,1.3762105785944871
+AGRA,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",8.27,0.2053637943878818
+AGRA,2011-12,Snow and Glacier,0.0,0.0
+AGRA,2005-06,"Builtup,Urban",116.7242096,2.8985400943630495
+AGRA,2005-06,"Builtup,Rural",113.9726093,2.830211306183263
+AGRA,2005-06,"Builtup,Mining",0.0,0.0
+AGRA,2005-06,"Agriculture,Crop land",2967.816709,73.69795651850013
+AGRA,2005-06,"Agriculture,Plantation",6.921279804,0.1718718600446983
+AGRA,2005-06,"Agriculture,Fallow",164.2755427,4.079352935187485
+AGRA,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+AGRA,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+AGRA,2005-06,"Forest,Deciduous",149.8215596,3.720426113732307
+AGRA,2005-06,"Forest,Forest Plantation",0.0,0.0
+AGRA,2005-06,"Forest,Scrub Forest",219.0969868,5.4406999453687614
+AGRA,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+AGRA,2005-06,Grass/Grazing,3.576063465,0.08880217196424137
+AGRA,2005-06,"Barren/Wastelands, Salt Affected",6.105697057,0.15161899818723615
+AGRA,2005-06,"Barren/Wastelands, Gullied/Ravinus",96.41219662,2.3941444405264463
+AGRA,2005-06,"Barren/Wastelands, Scrub land",56.51666875,1.4034434752917804
+AGRA,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+AGRA,2005-06,"Barren/Wastelands, Barren rocky",80.04899138,1.9878070866650113
+AGRA,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+AGRA,2005-06,"Wetlands/Water, Inland Wetland",0.262124671,0.006509179811273901
+AGRA,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+AGRA,2005-06,"Wetlands/Water, River/Stream/Canal",43.19035293,1.0725193178544823
+AGRA,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",2.259008125,0.05609655140302954
+AGRA,2005-06,Snow and Glacier,0.0,0.0
+AZAMGARH,2011-12,"Builtup,Urban",49.49,1.1688710439300898
+AZAMGARH,2011-12,"Builtup,Rural",274.71,6.488190836088804
+AZAMGARH,2011-12,"Builtup,Mining",14.09,0.33278223901747755
+AZAMGARH,2011-12,"Agriculture,Crop land",3409.52,80.52716107699575
+AZAMGARH,2011-12,"Agriculture,Plantation",32.11,0.7583845063769485
+AZAMGARH,2011-12,"Agriculture,Fallow",59.38,1.4024563060935287
+AZAMGARH,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+AZAMGARH,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+AZAMGARH,2011-12,"Forest,Deciduous",36.84,0.8700991969768541
+AZAMGARH,2011-12,"Forest,Forest Plantation",0.0,0.0
+AZAMGARH,2011-12,"Forest,Scrub Forest",0.0,0.0
+AZAMGARH,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+AZAMGARH,2011-12,Grass/Grazing,0.0,0.0
+AZAMGARH,2011-12,"Barren/Wastelands, Salt Affected",72.0,1.7005196032120926
+AZAMGARH,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+AZAMGARH,2011-12,"Barren/Wastelands, Scrub land",65.55,1.5481813887576759
+AZAMGARH,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+AZAMGARH,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+AZAMGARH,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+AZAMGARH,2011-12,"Wetlands/Water, Inland Wetland",110.9,2.6192725555030703
+AZAMGARH,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+AZAMGARH,2011-12,"Wetlands/Water, River/Stream/Canal",93.54,2.209258384506377
+AZAMGARH,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",15.86,0.3745866792631082
+AZAMGARH,2011-12,Snow and Glacier,0.0,0.0
+AZAMGARH,2005-06,"Builtup,Urban",74.50593841,1.7597056780821918
+AZAMGARH,2005-06,"Builtup,Rural",248.8187804,5.876683523854511
+AZAMGARH,2005-06,"Builtup,Mining",0.0,0.0
+AZAMGARH,2005-06,"Agriculture,Crop land",3269.869996,77.22886150212564
+AZAMGARH,2005-06,"Agriculture,Plantation",34.16583221,0.8069398254605573
+AZAMGARH,2005-06,"Agriculture,Fallow",26.97865422,0.6371906995748701
+AZAMGARH,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+AZAMGARH,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+AZAMGARH,2005-06,"Forest,Deciduous",0.0,0.0
+AZAMGARH,2005-06,"Forest,Forest Plantation",0.0,0.0
+AZAMGARH,2005-06,"Forest,Scrub Forest",0.0,0.0
+AZAMGARH,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+AZAMGARH,2005-06,Grass/Grazing,0.0,0.0
+AZAMGARH,2005-06,"Barren/Wastelands, Salt Affected",156.6672576,3.7002186490316484
+AZAMGARH,2005-06,"Barren/Wastelands, Gullied/Ravinus",20.9978773,0.4959347496457251
+AZAMGARH,2005-06,"Barren/Wastelands, Scrub land",94.02410412,2.220692114312707
+AZAMGARH,2005-06,"Barren/Wastelands, Sandy area",4.057359311,0.09582804230042513
+AZAMGARH,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+AZAMGARH,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+AZAMGARH,2005-06,"Wetlands/Water, Inland Wetland",127.5004091,3.0113464596126596
+AZAMGARH,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+AZAMGARH,2005-06,"Wetlands/Water, River/Stream/Canal",139.5865779,3.2968015564478037
+AZAMGARH,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",36.82721303,0.869797190127539
+AZAMGARH,2005-06,Snow and Glacier,0.0,0.0
+BAGHPAT,2011-12,"Builtup,Urban",49.54,3.982315112540193
+BAGHPAT,2011-12,"Builtup,Rural",36.44,2.9292604501607715
+BAGHPAT,2011-12,"Builtup,Mining",14.18,1.139871382636656
+BAGHPAT,2011-12,"Agriculture,Crop land",1076.18,86.5096463022508
+BAGHPAT,2011-12,"Agriculture,Plantation",7.68,0.617363344051447
+BAGHPAT,2011-12,"Agriculture,Fallow",38.31,3.079581993569132
+BAGHPAT,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+BAGHPAT,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+BAGHPAT,2011-12,"Forest,Deciduous",5.8,0.4662379421221865
+BAGHPAT,2011-12,"Forest,Forest Plantation",0.0,0.0
+BAGHPAT,2011-12,"Forest,Scrub Forest",0.3,0.024115755627009645
+BAGHPAT,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+BAGHPAT,2011-12,Grass/Grazing,0.0,0.0
+BAGHPAT,2011-12,"Barren/Wastelands, Salt Affected",0.0,0.0
+BAGHPAT,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+BAGHPAT,2011-12,"Barren/Wastelands, Scrub land",1.36,0.10932475884244373
+BAGHPAT,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+BAGHPAT,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+BAGHPAT,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+BAGHPAT,2011-12,"Wetlands/Water, Inland Wetland",0.0,0.0
+BAGHPAT,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+BAGHPAT,2011-12,"Wetlands/Water, River/Stream/Canal",12.24,0.9839228295819936
+BAGHPAT,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",1.96,0.15755627009646303
+BAGHPAT,2011-12,Snow and Glacier,0.0,0.0
+BAGHPAT,2005-06,"Builtup,Urban",2.294021189,0.1844068479903537
+BAGHPAT,2005-06,"Builtup,Rural",83.80486301,6.736725322347268
+BAGHPAT,2005-06,"Builtup,Mining",1.009587836,0.08115657845659163
+BAGHPAT,2005-06,"Agriculture,Crop land",1114.251305,89.5700405948553
+BAGHPAT,2005-06,"Agriculture,Plantation",7.524655636,0.6048758549839228
+BAGHPAT,2005-06,"Agriculture,Fallow",17.37646645,1.396822061897106
+BAGHPAT,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+BAGHPAT,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+BAGHPAT,2005-06,"Forest,Deciduous",5.843990098,0.46977412363344057
+BAGHPAT,2005-06,"Forest,Forest Plantation",0.0,0.0
+BAGHPAT,2005-06,"Forest,Scrub Forest",0.304685098,0.024492371221864952
+BAGHPAT,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+BAGHPAT,2005-06,Grass/Grazing,0.688079054,0.055311821061093246
+BAGHPAT,2005-06,"Barren/Wastelands, Salt Affected",0.0,0.0
+BAGHPAT,2005-06,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+BAGHPAT,2005-06,"Barren/Wastelands, Scrub land",0.828100692,0.06656757974276527
+BAGHPAT,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+BAGHPAT,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+BAGHPAT,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+BAGHPAT,2005-06,"Wetlands/Water, Inland Wetland",0.0,0.0
+BAGHPAT,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+BAGHPAT,2005-06,"Wetlands/Water, River/Stream/Canal",9.462136514,0.7606219062700965
+BAGHPAT,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",0.612109361,0.0492049325562701
+BAGHPAT,2005-06,Snow and Glacier,0.0,0.0
+BANDA,2011-12,"Builtup,Urban",27.82,0.5943174535355693
+BANDA,2011-12,"Builtup,Rural",79.7,1.7026276436658834
+BANDA,2011-12,"Builtup,Mining",2.66,0.056825464644306774
+BANDA,2011-12,"Agriculture,Crop land",3697.97,78.99957274086734
+BANDA,2011-12,"Agriculture,Plantation",70.51,1.5063020722067937
+BANDA,2011-12,"Agriculture,Fallow",345.67,7.384533219397564
+BANDA,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+BANDA,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+BANDA,2011-12,"Forest,Deciduous",140.73,3.0064088869899592
+BANDA,2011-12,"Forest,Forest Plantation",1.17,0.0249946592608417
+BANDA,2011-12,"Forest,Scrub Forest",6.32,0.13501388592181157
+BANDA,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+BANDA,2011-12,Grass/Grazing,0.0,0.0
+BANDA,2011-12,"Barren/Wastelands, Salt Affected",1.52,0.03247169408246101
+BANDA,2011-12,"Barren/Wastelands, Gullied/Ravinus",109.26,2.334116641743217
+BANDA,2011-12,"Barren/Wastelands, Scrub land",25.24,0.5392010254219184
+BANDA,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+BANDA,2011-12,"Barren/Wastelands, Barren rocky",2.4,0.05127109591967528
+BANDA,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+BANDA,2011-12,"Wetlands/Water, Inland Wetland",0.58,0.012390514847254858
+BANDA,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+BANDA,2011-12,"Wetlands/Water, River/Stream/Canal",153.97,3.2892544328135016
+BANDA,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",15.48,0.33069856868190556
+BANDA,2011-12,Snow and Glacier,0.0,0.0
+BANDA,2005-06,"Builtup,Urban",53.39678868,1.1407132809228797
+BANDA,2005-06,"Builtup,Rural",40.60248613,0.8673891503952147
+BANDA,2005-06,"Builtup,Mining",0.0,0.0
+BANDA,2005-06,"Agriculture,Crop land",3697.488532,78.98928716086307
+BANDA,2005-06,"Agriculture,Plantation",5.779257678,0.12346203114719075
+BANDA,2005-06,"Agriculture,Fallow",179.4358862,3.8332810553300574
+BANDA,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+BANDA,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+BANDA,2005-06,"Forest,Deciduous",62.69443186,1.3393384289681693
+BANDA,2005-06,"Forest,Forest Plantation",0.0,0.0
+BANDA,2005-06,"Forest,Scrub Forest",3.123219983,0.0667212130527665
+BANDA,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+BANDA,2005-06,Grass/Grazing,0.0,0.0
+BANDA,2005-06,"Barren/Wastelands, Salt Affected",5.126322735,0.10951341027558215
+BANDA,2005-06,"Barren/Wastelands, Gullied/Ravinus",301.4327107,6.439493926511429
+BANDA,2005-06,"Barren/Wastelands, Scrub land",127.7555209,2.729235652638325
+BANDA,2005-06,"Barren/Wastelands, Sandy area",17.79163289,0.3800818818628498
+BANDA,2005-06,"Barren/Wastelands, Barren rocky",37.7728809,0.8069404165776543
+BANDA,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+BANDA,2005-06,"Wetlands/Water, Inland Wetland",1.280625086,0.027357938175603502
+BANDA,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+BANDA,2005-06,"Wetlands/Water, River/Stream/Canal",137.8653465,2.9452114185003198
+BANDA,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",9.454357929,0.201973038431959
+BANDA,2005-06,Snow and Glacier,0.0,0.0
+BAREILLY,2011-12,"Builtup,Urban",98.57,2.3924757281553397
+BAREILLY,2011-12,"Builtup,Rural",194.21,4.7138349514563105
+BAREILLY,2011-12,"Builtup,Mining",0.09,0.002184466019417476
+BAREILLY,2011-12,"Agriculture,Crop land",3636.03,88.25315533980583
+BAREILLY,2011-12,"Agriculture,Plantation",18.91,0.4589805825242718
+BAREILLY,2011-12,"Agriculture,Fallow",5.43,0.13179611650485437
+BAREILLY,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+BAREILLY,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+BAREILLY,2011-12,"Forest,Deciduous",0.0,0.0
+BAREILLY,2011-12,"Forest,Forest Plantation",0.0,0.0
+BAREILLY,2011-12,"Forest,Scrub Forest",0.0,0.0
+BAREILLY,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+BAREILLY,2011-12,Grass/Grazing,0.0,0.0
+BAREILLY,2011-12,"Barren/Wastelands, Salt Affected",10.76,0.2611650485436893
+BAREILLY,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+BAREILLY,2011-12,"Barren/Wastelands, Scrub land",32.42,0.7868932038834952
+BAREILLY,2011-12,"Barren/Wastelands, Sandy area",0.21,0.005097087378640777
+BAREILLY,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+BAREILLY,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+BAREILLY,2011-12,"Wetlands/Water, Inland Wetland",4.77,0.1157766990291262
+BAREILLY,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+BAREILLY,2011-12,"Wetlands/Water, River/Stream/Canal",114.28,2.7737864077669903
+BAREILLY,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",4.33,0.10509708737864078
+BAREILLY,2011-12,Snow and Glacier,0.0,0.0
+BAREILLY,2005-06,"Builtup,Urban",86.96655023,2.1108385978155337
+BAREILLY,2005-06,"Builtup,Rural",200.389436,4.863821262135922
+BAREILLY,2005-06,"Builtup,Mining",0.0,0.0
+BAREILLY,2005-06,"Agriculture,Crop land",3462.901133,84.0509983737864
+BAREILLY,2005-06,"Agriculture,Plantation",15.53745234,0.3771226296116505
+BAREILLY,2005-06,"Agriculture,Fallow",221.4572977,5.375177128640776
+BAREILLY,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+BAREILLY,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+BAREILLY,2005-06,"Forest,Deciduous",0.0,0.0
+BAREILLY,2005-06,"Forest,Forest Plantation",0.0,0.0
+BAREILLY,2005-06,"Forest,Scrub Forest",0.0,0.0
+BAREILLY,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+BAREILLY,2005-06,Grass/Grazing,14.92644287,0.3622923026699029
+BAREILLY,2005-06,"Barren/Wastelands, Salt Affected",6.148170208,0.14922743223300972
+BAREILLY,2005-06,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+BAREILLY,2005-06,"Barren/Wastelands, Scrub land",28.3166302,0.687296849514563
+BAREILLY,2005-06,"Barren/Wastelands, Sandy area",12.64839306,0.30699983155339805
+BAREILLY,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+BAREILLY,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+BAREILLY,2005-06,"Wetlands/Water, Inland Wetland",2.794463436,0.06782678242718446
+BAREILLY,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+BAREILLY,2005-06,"Wetlands/Water, River/Stream/Canal",65.11746636,1.5805210281553397
+BAREILLY,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",2.79656432,0.06787777475728156
+BAREILLY,2005-06,Snow and Glacier,0.0,0.0
+BUDAUN,2011-12,"Builtup,Urban",40.26,0.7790247678018576
+BUDAUN,2011-12,"Builtup,Rural",217.69,4.212267801857585
+BUDAUN,2011-12,"Builtup,Mining",0.24,0.0046439628482972135
+BUDAUN,2011-12,"Agriculture,Crop land",4344.63,84.06791795665634
+BUDAUN,2011-12,"Agriculture,Plantation",73.12,1.414860681114551
+BUDAUN,2011-12,"Agriculture,Fallow",225.66,4.366486068111455
+BUDAUN,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+BUDAUN,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+BUDAUN,2011-12,"Forest,Deciduous",5.53,0.1070046439628483
+BUDAUN,2011-12,"Forest,Forest Plantation",0.0,0.0
+BUDAUN,2011-12,"Forest,Scrub Forest",20.68,0.4001547987616099
+BUDAUN,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+BUDAUN,2011-12,Grass/Grazing,27.55,0.5330882352941176
+BUDAUN,2011-12,"Barren/Wastelands, Salt Affected",21.28,0.4117647058823529
+BUDAUN,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+BUDAUN,2011-12,"Barren/Wastelands, Scrub land",102.04,1.9744582043343653
+BUDAUN,2011-12,"Barren/Wastelands, Sandy area",0.36,0.00696594427244582
+BUDAUN,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+BUDAUN,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+BUDAUN,2011-12,"Wetlands/Water, Inland Wetland",8.96,0.173374613003096
+BUDAUN,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+BUDAUN,2011-12,"Wetlands/Water, River/Stream/Canal",76.9,1.4880030959752324
+BUDAUN,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",3.1,0.05998452012383901
+BUDAUN,2011-12,Snow and Glacier,0.0,0.0
+BUDAUN,2005-06,"Builtup,Urban",13.79988908,0.26702571749226006
+BUDAUN,2005-06,"Builtup,Rural",230.6969166,4.4639496246130035
+BUDAUN,2005-06,"Builtup,Mining",0.109737849,0.002123410390866873
+BUDAUN,2005-06,"Agriculture,Crop land",4345.523139,84.08520005804954
+BUDAUN,2005-06,"Agriculture,Plantation",8.021845045,0.15522145984907118
+BUDAUN,2005-06,"Agriculture,Fallow",246.75986,4.7747650928792575
+BUDAUN,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+BUDAUN,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+BUDAUN,2005-06,"Forest,Deciduous",7.206614251,0.13944687018188856
+BUDAUN,2005-06,"Forest,Forest Plantation",0.0,0.0
+BUDAUN,2005-06,"Forest,Scrub Forest",23.06733399,0.44634934191176473
+BUDAUN,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+BUDAUN,2005-06,Grass/Grazing,53.2501161,1.030381503482972
+BUDAUN,2005-06,"Barren/Wastelands, Salt Affected",25.12430611,0.4861514340170278
+BUDAUN,2005-06,"Barren/Wastelands, Gullied/Ravinus",0.72744998,0.014076044504643965
+BUDAUN,2005-06,"Barren/Wastelands, Scrub land",134.1681495,2.5961329237616098
+BUDAUN,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+BUDAUN,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+BUDAUN,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+BUDAUN,2005-06,"Wetlands/Water, Inland Wetland",9.814119715,0.18990169727167183
+BUDAUN,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+BUDAUN,2005-06,"Wetlands/Water, River/Stream/Canal",66.92011139,1.29489379624613
+BUDAUN,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",2.810411052,0.05438101880804953
+BUDAUN,2005-06,Snow and Glacier,0.0,0.0
+CHITRAKOOT,2011-12,"Builtup,Urban",38.3,1.3013931362555213
+CHITRAKOOT,2011-12,"Builtup,Rural",21.85,0.7424396873938158
+CHITRAKOOT,2011-12,"Builtup,Mining",0.4,0.013591573224600747
+CHITRAKOOT,2011-12,"Agriculture,Crop land",1771.13,60.181107713217806
+CHITRAKOOT,2011-12,"Agriculture,Plantation",9.28,0.3153244988107373
+CHITRAKOOT,2011-12,"Agriculture,Fallow",120.12,4.081549439347604
+CHITRAKOOT,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+CHITRAKOOT,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+CHITRAKOOT,2011-12,"Forest,Deciduous",713.68,24.250084947332653
+CHITRAKOOT,2011-12,"Forest,Forest Plantation",7.97,0.2708120965001699
+CHITRAKOOT,2011-12,"Forest,Scrub Forest",31.73,1.0781515460414544
+CHITRAKOOT,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+CHITRAKOOT,2011-12,Grass/Grazing,0.0,0.0
+CHITRAKOOT,2011-12,"Barren/Wastelands, Salt Affected",0.48,0.0163098878695209
+CHITRAKOOT,2011-12,"Barren/Wastelands, Gullied/Ravinus",6.45,0.21916411824668705
+CHITRAKOOT,2011-12,"Barren/Wastelands, Scrub land",102.67,3.488617057424397
+CHITRAKOOT,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+CHITRAKOOT,2011-12,"Barren/Wastelands, Barren rocky",4.71,0.1600407747196738
+CHITRAKOOT,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+CHITRAKOOT,2011-12,"Wetlands/Water, Inland Wetland",0.76,0.02582398912674142
+CHITRAKOOT,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+CHITRAKOOT,2011-12,"Wetlands/Water, River/Stream/Canal",83.26,2.8290859667006454
+CHITRAKOOT,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",30.21,1.0265035677879715
+CHITRAKOOT,2011-12,Snow and Glacier,0.0,0.0
+CHITRAKOOT,2005-06,"Builtup,Urban",39.80236611,1.3524419337410807
+CHITRAKOOT,2005-06,"Builtup,Rural",17.84261128,0.6062728943255182
+CHITRAKOOT,2005-06,"Builtup,Mining",0.0,0.0
+CHITRAKOOT,2005-06,"Agriculture,Crop land",1262.4644,42.89719334012912
+CHITRAKOOT,2005-06,"Agriculture,Plantation",3.134733664,0.1065149053346925
+CHITRAKOOT,2005-06,"Agriculture,Fallow",393.545252,13.372247774379886
+CHITRAKOOT,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+CHITRAKOOT,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+CHITRAKOOT,2005-06,"Forest,Deciduous",556.7196009,18.916738053007137
+CHITRAKOOT,2005-06,"Forest,Forest Plantation",9.286709765,0.31555248946653075
+CHITRAKOOT,2005-06,"Forest,Scrub Forest",179.2554084,6.090907522935779
+CHITRAKOOT,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+CHITRAKOOT,2005-06,Grass/Grazing,0.0,0.0
+CHITRAKOOT,2005-06,"Barren/Wastelands, Salt Affected",0.0,0.0
+CHITRAKOOT,2005-06,"Barren/Wastelands, Gullied/Ravinus",57.67001454,1.9595655637104992
+CHITRAKOOT,2005-06,"Barren/Wastelands, Scrub land",255.1679312,8.670334053686714
+CHITRAKOOT,2005-06,"Barren/Wastelands, Sandy area",11.91226068,0.4047659082568807
+CHITRAKOOT,2005-06,"Barren/Wastelands, Barren rocky",37.46794086,1.2731206544342508
+CHITRAKOOT,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+CHITRAKOOT,2005-06,"Wetlands/Water, Inland Wetland",4.072922605,0.1383935645599728
+CHITRAKOOT,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+CHITRAKOOT,2005-06,"Wetlands/Water, River/Stream/Canal",90.5689547,3.0774364492014956
+CHITRAKOOT,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",24.08889297,0.818514881753313
+CHITRAKOOT,2005-06,Snow and Glacier,0.0,0.0
+DEORIA,2011-12,"Builtup,Urban",26.24,1.0194250194250194
+DEORIA,2011-12,"Builtup,Rural",213.02,8.275835275835275
+DEORIA,2011-12,"Builtup,Mining",11.07,0.43006993006993005
+DEORIA,2011-12,"Agriculture,Crop land",2152.76,83.63480963480964
+DEORIA,2011-12,"Agriculture,Plantation",19.34,0.7513597513597513
+DEORIA,2011-12,"Agriculture,Fallow",8.83,0.34304584304584307
+DEORIA,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+DEORIA,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+DEORIA,2011-12,"Forest,Deciduous",11.59,0.45027195027195027
+DEORIA,2011-12,"Forest,Forest Plantation",0.0,0.0
+DEORIA,2011-12,"Forest,Scrub Forest",0.0,0.0
+DEORIA,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+DEORIA,2011-12,Grass/Grazing,0.0,0.0
+DEORIA,2011-12,"Barren/Wastelands, Salt Affected",0.01,0.0003885003885003885
+DEORIA,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.05,0.0019425019425019425
+DEORIA,2011-12,"Barren/Wastelands, Scrub land",23.77,0.9234654234654235
+DEORIA,2011-12,"Barren/Wastelands, Sandy area",0.26,0.010101010101010102
+DEORIA,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+DEORIA,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+DEORIA,2011-12,"Wetlands/Water, Inland Wetland",17.31,0.6724941724941724
+DEORIA,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+DEORIA,2011-12,"Wetlands/Water, River/Stream/Canal",85.13,3.3073038073038075
+DEORIA,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",4.61,0.17909867909867913
+DEORIA,2011-12,Snow and Glacier,0.0,0.0
+DEORIA,2005-06,"Builtup,Urban",63.38709499,2.462591102952603
+DEORIA,2005-06,"Builtup,Rural",73.19418392,2.8435968888888885
+DEORIA,2005-06,"Builtup,Mining",0.0,0.0
+DEORIA,2005-06,"Agriculture,Crop land",1922.832447,74.70211526806527
+DEORIA,2005-06,"Agriculture,Plantation",212.0292966,8.23734641025641
+DEORIA,2005-06,"Agriculture,Fallow",69.86903104,2.7144145703185703
+DEORIA,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+DEORIA,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+DEORIA,2005-06,"Forest,Deciduous",0.38156946,0.014823988344988347
+DEORIA,2005-06,"Forest,Forest Plantation",0.0,0.0
+DEORIA,2005-06,"Forest,Scrub Forest",0.026901836,0.0010451373737373735
+DEORIA,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+DEORIA,2005-06,Grass/Grazing,0.0,0.0
+DEORIA,2005-06,"Barren/Wastelands, Salt Affected",3.044997882,0.11829828601398602
+DEORIA,2005-06,"Barren/Wastelands, Gullied/Ravinus",10.38169007,0.40332906254856254
+DEORIA,2005-06,"Barren/Wastelands, Scrub land",75.55993617,2.935506455710956
+DEORIA,2005-06,"Barren/Wastelands, Sandy area",12.77381543,0.4962632257187258
+DEORIA,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+DEORIA,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+DEORIA,2005-06,"Wetlands/Water, Inland Wetland",24.78415294,0.9628653045843045
+DEORIA,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+DEORIA,2005-06,"Wetlands/Water, River/Stream/Canal",91.91908041,3.571059844988345
+DEORIA,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",13.81580206,0.5367444467754467
+DEORIA,2005-06,Snow and Glacier,0.0,0.0
+ETAH,2011-12,"Builtup,Urban",14.54,0.5925020374898126
+ETAH,2011-12,"Builtup,Rural",105.78,4.310513447432763
+ETAH,2011-12,"Builtup,Mining",0.01,0.00040749796251018743
+ETAH,2011-12,"Agriculture,Crop land",2165.12,88.2281988590057
+ETAH,2011-12,"Agriculture,Plantation",13.87,0.56519967400163
+ETAH,2011-12,"Agriculture,Fallow",14.06,0.5729421352893236
+ETAH,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+ETAH,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+ETAH,2011-12,"Forest,Deciduous",3.14,0.12795436022819887
+ETAH,2011-12,"Forest,Forest Plantation",0.0,0.0
+ETAH,2011-12,"Forest,Scrub Forest",0.0,0.0
+ETAH,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+ETAH,2011-12,Grass/Grazing,0.0,0.0
+ETAH,2011-12,"Barren/Wastelands, Salt Affected",99.01,4.034637326813366
+ETAH,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+ETAH,2011-12,"Barren/Wastelands, Scrub land",5.03,0.2049714751426243
+ETAH,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+ETAH,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+ETAH,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+ETAH,2011-12,"Wetlands/Water, Inland Wetland",14.65,0.5969845150774246
+ETAH,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+ETAH,2011-12,"Wetlands/Water, River/Stream/Canal",16.2,0.6601466992665037
+ETAH,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",2.58,0.10513447432762836
+ETAH,2011-12,Snow and Glacier,0.0,0.0
+ETAH,2005-06,"Builtup,Urban",6.407556527,0.26110555894230253
+ETAH,2005-06,"Builtup,Rural",111.0157526,4.523850864503404
+ETAH,2005-06,"Builtup,Mining",0.0,0.0
+ETAH,2005-06,"Agriculture,Crop land",2037.664716,83.03408364269093
+ETAH,2005-06,"Agriculture,Plantation",5.764969855,0.23492038968871357
+ETAH,2005-06,"Agriculture,Fallow",141.2308299,5.755104090855375
+ETAH,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+ETAH,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+ETAH,2005-06,"Forest,Deciduous",3.098452919,0.1262608106323935
+ETAH,2005-06,"Forest,Forest Plantation",0.0,0.0
+ETAH,2005-06,"Forest,Scrub Forest",0.0,0.0
+ETAH,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+ETAH,2005-06,Grass/Grazing,0.295883124,0.012057127884564447
+ETAH,2005-06,"Barren/Wastelands, Salt Affected",125.8318228,5.127600246127765
+ETAH,2005-06,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+ETAH,2005-06,"Barren/Wastelands, Scrub land",3.689077434,0.15032854120398856
+ETAH,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+ETAH,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+ETAH,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+ETAH,2005-06,"Wetlands/Water, Inland Wetland",2.339139983,0.09531908928651472
+ETAH,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+ETAH,2005-06,"Wetlands/Water, River/Stream/Canal",14.56730105,0.5936121307574133
+ETAH,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",2.105932549,0.08581597259179871
+ETAH,2005-06,Snow and Glacier,0.0,0.0
+FATEHPUR,2011-12,"Builtup,Urban",42.41,1.0214354527938343
+FATEHPUR,2011-12,"Builtup,Rural",135.48,3.26300578034682
+FATEHPUR,2011-12,"Builtup,Mining",5.51,0.13270712909441232
+FATEHPUR,2011-12,"Agriculture,Crop land",3107.17,74.83550096339114
+FATEHPUR,2011-12,"Agriculture,Plantation",80.61,1.9414739884393064
+FATEHPUR,2011-12,"Agriculture,Fallow",165.44,3.984585741811175
+FATEHPUR,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+FATEHPUR,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+FATEHPUR,2011-12,"Forest,Deciduous",195.53,4.709296724470135
+FATEHPUR,2011-12,"Forest,Forest Plantation",0.03,0.000722543352601156
+FATEHPUR,2011-12,"Forest,Scrub Forest",0.0,0.0
+FATEHPUR,2011-12,"Forest,Swamp/Mangroves",0.03,0.000722543352601156
+FATEHPUR,2011-12,Grass/Grazing,0.0,0.0
+FATEHPUR,2011-12,"Barren/Wastelands, Salt Affected",106.14,2.55635838150289
+FATEHPUR,2011-12,"Barren/Wastelands, Gullied/Ravinus",111.33,2.68135838150289
+FATEHPUR,2011-12,"Barren/Wastelands, Scrub land",23.87,0.5749036608863198
+FATEHPUR,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+FATEHPUR,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+FATEHPUR,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+FATEHPUR,2011-12,"Wetlands/Water, Inland Wetland",12.89,0.31045279383429675
+FATEHPUR,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+FATEHPUR,2011-12,"Wetlands/Water, River/Stream/Canal",158.29,3.8123795761079
+FATEHPUR,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",7.26,0.17485549132947978
+FATEHPUR,2011-12,Snow and Glacier,0.0,0.0
+FATEHPUR,2005-06,"Builtup,Urban",72.35355,1.7426192196531791
+FATEHPUR,2005-06,"Builtup,Rural",46.44926858,1.118720341522158
+FATEHPUR,2005-06,"Builtup,Mining",0.0,0.0
+FATEHPUR,2005-06,"Agriculture,Crop land",2871.4786,69.15892581888247
+FATEHPUR,2005-06,"Agriculture,Plantation",109.0474642,2.6263840125240847
+FATEHPUR,2005-06,"Agriculture,Fallow",293.9579992,7.079913275529865
+FATEHPUR,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+FATEHPUR,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+FATEHPUR,2005-06,"Forest,Deciduous",2.866220618,0.06903228848747592
+FATEHPUR,2005-06,"Forest,Forest Plantation",0.0,0.0
+FATEHPUR,2005-06,"Forest,Scrub Forest",0.0,0.0
+FATEHPUR,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+FATEHPUR,2005-06,Grass/Grazing,0.0,0.0
+FATEHPUR,2005-06,"Barren/Wastelands, Salt Affected",185.0100552,4.455926184971099
+FATEHPUR,2005-06,"Barren/Wastelands, Gullied/Ravinus",237.4895227,5.719882531310212
+FATEHPUR,2005-06,"Barren/Wastelands, Scrub land",120.2561634,2.8963430491329483
+FATEHPUR,2005-06,"Barren/Wastelands, Sandy area",28.21420172,0.6795327967244701
+FATEHPUR,2005-06,"Barren/Wastelands, Barren rocky",16.54556086,0.39849616714836217
+FATEHPUR,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+FATEHPUR,2005-06,"Wetlands/Water, Inland Wetland",24.77789261,0.5967700532273603
+FATEHPUR,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+FATEHPUR,2005-06,"Wetlands/Water, River/Stream/Canal",135.5693258,3.2651571724470134
+FATEHPUR,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",7.984175609,0.19229710040944123
+FATEHPUR,2005-06,Snow and Glacier,0.0,0.0
+GHAZIABAD,2011-12,"Builtup,Urban",99.09,8.631533101045296
+GHAZIABAD,2011-12,"Builtup,Rural",48.29,4.206445993031359
+GHAZIABAD,2011-12,"Builtup,Mining",1.63,0.14198606271777003
+GHAZIABAD,2011-12,"Agriculture,Crop land",913.5,79.57317073170732
+GHAZIABAD,2011-12,"Agriculture,Plantation",18.85,1.6419860627177703
+GHAZIABAD,2011-12,"Agriculture,Fallow",38.78,3.3780487804878048
+GHAZIABAD,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+GHAZIABAD,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+GHAZIABAD,2011-12,"Forest,Deciduous",2.94,0.25609756097560976
+GHAZIABAD,2011-12,"Forest,Forest Plantation",0.0,0.0
+GHAZIABAD,2011-12,"Forest,Scrub Forest",1.01,0.08797909407665505
+GHAZIABAD,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+GHAZIABAD,2011-12,Grass/Grazing,0.0,0.0
+GHAZIABAD,2011-12,"Barren/Wastelands, Salt Affected",0.22,0.01916376306620209
+GHAZIABAD,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.06,0.005226480836236934
+GHAZIABAD,2011-12,"Barren/Wastelands, Scrub land",3.94,0.343205574912892
+GHAZIABAD,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+GHAZIABAD,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+GHAZIABAD,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+GHAZIABAD,2011-12,"Wetlands/Water, Inland Wetland",6.74,0.5871080139372822
+GHAZIABAD,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+GHAZIABAD,2011-12,"Wetlands/Water, River/Stream/Canal",10.56,0.9198606271777003
+GHAZIABAD,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",2.4,0.20905923344947736
+GHAZIABAD,2011-12,Snow and Glacier,0.0,0.0
+GHAZIABAD,2005-06,"Builtup,Urban",68.63879635,5.978989229094077
+GHAZIABAD,2005-06,"Builtup,Rural",70.33108044,6.126400735191638
+GHAZIABAD,2005-06,"Builtup,Mining",0.028230963,0.002459143118466899
+GHAZIABAD,2005-06,"Agriculture,Crop land",920.0893487,80.14715581010452
+GHAZIABAD,2005-06,"Agriculture,Plantation",17.82624288,1.5528086132404182
+GHAZIABAD,2005-06,"Agriculture,Fallow",38.2732281,3.3339048867595817
+GHAZIABAD,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+GHAZIABAD,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+GHAZIABAD,2005-06,"Forest,Deciduous",2.856622345,0.24883469904181185
+GHAZIABAD,2005-06,"Forest,Forest Plantation",0.0,0.0
+GHAZIABAD,2005-06,"Forest,Scrub Forest",1.030783457,0.08978949973867596
+GHAZIABAD,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+GHAZIABAD,2005-06,Grass/Grazing,4.492248517,0.39131084642857145
+GHAZIABAD,2005-06,"Barren/Wastelands, Salt Affected",0.297461538,0.02591128379790941
+GHAZIABAD,2005-06,"Barren/Wastelands, Gullied/Ravinus",0.293317141,0.025550273606271778
+GHAZIABAD,2005-06,"Barren/Wastelands, Scrub land",3.934730147,0.3427465284843205
+GHAZIABAD,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+GHAZIABAD,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+GHAZIABAD,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+GHAZIABAD,2005-06,"Wetlands/Water, Inland Wetland",7.843311147,0.683215256707317
+GHAZIABAD,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+GHAZIABAD,2005-06,"Wetlands/Water, River/Stream/Canal",10.27257456,0.8948235679442509
+GHAZIABAD,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",1.792023743,0.15609962918118467
+GHAZIABAD,2005-06,Snow and Glacier,0.0,0.0
+GORAKHPUR,2011-12,"Builtup,Urban",126.82,3.8152827918170877
+GORAKHPUR,2011-12,"Builtup,Rural",197.47,5.940734055354994
+GORAKHPUR,2011-12,"Builtup,Mining",13.82,0.4157641395908544
+GORAKHPUR,2011-12,"Agriculture,Crop land",2596.0,78.09867629362215
+GORAKHPUR,2011-12,"Agriculture,Plantation",38.28,1.151624548736462
+GORAKHPUR,2011-12,"Agriculture,Fallow",47.5,1.4290012033694344
+GORAKHPUR,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+GORAKHPUR,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+GORAKHPUR,2011-12,"Forest,Deciduous",75.61,2.2746690734055357
+GORAKHPUR,2011-12,"Forest,Forest Plantation",0.46,0.013838748495788207
+GORAKHPUR,2011-12,"Forest,Scrub Forest",0.0,0.0
+GORAKHPUR,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+GORAKHPUR,2011-12,Grass/Grazing,0.0,0.0
+GORAKHPUR,2011-12,"Barren/Wastelands, Salt Affected",2.56,0.07701564380264742
+GORAKHPUR,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.09,0.002707581227436823
+GORAKHPUR,2011-12,"Barren/Wastelands, Scrub land",19.66,0.5914560770156438
+GORAKHPUR,2011-12,"Barren/Wastelands, Sandy area",1.49,0.04482551143200963
+GORAKHPUR,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+GORAKHPUR,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+GORAKHPUR,2011-12,"Wetlands/Water, Inland Wetland",79.11,2.3799638989169676
+GORAKHPUR,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+GORAKHPUR,2011-12,"Wetlands/Water, River/Stream/Canal",107.99,3.2487966305655838
+GORAKHPUR,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",17.12,0.5150421179302046
+GORAKHPUR,2011-12,Snow and Glacier,0.0,0.0
+GORAKHPUR,2005-06,"Builtup,Urban",57.86999283,1.7409745135379062
+GORAKHPUR,2005-06,"Builtup,Rural",97.87933065,2.9446248691335737
+GORAKHPUR,2005-06,"Builtup,Mining",0.0,0.0
+GORAKHPUR,2005-06,"Agriculture,Crop land",2661.533449,80.07020003008424
+GORAKHPUR,2005-06,"Agriculture,Plantation",56.30693539,1.6939511248495789
+GORAKHPUR,2005-06,"Agriculture,Fallow",79.08132647,2.379101277677497
+GORAKHPUR,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+GORAKHPUR,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+GORAKHPUR,2005-06,"Forest,Deciduous",43.45887948,1.307427180505415
+GORAKHPUR,2005-06,"Forest,Forest Plantation",0.464258001,0.013966847202166064
+GORAKHPUR,2005-06,"Forest,Scrub Forest",0.0,0.0
+GORAKHPUR,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+GORAKHPUR,2005-06,Grass/Grazing,0.0,0.0
+GORAKHPUR,2005-06,"Barren/Wastelands, Salt Affected",66.81691725,2.0101358980144406
+GORAKHPUR,2005-06,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+GORAKHPUR,2005-06,"Barren/Wastelands, Scrub land",80.88906163,2.4334856086040912
+GORAKHPUR,2005-06,"Barren/Wastelands, Sandy area",4.44408041,0.13369676323706378
+GORAKHPUR,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+GORAKHPUR,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+GORAKHPUR,2005-06,"Wetlands/Water, Inland Wetland",58.42004136,1.7575223032490974
+GORAKHPUR,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+GORAKHPUR,2005-06,"Wetlands/Water, River/Stream/Canal",93.56091307,2.8147085761131168
+GORAKHPUR,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",23.2748147,0.700205015042118
+GORAKHPUR,2005-06,Snow and Glacier,0.0,0.0
+HAMIRPUR,2011-12,"Builtup,Urban",35.22,0.859653404930437
+HAMIRPUR,2011-12,"Builtup,Rural",72.09,1.7595801806199658
+HAMIRPUR,2011-12,"Builtup,Mining",1.88,0.04588723456187454
+HAMIRPUR,2011-12,"Agriculture,Crop land",3166.08,77.27800829875518
+HAMIRPUR,2011-12,"Agriculture,Plantation",11.69,0.28533072980229435
+HAMIRPUR,2011-12,"Agriculture,Fallow",282.88,6.904564315352697
+HAMIRPUR,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+HAMIRPUR,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+HAMIRPUR,2011-12,"Forest,Deciduous",171.32,4.18159628996827
+HAMIRPUR,2011-12,"Forest,Forest Plantation",1.23,0.030021967293141324
+HAMIRPUR,2011-12,"Forest,Scrub Forest",98.25,2.398096167927752
+HAMIRPUR,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+HAMIRPUR,2011-12,Grass/Grazing,0.0,0.0
+HAMIRPUR,2011-12,"Barren/Wastelands, Salt Affected",1.8,0.043934586282645835
+HAMIRPUR,2011-12,"Barren/Wastelands, Gullied/Ravinus",94.56,2.308030266048328
+HAMIRPUR,2011-12,"Barren/Wastelands, Scrub land",8.69,0.21210641933121796
+HAMIRPUR,2011-12,"Barren/Wastelands, Sandy area",0.83,0.020258725896997804
+HAMIRPUR,2011-12,"Barren/Wastelands, Barren rocky",0.07,0.0017085672443251162
+HAMIRPUR,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+HAMIRPUR,2011-12,"Wetlands/Water, Inland Wetland",1.73,0.042226019038320725
+HAMIRPUR,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+HAMIRPUR,2011-12,"Wetlands/Water, River/Stream/Canal",125.53,3.0639492311447403
+HAMIRPUR,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",23.15,0.5650475958018062
+HAMIRPUR,2011-12,Snow and Glacier,0.0,0.0
+HAMIRPUR,2005-06,"Builtup,Urban",2.910291505,0.07103469624115206
+HAMIRPUR,2005-06,"Builtup,Rural",79.24487058,1.9342170021967293
+HAMIRPUR,2005-06,"Builtup,Mining",0.0,0.0
+HAMIRPUR,2005-06,"Agriculture,Crop land",2295.068247,56.01826329021236
+HAMIRPUR,2005-06,"Agriculture,Plantation",3.184937835,0.0777382922870393
+HAMIRPUR,2005-06,"Agriculture,Fallow",536.4084892,13.092713917500609
+HAMIRPUR,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+HAMIRPUR,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+HAMIRPUR,2005-06,"Forest,Deciduous",2.736469179,0.06679202291920917
+HAMIRPUR,2005-06,"Forest,Forest Plantation",0.147815526,0.0036078966560898216
+HAMIRPUR,2005-06,"Forest,Scrub Forest",25.08846915,0.6123619514278741
+HAMIRPUR,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+HAMIRPUR,2005-06,Grass/Grazing,0.213673174,0.005215356944105443
+HAMIRPUR,2005-06,"Barren/Wastelands, Salt Affected",1.227900332,0.029970718379301927
+HAMIRPUR,2005-06,"Barren/Wastelands, Gullied/Ravinus",396.8134424,9.68546356846473
+HAMIRPUR,2005-06,"Barren/Wastelands, Scrub land",513.5103863,12.533814652184526
+HAMIRPUR,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+HAMIRPUR,2005-06,"Barren/Wastelands, Barren rocky",100.8567184,2.461721220405175
+HAMIRPUR,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+HAMIRPUR,2005-06,"Wetlands/Water, Inland Wetland",0.0,0.0
+HAMIRPUR,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+HAMIRPUR,2005-06,"Wetlands/Water, River/Stream/Canal",125.9461899,3.074107637295582
+HAMIRPUR,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",13.64210007,0.332977790334391
+HAMIRPUR,2005-06,Snow and Glacier,0.0,0.0
+JALAUN,2011-12,"Builtup,Urban",52.41,1.1480832420591456
+JALAUN,2011-12,"Builtup,Rural",109.55,2.3997809419496168
+JALAUN,2011-12,"Builtup,Mining",0.08,0.0017524644030668128
+JALAUN,2011-12,"Agriculture,Crop land",3551.27,77.7934282584885
+JALAUN,2011-12,"Agriculture,Plantation",5.85,0.12814895947426067
+JALAUN,2011-12,"Agriculture,Fallow",280.3,6.140197152245345
+JALAUN,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+JALAUN,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+JALAUN,2011-12,"Forest,Deciduous",128.05,2.8050383351588173
+JALAUN,2011-12,"Forest,Forest Plantation",2.12,0.046440306681270534
+JALAUN,2011-12,"Forest,Scrub Forest",118.47,2.595180722891566
+JALAUN,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+JALAUN,2011-12,Grass/Grazing,0.07,0.0015334063526834614
+JALAUN,2011-12,"Barren/Wastelands, Salt Affected",0.0,0.0
+JALAUN,2011-12,"Barren/Wastelands, Gullied/Ravinus",202.06,4.4262869660460025
+JALAUN,2011-12,"Barren/Wastelands, Scrub land",7.96,0.17437020810514786
+JALAUN,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+JALAUN,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+JALAUN,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+JALAUN,2011-12,"Wetlands/Water, Inland Wetland",0.48,0.010514786418400876
+JALAUN,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+JALAUN,2011-12,"Wetlands/Water, River/Stream/Canal",105.39,2.3086527929901424
+JALAUN,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",0.94,0.02059145673603505
+JALAUN,2011-12,Snow and Glacier,0.0,0.0
+JALAUN,2005-06,"Builtup,Urban",19.3935102,0.4248304534501643
+JALAUN,2005-06,"Builtup,Rural",94.93706734,2.079672888061336
+JALAUN,2005-06,"Builtup,Mining",0.0,0.0
+JALAUN,2005-06,"Agriculture,Crop land",2863.920267,62.73647901423877
+JALAUN,2005-06,"Agriculture,Plantation",1.262276531,0.027651183592552024
+JALAUN,2005-06,"Agriculture,Fallow",447.5018172,9.8028875618839
+JALAUN,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+JALAUN,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+JALAUN,2005-06,"Forest,Deciduous",7.402358157,0.16215461461117195
+JALAUN,2005-06,"Forest,Forest Plantation",0.840247615,0.0184063004381161
+JALAUN,2005-06,"Forest,Scrub Forest",16.9152264,0.3705416516976999
+JALAUN,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+JALAUN,2005-06,Grass/Grazing,0.0,0.0
+JALAUN,2005-06,"Barren/Wastelands, Salt Affected",0.0,0.0
+JALAUN,2005-06,"Barren/Wastelands, Gullied/Ravinus",411.8967057,9.022928930996715
+JALAUN,2005-06,"Barren/Wastelands, Scrub land",330.8100514,7.246660490690033
+JALAUN,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+JALAUN,2005-06,"Barren/Wastelands, Barren rocky",263.1171438,5.763792854326397
+JALAUN,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+JALAUN,2005-06,"Wetlands/Water, Inland Wetland",0.024208214,0.0005303004162102957
+JALAUN,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+JALAUN,2005-06,"Wetlands/Water, River/Stream/Canal",106.8850119,2.341402232201533
+JALAUN,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",0.09410892,0.0020615316538882805
+JALAUN,2005-06,Snow and Glacier,0.0,0.0
+JHANSI,2011-12,"Builtup,Urban",79.72,1.5867834394904459
+JHANSI,2011-12,"Builtup,Rural",115.72,2.303343949044586
+JHANSI,2011-12,"Builtup,Mining",16.55,0.3294187898089172
+JHANSI,2011-12,"Agriculture,Crop land",3663.72,72.92436305732484
+JHANSI,2011-12,"Agriculture,Plantation",14.66,0.29179936305732485
+JHANSI,2011-12,"Agriculture,Fallow",207.12,4.122611464968153
+JHANSI,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+JHANSI,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+JHANSI,2011-12,"Forest,Deciduous",337.22,6.712181528662421
+JHANSI,2011-12,"Forest,Forest Plantation",0.31,0.006170382165605096
+JHANSI,2011-12,"Forest,Scrub Forest",76.01,1.5129378980891721
+JHANSI,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+JHANSI,2011-12,Grass/Grazing,0.0,0.0
+JHANSI,2011-12,"Barren/Wastelands, Salt Affected",1.69,0.03363853503184713
+JHANSI,2011-12,"Barren/Wastelands, Gullied/Ravinus",103.98,2.0696656050955413
+JHANSI,2011-12,"Barren/Wastelands, Scrub land",218.93,4.357683121019108
+JHANSI,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+JHANSI,2011-12,"Barren/Wastelands, Barren rocky",32.37,0.6443073248407643
+JHANSI,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+JHANSI,2011-12,"Wetlands/Water, Inland Wetland",1.12,0.02229299363057325
+JHANSI,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+JHANSI,2011-12,"Wetlands/Water, River/Stream/Canal",96.74,1.9255573248407643
+JHANSI,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",58.13,1.157046178343949
+JHANSI,2011-12,Snow and Glacier,0.0,0.0
+JHANSI,2005-06,"Builtup,Urban",54.80581628,1.0908801011146496
+JHANSI,2005-06,"Builtup,Rural",87.29506581,1.7375610232882166
+JHANSI,2005-06,"Builtup,Mining",10.17050636,0.20243842277070062
+JHANSI,2005-06,"Agriculture,Crop land",2837.318504,56.47528869426751
+JHANSI,2005-06,"Agriculture,Plantation",4.158471439,0.08277212259156051
+JHANSI,2005-06,"Agriculture,Fallow",340.6980627,6.781410483678344
+JHANSI,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+JHANSI,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+JHANSI,2005-06,"Forest,Deciduous",35.32120797,0.70304952169586
+JHANSI,2005-06,"Forest,Forest Plantation",0.392495825,0.007812416898885351
+JHANSI,2005-06,"Forest,Scrub Forest",111.6423605,2.2221807424363056
+JHANSI,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+JHANSI,2005-06,Grass/Grazing,1.212463466,0.024133428861464967
+JHANSI,2005-06,"Barren/Wastelands, Salt Affected",0.0,0.0
+JHANSI,2005-06,"Barren/Wastelands, Gullied/Ravinus",233.5738557,4.649161140525478
+JHANSI,2005-06,"Barren/Wastelands, Scrub land",1031.844078,20.538297730891724
+JHANSI,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+JHANSI,2005-06,"Barren/Wastelands, Barren rocky",132.796717,2.6432467555732484
+JHANSI,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+JHANSI,2005-06,"Wetlands/Water, Inland Wetland",0.300457553,0.005980444924363057
+JHANSI,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+JHANSI,2005-06,"Wetlands/Water, River/Stream/Canal",117.9594852,2.3479196894904457
+JHANSI,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",24.51045231,0.48786728324044587
+JHANSI,2005-06,Snow and Glacier,0.0,0.0
+KAUSHAMBI,2011-12,"Builtup,Urban",145.99,6.922238027501185
+KAUSHAMBI,2011-12,"Builtup,Rural",66.36,3.14651493598862
+KAUSHAMBI,2011-12,"Builtup,Mining",7.79,0.36936936936936937
+KAUSHAMBI,2011-12,"Agriculture,Crop land",1525.93,72.35324798482694
+KAUSHAMBI,2011-12,"Agriculture,Plantation",126.79,6.01185395922238
+KAUSHAMBI,2011-12,"Agriculture,Fallow",42.71,2.025130393551446
+KAUSHAMBI,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+KAUSHAMBI,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+KAUSHAMBI,2011-12,"Forest,Deciduous",19.94,0.9454717875770509
+KAUSHAMBI,2011-12,"Forest,Forest Plantation",0.0,0.0
+KAUSHAMBI,2011-12,"Forest,Scrub Forest",0.0,0.0
+KAUSHAMBI,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+KAUSHAMBI,2011-12,Grass/Grazing,0.0,0.0
+KAUSHAMBI,2011-12,"Barren/Wastelands, Salt Affected",42.44,2.0123281175912755
+KAUSHAMBI,2011-12,"Barren/Wastelands, Gullied/Ravinus",2.0,0.0948316737790422
+KAUSHAMBI,2011-12,"Barren/Wastelands, Scrub land",14.48,0.6865813181602656
+KAUSHAMBI,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+KAUSHAMBI,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+KAUSHAMBI,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+KAUSHAMBI,2011-12,"Wetlands/Water, Inland Wetland",11.97,0.5675675675675675
+KAUSHAMBI,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+KAUSHAMBI,2011-12,"Wetlands/Water, River/Stream/Canal",100.71,4.77524893314367
+KAUSHAMBI,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",1.89,0.08961593172119488
+KAUSHAMBI,2011-12,Snow and Glacier,0.0,0.0
+KAUSHAMBI,2005-06,"Builtup,Urban",99.95367287,4.739387049312471
+KAUSHAMBI,2005-06,"Builtup,Rural",33.03800215,1.5665245211000474
+KAUSHAMBI,2005-06,"Builtup,Mining",0.0,0.0
+KAUSHAMBI,2005-06,"Agriculture,Crop land",1493.382845,70.80999739212898
+KAUSHAMBI,2005-06,"Agriculture,Plantation",100.1053313,4.746578060692271
+KAUSHAMBI,2005-06,"Agriculture,Fallow",69.55734362,3.298119659554291
+KAUSHAMBI,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+KAUSHAMBI,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+KAUSHAMBI,2005-06,"Forest,Deciduous",0.0,0.0
+KAUSHAMBI,2005-06,"Forest,Forest Plantation",0.0,0.0
+KAUSHAMBI,2005-06,"Forest,Scrub Forest",0.0,0.0
+KAUSHAMBI,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+KAUSHAMBI,2005-06,Grass/Grazing,0.0,0.0
+KAUSHAMBI,2005-06,"Barren/Wastelands, Salt Affected",108.1775524,5.129329179706022
+KAUSHAMBI,2005-06,"Barren/Wastelands, Gullied/Ravinus",11.89099303,0.5638213859649123
+KAUSHAMBI,2005-06,"Barren/Wastelands, Scrub land",74.52445261,3.533639289236605
+KAUSHAMBI,2005-06,"Barren/Wastelands, Sandy area",28.52640458,1.3526033466097678
+KAUSHAMBI,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+KAUSHAMBI,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+KAUSHAMBI,2005-06,"Wetlands/Water, Inland Wetland",17.58259958,0.8336936737790422
+KAUSHAMBI,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+KAUSHAMBI,2005-06,"Wetlands/Water, River/Stream/Canal",71.13511964,3.372931229966809
+KAUSHAMBI,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",1.125683698,0.05337523461356093
+KAUSHAMBI,2005-06,Snow and Glacier,0.0,0.0
+Kansiram Nagar,2011-12,"Builtup,Urban",13.1,0.6576305220883534
+Kansiram Nagar,2011-12,"Builtup,Rural",82.27,4.130020080321285
+Kansiram Nagar,2011-12,"Builtup,Mining",0.0,0.0
+Kansiram Nagar,2011-12,"Agriculture,Crop land",1619.9,81.320281124498
+Kansiram Nagar,2011-12,"Agriculture,Plantation",36.26,1.820281124497992
+Kansiram Nagar,2011-12,"Agriculture,Fallow",11.08,0.5562248995983936
+Kansiram Nagar,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+Kansiram Nagar,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+Kansiram Nagar,2011-12,"Forest,Deciduous",2.27,0.11395582329317269
+Kansiram Nagar,2011-12,"Forest,Forest Plantation",0.0,0.0
+Kansiram Nagar,2011-12,"Forest,Scrub Forest",2.15,0.10793172690763052
+Kansiram Nagar,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+Kansiram Nagar,2011-12,Grass/Grazing,3.98,0.19979919678714858
+Kansiram Nagar,2011-12,"Barren/Wastelands, Salt Affected",20.99,1.053714859437751
+Kansiram Nagar,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+Kansiram Nagar,2011-12,"Barren/Wastelands, Scrub land",50.12,2.5160642570281126
+Kansiram Nagar,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+Kansiram Nagar,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+Kansiram Nagar,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+Kansiram Nagar,2011-12,"Wetlands/Water, Inland Wetland",26.78,1.3443775100401607
+Kansiram Nagar,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+Kansiram Nagar,2011-12,"Wetlands/Water, River/Stream/Canal",121.43,6.095883534136546
+Kansiram Nagar,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",1.67,0.08383534136546185
+Kansiram Nagar,2011-12,Snow and Glacier,0.0,0.0
+Kansiram Nagar,2005-06,"Builtup,Urban",0.0,0.0
+Kansiram Nagar,2005-06,"Builtup,Rural",93.49036235,4.693314843448009
+Kansiram Nagar,2005-06,"Builtup,Mining",0.0,0.0
+Kansiram Nagar,2005-06,"Agriculture,Crop land",1530.58971,76.83721856033414
+Kansiram Nagar,2005-06,"Agriculture,Plantation",12.87550587,0.6463639812448857
+Kansiram Nagar,2005-06,"Agriculture,Fallow",137.9340059,6.924432647754255
+Kansiram Nagar,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+Kansiram Nagar,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+Kansiram Nagar,2005-06,"Forest,Deciduous",9.069218211,0.4552843242686962
+Kansiram Nagar,2005-06,"Forest,Forest Plantation",0.0,0.0
+Kansiram Nagar,2005-06,"Forest,Scrub Forest",1.262867081,0.06339726007660682
+Kansiram Nagar,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+Kansiram Nagar,2005-06,Grass/Grazing,39.95932397,2.0060002294188224
+Kansiram Nagar,2005-06,"Barren/Wastelands, Salt Affected",20.11128745,1.009607851947048
+Kansiram Nagar,2005-06,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+Kansiram Nagar,2005-06,"Barren/Wastelands, Scrub land",39.13787241,1.96476249428963
+Kansiram Nagar,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+Kansiram Nagar,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+Kansiram Nagar,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+Kansiram Nagar,2005-06,"Wetlands/Water, Inland Wetland",30.83205064,1.5478014769150445
+Kansiram Nagar,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+Kansiram Nagar,2005-06,"Wetlands/Water, River/Stream/Canal",74.15033785,3.722425205447818
+Kansiram Nagar,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",2.576023396,0.12931909276652995
+Kansiram Nagar,2005-06,Snow and Glacier,0.0,0.0
+LALITPUR,2011-12,"Builtup,Urban",23.76,0.4715221274062314
+LALITPUR,2011-12,"Builtup,Rural",80.01,1.587815042667196
+LALITPUR,2011-12,"Builtup,Mining",2.71,0.053780512006350464
+LALITPUR,2011-12,"Agriculture,Crop land",3499.82,69.45465370113118
+LALITPUR,2011-12,"Agriculture,Plantation",18.91,0.37527287160150824
+LALITPUR,2011-12,"Agriculture,Fallow",87.22,1.7308989878944234
+LALITPUR,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+LALITPUR,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+LALITPUR,2011-12,"Forest,Deciduous",672.6,13.347886485413772
+LALITPUR,2011-12,"Forest,Forest Plantation",3.36,0.06667989680492162
+LALITPUR,2011-12,"Forest,Scrub Forest",72.28,1.4344115896011114
+LALITPUR,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+LALITPUR,2011-12,Grass/Grazing,0.0,0.0
+LALITPUR,2011-12,"Barren/Wastelands, Salt Affected",0.0,0.0
+LALITPUR,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+LALITPUR,2011-12,"Barren/Wastelands, Scrub land",172.45,3.422306013097837
+LALITPUR,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+LALITPUR,2011-12,"Barren/Wastelands, Barren rocky",67.74,1.3443143480849373
+LALITPUR,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+LALITPUR,2011-12,"Wetlands/Water, Inland Wetland",0.86,0.017066878348878746
+LALITPUR,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+LALITPUR,2011-12,"Wetlands/Water, River/Stream/Canal",40.9,0.8116689819408612
+LALITPUR,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",296.37,5.88152411192697
+LALITPUR,2011-12,Snow and Glacier,0.0,0.0
+LALITPUR,2005-06,"Builtup,Urban",8.771137437,0.1740650414169478
+LALITPUR,2005-06,"Builtup,Rural",49.77305479,0.9877565943639612
+LALITPUR,2005-06,"Builtup,Mining",1.332309496,0.026439958245683667
+LALITPUR,2005-06,"Agriculture,Crop land",2024.064839,40.16798648541377
+LALITPUR,2005-06,"Agriculture,Plantation",4.782269838,0.09490513669378846
+LALITPUR,2005-06,"Agriculture,Fallow",188.1534006,3.7339432546140103
+LALITPUR,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+LALITPUR,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+LALITPUR,2005-06,"Forest,Deciduous",380.1915997,7.5449811410994245
+LALITPUR,2005-06,"Forest,Forest Plantation",3.298434402,0.06545811474498908
+LALITPUR,2005-06,"Forest,Scrub Forest",156.3660011,3.103115719388768
+LALITPUR,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+LALITPUR,2005-06,Grass/Grazing,2.856555366,0.05668893363762651
+LALITPUR,2005-06,"Barren/Wastelands, Salt Affected",0.0,0.0
+LALITPUR,2005-06,"Barren/Wastelands, Gullied/Ravinus",5.60679606,0.11126803056161935
+LALITPUR,2005-06,"Barren/Wastelands, Scrub land",1973.748035,39.16943907521334
+LALITPUR,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+LALITPUR,2005-06,"Barren/Wastelands, Barren rocky",5.085508101,0.10092296290930741
+LALITPUR,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+LALITPUR,2005-06,"Wetlands/Water, Inland Wetland",0.570865418,0.01132894260766025
+LALITPUR,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+LALITPUR,2005-06,"Wetlands/Water, River/Stream/Canal",42.90092381,0.8513777299067276
+LALITPUR,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",191.4982694,3.8003228696169873
+LALITPUR,2005-06,Snow and Glacier,0.0,0.0
+MAHOBA,2011-12,"Builtup,Urban",27.9,0.909387222946545
+MAHOBA,2011-12,"Builtup,Rural",41.47,1.3516949152542372
+MAHOBA,2011-12,"Builtup,Mining",16.65,0.5426988265971316
+MAHOBA,2011-12,"Agriculture,Crop land",2323.22,75.72425032594523
+MAHOBA,2011-12,"Agriculture,Plantation",24.68,0.8044328552803129
+MAHOBA,2011-12,"Agriculture,Fallow",165.53,5.395371577574967
+MAHOBA,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+MAHOBA,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+MAHOBA,2011-12,"Forest,Deciduous",202.52,6.601043024771839
+MAHOBA,2011-12,"Forest,Forest Plantation",0.0,0.0
+MAHOBA,2011-12,"Forest,Scrub Forest",19.67,0.6411342894393742
+MAHOBA,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+MAHOBA,2011-12,Grass/Grazing,0.0,0.0
+MAHOBA,2011-12,"Barren/Wastelands, Salt Affected",0.44,0.014341590612777053
+MAHOBA,2011-12,"Barren/Wastelands, Gullied/Ravinus",13.98,0.4556714471968709
+MAHOBA,2011-12,"Barren/Wastelands, Scrub land",85.9,2.7998696219035204
+MAHOBA,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+MAHOBA,2011-12,"Barren/Wastelands, Barren rocky",13.37,0.43578878748370276
+MAHOBA,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+MAHOBA,2011-12,"Wetlands/Water, Inland Wetland",3.16,0.10299869621903521
+MAHOBA,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+MAHOBA,2011-12,"Wetlands/Water, River/Stream/Canal",29.94,0.9758800521512386
+MAHOBA,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",99.57,3.2454367666232073
+MAHOBA,2011-12,Snow and Glacier,0.0,0.0
+MAHOBA,2005-06,"Builtup,Urban",0.454266912,0.014806613820078227
+MAHOBA,2005-06,"Builtup,Rural",44.39561656,1.4470539947848762
+MAHOBA,2005-06,"Builtup,Mining",1.754371704,0.057182910821382
+MAHOBA,2005-06,"Agriculture,Crop land",1687.144935,54.99168627770535
+MAHOBA,2005-06,"Agriculture,Plantation",5.409687619,0.17632619357887874
+MAHOBA,2005-06,"Agriculture,Fallow",511.3536697,16.667329520860495
+MAHOBA,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+MAHOBA,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+MAHOBA,2005-06,"Forest,Deciduous",58.71125638,1.9136654621903522
+MAHOBA,2005-06,"Forest,Forest Plantation",0.722163878,0.023538587940026078
+MAHOBA,2005-06,"Forest,Scrub Forest",56.8487713,1.852958647327249
+MAHOBA,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+MAHOBA,2005-06,Grass/Grazing,0.0,0.0
+MAHOBA,2005-06,"Barren/Wastelands, Salt Affected",0.0,0.0
+MAHOBA,2005-06,"Barren/Wastelands, Gullied/Ravinus",91.84308376,2.99358160886571
+MAHOBA,2005-06,"Barren/Wastelands, Scrub land",479.4268836,15.62669112125163
+MAHOBA,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+MAHOBA,2005-06,"Barren/Wastelands, Barren rocky",27.43133273,0.8941112363102999
+MAHOBA,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+MAHOBA,2005-06,"Wetlands/Water, Inland Wetland",0.119282166,0.0038879454367666227
+MAHOBA,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+MAHOBA,2005-06,"Wetlands/Water, River/Stream/Canal",30.44257184,0.9922611421121251
+MAHOBA,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",71.94210641,2.3449187226205996
+MAHOBA,2005-06,Snow and Glacier,0.0,0.0
+MEERUT,2011-12,"Builtup,Urban",135.91,5.095988001499813
+MEERUT,2011-12,"Builtup,Rural",92.77,3.478440194975628
+MEERUT,2011-12,"Builtup,Mining",0.97,0.03637045369328834
+MEERUT,2011-12,"Agriculture,Crop land",2198.66,82.43944506936633
+MEERUT,2011-12,"Agriculture,Plantation",55.0,2.0622422197225347
+MEERUT,2011-12,"Agriculture,Fallow",44.76,1.6782902137232847
+MEERUT,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+MEERUT,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+MEERUT,2011-12,"Forest,Deciduous",41.66,1.5620547431571055
+MEERUT,2011-12,"Forest,Forest Plantation",0.0,0.0
+MEERUT,2011-12,"Forest,Scrub Forest",0.41,0.01537307836520435
+MEERUT,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+MEERUT,2011-12,Grass/Grazing,0.32,0.011998500187476566
+MEERUT,2011-12,"Barren/Wastelands, Salt Affected",0.0,0.0
+MEERUT,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+MEERUT,2011-12,"Barren/Wastelands, Scrub land",11.41,0.42782152230971127
+MEERUT,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+MEERUT,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+MEERUT,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+MEERUT,2011-12,"Wetlands/Water, Inland Wetland",17.44,0.6539182602174729
+MEERUT,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+MEERUT,2011-12,"Wetlands/Water, River/Stream/Canal",64.32,2.4116985376827893
+MEERUT,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",3.35,0.1256092988376453
+MEERUT,2011-12,Snow and Glacier,0.0,0.0
+MEERUT,2005-06,"Builtup,Urban",92.11984107,3.4540622823397076
+MEERUT,2005-06,"Builtup,Rural",127.8366023,4.7932734270716155
+MEERUT,2005-06,"Builtup,Mining",0.665057642,0.024936544506936633
+MEERUT,2005-06,"Agriculture,Crop land",2188.899802,82.0734833895763
+MEERUT,2005-06,"Agriculture,Plantation",48.58241589,1.8216128942632173
+MEERUT,2005-06,"Agriculture,Fallow",58.0780302,2.17765392575928
+MEERUT,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+MEERUT,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+MEERUT,2005-06,"Forest,Deciduous",39.35953743,1.4757981788526435
+MEERUT,2005-06,"Forest,Forest Plantation",0.0,0.0
+MEERUT,2005-06,"Forest,Scrub Forest",4.120613134,0.15450367956505437
+MEERUT,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+MEERUT,2005-06,Grass/Grazing,32.88800761,1.2331461421072367
+MEERUT,2005-06,"Barren/Wastelands, Salt Affected",0.0,0.0
+MEERUT,2005-06,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+MEERUT,2005-06,"Barren/Wastelands, Scrub land",4.100959645,0.15376676584176976
+MEERUT,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+MEERUT,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+MEERUT,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+MEERUT,2005-06,"Wetlands/Water, Inland Wetland",12.01397666,0.4504678162729659
+MEERUT,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+MEERUT,2005-06,"Wetlands/Water, River/Stream/Canal",56.18755912,2.1067701207349083
+MEERUT,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",2.147597102,0.08052482572178479
+MEERUT,2005-06,Snow and Glacier,0.0,0.0
+MIRZAPUR,2011-12,"Builtup,Urban",22.64,0.5006634232640425
+MIRZAPUR,2011-12,"Builtup,Rural",66.43,1.4690402476780189
+MIRZAPUR,2011-12,"Builtup,Mining",28.73,0.6353383458646616
+MIRZAPUR,2011-12,"Agriculture,Crop land",2360.61,52.202786377708975
+MIRZAPUR,2011-12,"Agriculture,Plantation",40.03,0.8852277753206546
+MIRZAPUR,2011-12,"Agriculture,Fallow",226.51,5.009066784608581
+MIRZAPUR,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+MIRZAPUR,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+MIRZAPUR,2011-12,"Forest,Deciduous",1225.7,27.105263157894736
+MIRZAPUR,2011-12,"Forest,Forest Plantation",15.03,0.332375055285272
+MIRZAPUR,2011-12,"Forest,Scrub Forest",137.62,3.043343653250774
+MIRZAPUR,2011-12,"Forest,Swamp/Mangroves",0.09,0.0019902697921273774
+MIRZAPUR,2011-12,Grass/Grazing,0.0,0.0
+MIRZAPUR,2011-12,"Barren/Wastelands, Salt Affected",0.53,0.01172047766475011
+MIRZAPUR,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+MIRZAPUR,2011-12,"Barren/Wastelands, Scrub land",61.76,1.3657673595754092
+MIRZAPUR,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+MIRZAPUR,2011-12,"Barren/Wastelands, Barren rocky",18.85,0.4168509509066785
+MIRZAPUR,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+MIRZAPUR,2011-12,"Wetlands/Water, Inland Wetland",1.25,0.027642636001769128
+MIRZAPUR,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+MIRZAPUR,2011-12,"Wetlands/Water, River/Stream/Canal",167.94,3.713843432109686
+MIRZAPUR,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",148.28,3.2790800530738613
+MIRZAPUR,2011-12,Snow and Glacier,0.0,0.0
+MIRZAPUR,2005-06,"Builtup,Urban",48.39006608,1.0701031862007961
+MIRZAPUR,2005-06,"Builtup,Rural",19.08165881,0.4219738790358249
+MIRZAPUR,2005-06,"Builtup,Mining",0.0,0.0
+MIRZAPUR,2005-06,"Agriculture,Crop land",1986.845784,43.93732383900929
+MIRZAPUR,2005-06,"Agriculture,Plantation",44.33957659,0.9805302209199469
+MIRZAPUR,2005-06,"Agriculture,Fallow",364.9444718,8.070421755860238
+MIRZAPUR,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+MIRZAPUR,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+MIRZAPUR,2005-06,"Forest,Deciduous",502.8312335,11.119664606368863
+MIRZAPUR,2005-06,"Forest,Forest Plantation",3.244955738,0.07175930424590889
+MIRZAPUR,2005-06,"Forest,Scrub Forest",553.8748252,12.248448146837683
+MIRZAPUR,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+MIRZAPUR,2005-06,Grass/Grazing,0.0,0.0
+MIRZAPUR,2005-06,"Barren/Wastelands, Salt Affected",2.287884473,0.050594526160990715
+MIRZAPUR,2005-06,"Barren/Wastelands, Gullied/Ravinus",15.0039584,0.331799168509509
+MIRZAPUR,2005-06,"Barren/Wastelands, Scrub land",368.8600034,8.157010247678018
+MIRZAPUR,2005-06,"Barren/Wastelands, Sandy area",1.171319644,0.02590269004865104
+MIRZAPUR,2005-06,"Barren/Wastelands, Barren rocky",381.0631851,8.426872735515259
+MIRZAPUR,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+MIRZAPUR,2005-06,"Wetlands/Water, Inland Wetland",21.43733472,0.47406755241043785
+MIRZAPUR,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+MIRZAPUR,2005-06,"Wetlands/Water, River/Stream/Canal",169.329724,3.7445759398496237
+MIRZAPUR,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",39.2940184,0.8689521981424149
+MIRZAPUR,2005-06,Snow and Glacier,0.0,0.0
+MUZAFFARNAGAR,2011-12,"Builtup,Urban",102.37,2.5535046146171116
+MUZAFFARNAGAR,2011-12,"Builtup,Rural",129.11,3.2205038663008234
+MUZAFFARNAGAR,2011-12,"Builtup,Mining",5.71,0.1424295335495136
+MUZAFFARNAGAR,2011-12,"Agriculture,Crop land",3445.56,85.94562234971315
+MUZAFFARNAGAR,2011-12,"Agriculture,Plantation",56.56,1.4108256423048142
+MUZAFFARNAGAR,2011-12,"Agriculture,Fallow",82.6,2.0603641805936643
+MUZAFFARNAGAR,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+MUZAFFARNAGAR,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+MUZAFFARNAGAR,2011-12,"Forest,Deciduous",17.24,0.43003242703916184
+MUZAFFARNAGAR,2011-12,"Forest,Forest Plantation",0.0,0.0
+MUZAFFARNAGAR,2011-12,"Forest,Scrub Forest",8.77,0.218757794961337
+MUZAFFARNAGAR,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+MUZAFFARNAGAR,2011-12,Grass/Grazing,22.46,0.5602394612122724
+MUZAFFARNAGAR,2011-12,"Barren/Wastelands, Salt Affected",0.0,0.0
+MUZAFFARNAGAR,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+MUZAFFARNAGAR,2011-12,"Barren/Wastelands, Scrub land",22.3,0.5562484410077326
+MUZAFFARNAGAR,2011-12,"Barren/Wastelands, Sandy area",0.52,0.012970815664754302
+MUZAFFARNAGAR,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+MUZAFFARNAGAR,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+MUZAFFARNAGAR,2011-12,"Wetlands/Water, Inland Wetland",46.33,1.1556497879770515
+MUZAFFARNAGAR,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+MUZAFFARNAGAR,2011-12,"Wetlands/Water, River/Stream/Canal",61.8,1.5415315540034922
+MUZAFFARNAGAR,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",7.65,0.1908206535295585
+MUZAFFARNAGAR,2011-12,Snow and Glacier,0.0,0.0
+MUZAFFARNAGAR,2005-06,"Builtup,Urban",27.89702415,0.6958599189324022
+MUZAFFARNAGAR,2005-06,"Builtup,Rural",198.0265739,4.939550359191818
+MUZAFFARNAGAR,2005-06,"Builtup,Mining",6.184270402,0.15425967577949612
+MUZAFFARNAGAR,2005-06,"Agriculture,Crop land",3517.534309,87.7409406086306
+MUZAFFARNAGAR,2005-06,"Agriculture,Plantation",39.87816127,0.9947159209279122
+MUZAFFARNAGAR,2005-06,"Agriculture,Fallow",47.59001918,1.1870795505113494
+MUZAFFARNAGAR,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+MUZAFFARNAGAR,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+MUZAFFARNAGAR,2005-06,"Forest,Deciduous",19.85943884,0.4953713853828885
+MUZAFFARNAGAR,2005-06,"Forest,Forest Plantation",0.0,0.0
+MUZAFFARNAGAR,2005-06,"Forest,Scrub Forest",11.22572756,0.28001315939136945
+MUZAFFARNAGAR,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+MUZAFFARNAGAR,2005-06,Grass/Grazing,30.32454398,0.7564116732352208
+MUZAFFARNAGAR,2005-06,"Barren/Wastelands, Salt Affected",0.0,0.0
+MUZAFFARNAGAR,2005-06,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+MUZAFFARNAGAR,2005-06,"Barren/Wastelands, Scrub land",15.92544058,0.3972422195061112
+MUZAFFARNAGAR,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+MUZAFFARNAGAR,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+MUZAFFARNAGAR,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+MUZAFFARNAGAR,2005-06,"Wetlands/Water, Inland Wetland",46.55418938,1.161241940134697
+MUZAFFARNAGAR,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+MUZAFFARNAGAR,2005-06,"Wetlands/Water, River/Stream/Canal",45.85527642,1.1438083417311051
+MUZAFFARNAGAR,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",2.145025425,0.05350524881516588
+MUZAFFARNAGAR,2005-06,Snow and Glacier,0.0,0.0
+PRATAPGARH,2011-12,"Builtup,Urban",35.39,0.9521119182136132
+PRATAPGARH,2011-12,"Builtup,Rural",92.48,2.4880279795534035
+PRATAPGARH,2011-12,"Builtup,Mining",5.22,0.14043583535108958
+PRATAPGARH,2011-12,"Agriculture,Crop land",2460.62,66.19908528383105
+PRATAPGARH,2011-12,"Agriculture,Plantation",529.2,14.237288135593221
+PRATAPGARH,2011-12,"Agriculture,Fallow",128.6,3.459779391982782
+PRATAPGARH,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+PRATAPGARH,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+PRATAPGARH,2011-12,"Forest,Deciduous",83.82,2.255044390637611
+PRATAPGARH,2011-12,"Forest,Forest Plantation",0.0,0.0
+PRATAPGARH,2011-12,"Forest,Scrub Forest",0.0,0.0
+PRATAPGARH,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+PRATAPGARH,2011-12,Grass/Grazing,0.2,0.0053806833467850415
+PRATAPGARH,2011-12,"Barren/Wastelands, Salt Affected",156.97,4.22302932472424
+PRATAPGARH,2011-12,"Barren/Wastelands, Gullied/Ravinus",1.6,0.04304546677428033
+PRATAPGARH,2011-12,"Barren/Wastelands, Scrub land",62.67,1.6860371267150929
+PRATAPGARH,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+PRATAPGARH,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+PRATAPGARH,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+PRATAPGARH,2011-12,"Wetlands/Water, Inland Wetland",73.78,1.984934086629002
+PRATAPGARH,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+PRATAPGARH,2011-12,"Wetlands/Water, River/Stream/Canal",78.41,2.1094969061070756
+PRATAPGARH,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",8.04,0.21630347054075866
+PRATAPGARH,2011-12,Snow and Glacier,0.0,0.0
+PRATAPGARH,2005-06,"Builtup,Urban",91.84038568,2.4708201689534572
+PRATAPGARH,2005-06,"Builtup,Rural",57.39309865,1.5440704506322303
+PRATAPGARH,2005-06,"Builtup,Mining",0.0,0.0
+PRATAPGARH,2005-06,"Agriculture,Crop land",1798.171097,48.37694638149045
+PRATAPGARH,2005-06,"Agriculture,Plantation",615.6072367,16.56193803336024
+PRATAPGARH,2005-06,"Agriculture,Fallow",153.1020425,4.118968052192629
+PRATAPGARH,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+PRATAPGARH,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+PRATAPGARH,2005-06,"Forest,Deciduous",1.821563991,0.04900629515738499
+PRATAPGARH,2005-06,"Forest,Forest Plantation",0.0,0.0
+PRATAPGARH,2005-06,"Forest,Scrub Forest",0.0,0.0
+PRATAPGARH,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+PRATAPGARH,2005-06,Grass/Grazing,0.0,0.0
+PRATAPGARH,2005-06,"Barren/Wastelands, Salt Affected",400.2711735,10.76866218724778
+PRATAPGARH,2005-06,"Barren/Wastelands, Gullied/Ravinus",197.9520269,5.325585873015872
+PRATAPGARH,2005-06,"Barren/Wastelands, Scrub land",210.2688214,5.6569497282754915
+PRATAPGARH,2005-06,"Barren/Wastelands, Sandy area",20.18434442,0.5430278294323378
+PRATAPGARH,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+PRATAPGARH,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+PRATAPGARH,2005-06,"Wetlands/Water, Inland Wetland",62.29803443,1.6760299819747106
+PRATAPGARH,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+PRATAPGARH,2005-06,"Wetlands/Water, River/Stream/Canal",86.18614559,2.3187017914985204
+PRATAPGARH,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",21.90402913,0.5892932238364273
+PRATAPGARH,2005-06,Snow and Glacier,0.0,0.0
+SAHARANPUR,2011-12,"Builtup,Urban",71.04,1.925725128761182
+SAHARANPUR,2011-12,"Builtup,Rural",128.35,3.47926267281106
+SAHARANPUR,2011-12,"Builtup,Mining",0.18,0.004879371103280022
+SAHARANPUR,2011-12,"Agriculture,Crop land",2744.48,74.3963133640553
+SAHARANPUR,2011-12,"Agriculture,Plantation",183.51,4.974518839793982
+SAHARANPUR,2011-12,"Agriculture,Fallow",93.0,2.5210084033613445
+SAHARANPUR,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+SAHARANPUR,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+SAHARANPUR,2011-12,"Forest,Deciduous",318.87,8.643805909460559
+SAHARANPUR,2011-12,"Forest,Forest Plantation",0.0,0.0
+SAHARANPUR,2011-12,"Forest,Scrub Forest",1.36,0.03686635944700461
+SAHARANPUR,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+SAHARANPUR,2011-12,Grass/Grazing,2.84,0.07698563296286257
+SAHARANPUR,2011-12,"Barren/Wastelands, Salt Affected",0.0,0.0
+SAHARANPUR,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+SAHARANPUR,2011-12,"Barren/Wastelands, Scrub land",8.02,0.2174030902683654
+SAHARANPUR,2011-12,"Barren/Wastelands, Sandy area",3.89,0.10544863106532935
+SAHARANPUR,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+SAHARANPUR,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+SAHARANPUR,2011-12,"Wetlands/Water, Inland Wetland",0.0,0.0
+SAHARANPUR,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+SAHARANPUR,2011-12,"Wetlands/Water, River/Stream/Canal",130.52,3.538086202222825
+SAHARANPUR,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",2.93,0.07942531851450257
+SAHARANPUR,2011-12,Snow and Glacier,0.0,0.0
+SAHARANPUR,2005-06,"Builtup,Urban",41.17779253,1.1162318387096772
+SAHARANPUR,2005-06,"Builtup,Rural",155.0018907,4.201731924640824
+SAHARANPUR,2005-06,"Builtup,Mining",0.729685918,0.019780046570886417
+SAHARANPUR,2005-06,"Agriculture,Crop land",2886.593927,78.24868330170777
+SAHARANPUR,2005-06,"Agriculture,Plantation",131.2126514,3.5568623312550827
+SAHARANPUR,2005-06,"Agriculture,Fallow",29.63535144,0.8033437636215777
+SAHARANPUR,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+SAHARANPUR,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+SAHARANPUR,2005-06,"Forest,Deciduous",320.1083658,8.677375055570614
+SAHARANPUR,2005-06,"Forest,Forest Plantation",0.0,0.0
+SAHARANPUR,2005-06,"Forest,Scrub Forest",1.136341922,0.030803521875847114
+SAHARANPUR,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+SAHARANPUR,2005-06,Grass/Grazing,26.72440515,0.7244349457847654
+SAHARANPUR,2005-06,"Barren/Wastelands, Salt Affected",0.0,0.0
+SAHARANPUR,2005-06,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+SAHARANPUR,2005-06,"Barren/Wastelands, Scrub land",1.946220005,0.05275738696123611
+SAHARANPUR,2005-06,"Barren/Wastelands, Sandy area",0.034113876,0.0009247458931959881
+SAHARANPUR,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+SAHARANPUR,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+SAHARANPUR,2005-06,"Wetlands/Water, Inland Wetland",0.0,0.0
+SAHARANPUR,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+SAHARANPUR,2005-06,"Wetlands/Water, River/Stream/Canal",93.69813462,2.539933169422608
+SAHARANPUR,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",1.001119484,0.027137963784223364
+SAHARANPUR,2005-06,Snow and Glacier,0.0,0.0
+SANT RAVIDAS NAGAR,2011-12,"Builtup,Urban",25.46,2.3574074074074076
+SANT RAVIDAS NAGAR,2011-12,"Builtup,Rural",92.2,8.537037037037036
+SANT RAVIDAS NAGAR,2011-12,"Builtup,Mining",6.33,0.5861111111111111
+SANT RAVIDAS NAGAR,2011-12,"Agriculture,Crop land",823.11,76.21388888888889
+SANT RAVIDAS NAGAR,2011-12,"Agriculture,Plantation",24.49,2.2675925925925924
+SANT RAVIDAS NAGAR,2011-12,"Agriculture,Fallow",24.32,2.251851851851852
+SANT RAVIDAS NAGAR,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+SANT RAVIDAS NAGAR,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+SANT RAVIDAS NAGAR,2011-12,"Forest,Deciduous",10.02,0.9277777777777778
+SANT RAVIDAS NAGAR,2011-12,"Forest,Forest Plantation",0.0,0.0
+SANT RAVIDAS NAGAR,2011-12,"Forest,Scrub Forest",0.0,0.0
+SANT RAVIDAS NAGAR,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+SANT RAVIDAS NAGAR,2011-12,Grass/Grazing,0.0,0.0
+SANT RAVIDAS NAGAR,2011-12,"Barren/Wastelands, Salt Affected",17.95,1.662037037037037
+SANT RAVIDAS NAGAR,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+SANT RAVIDAS NAGAR,2011-12,"Barren/Wastelands, Scrub land",3.84,0.35555555555555557
+SANT RAVIDAS NAGAR,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+SANT RAVIDAS NAGAR,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+SANT RAVIDAS NAGAR,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+SANT RAVIDAS NAGAR,2011-12,"Wetlands/Water, Inland Wetland",4.65,0.43055555555555564
+SANT RAVIDAS NAGAR,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+SANT RAVIDAS NAGAR,2011-12,"Wetlands/Water, River/Stream/Canal",40.05,3.708333333333333
+SANT RAVIDAS NAGAR,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",7.57,0.700925925925926
+SANT RAVIDAS NAGAR,2011-12,Snow and Glacier,0.0,0.0
+SANT RAVIDAS NAGAR,2005-06,"Builtup,Urban",16.35509836,1.5143609592592593
+SANT RAVIDAS NAGAR,2005-06,"Builtup,Rural",29.10300851,2.6947230101851853
+SANT RAVIDAS NAGAR,2005-06,"Builtup,Mining",0.0,0.0
+SANT RAVIDAS NAGAR,2005-06,"Agriculture,Crop land",786.5225125,72.82615856481482
+SANT RAVIDAS NAGAR,2005-06,"Agriculture,Plantation",36.53973046,3.383308375925926
+SANT RAVIDAS NAGAR,2005-06,"Agriculture,Fallow",28.33323727,2.6234478953703704
+SANT RAVIDAS NAGAR,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+SANT RAVIDAS NAGAR,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+SANT RAVIDAS NAGAR,2005-06,"Forest,Deciduous",0.382402705,0.03540765787037037
+SANT RAVIDAS NAGAR,2005-06,"Forest,Forest Plantation",0.0,0.0
+SANT RAVIDAS NAGAR,2005-06,"Forest,Scrub Forest",0.0,0.0
+SANT RAVIDAS NAGAR,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+SANT RAVIDAS NAGAR,2005-06,Grass/Grazing,0.0,0.0
+SANT RAVIDAS NAGAR,2005-06,"Barren/Wastelands, Salt Affected",39.98932289,3.702715082407407
+SANT RAVIDAS NAGAR,2005-06,"Barren/Wastelands, Gullied/Ravinus",11.26070233,1.0426576231481484
+SANT RAVIDAS NAGAR,2005-06,"Barren/Wastelands, Scrub land",54.64134182,5.059383501851852
+SANT RAVIDAS NAGAR,2005-06,"Barren/Wastelands, Sandy area",0.037365986,0.0034598135185185184
+SANT RAVIDAS NAGAR,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+SANT RAVIDAS NAGAR,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+SANT RAVIDAS NAGAR,2005-06,"Wetlands/Water, Inland Wetland",34.11393724,3.158697892592593
+SANT RAVIDAS NAGAR,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+SANT RAVIDAS NAGAR,2005-06,"Wetlands/Water, River/Stream/Canal",38.5048745,3.5652661574074074
+SANT RAVIDAS NAGAR,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",4.216465377,0.3904134608333333
+SANT RAVIDAS NAGAR,2005-06,Snow and Glacier,0.0,0.0
+SHRAWASTI,2011-12,"Builtup,Urban",18.37,0.7473555736371034
+SHRAWASTI,2011-12,"Builtup,Rural",61.27,2.4926769731489014
+SHRAWASTI,2011-12,"Builtup,Mining",9.57,0.38934092758340116
+SHRAWASTI,2011-12,"Agriculture,Crop land",1868.59,76.0207485760781
+SHRAWASTI,2011-12,"Agriculture,Plantation",94.56,3.8470301057770544
+SHRAWASTI,2011-12,"Agriculture,Fallow",15.01,0.6106590724165989
+SHRAWASTI,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+SHRAWASTI,2011-12,"Forest,Evergreen/Semi evergreen",5.87,0.23881204231082181
+SHRAWASTI,2011-12,"Forest,Deciduous",261.09,10.622050447518307
+SHRAWASTI,2011-12,"Forest,Forest Plantation",3.65,0.1484947111472742
+SHRAWASTI,2011-12,"Forest,Scrub Forest",11.22,0.4564686737184703
+SHRAWASTI,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+SHRAWASTI,2011-12,Grass/Grazing,0.16,0.006509357200976403
+SHRAWASTI,2011-12,"Barren/Wastelands, Salt Affected",0.62,0.025223759153783564
+SHRAWASTI,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+SHRAWASTI,2011-12,"Barren/Wastelands, Scrub land",7.47,0.3039056143205858
+SHRAWASTI,2011-12,"Barren/Wastelands, Sandy area",0.09,0.003661513425549227
+SHRAWASTI,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+SHRAWASTI,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+SHRAWASTI,2011-12,"Wetlands/Water, Inland Wetland",32.34,1.3157038242473558
+SHRAWASTI,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+SHRAWASTI,2011-12,"Wetlands/Water, River/Stream/Canal",64.85,2.6383238405207483
+SHRAWASTI,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",3.27,0.13303498779495526
+SHRAWASTI,2011-12,Snow and Glacier,0.0,0.0
+SHRAWASTI,2005-06,"Builtup,Urban",4.917640441,0.20006673885272577
+SHRAWASTI,2005-06,"Builtup,Rural",44.48439071,1.8097799312449145
+SHRAWASTI,2005-06,"Builtup,Mining",0.099523572,0.004048965500406835
+SHRAWASTI,2005-06,"Agriculture,Crop land",1739.190283,70.756317453214
+SHRAWASTI,2005-06,"Agriculture,Plantation",41.66898331,1.6952393535394632
+SHRAWASTI,2005-06,"Agriculture,Fallow",179.8400482,7.316519454841335
+SHRAWASTI,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+SHRAWASTI,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+SHRAWASTI,2005-06,"Forest,Deciduous",257.7525799,10.486272575264442
+SHRAWASTI,2005-06,"Forest,Forest Plantation",3.195263627,0.12999445187144018
+SHRAWASTI,2005-06,"Forest,Scrub Forest",12.46551668,0.5071406297803093
+SHRAWASTI,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+SHRAWASTI,2005-06,Grass/Grazing,2.603906731,0.10593599393816111
+SHRAWASTI,2005-06,"Barren/Wastelands, Salt Affected",0.0,0.0
+SHRAWASTI,2005-06,"Barren/Wastelands, Gullied/Ravinus",0.307242643,0.012499700691619202
+SHRAWASTI,2005-06,"Barren/Wastelands, Scrub land",70.92843733,2.885615839300244
+SHRAWASTI,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+SHRAWASTI,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+SHRAWASTI,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+SHRAWASTI,2005-06,"Wetlands/Water, Inland Wetland",30.89957887,1.25710247640358
+SHRAWASTI,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+SHRAWASTI,2005-06,"Wetlands/Water, River/Stream/Canal",65.81639121,2.677640000406835
+SHRAWASTI,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",3.83021381,0.1558264365337673
+SHRAWASTI,2005-06,Snow and Glacier,0.0,0.0
+SIDDHARTHNAGAR,2011-12,"Builtup,Urban",26.99,0.9167798913043478
+SIDDHARTHNAGAR,2011-12,"Builtup,Rural",126.03,4.280910326086956
+SIDDHARTHNAGAR,2011-12,"Builtup,Mining",5.1,0.1732336956521739
+SIDDHARTHNAGAR,2011-12,"Agriculture,Crop land",2457.39,83.4711277173913
+SIDDHARTHNAGAR,2011-12,"Agriculture,Plantation",50.87,1.7279211956521738
+SIDDHARTHNAGAR,2011-12,"Agriculture,Fallow",74.82,2.541440217391304
+SIDDHARTHNAGAR,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+SIDDHARTHNAGAR,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+SIDDHARTHNAGAR,2011-12,"Forest,Deciduous",39.09,1.3277853260869568
+SIDDHARTHNAGAR,2011-12,"Forest,Forest Plantation",0.0,0.0
+SIDDHARTHNAGAR,2011-12,"Forest,Scrub Forest",1.09,0.037024456521739135
+SIDDHARTHNAGAR,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+SIDDHARTHNAGAR,2011-12,Grass/Grazing,0.11,0.003736413043478261
+SIDDHARTHNAGAR,2011-12,"Barren/Wastelands, Salt Affected",1.8,0.06114130434782609
+SIDDHARTHNAGAR,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.0,0.0
+SIDDHARTHNAGAR,2011-12,"Barren/Wastelands, Scrub land",10.43,0.35427989130434784
+SIDDHARTHNAGAR,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+SIDDHARTHNAGAR,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+SIDDHARTHNAGAR,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+SIDDHARTHNAGAR,2011-12,"Wetlands/Water, Inland Wetland",86.87,2.950747282608696
+SIDDHARTHNAGAR,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+SIDDHARTHNAGAR,2011-12,"Wetlands/Water, River/Stream/Canal",57.73,1.9609375
+SIDDHARTHNAGAR,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",5.66,0.1922554347826087
+SIDDHARTHNAGAR,2011-12,Snow and Glacier,0.0,0.0
+SIDDHARTHNAGAR,2005-06,"Builtup,Urban",4.92813315,0.16739582710597825
+SIDDHARTHNAGAR,2005-06,"Builtup,Rural",42.56313415,1.4457586328125003
+SIDDHARTHNAGAR,2005-06,"Builtup,Mining",0.0,0.0
+SIDDHARTHNAGAR,2005-06,"Agriculture,Crop land",2242.749269,76.18034201766304
+SIDDHARTHNAGAR,2005-06,"Agriculture,Plantation",30.37660531,1.0318140390625
+SIDDHARTHNAGAR,2005-06,"Agriculture,Fallow",425.8362743,14.464547360733695
+SIDDHARTHNAGAR,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+SIDDHARTHNAGAR,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+SIDDHARTHNAGAR,2005-06,"Forest,Deciduous",11.50089558,0.3906554205163043
+SIDDHARTHNAGAR,2005-06,"Forest,Forest Plantation",0.0,0.0
+SIDDHARTHNAGAR,2005-06,"Forest,Scrub Forest",6.727062887,0.22850077741168476
+SIDDHARTHNAGAR,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+SIDDHARTHNAGAR,2005-06,Grass/Grazing,0.0,0.0
+SIDDHARTHNAGAR,2005-06,"Barren/Wastelands, Salt Affected",6.736795724,0.22883137649456523
+SIDDHARTHNAGAR,2005-06,"Barren/Wastelands, Gullied/Ravinus",1.425536433,0.04842175383831522
+SIDDHARTHNAGAR,2005-06,"Barren/Wastelands, Scrub land",43.95063144,1.4928882961956524
+SIDDHARTHNAGAR,2005-06,"Barren/Wastelands, Sandy area",0.0,0.0
+SIDDHARTHNAGAR,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+SIDDHARTHNAGAR,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+SIDDHARTHNAGAR,2005-06,"Wetlands/Water, Inland Wetland",67.8977049,2.3063079110054345
+SIDDHARTHNAGAR,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+SIDDHARTHNAGAR,2005-06,"Wetlands/Water, River/Stream/Canal",54.38812028,1.8474225638586959
+SIDDHARTHNAGAR,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",4.919836433,0.16711400927309783
+SIDDHARTHNAGAR,2005-06,Snow and Glacier,0.0,0.0
+SONBHADRA,2011-12,"Builtup,Urban",78.73,1.159840895698291
+SONBHADRA,2011-12,"Builtup,Rural",26.53,0.3908367707719505
+SONBHADRA,2011-12,"Builtup,Mining",31.29,0.4609605185621685
+SONBHADRA,2011-12,"Agriculture,Crop land",2247.68,33.11255156157925
+SONBHADRA,2011-12,"Agriculture,Plantation",15.71,0.2314378314672952
+SONBHADRA,2011-12,"Agriculture,Fallow",257.59,3.7947849145550965
+SONBHADRA,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+SONBHADRA,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+SONBHADRA,2011-12,"Forest,Deciduous",3294.91,48.540218031820864
+SONBHADRA,2011-12,"Forest,Forest Plantation",31.19,0.4594873305833824
+SONBHADRA,2011-12,"Forest,Scrub Forest",112.6,1.658809664113141
+SONBHADRA,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+SONBHADRA,2011-12,Grass/Grazing,0.0,0.0
+SONBHADRA,2011-12,"Barren/Wastelands, Salt Affected",0.0,0.0
+SONBHADRA,2011-12,"Barren/Wastelands, Gullied/Ravinus",3.24,0.047731290512669416
+SONBHADRA,2011-12,"Barren/Wastelands, Scrub land",51.71,0.7617855038302888
+SONBHADRA,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+SONBHADRA,2011-12,"Barren/Wastelands, Barren rocky",41.31,0.608573954036535
+SONBHADRA,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+SONBHADRA,2011-12,"Wetlands/Water, Inland Wetland",5.48,0.0807307012374779
+SONBHADRA,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+SONBHADRA,2011-12,"Wetlands/Water, River/Stream/Canal",169.13,2.4916028285209193
+SONBHADRA,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",420.92,6.200942840306423
+SONBHADRA,2011-12,Snow and Glacier,0.0,0.0
+SONBHADRA,2005-06,"Builtup,Urban",88.24880322,1.3000707604596344
+SONBHADRA,2005-06,"Builtup,Rural",1.186997854,0.0174867096935769
+SONBHADRA,2005-06,"Builtup,Mining",7.305549066,0.1076244706246317
+SONBHADRA,2005-06,"Agriculture,Crop land",1665.638671,24.537988671184443
+SONBHADRA,2005-06,"Agriculture,Plantation",16.37321281,0.24120820285798464
+SONBHADRA,2005-06,"Agriculture,Fallow",408.7011744,6.020936570418385
+SONBHADRA,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+SONBHADRA,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+SONBHADRA,2005-06,"Forest,Deciduous",2067.932673,30.464535548025925
+SONBHADRA,2005-06,"Forest,Forest Plantation",7.395069201,0.10894327049204479
+SONBHADRA,2005-06,"Forest,Scrub Forest",908.8718874,13.389391387743075
+SONBHADRA,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+SONBHADRA,2005-06,Grass/Grazing,0.0,0.0
+SONBHADRA,2005-06,"Barren/Wastelands, Salt Affected",0.0,0.0
+SONBHADRA,2005-06,"Barren/Wastelands, Gullied/Ravinus",5.183223215,0.07635862131703006
+SONBHADRA,2005-06,"Barren/Wastelands, Scrub land",861.9694857,12.69843084413671
+SONBHADRA,2005-06,"Barren/Wastelands, Sandy area",3.715835437,0.05474124096935769
+SONBHADRA,2005-06,"Barren/Wastelands, Barren rocky",220.3477354,3.2461363494401887
+SONBHADRA,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+SONBHADRA,2005-06,"Wetlands/Water, Inland Wetland",12.2329896,0.180214932233353
+SONBHADRA,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+SONBHADRA,2005-06,"Wetlands/Water, River/Stream/Canal",176.6216009,2.6019681923983504
+SONBHADRA,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",336.2750918,4.953964228049499
+SONBHADRA,2005-06,Snow and Glacier,0.0,0.0
+VARANASI,2011-12,"Builtup,Urban",113.68,8.231716147719045
+VARANASI,2011-12,"Builtup,Rural",46.18,3.343953656770456
+VARANASI,2011-12,"Builtup,Mining",11.44,0.8283852280955829
+VARANASI,2011-12,"Agriculture,Crop land",1084.03,78.49601737871107
+VARANASI,2011-12,"Agriculture,Plantation",20.49,1.4837074583635048
+VARANASI,2011-12,"Agriculture,Fallow",35.15,2.5452570601013758
+VARANASI,2011-12,"Agriculture, Shifting Cultivation",0.0,0.0
+VARANASI,2011-12,"Forest,Evergreen/Semi evergreen",0.0,0.0
+VARANASI,2011-12,"Forest,Deciduous",7.93,0.5742215785662563
+VARANASI,2011-12,"Forest,Forest Plantation",0.0,0.0
+VARANASI,2011-12,"Forest,Scrub Forest",0.0,0.0
+VARANASI,2011-12,"Forest,Swamp/Mangroves",0.0,0.0
+VARANASI,2011-12,Grass/Grazing,0.0,0.0
+VARANASI,2011-12,"Barren/Wastelands, Salt Affected",8.44,0.611151339608979
+VARANASI,2011-12,"Barren/Wastelands, Gullied/Ravinus",0.14,0.010137581462708184
+VARANASI,2011-12,"Barren/Wastelands, Scrub land",6.51,0.4713975380159305
+VARANASI,2011-12,"Barren/Wastelands, Sandy area",0.0,0.0
+VARANASI,2011-12,"Barren/Wastelands, Barren rocky",0.0,0.0
+VARANASI,2011-12,"Barren/Wastelands, Rann",0.0,0.0
+VARANASI,2011-12,"Wetlands/Water, Inland Wetland",7.1,0.5141202027516293
+VARANASI,2011-12,"Wetlands/Water, Coastal Wetland",0.0,0.0
+VARANASI,2011-12,"Wetlands/Water, River/Stream/Canal",36.72,2.658942795076032
+VARANASI,2011-12,"Wetlands/Water, Reservoir/Lake/Pond",3.18,0.23026792179580013
+VARANASI,2011-12,Snow and Glacier,0.0,0.0
+VARANASI,2005-06,"Builtup,Urban",84.97433194,6.1531015162925415
+VARANASI,2005-06,"Builtup,Rural",34.20232273,2.4766345206372193
+VARANASI,2005-06,"Builtup,Mining",0.0,0.0
+VARANASI,2005-06,"Agriculture,Crop land",1015.988977,73.56907871107893
+VARANASI,2005-06,"Agriculture,Plantation",22.58560494,1.6354529283128167
+VARANASI,2005-06,"Agriculture,Fallow",57.31220255,4.150050872556119
+VARANASI,2005-06,"Agriculture, Shifting Cultivation",0.0,0.0
+VARANASI,2005-06,"Forest,Evergreen/Semi evergreen",0.0,0.0
+VARANASI,2005-06,"Forest,Deciduous",0.0,0.0
+VARANASI,2005-06,"Forest,Forest Plantation",0.0,0.0
+VARANASI,2005-06,"Forest,Scrub Forest",0.0,0.0
+VARANASI,2005-06,"Forest,Swamp/Mangroves",0.0,0.0
+VARANASI,2005-06,Grass/Grazing,0.0,0.0
+VARANASI,2005-06,"Barren/Wastelands, Salt Affected",66.72567596,4.831692683562636
+VARANASI,2005-06,"Barren/Wastelands, Gullied/Ravinus",3.269066271,0.23671732592324402
+VARANASI,2005-06,"Barren/Wastelands, Scrub land",35.64876154,2.5813730296886312
+VARANASI,2005-06,"Barren/Wastelands, Sandy area",0.725051652,0.05250192990586531
+VARANASI,2005-06,"Barren/Wastelands, Barren rocky",0.0,0.0
+VARANASI,2005-06,"Barren/Wastelands, Rann",0.0,0.0
+VARANASI,2005-06,"Wetlands/Water, Inland Wetland",15.49515129,1.1220239891383057
+VARANASI,2005-06,"Wetlands/Water, Coastal Wetland",0.0,0.0
+VARANASI,2005-06,"Wetlands/Water, River/Stream/Canal",40.57456089,2.9380565452570604
+VARANASI,2005-06,"Wetlands/Water, Reservoir/Lake/Pond",3.498293652,0.2533159776973208
+VARANASI,2005-06,Snow and Glacier,0.0,0.0

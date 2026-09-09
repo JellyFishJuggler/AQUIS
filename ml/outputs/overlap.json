@@ -1,0 +1,14 @@
+{
+  "raw_rows": 378554,
+  "independent_windows": 3371,
+  "stations": 511,
+  "stations_with_window": 511,
+  "effective_N_ratio": 0.0089,
+  "window_length_steps": 120,
+  "window_length_days": 30,
+  "generated_cols": [
+    "step_idx",
+    "window_id",
+    "stride"
+  ]
+}

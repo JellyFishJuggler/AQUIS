@@ -1,5 +1,12 @@
 # AQUIS ML Module — Build Plan from Scratch (Multi-Step Accuracy Focus)
 
+> **SUPERSEDED (2026-09):** this plan describes the deleted per-station forecasting
+> architecture. The current `ml/` is the merged **pooled** module (600 stations,
+> single 30-day horizon, delta target, empirical quantile calibration) — see
+> `ml/README.md`, `ml/MODEL_CARD.md`, and the bold "Key findings" in `Readme.md`.
+> References to `ml.training.*`, `ml.scripts.*`, `ml/models/xgboost_quantile.py`
+> below are historical only.
+
 ## Current State
 - `ml/data/processed/common.parquet` exists (336k rows, 93 stations, 2021-2025)
 - `ml/requirements.txt` has all dependencies
@@ -137,6 +144,7 @@ ml/artifacts/<station_slug>/
 
 ### 4.4 Background Execution
 - `setsid PYTHONPATH=/home/srijan/Downloads/Developement/AQUIS ml/venv/bin/python -u -m ml.scripts.diagnose_fleet > /tmp/diagnose_fleet.log 2>&1 & disown`
+  (historical command; current equivalent = `cd ml && venv/bin/python -u 11_fleet.py --force`)
 
 ---
 

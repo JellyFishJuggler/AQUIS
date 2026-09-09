@@ -109,7 +109,7 @@
 # Soil Texture — ISRIC SoilGrids v2.0 (SANCTIONED EXCEPTION to the NWDP-only rule)
 ## Static per-station texture: sand / silt / clay / bulk density (bdod) at
 ## 0-30 cm (thickness-weighted) and 60-100 cm. Fetched via ISRIC REST (query by
-## lon/lat), NOT via NWDP CKAN (NWDP has no soil product). See ml_temp/07_soil.py.
+## lon/lat), NOT via NWDP CKAN (NWDP has no soil product). See ml/07_soil.py.
 ## REST base: https://rest.isric.org/soilgrids/v2.0/properties/query?lon=..&lat=..
 ## doc: https://rest.isric.org/docs/home
 
@@ -118,4 +118,4 @@
 ## API (GET, requires header Content-Type: application/x-www-form-urlencoded):
 ## https://bhuvan-app1.nrsc.gov.in/api/lulc/curljson.php?year=1112&distcode=<0911>&token=<key>
 ## Key: LULC_STATISTICS_API_KEY in <repo>/.env (Bhuvan access token, ~1-day expiry).
-## Fetch script: ml_temp/08_lulc.py. API doc page: https://bhuvan-app1.nrsc.gov.in/api/
+## Fetch script: ml/08_lulc.py. API doc page: https://bhuvan-app1.nrsc.gov.in/api/

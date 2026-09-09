@@ -1,0 +1,546 @@
+station,district,anchor,date_from,age_days,anchor_valid,xgb_level,q05_level,q50_level,q95_level,change_30d_m,change_pooled_m,band_half_m,plausible,category
+Ramchhitoni Sahawar (UP-011),KANSIRAM NAGAR,-2.841,2026-09-05 00:00:00,4,True,-2.72,-4.266,-2.691,-1.039,0.15,0.121,1.613,True,stable
+Mahgaon (UP-031),KAUSHAMBI,-17.171,2026-09-03 18:00:00,6,True,-16.881,-18.637,-16.689,-11.989,0.482,0.29,3.324,True,recovering
+Awagarh (UP-005),ETAH,-17.599,2026-09-05 00:00:00,4,True,-17.354,-19.02,-17.412,-15.582,0.187,0.245,1.719,True,stable
+Mandi Samiti-Muzaffar Nagar-Medium,MUZAFFARNAGAR,-17.457,2026-08-24 18:00:00,16,True,-17.196,-18.898,-17.054,-13.374,0.403,0.261,2.762,True,recovering
+Block Development Office-Khekra-Shallow,BAGHPAT,-28.398,2026-09-05 00:00:00,4,True,-28.153,-29.819,-28.204,-26.582,0.194,0.245,1.618,True,stable
+Salhakheri,MUZAFFARNAGAR,-22.815,2026-09-05 00:00:00,4,True,-22.554,-24.256,-22.425,-18.225,0.39,0.261,3.015,True,recovering
+Halwana,SAHARANPUR,-11.013,2026-09-05 00:00:00,4,True,-10.723,-12.479,-10.597,-6.523,0.416,0.29,2.978,True,recovering
+Goyla,MUZAFFARNAGAR,-18.932,2026-09-05 00:00:00,4,True,-18.671,-20.373,-18.542,-13.734,0.39,0.261,3.32,True,recovering
+Badhai Khurd Pr. Vid.,MUZAFFARNAGAR,-6.65,2026-09-05 00:00:00,4,True,-6.389,-8.083,-6.234,-2.355,0.416,0.261,2.864,True,recovering
+Srikantpur Pr. Vid.,AZAMGARH,-5.998,2026-09-05 00:00:00,4,True,-5.641,-7.431,-5.421,-0.9,0.577,0.357,3.265,True,recovering
+Sanjhak,MUZAFFARNAGAR,-13.233,2026-09-05 00:00:00,4,True,-12.972,-14.699,-12.817,-8.547,0.416,0.261,3.076,True,recovering
+Navrasia,AZAMGARH,-4.157,2026-09-05 00:00:00,4,True,-3.812,-5.596,-3.647,-1.297,0.51,0.345,2.149,True,recovering
+Khursropur,MUZAFFARNAGAR,-11.019,2026-09-05 00:00:00,4,True,-10.758,-12.452,-10.603,-6.676,0.416,0.261,2.888,True,recovering
+Rajapur Sikraur,AZAMGARH,-5.526,2026-09-05 00:00:00,4,True,-5.252,-6.959,-4.96,-1.275,0.566,0.274,2.842,True,recovering
+Singhara Pr. Vid.,AZAMGARH,-0.935,2026-09-05 00:00:00,4,True,-0.898,-2.374,-0.992,0.214,-0.057,0.037,1.294,True,stable
+Paderi,BANDA,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Khojapur,AZAMGARH,-10.009,2026-09-05 00:00:00,4,True,-9.652,-11.475,-9.443,-4.48,0.566,0.357,3.497,True,recovering
+Gyana Majra Pr. Vid.,MUZAFFARNAGAR,-11.784,2026-09-05 00:00:00,4,True,-11.523,-13.217,-11.368,-7.184,0.416,0.261,3.016,True,recovering
+Aswaniya Pr. Vid.,AZAMGARH,-3.544,2026-09-05 00:00:00,4,True,-3.27,-4.977,-3.151,-0.829,0.393,0.274,2.074,True,recovering
+Bhitari_2,CHITRAKOOT,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Pathrodi,CHITRAKOOT,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Sikhula Pz._1,BANDA,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Amchurnirua,CHITRAKOOT,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Shitalpur_1,CHITRAKOOT,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Luktra,BANDA,,2026-09-04 18:00:00,5,False,,,,,-20.861,-20.861,,False,unreliable
+Jamalpur_2,LALITPUR,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Chakara  P_1,JHANSI,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+"Jr. High School, Purwa Tarouha",CHITRAKOOT,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+"Primary School, Bamhauri",JHANSI,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+High School & Inter College Boroda,MUZAFFARNAGAR,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Naglakabu_1,MEERUT,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Dhikauli,JHANSI,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Pahara_2,CHITRAKOOT,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Narajit,BANDA,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Satti Chau Prathmik Vidyalaya,SHRAWASTI,-6.751,2026-09-05 00:00:00,4,True,-6.49,-8.184,-6.335,-2.245,0.416,0.261,2.969,True,recovering
+Bijijauri_1,MAHOBA,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Kusarma,MAHOBA,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Chorwa Bhari Prathmik Vidyalaya,SHRAWASTI,-2.726,2026-09-05 00:00:00,4,True,-2.589,-4.159,-2.459,-0.495,0.267,0.137,1.832,True,stable
+Alakchandra Inter college Bhinga,SHRAWASTI,-5.045,2026-09-05 00:00:00,4,True,-4.83,-6.478,-4.652,-1.2,0.393,0.215,2.639,True,recovering
+Niwabhari Prathmik Vidyalaya,SHRAWASTI,-2.224,2026-09-05 00:00:00,4,True,-2.187,-3.657,-2.003,-0.376,0.221,0.037,1.64,True,stable
+Badhouli,HAMIRPUR,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Chandi Kalan,HAMIRPUR,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Madarpur_1,HAMIRPUR,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Lagdi Gullar Prathmik Vidyalaya,SHRAWASTI,-4.533,2026-09-05 00:00:00,4,True,-4.318,-5.966,-4.254,-1.39,0.279,0.215,2.288,True,stable
+Gloragundera/Gewara,LALITPUR,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Babina Rular,JHANSI,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Kamhariya_1,HAMIRPUR,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Baghpat Meerut Kheda Balrampur Itiyara,MEERUT,-12.024,2026-09-04 12:00:00,5,True,-11.779,-13.446,-11.855,-9.794,0.169,0.245,1.826,True,stable
+Saital,GORAKHPUR,-5.033,2026-09-05 00:00:00,4,True,-4.759,-6.468,-4.511,-0.901,0.522,0.274,2.784,True,recovering
+Birdha /Poorabirdha,LALITPUR,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+PRIMARY SCHOOL BAKAR GANJ,KAUSHAMBI,-19.071,2026-09-05 00:00:00,4,True,-18.81,-20.506,-18.681,-14.315,0.39,0.261,3.095,True,recovering
+SWASTH KENDR PIPIGANJ,GORAKHPUR,-3.639,2026-09-05 00:00:00,4,True,-3.365,-5.072,-3.227,-0.762,0.412,0.274,2.155,True,recovering
+PAHARPUR BARIGAWA PRATHMIK VIDYALAYA,FATEHPUR,-20.22,2026-09-04 12:00:00,5,True,-19.959,-21.661,-19.83,-15.025,0.39,0.261,3.318,True,recovering
+SARAHARI PRATHMIK VIDYALAYA,GORAKHPUR,-4.514,2026-09-05 00:00:00,4,True,-4.24,-5.947,-3.996,-0.211,0.518,0.274,2.868,True,recovering
+Mathura Chaumuha Navagaon-11,AGRA,-11.623,2026-09-04 00:00:00,5,True,-11.333,-13.081,-11.21,-6.727,0.413,0.29,3.177,True,recovering
+ASHADHA PRATHMIK VIDYALAYA,KAUSHAMBI,-6.001,2026-09-05 00:00:00,4,True,-5.74,-7.434,-5.585,-1.556,0.416,0.261,2.939,True,recovering
+BANI KHAS C.V. VIDYALAYA,KAUSHAMBI,-12.936,2026-09-05 00:00:00,4,True,-12.675,-14.377,-12.52,-8.215,0.416,0.261,3.081,True,recovering
+RASULPUR BARGAON RAJKIYA UCHTTAR PRATHAMIK VIDYALAYA,KAUSHAMBI,-21.723,2026-09-05 00:00:00,4,True,-21.462,-23.189,-21.333,-15.68,0.39,0.261,3.755,True,recovering
+"Primary School Sahjanwa , Pratham Pipra",GORAKHPUR,-6.233,2026-09-05 00:00:00,4,True,-5.876,-7.668,-5.673,-0.944,0.56,0.357,3.362,True,recovering
+Primary School Harinahpur,MIRZAPUR,-16.345,2026-09-04 06:00:00,5,True,-15.988,-17.775,-15.78,-11.012,0.565,0.357,3.381,True,recovering
+PRIMARY SCHOOL RAMUGHAT,GORAKHPUR,-4.446,2026-09-05 00:00:00,4,True,-4.172,-5.879,-3.889,0.058,0.557,0.274,2.968,True,recovering
+"Primary School, Kantit",MIRZAPUR,-3.16,2026-09-05 00:00:00,4,True,-2.886,-4.593,-2.724,-0.504,0.436,0.274,2.044,True,recovering
+BADHANI PRATHMIK VIDYALAYA,GORAKHPUR,-4.104,2026-09-05 00:00:00,4,True,-3.83,-5.537,-3.719,-0.184,0.385,0.274,2.676,True,recovering
+Mathura Nandgaon Nandgaon Dehat,AGRA,-3.055,2026-09-04 00:00:00,5,True,-2.856,-4.477,-2.899,-1.349,0.156,0.199,1.564,True,stable
+Hathras Hathras Hathras,AGRA,-3.862,2026-09-05 00:00:00,4,True,-3.618,-5.308,-3.511,-0.143,0.351,0.244,2.583,True,recovering
+MANDHATA PURV MADHYAMIK VIDYALAYA,PRATAPGARH,-10.016,2026-09-05 00:00:00,4,True,-9.755,-11.449,-9.6,-6.118,0.416,0.261,2.665,True,recovering
+HARNHAPUR PRATHAMIK VIDYALAYA,PRATAPGARH,-17.545,2026-09-05 00:00:00,4,True,-17.188,-18.98,-16.976,-12.676,0.569,0.357,3.152,True,recovering
+Primary School Karwal,GORAKHPUR,-6.291,2026-09-05 00:00:00,4,True,-5.863,-7.73,-5.675,-1.089,0.616,0.428,3.32,True,recovering
+"Panchayat Bhwan, Kon",SONBHADRA,-23.095,2026-09-05 00:00:00,4,True,-22.738,-24.536,-22.541,-16.721,0.554,0.357,3.907,True,recovering
+FAREDUPUR PRATHMIK VIDYALAYA,PRATAPGARH,-6.869,2026-09-05 00:00:00,4,True,-6.608,-8.302,-6.453,-2.319,0.416,0.261,2.992,True,recovering
+"Primary School, Kaparwar",DEORIA,-5.247,2026-09-05 00:00:00,4,True,-4.973,-6.68,-4.707,-0.725,0.54,0.274,2.977,True,recovering
+"Adarsh Primary School, Dubar Kalan",MIRZAPUR,-2.32,2026-09-05 00:00:00,4,True,-2.168,-3.753,-1.955,-0.024,0.365,0.152,1.864,True,recovering
+Kukwa Khaas,BANDA,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+"Panchayat Bhawan, Dohri",MIRZAPUR,-10.535,2026-09-05 00:00:00,4,True,-10.178,-11.968,-9.949,-5.421,0.586,0.357,3.273,True,recovering
+Pv. Compiergang,GORAKHPUR,-2.877,2026-09-05 00:00:00,4,True,-2.68,-4.31,-2.469,-0.388,0.408,0.197,1.961,True,recovering
+"Purv Madh Vidhyalaya, Shivpur",SONBHADRA,-4.574,2026-09-05 00:00:00,4,True,-4.3,-6.007,-4.156,-0.919,0.418,0.274,2.544,True,recovering
+"Primary School, Kalani Khurad",GORAKHPUR,-4.171,2026-09-05 00:00:00,4,True,-3.897,-5.601,-3.791,-0.356,0.38,0.274,2.622,True,recovering
+Primary School Keshawpur Pratham,GORAKHPUR,-7.243,2026-09-05 00:00:00,4,True,-6.886,-8.678,-6.693,-1.159,0.55,0.357,3.76,True,recovering
+Meerut Janikhurd Satvai,MEERUT,-2.113,2026-09-05 00:00:00,4,True,-2.076,-3.546,-1.931,-0.532,0.182,0.037,1.507,True,stable
+Prathmik Vidhyalaya Mahugarh,MIRZAPUR,-1.941,2026-09-05 00:00:00,4,True,-1.904,-3.374,-1.945,-0.197,-0.004,0.037,1.588,True,stable
+"Primary School, Narokhar",SONBHADRA,-3.18,2026-09-05 00:00:00,4,True,-2.906,-4.613,-2.814,-0.961,0.366,0.274,1.826,True,recovering
+DEOCHALI C.V. VIDYALAYA,FATEHPUR,-10.819,2026-09-05 00:00:00,4,True,-10.558,-12.26,-10.403,-6.246,0.416,0.261,3.007,True,recovering
+"Primary School, Dhanaura Tikari",BAGHPAT,-23.827,2026-09-04 00:00:00,5,True,-23.537,-25.293,-23.437,-14.832,0.39,0.29,5.231,True,recovering
+BANSGAON PRATHMIK VIDYALAYA,GORAKHPUR,-4.556,2026-09-05 00:00:00,4,True,-4.282,-5.986,-4.176,-0.699,0.38,0.274,2.643,True,recovering
+"Primary School, Brahmpur",GORAKHPUR,-6.311,2026-09-05 00:00:00,4,True,-5.954,-7.744,-5.764,-0.024,0.547,0.357,3.86,True,recovering
+Chhibaw_1,BANDA,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+"Mahadeva Temple, Mahadeva",SANT RAVIDAS NAGAR,-15.476,2026-09-05 00:00:00,4,True,-15.215,-16.917,-15.06,-11.706,0.416,0.261,2.605,True,recovering
+"Irrigation Department, Amawar",SONBHADRA,-5.2,2026-09-05 00:00:00,4,True,-4.926,-6.633,-4.629,-1.13,0.571,0.274,2.751,True,recovering
+"Community Center, Ghorawal",SONBHADRA,-5.561,2026-09-05 00:00:00,4,True,-5.233,-6.991,-4.997,-0.986,0.564,0.328,3.003,True,recovering
+Primary School Babura,MIRZAPUR,-10.073,2026-09-05 00:00:00,4,True,-9.752,-11.506,-9.486,-5.453,0.587,0.321,3.026,True,recovering
+"Primary School, Kevtam",SONBHADRA,-5.003,2026-09-05 00:00:00,4,True,-4.729,-6.436,-4.442,-0.552,0.561,0.274,2.942,True,recovering
+"Primary School, Pakarhut",SONBHADRA,-4.113,2026-09-05 00:00:00,4,True,-3.839,-5.546,-3.683,-0.476,0.43,0.274,2.535,True,recovering
+"Primary School, Sirjam",DEORIA,-3.093,2026-09-05 00:00:00,4,True,-2.819,-4.526,-2.686,-0.691,0.407,0.274,1.917,True,recovering
+"Primary School, Tewalagarhi",BAGHPAT,-21.361,2026-09-04 00:00:00,5,True,-21.071,-22.827,-20.971,-15.912,0.39,0.29,3.457,True,recovering
+"Purv Madhyamik Vidyalaya,Bharpura",MIRZAPUR,-12.466,2026-09-05 00:00:00,4,True,-12.109,-13.907,-11.895,-6.497,0.571,0.357,3.705,True,recovering
+Mathura Rayan Kharaba,AGRA,-12.977,2026-09-05 00:00:00,4,True,-12.732,-14.402,-12.797,-9.552,0.18,0.245,2.425,True,stable
+"Purv Madhyamik Vidhyalaya, Fattupur",SANT RAVIDAS NAGAR,-13.358,2026-09-05 00:00:00,4,True,-13.001,-14.799,-12.771,-7.521,0.587,0.357,3.639,True,recovering
+"Primary School, Bartha Lala",DEORIA,-5.664,2026-09-05 00:00:00,4,True,-5.307,-7.099,-5.14,-0.655,0.524,0.357,3.222,True,recovering
+Primary School  Maharaji,GORAKHPUR,-3.736,2026-09-05 00:00:00,4,True,-3.462,-5.169,-3.336,-0.819,0.4,0.274,2.175,True,recovering
+Bdo Office Campus Pipraich,GORAKHPUR,-3.886,2026-09-05 00:00:00,4,True,-3.612,-5.321,-3.493,-0.694,0.393,0.274,2.313,True,recovering
+Primary School  Bihasara,MIRZAPUR,-11.144,2026-09-05 00:00:00,4,True,-10.787,-12.574,-10.581,-6.049,0.563,0.357,3.263,True,recovering
+"Thana Prisar, Lalganj",MIRZAPUR,-4.708,2026-09-05 00:00:00,4,True,-4.434,-6.141,-4.299,-1.432,0.409,0.274,2.354,True,recovering
+"Purv Madhyamik Vidyalaya, Ranibari",MIRZAPUR,-7.563,2026-09-05 00:00:00,4,True,-7.242,-8.996,-6.998,-2.605,0.565,0.321,3.195,True,recovering
+"Primary School, Jhaaro Kalan",SONBHADRA,-6.056,2026-09-05 00:00:00,4,True,-5.699,-7.486,-5.502,-0.954,0.554,0.357,3.266,True,recovering
+"Primary School, Shivpur",MIRZAPUR,-10.723,2026-09-05 00:00:00,4,True,-10.366,-12.156,-10.158,-5.175,0.565,0.357,3.49,True,recovering
+"Primary School, Narouiya Daamar",SONBHADRA,-14.139,2026-09-05 00:00:00,4,True,-13.782,-15.58,-13.579,-6.567,0.56,0.357,4.506,True,recovering
+"Roadways Bus Stand, Robertsganj",SONBHADRA,-1.935,2026-09-05 00:00:00,4,True,-1.898,-3.368,-1.85,0.138,0.085,0.037,1.753,True,stable
+Primary School  Biraura,MIRZAPUR,-16.987,2026-09-05 00:00:00,4,True,-16.666,-18.428,-16.4,-12.18,0.587,0.321,3.124,True,recovering
+"Purv Madh Vidhyalaya, Doomradeeh",SONBHADRA,-8.355,2026-09-05 00:00:00,4,True,-7.998,-9.785,-7.805,-2.161,0.55,0.357,3.812,True,recovering
+"Primary School, Mithabel",GORAKHPUR,-4.765,2026-09-05 00:00:00,4,True,-4.491,-6.192,-4.379,-0.538,0.386,0.274,2.827,True,recovering
+"Purv Madhyamik Vidyalaya, Mujehra",MIRZAPUR,-12.643,2026-09-05 00:00:00,4,True,-12.322,-14.084,-12.061,-7.696,0.582,0.321,3.194,True,recovering
+"Nagar Palika Campus, Gyanpur",SANT RAVIDAS NAGAR,-8.87,2026-09-05 00:00:00,4,True,-8.549,-10.303,-8.288,-4.36,0.582,0.321,2.971,True,recovering
+KOSHAK IMAM PRATHMIK VIDYALAYA,KAUSHAMBI,-13.069,2026-09-05 00:00:00,4,True,-12.871,-14.499,-12.68,-8.314,0.389,0.198,3.093,True,recovering
+"Primary School, Chariya Bujrag",DEORIA,-4.184,2026-09-05 00:00:00,4,True,-3.91,-5.617,-3.794,-1.165,0.39,0.274,2.226,True,recovering
+"Anganwadi Kedra, Baini",SONBHADRA,-0.998,2026-09-05 00:00:00,4,True,-0.961,-2.433,-1.039,0.257,-0.041,0.037,1.345,True,stable
+Aryavart Madhyamik Vidhyalaya Sindhora,MIRZAPUR,-7.112,2026-09-05 00:00:00,4,True,-6.755,-8.545,-6.542,-1.077,0.57,0.357,3.734,True,recovering
+"Purv Madhyamik Vidhyalaya, Doriya",SONBHADRA,-3.39,2026-09-05 00:00:00,4,True,-3.116,-4.823,-2.956,-0.399,0.434,0.274,2.212,True,recovering
+HOLAGARH PURV MADHYAMIK VIDYALAYA,PRATAPGARH,-4.498,2026-09-05 00:00:00,4,True,-4.283,-5.931,-4.22,-1.39,0.278,0.215,2.27,True,stable
+Primary School Jainpur,GORAKHPUR,-1.101,2026-09-05 00:00:00,4,True,-1.064,-2.534,-1.15,0.216,-0.049,0.037,1.375,True,stable
+"Primary School, Sirasi",SONBHADRA,-4.616,2026-09-05 00:00:00,4,True,-4.342,-6.049,-4.207,-0.642,0.409,0.274,2.703,True,recovering
+"Primary School, Dhankharpur",SIDDHARTHNAGAR,-1.603,2026-09-05 00:00:00,4,True,-1.566,-3.036,-1.592,0.291,0.011,0.037,1.663,True,stable
+"Primary School, Tilaura",SIDDHARTHNAGAR,-3.961,2026-09-05 00:00:00,4,True,-3.687,-5.394,-3.552,-0.713,0.409,0.274,2.34,True,recovering
+"Primary  School, Nawada Kalan",SANT RAVIDAS NAGAR,-8.05,2026-09-05 00:00:00,4,True,-7.693,-9.483,-7.479,-2.585,0.571,0.357,3.449,True,recovering
+"Composite School, Mungari",SANT RAVIDAS NAGAR,-10.22,2026-09-05 00:00:00,4,True,-9.899,-11.653,-9.66,-5.313,0.56,0.321,3.17,True,recovering
+Kushinagar Motichak Motichak,GORAKHPUR,-0.994,2026-09-05 00:00:00,4,True,-0.957,-2.415,-1.064,0.128,-0.07,0.037,1.272,True,stable
+"Primary School, Belaukh",SIDDHARTHNAGAR,-2.159,2026-09-05 00:00:00,4,True,-2.122,-3.592,-1.833,-0.22,0.326,0.037,1.686,True,recovering
+"Madhyamik Vidhyalaya, Dulha Daul",MIRZAPUR,-6.027,2026-09-05 00:00:00,4,True,-5.67,-7.462,-5.462,-1.371,0.565,0.357,3.045,True,recovering
+"Primary / Composite School, Pepala",BAGHPAT,-8.937,2026-09-03 18:00:00,6,True,-8.676,-10.372,-8.563,-5.287,0.374,0.261,2.542,True,recovering
+"Upper Primary School, Khadui",SONBHADRA,-1.048,2026-09-05 00:00:00,4,True,-1.011,-2.481,-1.083,0.41,-0.035,0.037,1.445,True,stable
+Mathura Nandgaon Vathainkala,AGRA,-0.638,2026-09-05 00:00:00,4,True,-0.619,-2.065,-0.679,0.214,-0.041,0.019,1.139,True,stable
+"Primary School, Baghpokhar",SONBHADRA,-6.851,2026-09-05 00:00:00,4,True,-6.494,-8.278,-6.298,-2.05,0.553,0.357,3.114,True,recovering
+Jauharpur,BANDA,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+"Primary School, Koilar",VARANASI,-19.367,2026-09-05 00:00:00,4,True,-19.01,-20.797,-18.797,-14.54,0.57,0.357,3.129,True,recovering
+B.D.O Office Bhatini,DEORIA,-3.992,2026-09-05 00:00:00,4,True,-3.718,-5.425,-3.594,-0.283,0.398,0.274,2.571,True,recovering
+"Panchayat Bhawan, Kul Doomri",SONBHADRA,-4.996,2026-09-05 00:00:00,4,True,-4.722,-6.429,-4.469,-0.665,0.527,0.274,2.882,True,recovering
+Shahjahanpur Bhawal Kheda Ladhauli,BAREILLY,-8.16,2026-08-31 12:00:00,9,True,-7.899,-9.593,-7.782,-4.136,0.378,0.261,2.728,True,recovering
+"Composite School, Pathraha",MIRZAPUR,-9.276,2026-09-05 00:00:00,4,True,-8.919,-10.709,-8.694,-3.818,0.582,0.357,3.445,True,recovering
+"Primary School, Jogehthi",MEERUT,-10.523,2026-09-03 12:00:00,6,True,-10.278,-11.944,-10.355,-8.304,0.168,0.245,1.82,True,stable
+Block Deoria Campus Deoria Sadar,DEORIA,-4.118,2026-09-05 00:00:00,4,True,-3.844,-5.557,-3.78,-1.373,0.338,0.274,2.092,True,recovering
+"Purv Madhyamik Vidhyalaya, Mahooli",SONBHADRA,-7.236,2026-09-05 00:00:00,4,True,-6.879,-8.669,-6.699,-1.756,0.537,0.357,3.456,True,recovering
+"Primary / Composite School, Mohaddinpur",BAGHPAT,-6.4,2026-09-04 00:00:00,5,True,-6.155,-7.822,-6.231,-4.441,0.169,0.245,1.691,True,stable
+"Primary School, Kodai",VARANASI,-15.87,2026-09-05 00:00:00,4,True,-15.513,-17.311,-15.278,-10.126,0.592,0.357,3.592,True,recovering
+Mainpuri Karhal Mohabbatpur,AGRA,-2.397,2026-08-29 18:00:00,11,True,-2.252,-3.836,-2.159,-0.742,0.238,0.145,1.547,True,stable
+Mainpuri Karhal Takhrau,AGRA,-1.158,2026-09-05 00:00:00,4,True,-1.121,-2.591,-1.198,-0.239,-0.04,0.037,1.176,True,stable
+"Primary / Composite School, Banwaripur",BAGHPAT,-10.676,2026-08-23 18:00:00,17,True,-10.431,-12.097,-10.48,-8.707,0.196,0.245,1.695,True,stable
+"Vikash Khand Parisar, Itwa",SIDDHARTHNAGAR,-1.432,2026-09-05 00:00:00,4,True,-1.395,-2.865,-1.407,0.41,0.025,0.037,1.637,True,stable
+Meerut Sardhana Chhabariya,MEERUT,-11.291,2026-09-02 12:00:00,7,True,-11.046,-12.716,-11.112,-8.91,0.179,0.245,1.903,True,stable
+"Primary School,  Todarpur",VARANASI,-10.907,2026-09-05 00:00:00,4,True,-10.55,-12.348,-10.332,-5.299,0.575,0.357,3.524,True,recovering
+Chirautha,BANDA,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Piparaond,CHITRAKOOT,35.93,2026-09-05 00:00:00,4,True,35.555,34.497,35.875,37.468,-0.055,-0.375,1.485,True,stable
+Perthivipur Nayakh,JHANSI,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Aligarh Lodha Aisi Kol,AGRA,-23.785,2026-09-03 00:00:00,6,True,-23.54,-25.21,-23.637,-21.216,0.148,0.245,1.997,True,stable
+Aligarh Lodha Mahrawalpur Nagariya,AGRA,-22.671,2026-09-04 00:00:00,5,True,-22.426,-24.092,-22.533,-20.825,0.138,0.245,1.633,True,stable
+"Primary School, Johadi",BAGHPAT,-29.054,2026-09-04 00:00:00,5,True,-28.809,-30.481,-28.906,-26.511,0.148,0.245,1.985,True,stable
+Aligarh Jawa Sogera,AGRA,-4.245,2026-09-04 00:00:00,5,True,-4.03,-5.68,-4.001,-1.838,0.244,0.215,1.921,True,stable
+Gorakhpur Pali Dumari Niwas,GORAKHPUR,-3.566,2026-09-05 00:00:00,4,True,-3.292,-4.996,-3.181,-0.592,0.385,0.274,2.202,True,recovering
+Maharajganj Nichlaul Balaekhor,GORAKHPUR,-0.641,2026-08-31 18:00:00,9,True,-0.622,-2.062,-0.713,-0.117,-0.072,0.019,0.972,True,stable
+Jaunpur Jalalpur Vind,VARANASI,-3.562,2026-09-04 00:00:00,5,True,-3.217,-5.001,-2.934,0.461,0.628,0.345,2.731,True,recovering
+Aligarh Khair Arrana,AGRA,-5.199,2026-09-05 00:00:00,4,True,-4.984,-6.632,-4.791,-1.64,0.408,0.215,2.496,True,recovering
+Mathura Naujheel Badharra,AGRA,-8.982,2026-09-04 00:00:00,5,True,-8.721,-10.417,-8.566,-4.296,0.416,0.261,3.06,True,recovering
+Badaun Ujhani Sports Stadium,BAREILLY,-15.272,2026-09-04 00:00:00,5,True,-15.027,-16.693,-15.045,-13.302,0.227,0.245,1.696,True,stable
+Shahjahanpur Bhawal Kheda Chak Bhitara,BAREILLY,-0.557,2026-09-05 00:00:00,4,True,-0.538,-1.996,-0.601,0.596,-0.044,0.019,1.296,True,stable
+Jaunpur Kerakat Mahali,VARANASI,-10.934,2026-09-04 00:00:00,5,True,-10.577,-12.355,-10.761,-9.185,0.173,0.357,1.585,True,stable
+Mainpuri Karhal Naglamdari,AGRA,-0.123,2026-09-04 00:00:00,5,True,-0.104,-1.544,-0.164,0.606,-0.041,0.019,1.075,True,stable
+Varansi Chirai Gaon Chhahi,VARANASI,-18.962,2026-08-21 18:00:00,19,True,-18.605,-20.403,-18.372,-13.148,0.59,0.357,3.627,True,recovering
+"Primary School/ Composite, Dadheru Kaian",MUZAFFARNAGAR,-10.829,2026-09-04 00:00:00,5,True,-10.568,-12.259,-10.46,-7.462,0.369,0.261,2.398,True,recovering
+Hamirpur Kurara Damar,CHITRAKOOT,-2.327,2026-08-31 00:00:00,9,True,-2.105,-3.773,-1.718,0.139,0.609,0.222,1.956,True,recovering
+Maharajganj Mithaura Madanpura,GORAKHPUR,-2.114,2026-09-05 00:00:00,4,True,-2.077,-3.547,-1.876,-0.439,0.238,0.037,1.554,True,stable
+Gorakhpur Urwa Malhanpar,GORAKHPUR,-1.353,2026-09-05 00:00:00,4,True,-1.316,-2.792,-1.404,0.197,-0.051,0.037,1.494,True,stable
+Gorakhpur Gola Turkwaliya,GORAKHPUR,-2.324,2026-09-05 00:00:00,4,True,-2.172,-3.759,-1.929,0.161,0.395,0.152,1.96,True,recovering
+"Primary School, Bhadauda",MEERUT,-9.307,2026-08-27 18:00:00,13,True,-9.046,-10.737,-8.903,-5.358,0.404,0.261,2.689,True,recovering
+Gorakhpur Chargaon Beniganj,GORAKHPUR,-0.593,2026-09-04 00:00:00,5,True,-0.574,-2.014,-0.645,0.136,-0.052,0.019,1.075,True,stable
+Azamgarh Pavai Velasiya,AZAMGARH,-0.403,2026-09-04 00:00:00,5,True,-0.384,-1.836,-0.439,0.69,-0.036,0.019,1.263,True,stable
+Jaunpur Kerakat Nihalapur,VARANASI,-4.304,2026-09-02 06:00:00,7,True,-3.959,-5.743,-3.691,0.348,0.613,0.345,3.045,True,recovering
+Gorakhpur Gola Gopalpur Patham,GORAKHPUR,-0.383,2026-09-04 00:00:00,5,True,-0.364,-1.813,-0.436,0.916,-0.053,0.019,1.365,True,stable
+"Primary School, Safpuram Chandpur",MEERUT,-12.643,2026-08-27 12:00:00,13,True,-12.398,-14.07,-12.466,-10.377,0.177,0.245,1.847,True,stable
+Mahoba Charkhari Padha,CHITRAKOOT,-3.449,2026-09-02 06:00:00,7,True,-3.104,-4.895,-2.844,1.484,0.605,0.345,3.19,True,recovering
+Azamgarh Palhana Jamui Bhatauli,AZAMGARH,-1.767,2026-09-01 00:00:00,8,True,-1.73,-3.188,-1.802,-0.729,-0.035,0.037,1.229,True,stable
+"Primary School, Bodha",BAGHPAT,-13.432,2026-08-29 00:00:00,11,True,-13.171,-14.859,-13.156,-9.465,0.276,0.261,2.697,True,stable
+Shahjahanpur Bhawal Kheda Bhawal Kheda,BAREILLY,-3.57,2026-09-04 00:00:00,5,True,-3.355,-5.003,-3.306,-0.925,0.264,0.215,2.039,True,stable
+Gorakhpur Barahalganj Ojhauli,GORAKHPUR,-3.85,2026-09-05 00:00:00,4,True,-3.576,-5.277,-3.554,-0.63,0.296,0.274,2.324,True,stable
+Shahjahanpur Dadraul Banthara,BAREILLY,-3.21,2026-09-04 00:00:00,5,True,-2.995,-4.64,-2.936,-0.354,0.274,0.215,2.143,True,stable
+Etah Jalesar Sakrauli,AGRA,-11.877,2026-09-04 00:00:00,5,True,-11.632,-13.298,-11.708,-9.505,0.169,0.245,1.897,True,stable
+Kushinagar Tamkuhi Rajwatiya,GORAKHPUR,-0.666,2026-09-04 18:00:00,5,True,-0.647,-2.087,-0.694,0.926,-0.028,0.019,1.506,True,stable
+Sitapur Mafi,CHITRAKOOT,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Shahjahanpur Puvayan  Badagaon Pratham,BAREILLY,-8.026,2026-09-04 00:00:00,5,True,-7.765,-9.453,-7.82,-3.788,0.206,0.261,2.833,True,stable
+"Primary School, Silana",BAGHPAT,-22.167,2026-09-05 00:00:00,4,True,-21.906,-23.608,-21.777,-17.54,0.39,0.261,3.034,True,recovering
+Kushinagar Captanganj Captanganj,GORAKHPUR,-4.4,2026-09-04 00:00:00,5,True,-4.126,-5.821,-4.222,-2.563,0.178,0.274,1.629,True,stable
+Saint Ravidas Nagar Aurai Ugapur,MIRZAPUR,-8.845,2026-09-05 00:00:00,4,True,-8.454,-10.311,-8.216,-4.122,0.629,0.391,3.094,True,recovering
+Badaun Salarpur BDO Office,BAREILLY,-20.856,2026-09-04 00:00:00,5,True,-20.611,-22.277,-20.713,-18.961,0.143,0.245,1.658,True,stable
+Hathras Mursan Chandapa Sandh,AGRA,-30.718,2026-09-05 00:00:00,4,True,-30.536,-32.139,-30.526,-28.71,0.192,0.182,1.714,True,stable
+Azamgarh Sathiyavn Gajahada,AZAMGARH,0.457,2026-09-04 00:00:00,5,True,-1.418,-0.964,0.408,1.613,-0.049,-1.875,1.289,True,stable
+Hamirpur Sarila Purani,CHITRAKOOT,-14.48,2026-09-04 12:00:00,5,True,-14.052,-15.946,-13.846,-3.79,0.634,0.428,6.078,True,recovering
+Shahjahanpur Puvayan Bhilawan,BAREILLY,-8.955,2026-09-04 00:00:00,5,True,-8.694,-10.39,-8.58,-4.633,0.375,0.261,2.878,True,recovering
+Varansi Cholapur Munari,VARANASI,-13.506,2026-09-03 18:00:00,6,True,-13.078,-14.972,-12.878,-6.24,0.628,0.428,4.366,True,recovering
+Varansi Cholapur Chaubepur,VARANASI,-1.286,2026-09-04 00:00:00,5,True,-1.249,-2.732,-1.065,0.206,0.221,0.037,1.469,True,stable
+Kushinagar Khadda Basdila,GORAKHPUR,-1.098,2026-09-04 00:00:00,5,True,-1.061,-2.525,-1.147,0.405,-0.049,0.037,1.465,True,stable
+Gorakhpur Kauriram Jagdispur Bhaluwan 2Nd,GORAKHPUR,-0.352,2026-09-04 00:00:00,5,True,-0.333,-1.785,-0.402,0.83,-0.05,0.019,1.308,True,stable
+Mahoba Jaitpur saguniyamaph,CHITRAKOOT,-0.639,2026-09-02 18:00:00,7,True,-0.62,-2.078,-0.677,0.3,-0.038,0.019,1.189,True,stable
+Gorakhpur Kauriram Dhausa,GORAKHPUR,-0.666,2026-09-05 00:00:00,4,True,-0.647,-2.093,-0.719,0.845,-0.053,0.019,1.469,True,stable
+"Primary / Composite School, Jasad",BAGHPAT,-16.584,2026-09-04 00:00:00,5,True,-16.323,-18.019,-16.168,-11.637,0.416,0.261,3.191,True,recovering
+Meerut Janikhurd Afjalpur Pavati,MEERUT,-8.011,2026-09-03 18:00:00,6,True,-7.75,-9.444,-7.633,-4.205,0.378,0.261,2.619,True,recovering
+Saint Ravidas Nagar Gyanpur Samhai,MIRZAPUR,-7.194,2026-09-04 00:00:00,5,True,-6.803,-8.66,-6.565,-2.688,0.629,0.391,2.986,True,recovering
+Kushinagar Motichak Mathauli Bazar,GORAKHPUR,-1.467,2026-09-04 00:00:00,5,True,-1.43,-2.894,-1.516,-0.517,-0.049,0.037,1.189,True,stable
+Azamgarh Palhana Balahi Lahucha,AZAMGARH,-5.518,2026-09-04 00:00:00,5,True,-5.244,-6.939,-5.328,-3.99,0.19,0.274,1.474,True,stable
+Sujanpura Badhyapar,GORAKHPUR,-0.157,2026-09-04 00:00:00,5,True,-0.138,-1.584,-0.21,1.211,-0.053,0.019,1.398,True,stable
+Hamirpur Sumerpur Para,CHITRAKOOT,-15.41,2026-08-29 12:00:00,11,True,-14.982,-16.876,-14.79,-7.438,0.62,0.428,4.719,True,recovering
+Banda Baberu Umrehani,CHITRAKOOT,-0.01,2026-08-29 00:00:00,11,True,-1.83,-1.445,-0.098,0.754,-0.088,-1.82,1.099,True,stable
+"Primary School/ Composite, Jaula Dindauli",SAHARANPUR,-13.29,2026-09-04 00:00:00,5,True,-13.029,-14.717,-13.009,-9.77,0.281,0.261,2.474,True,stable
+Gorakhpur Gola Dhakwarchak,GORAKHPUR,-1.734,2026-09-04 00:00:00,5,True,-1.697,-3.161,-1.785,0.054,-0.051,0.037,1.608,True,stable
+Gorakhpur Belghat Belghat,GORAKHPUR,-4.342,2026-09-04 00:00:00,5,True,-4.068,-5.772,-3.953,-0.999,0.389,0.274,2.387,True,recovering
+Aligarh Jawa Bahadurpur Kota,AGRA,-7.93,2026-09-05 00:00:00,4,True,-7.685,-9.357,-7.745,-4.827,0.185,0.245,2.265,True,stable
+Saint Ravidas Nagar Deegh Velahua,MIRZAPUR,-4.836,2026-09-04 00:00:00,5,True,-4.491,-6.282,-4.213,-1.121,0.623,0.345,2.58,True,recovering
+Gorakhpur Sardarnagr Awadpur,GORAKHPUR,-1.514,2026-09-05 00:00:00,4,True,-1.477,-2.941,-1.562,0.151,-0.048,0.037,1.546,True,stable
+Banda Tindwari Bhindowra,CHITRAKOOT,-5.693,2026-09-04 00:00:00,5,True,-5.403,-7.159,-5.277,-0.809,0.416,0.29,3.175,True,recovering
+"Samaj Sevak Junir High School, Bhaura Kalan",MUZAFFARNAGAR,-24.692,2026-09-04 00:00:00,5,True,-24.431,-26.133,-24.345,-21.173,0.347,0.261,2.48,True,recovering
+Aligarh Chandaus  Somana,AGRA,-6.528,2026-08-24 00:00:00,16,True,-6.267,-7.955,-6.305,-2.855,0.223,0.261,2.55,True,stable
+"Primary School/ Composite, Haibatpur",MUZAFFARNAGAR,-7.68,2026-09-04 00:00:00,5,True,-7.419,-9.11,-7.302,-3.936,0.378,0.261,2.587,True,recovering
+Gorakhpur Gagaha Gagaha,GORAKHPUR,-1.855,2026-09-04 00:00:00,5,True,-1.818,-3.29,-1.85,0.073,0.005,0.037,1.681,True,stable
+Kushinagar Dudhai Lala Chhapra,GORAKHPUR,-0.568,2026-09-04 00:00:00,5,True,-0.549,-1.995,-0.618,0.775,-0.05,0.019,1.385,True,stable
+Terha_1,HAMIRPUR,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Varansi Chirai Gaon  Gathiya Jairampur,VARANASI,-22.971,2026-09-03 18:00:00,6,True,-22.614,-24.397,-22.641,-18.837,0.33,0.357,2.78,True,recovering
+"Primary School/ Composite, Mehmoodpur",SAHARANPUR,-8.804,2026-09-04 00:00:00,5,True,-8.543,-10.237,-8.388,-4.114,0.416,0.261,3.061,True,recovering
+Aligarh Khair Utwara,AGRA,-5.883,2026-08-29 00:00:00,11,True,-5.638,-7.304,-5.708,-3.662,0.175,0.245,1.821,True,stable
+Saint Ravidas Nagar Bhadohi Munshi,MIRZAPUR,-9.054,2026-08-29 00:00:00,11,True,-8.697,-10.481,-8.528,-5.347,0.526,0.357,2.567,True,recovering
+Banda Badokhar Khurd Chatgan,CHITRAKOOT,-8.37,2026-08-27 00:00:00,13,True,-8.109,-9.801,-7.935,-4.557,0.435,0.261,2.622,True,recovering
+Maharajganj Nichlaul Garaura,GORAKHPUR,-0.655,2026-08-31 12:00:00,9,True,-0.636,-2.076,-0.73,0.001,-0.075,0.019,1.038,True,stable
+"Primary School, Pali",MEERUT,-11.417,2026-08-28 00:00:00,12,True,-11.172,-12.844,-11.238,-9.053,0.179,0.245,1.896,True,stable
+Shahjahanpur Sidhauli Sidhauli,BAREILLY,-5.488,2026-09-04 00:00:00,5,True,-5.273,-6.921,-5.072,-1.291,0.416,0.215,2.815,True,recovering
+Jaunpur Dobhi Bankati,VARANASI,-14.245,2026-09-03 18:00:00,6,True,-13.817,-15.711,-13.617,-5.857,0.628,0.428,4.927,True,recovering
+Kushinagar Captanganj Senduriya Vishunpur,GORAKHPUR,-0.985,2026-09-05 00:00:00,4,True,-0.948,-2.406,-1.054,-0.291,-0.069,0.037,1.057,True,stable
+Saint Ravidas Nagar Abholi Abholi,MIRZAPUR,-10.789,2026-09-04 00:00:00,5,True,-10.398,-12.255,-10.166,-5.692,0.623,0.391,3.282,True,recovering
+Maharajganj Nautanwa Sampatiha,GORAKHPUR,-2.457,2026-09-04 00:00:00,5,True,-2.26,-3.89,-2.069,-0.301,0.388,0.197,1.794,True,recovering
+Jaunpur Jalalpur Katuwani,VARANASI,-8.741,2026-09-01 00:00:00,8,True,-8.384,-10.174,-8.17,-3.281,0.571,0.357,3.446,True,recovering
+Shahjahanpur Sidhauli Mahanand Pur,BAREILLY,-4.363,2026-08-23 18:00:00,17,True,-4.164,-5.784,-4.185,-2.707,0.178,0.199,1.538,True,stable
+Kushinagar Fazilnagar  Belwakala,GORAKHPUR,-0.424,2026-09-04 00:00:00,5,True,-0.405,-1.845,-0.495,0.308,-0.071,0.019,1.076,True,stable
+"Primary School/ Composite, Jhabiran",SAHARANPUR,-5.079,2026-09-04 00:00:00,5,True,-4.835,-6.518,-4.687,-1.376,0.392,0.244,2.571,True,recovering
+Badaun Usawan BDO Office,BAREILLY,-21.515,2026-09-05 00:00:00,4,True,-21.27,-22.936,-21.378,-19.476,0.137,0.245,1.73,True,stable
+Maharajganj Siswa Siswa,GORAKHPUR,-0.999,2026-09-05 00:00:00,4,True,-0.962,-2.429,-1.053,0.381,-0.054,0.037,1.405,True,stable
+Mahoba Panwari Didvara,CHITRAKOOT,-6.635,2026-08-28 00:00:00,12,True,-6.207,-8.101,-6.022,-0.081,0.613,0.428,4.01,True,recovering
+Jaunpur Kerakat Barbaspur (Sohani),VARANASI,-5.862,2026-09-04 00:00:00,5,True,-5.505,-7.283,-5.725,-4.353,0.137,0.357,1.465,True,stable
+"Primary / Composite School, Chiraudi",MEERUT,-4.554,2026-09-04 00:00:00,5,True,-4.339,-5.981,-4.389,-1.932,0.165,0.215,2.025,True,stable
+"Primary School, Sindhan Kalan",BANDA,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+Azamgarh Thekama Bardah,AZAMGARH,-4.101,2026-09-04 00:00:00,5,True,-3.827,-5.534,-3.677,-1.08,0.424,0.274,2.227,True,recovering
+Etah Aavagarh Badhawali,AGRA,-3.387,2026-09-04 00:00:00,5,True,-3.172,-4.814,-3.126,-0.657,0.261,0.215,2.079,True,stable
+Kushinagar Fazilnagar Jokwa Bujurg,GORAKHPUR,-1.564,2026-09-04 00:00:00,5,True,-1.527,-2.991,-1.612,-0.008,-0.048,0.037,1.492,True,stable
+Saint Ravidas Nagar Suriyawan Mond,MIRZAPUR,-5.655,2026-09-04 00:00:00,5,True,-5.298,-7.113,-5.063,-0.605,0.592,0.357,3.254,True,recovering
+Shahjahanpur Puvayan Nahil,BAREILLY,-6.434,2026-09-04 00:00:00,5,True,-6.189,-7.859,-6.252,-4.128,0.182,0.245,1.866,True,stable
+Aligarh Jawa Jamalpur Siya,AGRA,-14.147,2026-09-04 00:00:00,5,True,-13.902,-15.568,-13.957,-12.134,0.19,0.245,1.717,True,stable
+Saint Ravidas Nagar Aurai Uprauth,MIRZAPUR,-3.93,2026-09-04 00:00:00,5,True,-3.656,-5.363,-3.343,-0.711,0.587,0.274,2.326,True,recovering
+"Block Office, Kurara",HAMIRPUR,-3.318,2026-09-03 12:00:00,6,True,-2.973,-4.764,-2.684,1.176,0.634,0.345,2.97,True,recovering
+Gorakhpur Barahalganj Bhatpar (Saukhor),GORAKHPUR,-3.544,2026-09-05 00:00:00,4,True,-3.27,-4.971,-3.159,-0.493,0.385,0.274,2.239,True,recovering
+Deoria Bhaluwani Markna,GORAKHPUR,-1.949,2026-09-04 00:00:00,5,True,-1.912,-3.376,-1.947,0.078,0.002,0.037,1.727,True,stable
+Azamgarh Atrauliya Atrauliya,AZAMGARH,-1.355,2026-09-04 00:00:00,5,True,-1.318,-2.782,-1.395,0.255,-0.04,0.037,1.518,True,stable
+Banda Baberu Anvan,CHITRAKOOT,0.275,2026-08-30 18:00:00,10,True,-1.6,-1.164,0.185,0.96,-0.09,-1.875,1.062,True,stable
+Mainpuri Karhal Timrakh,AGRA,-2.868,2026-08-29 00:00:00,11,True,-2.731,-4.298,-2.6,-0.59,0.268,0.137,1.854,True,stable
+Kushinagar Sewarhi Sewarhi,GORAKHPUR,-1.326,2026-09-04 00:00:00,5,True,-1.289,-2.756,-1.374,0.129,-0.048,0.037,1.443,True,stable
+"Primary / Composite School, Mahalaka",MEERUT,-8.649,2026-08-28 12:00:00,12,True,-8.388,-10.079,-8.271,-5.378,0.378,0.261,2.35,True,recovering
+Mahoba Kabrai Sisri Kala,CHITRAKOOT,-0.776,2026-09-02 12:00:00,7,True,-0.739,-2.215,-0.818,0.163,-0.042,0.037,1.189,True,stable
+Azamgarh Ahiraula Bahera,AZAMGARH,-4.567,2026-09-03 06:00:00,6,True,-4.292,-5.994,-4.217,-0.788,0.349,0.274,2.603,True,recovering
+"Primary School, Asara Bighawati",BAGHPAT,-17.042,2026-09-04 00:00:00,5,True,-16.781,-18.483,-16.652,-12.644,0.39,0.261,2.92,True,recovering
+Kushinagar Fazilnagar Narayanpur Khoti,GORAKHPUR,-3.632,2026-09-04 00:00:00,5,True,-3.358,-5.057,-3.396,-1.08,0.236,0.274,1.989,True,stable
+Saint Ravidas Nagar Gyanpur Kansapur,MIRZAPUR,-5.008,2026-09-04 00:00:00,5,True,-4.734,-6.441,-4.602,-1.233,0.406,0.274,2.604,True,recovering
+"Primary School, Bhalsona",MEERUT,-2.346,2026-09-02 12:00:00,7,True,-2.23,-3.773,-2.127,0.656,0.219,0.116,2.215,True,stable
+"ITI Campus, ITI Campus Area",MUZAFFARNAGAR,-12.433,2026-09-04 00:00:00,5,True,-12.172,-13.86,-12.066,-8.448,0.367,0.261,2.706,True,recovering
+Banda Kamasin Tilowsa,CHITRAKOOT,-0.073,2026-08-31 00:00:00,9,True,-0.054,-1.506,-0.161,0.571,-0.088,0.019,1.038,True,stable
+Jaunpur Rampur Sultanpur,VARANASI,-1.097,2026-08-29 00:00:00,11,True,-1.06,-2.536,-1.134,-0.165,-0.037,0.037,1.185,True,stable
+Jaunpur Rampur Kathwatiya,VARANASI,-16.255,2026-09-04 00:00:00,5,True,-15.898,-17.682,-15.701,-11.54,0.554,0.357,3.071,True,recovering
+Etah Jalesar Hasangarh,AGRA,-8.181,2026-09-04 00:00:00,5,True,-7.936,-9.606,-7.999,-5.728,0.182,0.245,1.939,True,stable
+Shahjahanpur Bhawal Kheda Sutnera,BAREILLY,-4.009,2026-09-01 12:00:00,8,True,-3.794,-5.439,-3.766,-1.45,0.243,0.215,1.994,True,stable
+Shahjahanpur Sidhauli Korokuiyan,BAREILLY,-0.701,2026-09-04 00:00:00,5,True,-0.682,-2.122,-0.742,0.023,-0.041,0.019,1.073,True,stable
+Deoria Bhatpar Rani Dharkwan,GORAKHPUR,-2.355,2026-09-04 00:00:00,5,True,-2.203,-3.785,-2.034,-0.078,0.321,0.152,1.854,True,recovering
+"Primary School, Marry",JHANSI,-0.785,2026-09-03 18:00:00,6,True,-0.748,-2.218,-0.829,0.009,-0.044,0.037,1.113,True,stable
+Sonbhadra Duddhi Mahuli,MIRZAPUR,-1.34,2026-09-03 18:00:00,6,True,-1.303,-2.773,-1.392,-0.185,-0.052,0.037,1.294,True,stable
+Varansi Pindara Gajendra,VARANASI,-11.274,2026-09-04 00:00:00,5,True,-10.917,-12.696,-10.969,-7.698,0.305,0.357,2.499,True,recovering
+Varansi Badagaon Gajapur,VARANASI,-17.633,2026-09-03 18:00:00,6,True,-17.276,-19.054,-17.521,-15.607,0.112,0.357,1.723,True,stable
+"Primary School/ Composite, Chittora",MUZAFFARNAGAR,-1.761,2026-09-04 00:00:00,5,True,-1.724,-3.191,-1.794,-0.69,-0.033,0.037,1.25,True,stable
+"Primary School/ Composite, Rasulpur",MUZAFFARNAGAR,-6.399,2026-09-05 00:00:00,4,True,-6.138,-7.834,-6.021,-2.456,0.378,0.261,2.689,True,recovering
+"Primary School/ Composite, Jukhedi",SAHARANPUR,-16.246,2026-09-04 12:00:00,5,True,-16.001,-17.673,-16.069,-13.739,0.177,0.245,1.967,True,stable
+Saint Ravidas Nagar Suriyawan Chhapariya,MIRZAPUR,-13.384,2026-09-04 00:00:00,5,True,-13.056,-14.842,-12.799,-8.193,0.585,0.328,3.325,True,recovering
+"Primary School, Sarwa",JHANSI,-1.702,2026-09-04 00:00:00,5,True,-1.665,-3.141,-1.723,-0.342,-0.021,0.037,1.399,True,stable
+Sonbhadra Chopan Khairatiya,MIRZAPUR,-0.609,2026-09-04 00:00:00,5,True,-0.59,-2.048,-0.637,2.022,-0.028,0.019,2.035,True,stable
+Saint Ravidas Nagar Abholi Gangarampur,MIRZAPUR,-8.5,2026-09-04 00:00:00,5,True,-8.109,-9.966,-7.877,-3.581,0.623,0.391,3.192,True,recovering
+Chitrakoot Karvi Shivrampur,CHITRAKOOT,-15.215,2026-09-04 12:00:00,5,True,-14.925,-16.681,-14.825,-7.755,0.39,0.29,4.463,True,recovering
+Kushinagar Tamkuhi Tamkuhi,GORAKHPUR,-1.205,2026-09-04 00:00:00,5,True,-1.168,-2.631,-1.254,0.22,-0.049,0.037,1.425,True,stable
+Mahoba Kabrai Karaha,CHITRAKOOT,-1.457,2026-09-02 12:00:00,7,True,-1.42,-2.896,-1.493,-0.237,-0.036,0.037,1.329,True,stable
+"Primary School, Basti",JALAUN,-0.991,2026-09-04 00:00:00,5,True,-0.954,-2.437,-0.817,0.859,0.174,0.037,1.648,True,stable
+Hamirpur Kurara Jalokhar,CHITRAKOOT,-0.048,2026-09-02 06:00:00,7,True,-0.029,-1.494,-0.004,1.607,0.044,0.019,1.55,True,stable
+"Primary School, Kakaurkala",BAGHPAT,-12.797,2026-09-04 00:00:00,5,True,-12.536,-14.232,-12.381,-7.901,0.416,0.261,3.165,True,recovering
+"Primary School, Nota",JHANSI,-1.875,2026-09-03 12:00:00,6,True,-1.838,-3.314,-1.746,0.118,0.129,0.037,1.716,True,stable
+"Primary School, Evani",JHANSI,-3.056,2026-08-28 12:00:00,12,True,-2.711,-4.502,-2.438,1.104,0.618,0.345,2.803,True,recovering
+Gorakhpur Pali Pali,GORAKHPUR,-3.998,2026-09-04 00:00:00,5,True,-3.724,-5.425,-3.707,-0.514,0.291,0.274,2.456,True,stable
+Jaunpur Dobhi Bagerwa,VARANASI,-15.709,2026-08-27 12:00:00,13,True,-15.352,-17.15,-15.149,-10.116,0.56,0.357,3.517,True,recovering
+"Primary School/ Composite, Sidki",SAHARANPUR,-10.089,2026-09-04 00:00:00,5,True,-9.799,-11.555,-9.673,-3.499,0.416,0.29,4.028,True,recovering
+"Primary School, Pachar",JHANSI,-0.117,2026-09-04 00:00:00,5,True,-0.098,-1.547,-0.158,0.787,-0.041,0.019,1.167,True,stable
+Deoria Bhatani Mishrauli Dichit,GORAKHPUR,-1.977,2026-09-04 12:00:00,5,True,-1.94,-3.398,-2.043,-0.565,-0.066,0.037,1.416,True,stable
+"Primary School/ Composite, Ghumawati",MUZAFFARNAGAR,-7.213,2026-08-29 00:00:00,11,True,-6.968,-8.634,-7.009,-5.112,0.204,0.245,1.761,True,stable
+"Primary School, Khujurahokhurd",JHANSI,-9.003,2026-09-04 00:00:00,5,True,-8.575,-10.461,-8.389,-1.841,0.614,0.428,4.31,True,recovering
+Kushinagar Dudhai Gorariya,GORAKHPUR,-2.598,2026-08-31 18:00:00,9,True,-2.401,-4.023,-2.351,-0.684,0.247,0.197,1.669,True,stable
+"Primary School, Khandeura",BANDA,-6.813,2026-08-15 12:00:00,25,True,-6.523,-8.271,-6.372,-2.722,0.441,0.29,2.775,True,recovering
+Kushinagar Dudhai Dudhai,GORAKHPUR,-2.038,2026-09-05 00:00:00,4,True,-2.001,-3.465,-1.987,-0.118,0.051,0.037,1.674,True,stable
+"Primary / Composite School, Jainpur",BAGHPAT,-13.733,2026-09-01 00:00:00,8,True,-13.472,-15.174,-13.317,-8.672,0.416,0.261,3.251,True,recovering
+"Upper Primary School Eng Medium, Hariyabans",SAHARANPUR,-13.523,2026-09-04 00:00:00,5,True,-13.262,-14.95,-13.313,-8.994,0.21,0.261,2.978,True,stable
+"Primary School/ Composite, Katla Naveen",SAHARANPUR,-4.765,2026-09-05 00:00:00,4,True,-4.566,-6.191,-4.601,-2.595,0.164,0.199,1.798,True,stable
+"Primary School, Radhana",MEERUT,-10.197,2026-09-04 00:00:00,5,True,-9.936,-11.627,-9.822,-6.844,0.375,0.261,2.391,True,recovering
+Varansi Harahua Bhaithauli,VARANASI,-8.553,2026-09-02 12:00:00,7,True,-8.196,-9.986,-7.987,-2.615,0.566,0.357,3.686,True,recovering
+"Inter College, Sarv Hitakari",BAGHPAT,-26.75,2026-09-05 00:00:00,4,True,-26.505,-28.171,-26.563,-24.949,0.187,0.245,1.611,True,stable
+"Primary School/ Composite, Nunabadi",SAHARANPUR,-5.996,2026-09-04 00:00:00,5,True,-5.735,-7.423,-5.609,-1.747,0.387,0.261,2.838,True,recovering
+"Primary School/ Composite, Alampur",SAHARANPUR,-16.958,2026-09-05 00:00:00,4,True,-16.713,-18.385,-16.781,-13.834,0.177,0.245,2.276,True,stable
+"Block office, Gursarai",JHANSI,-1.893,2026-09-03 00:00:00,6,True,-1.856,-3.339,-1.736,-0.425,0.157,0.037,1.457,True,stable
+"Primary School, R.K.Inter college",BAGHPAT,-14.494,2026-09-04 00:00:00,5,True,-14.233,-15.935,-14.078,-9.562,0.416,0.261,3.187,True,recovering
+"Primary School, Dagarpur Tigadi",BAGHPAT,-20.184,2026-08-29 00:00:00,11,True,-19.939,-21.611,-19.99,-17.078,0.194,0.245,2.267,True,stable
+Gorakhpur Belghat Murarpur,GORAKHPUR,-2.211,2026-09-05 00:00:00,4,True,-2.174,-3.641,-1.905,0.237,0.306,0.037,1.939,True,recovering
+"Primary / Composite School, Saradhana Block Office",BAGHPAT,-8.864,2026-09-04 00:00:00,5,True,-8.603,-10.291,-8.457,-4.206,0.407,0.261,3.042,True,recovering
+Shahjahanpur Bhawal Kheda Chaudhera,BAREILLY,-3.655,2026-09-04 00:00:00,5,True,-3.44,-5.088,-3.381,-1.002,0.274,0.215,2.043,True,stable
+Gorakhpur Sahjanwa Kasrol,GORAKHPUR,-2.542,2026-09-04 12:00:00,5,True,-2.345,-3.977,-2.158,0.011,0.384,0.197,1.994,True,recovering
+Deoria Salempur Manihari,GORAKHPUR,-3.316,2026-09-05 00:00:00,4,True,-3.042,-4.743,-3.024,-0.822,0.292,0.274,1.961,True,stable
+Maharajganj Nautanwa Purniha,GORAKHPUR,-1.502,2026-09-05 00:00:00,4,True,-1.465,-2.929,-1.551,-0.14,-0.049,0.037,1.395,True,stable
+"Primary School, Masaurakhurd",LALITPUR,-2.63,2026-09-03 12:00:00,6,True,-2.464,-4.069,-2.202,0.174,0.428,0.166,2.122,True,recovering
+Azamgarh Jahanganj Godhaura,AZAMGARH,-4.913,2026-09-01 18:00:00,8,True,-4.639,-6.34,-4.594,-1.479,0.319,0.274,2.431,True,recovering
+"Primary School/ Composite, Manoharpur",SAHARANPUR,-5.307,2026-09-03 00:00:00,6,True,-5.063,-6.753,-4.923,-1.499,0.384,0.244,2.627,True,recovering
+Maharajganj Mithaura Bhagatar,GORAKHPUR,-0.781,2026-09-04 00:00:00,5,True,-0.744,-2.202,-0.836,-0.057,-0.055,0.037,1.072,True,stable
+"Primary School/ Composite, Harsauli",MUZAFFARNAGAR,-14.86,2026-09-04 00:00:00,5,True,-14.599,-16.29,-14.447,-10.036,0.413,0.261,3.127,True,recovering
+"Primary School/ Composite, Mandawali Khadar",MUZAFFARNAGAR,-9.555,2026-09-04 00:00:00,5,True,-9.294,-10.988,-9.139,-5.074,0.416,0.261,2.957,True,recovering
+"Primary School/ Composite, Nagla Rajput",SAHARANPUR,-7.164,2026-09-04 00:00:00,5,True,-6.919,-8.589,-6.982,-4.748,0.182,0.245,1.92,True,stable
+"Primary School, Vansha Gram Panchayt",LALITPUR,-1.163,2026-09-05 00:00:00,4,True,-1.126,-2.596,-1.19,0.297,-0.027,0.037,1.447,True,stable
+"Primary School/ Composite, Pawti",MUZAFFARNAGAR,-1.968,2026-09-04 12:00:00,5,True,-1.931,-3.401,-1.974,-0.422,-0.006,0.037,1.489,True,stable
+Firozabad Madanpur Rudhawali,AGRA,-27.404,2026-09-04 12:00:00,5,True,-27.143,-28.834,-27.05,-24.131,0.354,0.261,2.351,True,recovering
+"Primary School/ Composite, Manganpur",MUZAFFARNAGAR,-11.908,2026-09-03 12:00:00,6,True,-11.647,-13.338,-11.488,-6.736,0.42,0.261,3.301,True,recovering
+"Primary School, Gotaka",MEERUT,-16.83,2026-09-04 00:00:00,5,True,-16.569,-18.271,-16.44,-12.26,0.39,0.261,3.005,True,recovering
+Saint Ravidas Nagar Deegh  Deegh,MIRZAPUR,-7.191,2026-09-04 00:00:00,5,True,-6.763,-8.649,-6.565,-1.633,0.626,0.428,3.508,True,recovering
+"Primary School/ Composite, Mundi Kheri",SAHARANPUR,-4.683,2026-09-01 12:00:00,8,True,-4.484,-6.11,-4.48,-1.478,0.203,0.199,2.316,True,stable
+"Primary School/ Composite, Landhoura Junardar",SAHARANPUR,-6.642,2026-08-20 12:00:00,20,True,-6.352,-8.108,-6.226,-2.052,0.416,0.29,3.028,True,recovering
+"Primary School, Chiplatha",JHANSI,-5.172,2026-04-28 00:00:00,134,True,-5.449,-6.607,-5.369,-4.689,-0.197,-0.277,0.959,False,unreliable
+Mathura Baldeo  Khanpur,AGRA,-10.658,2026-09-04 00:00:00,5,True,-10.413,-12.085,-10.449,-7.015,0.209,0.245,2.535,True,stable
+Jaunpur Rampur Kamaruddin,VARANASI,-11.666,2026-08-30 12:00:00,10,True,-11.309,-13.091,-11.343,-8.046,0.323,0.357,2.522,True,recovering
+"Primary School/ Composite, Manpur Qadeem",SAHARANPUR,-4.537,2026-09-02 12:00:00,7,True,-4.338,-5.964,-4.337,-1.284,0.2,0.199,2.34,True,stable
+"Shahid Chandra Shekhar Kanya P.M.V., Mallupura",MUZAFFARNAGAR,-15.32,2026-09-04 00:00:00,5,True,-15.059,-16.761,-14.904,-10.794,0.416,0.261,2.984,True,recovering
+"Primary School, Sangholi taga",BAGHPAT,-13.468,2026-09-05 00:00:00,4,True,-13.207,-14.898,-13.052,-8.502,0.416,0.261,3.198,True,recovering
+Varansi Harahua Sulemapur,VARANASI,-14.419,2026-09-04 00:00:00,5,True,-14.062,-15.846,-14.144,-11.104,0.275,0.357,2.371,True,stable
+Jaunpur Jalalpur Vanpurwa,VARANASI,-7.735,2026-09-02 06:00:00,7,True,-7.307,-9.201,-7.11,-1.636,0.625,0.428,3.782,True,recovering
+Jaunpur Dobhi Kakarapar,VARANASI,-1.554,2026-09-03 18:00:00,6,True,-1.517,-2.987,-1.594,-0.203,-0.04,0.037,1.392,True,stable
+Deoria Tarkulwa Tarkulwa,GORAKHPUR,-6.423,2026-09-04 00:00:00,5,True,-6.066,-7.85,-6.157,-2.578,0.266,0.357,2.636,True,stable
+Aligarh Chandaus Maharajpur,AGRA,-7.044,2026-08-29 00:00:00,11,True,-6.799,-8.465,-6.84,-4.945,0.204,0.245,1.76,True,stable
+"Primary School/ Composite, Tandheda",MUZAFFARNAGAR,-11.368,2026-08-28 12:00:00,12,True,-11.107,-12.795,-10.999,-7.583,0.369,0.261,2.606,True,recovering
+Mahoba Charkhari Natara,CHITRAKOOT,-1.226,2026-09-02 06:00:00,7,True,-1.189,-2.659,-1.279,-0.1,-0.053,0.037,1.279,True,stable
+Chitrakoot Manikpur Agarhudha,CHITRAKOOT,-3.03,2026-08-26 12:00:00,14,True,-2.786,-4.476,-2.525,-0.42,0.505,0.244,2.028,True,recovering
+Mathura Chhata Chandauri,AGRA,-6.551,2026-09-04 00:00:00,5,True,-6.29,-7.984,-6.135,-2.084,0.416,0.261,2.95,True,recovering
+"Primary School/ Composite, Chaappar",SAHARANPUR,-17.975,2026-09-04 00:00:00,5,True,-17.73,-19.402,-17.811,-15.606,0.164,0.245,1.898,True,stable
+Maharajganj Dhani Nausagar,GORAKHPUR,-1.922,2026-09-04 00:00:00,5,True,-1.885,-3.357,-1.901,0.239,0.021,0.037,1.798,True,stable
+"Inter college, Tindwara",BANDA,-1.954,2026-08-29 00:00:00,11,True,-1.917,-3.381,-2.073,-0.624,-0.119,0.037,1.378,True,stable
+Varansi Harahua Shivrampur,VARANASI,-6.713,2026-08-31 18:00:00,9,True,-6.285,-8.179,-6.079,-1.487,0.634,0.428,3.346,True,recovering
+Azamgarh Lalganj Lalganj,AZAMGARH,-3.115,2026-09-05 00:00:00,4,True,-2.841,-4.545,-2.73,-0.206,0.385,0.274,2.169,True,recovering
+"Primary School/ Composite, Bhojpur Taga",SAHARANPUR,-2.242,2026-08-24 12:00:00,16,True,-2.182,-3.672,-2.018,-0.455,0.224,0.06,1.609,True,stable
+Shahjahanpur Puvayan Mahua Pathak,BAREILLY,-1.451,2026-09-04 00:00:00,5,True,-1.414,-2.878,-1.49,-0.499,-0.039,0.037,1.19,True,stable
+Chitrakoot Karvi Khoha,CHITRAKOOT,-4.038,2026-09-04 00:00:00,5,True,-3.794,-5.484,-3.622,-0.431,0.416,0.244,2.527,True,recovering
+"Primary School/ Composite, Dholla Majra",SAHARANPUR,-9.147,2026-09-04 00:00:00,5,True,-8.886,-10.577,-8.776,-5.684,0.371,0.261,2.447,True,recovering
+Mainpuri Karhal  Rajpur,AGRA,-4.906,2026-09-01 00:00:00,8,True,-4.662,-6.345,-4.626,-1.517,0.28,0.244,2.414,True,stable
+Kushinagar Sewarhi  Rampur Bagra N0.2,GORAKHPUR,-1.442,2026-09-04 00:00:00,5,True,-1.405,-2.868,-1.49,0.026,-0.048,0.037,1.447,True,stable
+Jaunpur Dobhi Kachhawan,VARANASI,-6.575,2026-09-03 18:00:00,6,True,-6.147,-8.041,-5.947,-0.895,0.628,0.428,3.573,True,recovering
+"Primary School/ Composite, Nasrullahgarh",SAHARANPUR,-7.311,2026-09-04 00:00:00,5,True,-7.066,-8.733,-7.134,-4.882,0.177,0.245,1.926,True,stable
+Shahjahanpur Bhawal Kheda Shahbaj Pur,BAREILLY,-3.097,2026-09-04 00:00:00,5,True,-2.853,-4.536,-2.794,-0.285,0.303,0.244,2.125,True,recovering
+"Janata Inter College, Lachheda",MUZAFFARNAGAR,-10.956,2026-08-29 00:00:00,11,True,-10.711,-12.377,-10.757,-9.125,0.199,0.245,1.626,True,stable
+Shahjahanpur Dadraul Saraura (East),BAREILLY,-3.538,2026-09-04 00:00:00,5,True,-3.294,-4.977,-3.122,-0.473,0.416,0.244,2.252,True,recovering
+"Primary School, Block Office",BAGHPAT,-21.014,2026-09-04 00:00:00,5,True,-20.753,-22.441,-20.631,-16.598,0.383,0.261,2.922,True,recovering
+Varansi Harahua Kakalpur,VARANASI,-22.093,2026-08-24 00:00:00,16,True,-21.665,-23.559,-21.469,-13.267,0.624,0.428,5.146,True,recovering
+Jaunpur Rampur Kaseru Nonara,VARANASI,-4.612,2026-08-25 18:00:00,15,True,-4.267,-6.051,-4.004,-0.56,0.608,0.345,2.745,True,recovering
+"Primary School, Kakadipur",BAGHPAT,-20.882,2026-09-04 00:00:00,5,True,-20.637,-22.303,-20.685,-19.012,0.197,0.245,1.645,True,stable
+"Primary School, Paraon",LALITPUR,-0.391,2026-09-01 00:00:00,8,True,-0.372,-1.83,-0.441,0.849,-0.05,0.019,1.339,True,stable
+Rasin_2,CHITRAKOOT,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+"Primary School, Gauripur Javahar Nagar",BAGHPAT,-24.77,2026-09-04 00:00:00,5,True,-24.509,-26.205,-24.38,-19.867,0.39,0.261,3.169,True,recovering
+Azamgarh Ahiraula Kandara,AZAMGARH,-3.627,2026-09-01 18:00:00,8,True,-3.353,-5.054,-3.344,-0.521,0.283,0.274,2.267,True,stable
+"Primary School, Garher",JALAUN,-0.982,2026-09-02 12:00:00,7,True,-1.997,-2.428,-0.919,1.072,0.063,-1.015,1.75,True,stable
+"Primary School, Bamhoori Khurd",MAHOBA,-1.979,2026-08-29 00:00:00,11,True,-1.942,-3.4,-2.033,-0.5,-0.054,0.037,1.45,True,stable
+"Primary School, Gursarai tahrauli tahshil",JHANSI,-2.058,2026-08-29 00:00:00,11,True,-2.021,-3.483,-2.058,-0.328,0.0,0.037,1.577,True,stable
+Jaunpur Kerakat  Kharg Senpur,VARANASI,-3.992,2026-08-31 12:00:00,9,True,-3.647,-5.431,-3.379,-0.728,0.613,0.345,2.351,True,recovering
+Sonbhadra Babhani Bhawar,MIRZAPUR,-5.002,2026-08-23 18:00:00,17,True,-4.728,-6.426,-4.856,-3.306,0.146,0.274,1.56,True,stable
+"Primary School, Dhikana",BAGHPAT,-17.471,2026-09-01 00:00:00,8,True,-17.21,-18.912,-17.068,-12.711,0.403,0.261,3.101,True,recovering
+Varansi Harahua Gurwat,VARANASI,-6.121,2026-08-23 18:00:00,17,True,-5.764,-7.542,-5.923,-3.795,0.198,0.357,1.873,True,stable
+"Primary School, Vijaypura",LALITPUR,-1.537,2026-09-01 00:00:00,8,True,-1.5,-2.983,-1.437,0.43,0.1,0.037,1.707,True,stable
+"Primary School, Padra",JHANSI,-12.363,2026-07-05 18:00:00,66,True,-11.996,-13.79,-12.205,-8.36,0.158,0.367,2.715,False,unreliable
+"Primary School/ Composite, Jeevna",MUZAFFARNAGAR,-10.947,2026-08-28 12:00:00,12,True,-10.686,-12.377,-10.572,-7.968,0.375,0.261,2.205,True,recovering
+"Primary School, Khiriya",JHANSI,-0.2,2026-09-04 00:00:00,5,True,-0.181,-1.639,-0.252,0.666,-0.052,0.019,1.152,True,stable
+"Primary School/ Composite, Fakreda",SAHARANPUR,-13.213,2026-08-25 12:00:00,15,True,-12.952,-14.654,-12.837,-9.92,0.376,0.261,2.367,True,recovering
+"Primary School, Dhanaura",JHANSI,-29.35,2026-08-29 00:00:00,11,True,-28.993,-30.777,-29.035,-25.212,0.315,0.357,2.783,True,recovering
+"Primary School, Shekhar",JHANSI,-7.343,2026-08-29 00:00:00,11,True,-6.986,-8.77,-6.811,-2.751,0.532,0.357,3.009,True,recovering
+"Primary School, Kailgwan",LALITPUR,-0.606,2026-09-03 12:00:00,6,True,-0.587,-2.045,-0.635,0.404,-0.029,0.019,1.224,True,stable
+"Primary School, Dewari",JALAUN,-1.831,2026-08-29 00:00:00,11,True,-1.794,-3.261,-1.833,-0.179,-0.002,0.037,1.541,True,stable
+"Primary School, Kalan Bar Devran",LALITPUR,,2026-09-03 18:00:00,6,False,,,,,-1.819,-1.819,,False,unreliable
+"Primary School, Dera Devra bujurg",JHANSI,-2.826,2026-08-26 06:00:00,14,True,-2.559,-4.272,-2.217,-0.279,0.609,0.267,1.996,True,recovering
+"Primary School/ Composite, Peepalhera",MUZAFFARNAGAR,-13.092,2026-09-03 12:00:00,6,True,-12.831,-14.533,-12.712,-9.313,0.38,0.261,2.61,True,recovering
+"Primary School, Bhagwanpur",BAGHPAT,-26.673,2026-09-01 00:00:00,8,True,-26.428,-28.1,-26.491,-22.713,0.182,0.245,2.694,True,stable
+"Primary School, Bilata",LALITPUR,-4.699,2026-09-04 00:00:00,5,True,-4.354,-6.146,-4.065,0.666,0.634,0.345,3.406,True,recovering
+"Primary School, Bohra",JALAUN,-6.088,2026-08-29 00:00:00,11,True,-5.731,-7.515,-5.664,-1.86,0.424,0.357,2.827,True,recovering
+"Primary School, Sanori",LALITPUR,-0.282,2026-09-05 00:00:00,4,True,-0.263,-1.715,-0.335,1.003,-0.053,0.019,1.359,True,stable
+Varansi Pindara Molanapur,VARANASI,-4.586,2026-08-27 18:00:00,13,True,-4.241,-6.025,-3.978,-0.941,0.608,0.345,2.542,True,recovering
+"Primary School, Karasdev Mandir",LALITPUR,-3.087,2026-09-05 00:00:00,4,True,-2.742,-4.526,-2.463,0.615,0.624,0.345,2.57,True,recovering
+"Primary School, Bhartpura",LALITPUR,-1.688,2026-09-03 00:00:00,6,True,-1.651,-3.127,-1.698,-0.109,-0.01,0.037,1.509,True,stable
+"Primary School, Leharthkurpura",JHANSI,-1.622,2026-09-04 00:00:00,5,True,-1.585,-3.061,-1.637,-0.082,-0.015,0.037,1.489,True,stable
+Devrar_1,BANDA,,2026-09-05 00:00:00,4,False,,,,,-20.861,-20.861,,False,unreliable
+"Primary School/ Composite, Nandhera Khurd",SAHARANPUR,-5.653,2026-09-03 12:00:00,6,True,-5.391,-7.085,-5.274,-2.143,0.378,0.261,2.471,True,recovering
+"Primary School, Manupura",LALITPUR,-5.964,2026-08-15 00:00:00,25,True,-5.643,-7.389,-5.656,-2.496,0.308,0.321,2.447,True,recovering
+"Primary School, Bgra khisani bujurg",JHANSI,-2.498,2026-08-30 06:00:00,10,True,-2.361,-3.931,-2.228,-0.494,0.27,0.137,1.718,True,stable
+Hamirpur Sumerpur Etara,CHITRAKOOT,-4.337,2026-08-31 00:00:00,9,True,-3.992,-5.776,-3.717,0.583,0.62,0.345,3.179,True,recovering
+"Primary School, Bandpur",BAGHPAT,-24.704,2026-09-04 00:00:00,5,True,-24.443,-26.145,-24.314,-19.826,0.39,0.261,3.159,True,recovering
+"Primary School, Anrabali",MEERUT,-7.924,2026-08-21 18:00:00,19,True,-7.663,-9.354,-7.546,-4.631,0.378,0.261,2.362,True,recovering
+"Primary School, Belatal",MAHOBA,0.267,2026-09-01 00:00:00,8,True,-1.608,-1.166,0.228,1.105,-0.039,-1.875,1.135,True,stable
+"Primary School, Surikalan",LALITPUR,-2.713,2026-09-04 06:00:00,5,True,-2.446,-4.159,-2.09,0.606,0.623,0.267,2.383,True,recovering
+"Primary School, Gaidaira",LALITPUR,-2.571,2026-08-29 00:00:00,11,True,-2.374,-3.992,-2.442,-1.221,0.129,0.197,1.385,True,stable
+"Primary School, Badagaon bharati form",JHANSI,-1.161,2026-08-26 00:00:00,14,True,-1.124,-2.6,-1.194,-0.054,-0.033,0.037,1.273,True,stable
+Mathura Pharah Nagala Medhaki,AGRA,-2.948,2026-09-05 00:00:00,4,True,-2.749,-4.375,-2.796,-0.678,0.152,0.199,1.848,True,stable
+Chitrakoot Manikpur Sardar Patel,CHITRAKOOT,-6.786,2026-08-25 12:00:00,15,True,-6.496,-8.244,-6.281,-1.91,0.505,0.29,3.167,True,recovering
+"Primary School, Saina",HAMIRPUR,-8.512,2026-08-13 18:00:00,27,True,-8.121,-9.978,-7.9,-2.914,0.612,0.391,3.532,True,recovering
+Banda Bisndha Mrooli,CHITRAKOOT,-0.114,2026-09-03 00:00:00,6,True,-0.095,-1.553,-0.197,1.128,-0.083,0.019,1.341,True,stable
+"Uccha Prathmik Vidhyalaya, Semra Bhav Nagar",LALITPUR,-1.288,2026-09-05 00:00:00,4,True,-1.251,-2.727,-1.321,0.201,-0.033,0.037,1.464,True,stable
+Primary School Kurdi,BAGHPAT,-10.521,2026-09-05 00:00:00,4,True,-10.26,-11.954,-10.105,-5.949,0.416,0.261,3.002,True,recovering
+Primary School Rathoda,BAGHPAT,-22.793,2026-09-05 00:00:00,4,True,-22.532,-24.234,-22.403,-17.489,0.39,0.261,3.372,True,recovering
+Grampunchayat Sachiwalaya Deori,SONBHADRA,-3.15,2026-09-05 00:00:00,4,True,-2.876,-4.583,-2.749,-0.376,0.401,0.274,2.103,True,recovering
+Upper Primary School Pohalli,MEERUT,-8.727,2026-09-05 00:00:00,4,True,-8.466,-10.154,-8.355,-5.241,0.372,0.261,2.457,True,recovering
+"Gram Panchayat Sachiwalaya / D.B.R. Ambedkar Samudayak Bhawan, Durkhuroo",JHANSI,-18.253,2026-09-05 00:00:00,4,True,-17.896,-19.683,-17.758,-12.334,0.495,0.357,3.674,True,recovering
+Prathmik Vidhyalaya Pahalgaon,JHANSI,-0.623,2026-09-05 00:00:00,4,True,-0.604,-2.062,-0.664,0.239,-0.041,0.019,1.151,True,stable
+Goshala Bankat,BANDA,-13.126,2026-09-05 00:00:00,4,True,-12.836,-14.592,-12.723,-6.739,0.403,0.29,3.927,True,recovering
+Primary School Sanda-Sanee,BANDA,-67.376,2026-09-05 00:00:00,4,True,-67.131,-68.797,-67.238,-64.882,0.138,0.245,1.958,True,stable
+Purva Madhyamik Vidhyalaya Sihari,JALAUN,-1.412,2026-09-05 00:00:00,4,True,-1.375,-2.851,-1.451,0.177,-0.039,0.037,1.514,True,stable
+Purva Madhyamik Vidhyalaya Ladwari,LALITPUR,-0.761,2026-09-05 00:00:00,4,True,-0.742,-2.207,-0.779,0.602,-0.018,0.019,1.405,True,stable
+Goshala Basela,HAMIRPUR,-0.359,2026-09-05 00:00:00,4,True,-0.34,-1.798,-0.4,0.536,-0.041,0.019,1.167,True,stable
+Prathmik Vidhyalaya Manohari,JALAUN,-0.667,2026-09-05 00:00:00,4,True,-0.648,-2.094,-0.711,0.194,-0.044,0.019,1.144,True,stable
+Upper Primary Kasampur,MUZAFFARNAGAR,-4.417,2026-09-05 00:00:00,4,True,-4.202,-5.852,-4.138,-0.808,0.279,0.215,2.522,True,stable
+Primary School Pahara,ETAH,-11.856,2026-09-05 00:00:00,4,True,-11.611,-13.277,-11.64,-9.676,0.216,0.245,1.8,True,stable
+"Office of the Development Officer, Dakore",JALAUN,-0.779,2026-09-05 00:00:00,4,True,-0.742,-2.2,-0.826,0.302,-0.047,0.037,1.251,True,stable
+Veterinary Hospital Shahjahanpur,MEERUT,-10.007,2026-09-05 00:00:00,4,True,-9.746,-11.434,-9.747,-6.647,0.26,0.261,2.394,True,stable
+Upper Primary School Urouliya,BUDAUN,-18.537,2026-09-05 00:00:00,4,True,-18.292,-19.958,-18.347,-16.612,0.19,0.245,1.673,True,stable
+Purva Madhyamik Vidyalaya Chalakpur,SAHARANPUR,-5.188,2026-09-05 00:00:00,4,True,-4.989,-6.615,-5.006,-3.112,0.182,0.199,1.752,True,stable
+Primary School Chandrapur Bichpuri,BAREILLY,-6.194,2026-09-05 00:00:00,4,True,-5.949,-7.621,-6.012,-3.766,0.182,0.245,1.928,True,stable
+"Purva Madhyamik Vidhyalaya, Chackwara",AZAMGARH,-0.809,2026-09-05 00:00:00,4,True,-0.772,-2.242,-0.865,0.09,-0.056,0.037,1.166,True,stable
+Primary School Campus Sikraura,AZAMGARH,-1.078,2026-09-05 00:00:00,4,True,-1.041,-2.499,-1.156,-0.478,-0.078,0.037,1.01,True,stable
+Gadhela Panchayat Bhawan,JALAUN,-3.984,2026-09-05 00:00:00,4,True,-3.639,-5.431,-3.35,1.062,0.634,0.345,3.246,True,recovering
+Primary School No. 1 Barawad,BAGHPAT,-24.615,2026-09-04 18:00:00,5,True,-24.43,-26.036,-24.48,-22.823,0.135,0.185,1.606,True,stable
+"Uccha Prathmik Vidhyalaya, Pathouli",MEERUT,-8.774,2026-09-05 00:00:00,4,True,-8.513,-10.204,-8.399,-5.198,0.375,0.261,2.503,True,recovering
+R.R.C. Center Aata,JALAUN,-0.214,2026-09-05 00:00:00,4,True,-0.195,-1.653,-0.258,0.918,-0.044,0.019,1.286,True,stable
+Goshala Ghuri,BANDA,-1.126,2026-09-05 00:00:00,4,True,-1.089,-2.572,-1.046,0.479,0.08,0.037,1.526,True,stable
+Primary School Salawa,MEERUT,-2.291,2026-09-05 00:00:00,4,True,-2.231,-3.721,-2.032,0.21,0.259,0.06,1.966,True,stable
+Primary School Jatmujheda,MUZAFFARNAGAR,-7.857,2026-09-05 00:00:00,4,True,-7.596,-9.29,-7.479,-3.657,0.378,0.261,2.816,True,recovering
+"Composite School, Ghamhapur",MIRZAPUR,-1.711,2026-09-05 00:00:00,4,True,-1.674,-3.15,-1.642,-0.067,0.069,0.037,1.541,True,stable
+Primary School Jagannathpur,BAREILLY,-15.124,2026-09-05 00:00:00,4,True,-14.879,-16.551,-14.947,-12.645,0.177,0.245,1.953,True,stable
+Prathmik Vidhyalaya Takuli (Durahi Maafi),BANDA,-1.023,2026-09-05 00:00:00,4,True,-0.986,-2.469,-1.057,0.259,-0.034,0.037,1.364,True,stable
+"Primary School, Salhepur",FATEHPUR,-25.39,2026-09-05 00:00:00,4,True,-25.1,-26.856,-25.0,-18.93,0.39,0.29,3.963,True,recovering
+Upper Primary School Sarahan Bujurg,FATEHPUR,-58.39,2026-09-05 00:00:00,4,True,-58.145,-59.811,-58.252,-55.896,0.138,0.245,1.958,True,stable
+Primary School Chobla,MEERUT,-6.708,2026-09-05 00:00:00,4,True,-6.447,-8.135,-6.445,-3.334,0.263,0.261,2.401,True,stable
+Primary School Sahori,ETAH,-8.342,2026-09-05 00:00:00,4,True,-8.097,-9.763,-8.121,-6.086,0.221,0.245,1.838,True,stable
+Goshala Bada Gaon,BANDA,-1.736,2026-09-05 00:00:00,4,True,-2.751,-3.183,-1.542,0.287,0.194,-1.015,1.735,True,stable
+Goshala Pachhahan,BANDA,-16.204,2026-09-05 00:00:00,4,True,-15.943,-17.639,-15.788,-11.305,0.416,0.261,3.167,True,recovering
+Purva Madhyamik Vidhyalaya Piphara,ETAH,-8.01,2026-09-05 00:00:00,4,True,-7.765,-9.431,-7.816,-5.954,0.194,0.245,1.738,True,stable
+"Pratmik Vidhyalaya, Kakaruwa",LALITPUR,-3.826,2026-09-05 00:00:00,4,True,-3.481,-5.265,-3.202,0.029,0.624,0.345,2.647,True,recovering
+Primary School Harivanshpur,SIDDHARTHNAGAR,-2.57,2026-09-05 00:00:00,4,True,-2.373,-3.995,-2.299,-0.091,0.271,0.197,1.952,True,stable
+Uccha Prathmik Vidhyalaya Odera,HAMIRPUR,-0.053,2026-09-05 00:00:00,4,True,-0.034,-1.492,-0.097,0.817,-0.044,0.019,1.154,True,stable
+Primary School Jagdishpur Pratham,GORAKHPUR,-3.441,2026-09-05 00:00:00,4,True,-3.167,-4.871,-3.056,-0.673,0.385,0.274,2.099,True,recovering
+Kushinagar Khadda Khadda,GORAKHPUR,-1.27,2026-09-05 00:00:00,4,True,-1.233,-2.7,-1.319,0.174,-0.049,0.037,1.437,True,stable
+Panchayat Bhawan Kuda Nar Singhpur,BUDAUN,,2026-09-05 00:00:00,4,False,,,,,-0.428,-0.428,,False,unreliable
+Primary School Bilona,FATEHPUR,-11.143,2026-09-05 00:00:00,4,True,-10.853,-12.609,-10.74,-3.981,0.403,0.29,4.314,True,recovering
+Uccha Prathmik Vidhyalaya Uldan,JHANSI,-9.625,2026-09-05 00:00:00,4,True,-9.197,-11.091,-8.991,-1.922,0.634,0.428,4.584,True,recovering
+"Uccha Prathmik Vidhyalaya, Gangapur",FATEHPUR,-23.4,2026-09-05 00:00:00,4,True,-23.11,-24.866,-23.01,-17.557,0.39,0.29,3.655,True,recovering
+B.D.O. Office Lar,DEORIA,-5.351,2026-09-05 00:00:00,4,True,-5.077,-6.773,-5.111,-2.376,0.24,0.274,2.199,True,stable
+Primary School Charkonwa,SONBHADRA,-1.762,2026-09-05 00:00:00,4,True,-1.725,-3.195,-1.787,0.006,-0.025,0.037,1.6,True,stable
+Primary School Mainhe hardo,SIDDHARTHNAGAR,-0.224,2026-09-05 00:00:00,4,True,-0.205,-1.651,-0.264,1.237,-0.04,0.019,1.444,True,stable
+"Uccha Prathmik Vidhyalaya, Kapsarh",MEERUT,-2.754,2026-09-05 00:00:00,4,True,-2.617,-4.189,-2.49,-0.265,0.264,0.137,1.962,True,stable
+Primary School Kucharam,CHITRAKOOT,-9.961,2026-08-26 18:00:00,14,True,-9.671,-11.427,-9.456,-3.988,0.505,0.29,3.72,True,recovering
+Composite School Sagarpur,MIRZAPUR,-0.672,2026-09-05 00:00:00,4,True,-1.706,-2.118,-0.564,0.87,0.108,-1.034,1.494,True,stable
+Composite Girls Primary School Mai,JALAUN,-27.732,2026-09-04 06:00:00,5,True,-27.375,-29.153,-27.593,-24.868,0.139,0.357,2.143,True,stable
+Panchayat Bhawan Usmanpur,BUDAUN,-6.225,2026-09-05 00:00:00,4,True,-5.98,-7.646,-6.02,-3.392,0.205,0.245,2.127,True,stable
+Purva Madhyamik Vidhyalaya Bhitaura,JHANSI,-3.237,2026-09-05 00:00:00,4,True,-2.993,-4.676,-2.642,-0.258,0.595,0.244,2.209,True,recovering
+Prathmik Vidhyalaya Pipra Sarvan,DEORIA,-3.057,2026-09-05 00:00:00,4,True,-2.783,-4.484,-2.677,-0.177,0.38,0.274,2.154,True,recovering
+Aaganwadi Kendra Pakri Bazaar,DEORIA,-3.809,2026-09-05 00:00:00,4,True,-3.535,-5.236,-3.521,-0.874,0.288,0.274,2.181,True,stable
+Aagan Wadi Kendra Chandni,JALAUN,-1.125,2026-09-05 00:00:00,4,True,-1.088,-2.571,-1.011,0.11,0.114,0.037,1.34,True,stable
+Primary School Shekhpuri,MEERUT,-5.33,2026-08-15 18:00:00,25,True,-5.131,-6.751,-5.165,-3.642,0.165,0.199,1.555,True,stable
+"Prathmik Vidhyalaya, Makarndpur",FATEHPUR,-23.937,2026-09-05 00:00:00,4,True,-23.676,-25.378,-23.547,-19.109,0.39,0.261,3.134,True,recovering
+Composite School katar,AZAMGARH,-5.07,2026-09-05 00:00:00,4,True,-4.796,-6.491,-4.922,-3.759,0.148,0.274,1.366,True,stable
+Comosite School Campus Badalganj,AZAMGARH,-6.054,2026-09-05 00:00:00,4,True,-5.697,-7.489,-5.504,-1.606,0.55,0.357,2.941,True,recovering
+Goshala Bhadehdu,BANDA,-6.264,2026-09-05 00:00:00,4,True,-5.974,-7.711,-5.861,-1.951,0.403,0.29,2.88,True,recovering
+"Prathmik Vidhyalaya, Katiliaha",FATEHPUR,-16.649,2026-09-05 00:00:00,4,True,-16.359,-18.115,-16.25,-8.289,0.399,0.29,4.913,True,recovering
+Primary School Jairampur,JALAUN,-23.047,2026-09-05 00:00:00,4,True,-22.69,-24.474,-22.711,-18.424,0.336,0.357,3.025,True,recovering
+primary school kapasi,SAHARANPUR,-7.054,2026-09-05 00:00:00,4,True,-6.793,-8.481,-6.682,-3.054,0.372,0.261,2.714,True,recovering
+Primary School Pinna,MUZAFFARNAGAR,-12.913,2026-09-05 00:00:00,4,True,-12.668,-14.34,-12.702,-8.712,0.211,0.245,2.814,True,stable
+Primary School Bhata Diha,GORAKHPUR,-1.547,2026-09-05 00:00:00,4,True,-1.51,-2.982,-1.598,0.125,-0.051,0.037,1.553,True,stable
+Rajkia High School Pakhrauli,BANDA,-13.386,2026-08-17 18:00:00,23,True,-13.096,-14.852,-12.9,-5.513,0.486,0.29,4.67,True,recovering
+"Uccha Prathmik Vidhyalaya, Lohra (Pampawan)",SONBHADRA,-2.228,2026-09-05 00:00:00,4,True,-3.243,-3.674,-1.615,-0.068,0.613,-1.015,1.803,True,recovering
+"Office of Assistant Director, Resham",SONBHADRA,-0.693,2026-09-04 18:00:00,5,True,-0.674,-2.126,-0.732,0.358,-0.039,0.019,1.242,True,stable
+Primary School Nandapur,FATEHPUR,-18.466,2026-09-01 18:00:00,8,True,-18.205,-19.907,-17.987,-12.614,0.479,0.261,3.646,True,recovering
+"B.D.O. Office, Binauli",BAGHPAT,-26.736,2026-09-05 00:00:00,4,True,-26.475,-28.177,-26.346,-22.161,0.39,0.261,3.008,True,recovering
+Primary School Gudha,LALITPUR,-1.478,2026-09-05 00:00:00,4,True,-1.441,-2.917,-1.493,-0.265,-0.015,0.037,1.326,True,stable
+Primary School Cholahe,SHRAWASTI,-3.538,2026-09-05 00:00:00,4,True,-3.323,-4.971,-3.264,-0.901,0.274,0.215,2.035,True,stable
+Composite School Sanjarpur,MIRZAPUR,-3.137,2026-09-05 00:00:00,4,True,-2.863,-4.57,-2.749,-0.374,0.388,0.274,2.098,True,recovering
+"Primary School, Kritikhand",FATEHPUR,-13.213,2026-09-05 00:00:00,4,True,-12.923,-14.679,-12.797,-8.328,0.416,0.29,3.176,True,recovering
+Composite School Kilhora,GHAZIABAD,-16.307,2026-09-05 00:00:00,4,True,-16.062,-17.729,-16.135,-14.375,0.172,0.245,1.677,True,stable
+Upper Primary School Rijaula,BUDAUN,-20.745,2026-09-05 00:00:00,4,True,-20.5,-22.166,-20.552,-18.894,0.193,0.245,1.636,True,stable
+Punchayat Bhawan Vijaypur,MIRZAPUR,-1.291,2026-09-05 00:00:00,4,True,-1.254,-2.73,-1.327,-0.012,-0.036,0.037,1.359,True,stable
+Inter Collage Khampar,DEORIA,-2.686,2026-09-05 00:00:00,4,True,-2.489,-4.113,-2.41,-0.244,0.276,0.197,1.935,True,stable
+Prathmik Vidhyalaya Sirasiya Pawar,DEORIA,-2.73,2026-09-05 00:00:00,4,True,-2.533,-4.16,-2.351,0.058,0.379,0.197,2.109,True,recovering
+Rajkia Balika Inter College Kamasin,BANDA,-10.806,2026-08-22 00:00:00,18,True,-10.516,-12.272,-10.346,-4.82,0.46,0.29,3.726,True,recovering
+"Prathmik Vidhyalaya, Nehlawa",SIDDHARTHNAGAR,-1.5,2026-09-05 00:00:00,4,True,-1.463,-2.927,-1.538,0.114,-0.038,0.037,1.521,True,stable
+Primary School Campus Aurangabad,AZAMGARH,-0.699,2026-09-05 00:00:00,4,True,-0.68,-2.132,-0.74,0.147,-0.041,0.019,1.139,True,stable
+Primary School Sonda,GHAZIABAD,-4.285,2026-09-05 00:00:00,4,True,-4.086,-5.706,-4.077,-2.553,0.208,0.199,1.576,True,stable
+Punchayat Bhawan Bhaluwani,DEORIA,-0.814,2026-09-04 18:00:00,5,True,-0.777,-2.244,-0.868,0.535,-0.054,0.037,1.39,True,stable
+Primary School Ashadh,VARANASI,-9.947,2026-09-05 00:00:00,4,True,-9.519,-11.413,-9.313,-3.379,0.634,0.428,4.017,True,recovering
+Goshala Churaha,HAMIRPUR,-22.832,2026-09-05 00:00:00,4,True,-22.468,-24.298,-22.232,-12.009,0.6,0.364,6.144,True,recovering
+Composite School Nagla Bair,GHAZIABAD,-8.883,2026-08-09 18:00:00,31,True,-8.638,-10.304,-8.718,-6.96,0.165,0.245,1.672,True,stable
+Purva Madhyamik Vidhyalaya Achausa,JHANSI,-2.403,2026-09-05 00:00:00,4,True,-2.181,-3.842,-2.008,-0.162,0.395,0.222,1.84,True,recovering
+"Uccha Prathmik Vidhyalaya, Hasanpur Kadim",MEERUT,-30.232,2026-09-04 06:00:00,5,True,-30.089,-31.653,-30.086,-28.072,0.146,0.143,1.79,True,stable
+Primary School Odaraha,VARANASI,-13.515,2026-09-05 00:00:00,4,True,-13.087,-14.981,-12.897,-6.719,0.618,0.428,4.131,True,recovering
+Composite School Biralsi,MUZAFFARNAGAR,-8.606,2026-08-27 18:00:00,13,True,-8.345,-10.039,-8.201,-4.358,0.405,0.261,2.841,True,recovering
+"Purva Madhyamik Vidhyalaya, Chandapur",VARANASI,-2.986,2026-09-05 00:00:00,4,True,-2.641,-4.432,-2.358,-0.652,0.628,0.345,1.89,True,recovering
+Primary School Dohriya,GORAKHPUR,-0.073,2026-09-05 00:00:00,4,True,-0.054,-1.503,-0.127,1.098,-0.054,0.019,1.3,True,stable
+"Prathmik Vidhyalaya, Phaprana",GHAZIABAD,-7.837,2026-08-22 18:00:00,18,True,-7.576,-9.267,-7.421,-3.67,0.416,0.261,2.798,True,recovering
+Prmary School Rajpura,VARANASI,-8.404,2026-09-05 00:00:00,4,True,-7.976,-9.87,-7.77,-3.022,0.634,0.428,3.424,True,recovering
+Primary School chandsina,MUZAFFARNAGAR,-75.8,2026-09-05 00:00:00,4,True,-75.555,-77.221,-75.654,-73.263,0.146,0.245,1.979,True,stable
+Primary School Campus Powai,AZAMGARH,-9.164,2026-09-05 00:00:00,4,True,-8.807,-10.585,-8.998,-7.371,0.166,0.357,1.607,True,stable
+"Prathmik Vidhyalaya, Thavai",FATEHPUR,-5.81,2026-09-05 00:00:00,4,True,-5.549,-7.243,-5.394,-1.47,0.416,0.261,2.886,True,recovering
+Poorv Madhamik Vidhyalaya Kaseti,ETAH,-7.679,2026-09-05 00:00:00,4,True,-7.389,-9.137,-7.263,-3.097,0.416,0.29,3.02,True,recovering
+Uccha Prathmik Vidhyalaya Deaval,CHITRAKOOT,-18.359,2026-08-04 18:00:00,36,True,-18.022,-19.825,-18.031,-13.915,0.328,0.337,2.955,True,recovering
+Primary School Madari,FATEHPUR,-22.957,2026-09-04 18:00:00,5,True,-22.696,-24.398,-22.56,-17.314,0.397,0.261,3.542,True,recovering
+Primary School Jamunia,MIRZAPUR,-0.717,2026-09-05 00:00:00,4,True,-0.698,-2.15,-0.757,0.102,-0.04,0.019,1.126,True,stable
+"Uccha Prathmik Vidhyalaya, Chero",DEORIA,-3.155,2026-08-02 12:00:00,38,True,-2.692,-4.588,-2.662,-0.492,0.493,0.463,2.048,True,recovering
+Prathmik Vidhyalaya Barha,JALAUN,-0.174,2026-09-05 00:00:00,4,True,-0.155,-1.607,-0.218,0.646,-0.044,0.019,1.126,True,stable
+"Composite School, Dhamna Khurd",FATEHPUR,-14.239,2026-08-15 18:00:00,25,True,-14.054,-15.666,-14.1,-11.945,0.139,0.185,1.86,True,stable
+Composite School Basantpur Saitali-1,GHAZIABAD,-8.613,2026-08-15 18:00:00,25,True,-8.431,-10.034,-8.416,-6.795,0.197,0.182,1.619,True,stable
+Primary School Vamanpura,BUDAUN,-23.004,2026-09-05 00:00:00,4,True,-22.759,-24.426,-22.817,-19.466,0.187,0.245,2.48,True,stable
+Prathmik Vidhyalaya Bant,LALITPUR,-2.035,2026-09-05 00:00:00,4,True,-1.998,-3.474,-1.705,0.217,0.33,0.037,1.845,True,recovering
+Primary School Bargdhi,GORAKHPUR,-1.424,2026-08-15 18:00:00,25,True,-1.387,-2.845,-1.458,-0.837,-0.034,0.037,1.004,True,stable
+primary school Chaura khurd,SAHARANPUR,-15.995,2026-09-05 00:00:00,4,True,-15.75,-17.416,-15.775,-14.076,0.22,0.245,1.67,True,stable
+Uccha Prathmik Vidhyalaya Devaratha,BANDA,-5.234,2026-09-05 00:00:00,4,True,-4.99,-6.673,-4.818,-1.462,0.416,0.244,2.606,True,recovering
+Primary School English Medium Qutubpur Labdauna,SAHARANPUR,-5.759,2026-09-05 00:00:00,4,True,-5.498,-7.194,-5.343,-1.496,0.416,0.261,2.849,True,recovering
+"Primary School, Purakalan, Talbehat, Lalitpur_1",LALITPUR,-4.074,2026-08-29 00:00:00,11,True,-3.8,-5.496,-3.865,-2.135,0.209,0.274,1.681,True,stable
+Primary School Mohammadpur Gurjar,SAHARANPUR,-18.915,2026-09-05 00:00:00,4,True,-18.67,-20.342,-18.764,-16.454,0.151,0.245,1.944,True,stable
+Primary School Masuri,GHAZIABAD,,2026-06-08 18:00:00,93,False,,,,,0.042,0.042,,False,unreliable
+Mahoba Charkhari Kuaan,CHITRAKOOT,-6.175,2026-09-04 12:00:00,5,True,-5.818,-7.608,-5.593,0.544,0.582,0.357,4.076,True,recovering
+"Composite Uccha Prathmik Vidhyalaya, Paltadevi",SIDDHARTHNAGAR,,2026-09-05 00:00:00,4,False,,,,,-0.037,-0.037,,False,unreliable
+Priamry School Mukasim,SONBHADRA,-0.412,2026-09-05 00:00:00,4,True,-0.393,-1.845,-0.452,0.59,-0.04,0.019,1.217,True,stable
+"Primary School, Motiyari, Mahuaa, Banda_1",BANDA,-0.578,2026-08-29 00:00:00,11,True,-0.559,-2.024,-0.668,0.392,-0.09,0.019,1.208,True,stable
+"Swarg Dham, Hardua",JHANSI,-0.108,2026-09-05 00:00:00,4,True,-0.089,-1.554,-0.007,1.314,0.101,0.019,1.434,True,stable
+Primary School Baijnathpur,GORAKHPUR,-5.3,2026-09-05 00:00:00,4,True,-5.026,-6.721,-5.096,-3.145,0.204,0.274,1.788,True,stable
+"Uccha Prathmik Vidhyalaya, Simra",JHANSI,-9.856,2026-05-24 12:00:00,108,True,-10.093,-11.286,-10.043,-9.486,-0.187,-0.237,0.9,False,unreliable
+Upper Primary School Lehra,ETAH,-2.445,2026-09-05 00:00:00,4,True,-2.308,-3.878,-2.207,-0.375,0.238,0.137,1.751,True,stable
+Primary School Radnool Azizpur,BUDAUN,-6.546,2026-09-05 00:00:00,4,True,-6.285,-7.976,-6.168,-3.142,0.378,0.261,2.417,True,recovering
+primary school jalalpura,SAHARANPUR,-10.628,2026-04-02 12:00:00,160,True,-10.916,-12.063,-10.852,-9.339,-0.224,-0.288,1.362,False,unreliable
+"Primary School, Pashu palan Vibhag Masuri",MEERUT,-16.775,2026-08-29 00:00:00,11,True,-16.53,-18.202,-16.564,-13.991,0.211,0.245,2.105,True,stable

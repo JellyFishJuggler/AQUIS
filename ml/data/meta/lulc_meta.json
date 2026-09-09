@@ -1,0 +1,13 @@
+{
+  "source": "ISRO Bhuvan LULC 50K Thematic Statistics",
+  "api": "https://bhuvan-app1.nrsc.gov.in/api/lulc/curljson.php",
+  "cycles": [
+    "2011-12",
+    "2005-06"
+  ],
+  "classes": 24,
+  "features_used": "2011-12 cycle (latest 50K); percent of district total area",
+  "districts": 29,
+  "key_used": "LULC_STATISTICS_API_KEY (<repo>/.env)",
+  "queried_at": "2026-09-09T11:11:10"
+}

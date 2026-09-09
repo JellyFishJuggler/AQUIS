@@ -1,0 +1,10 @@
+{
+  "moran_I": 0.04205812712581984,
+  "moran_p": 0.051,
+  "geary_C": 1.0832849443538426,
+  "geary_p": 0.199,
+  "k": 5,
+  "n_sim": 999,
+  "n_stations": 511,
+  "metric": "per-station mean XGBoost test residual (err_xgb)"
+}
