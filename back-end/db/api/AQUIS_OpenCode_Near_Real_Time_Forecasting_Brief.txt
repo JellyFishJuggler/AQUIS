@@ -1,0 +1,643 @@
+AQUIS — NEAR-REAL-TIME GROUNDWATER FORECASTING
+DATA ARCHITECTURE, SPATIAL/TEMPORAL ALIGNMENT & HYDROGEOLOGICAL FORMULAS
+Implementation brief for OpenCode
+
+1. PURPOSE
+
+AQUIS is intended to evolve from a groundwater monitoring/data system into a near-real-time groundwater forecasting and anomaly-detection system.
+
+Core idea:
+1) ingest groundwater-level telemetry;
+2) ingest environmental and surface-water drivers;
+3) spatially associate different monitoring networks;
+4) temporally align them to the groundwater-level time grid;
+5) derive physically meaningful features;
+6) forecast future groundwater level;
+7) separately detect unusual behaviour.
+
+IMPORTANT:
+Do NOT assume every available parameter needs its own API or must be fed directly into ML. Some variables are directly observed, some are derived from other observations, and some are static/slow-changing context.
+
+2. EXISTING AQUIS/NWIC DATA SOURCE — PROJECT REFERENCE
+
+Use the uploaded reference file:
+5001f114-5070-4854-b155-dcd7b982db08.txt
+
+This file is the source map for the currently identified NWIC/NWDP datasets and their 2021–2025 / 2026–2030 resources. It contains the exact download/resource URLs.
+
+Current core API:
+NWIC/NWDP CKAN Datastore API
+https://nwdp.nwic.gov.in/api/3/action/datastore_search
+
+Existing groundwater telemetry resources:
+- 84bfda45-… = archive 2021–2025 telemetry
+- 31c66a49-… = live 2026+ resource
+
+Current ingestion behaviour:
+- State/District/Agency filters
+- offset/limit pagination, 5000/page
+- HTTP 429 retry + backoff
+- date-window filtering client-side because API date filtering is not supported
+- incremental refresh checks the current maximum timestamp per district
+- fetches only newer records
+- deduplicates
+- chronological sort
+- backup + merge
+- --retrain can trigger model refresh detection
+
+Current project state:
+common.parquet ≈ 5.3M rows
+≈ 1,353 stations
+2021-01-01 → 2026-09-05
+
+The current GWL record contains station/agency/state/district/SLNo/LGD information, Groundwater Level Telemetry 6 Hourly (meter), and Data Acquisition Time.
+
+IMPORTANT IMPLEMENTATION REQUIREMENT — DO NOT DOWNLOAD THE CSV FILES
+
+OpenCode must NOT implement the NWIC/NWDP resources by downloading the listed CSV files into the project and treating those CSVs as the primary data source.
+
+The CSV URLs in the supplied reference file are provided to identify the corresponding NWIC/NWDP datasets/resources. For AQUIS runtime ingestion, use the NWIC/NWDP CKAN API in the same way the existing groundwater pipeline already does.
+
+Preferred pattern:
+NWIC/NWDP CKAN datastore_search API
+    ↓
+resource_id
+    ↓
+JSON filters (State / District / Agency / other supported filters)
+    ↓
+offset + limit pagination
+    ↓
+records returned as JSON
+    ↓
+client-side window filtering where required
+    ↓
+clean / deduplicate / align
+    ↓
+AQUIS feature pipeline
+
+For every additional parameter that is integrated (rainfall, temperature, river level/discharge, canal level/discharge, etc.), first identify its NWIC/NWDP resource ID from the supplied API-reference file and determine whether it can be queried through the CKAN Datastore API.
+
+Do NOT:
+- write code that downloads the large CSV archives as the normal ingestion mechanism;
+- repeatedly download 2021–2025 or other historical CSVs during every refresh;
+- treat a CSV download URL as equivalent to a live API endpoint;
+- create a second bulk-download pipeline when the same resource is queryable through datastore_search.
+
+DO:
+- reuse the existing API-client/incremental-ingestion pattern already used for GWL;
+- query the appropriate resource_id directly;
+- use pagination;
+- apply supported server-side filters;
+- perform date/window filtering client-side where necessary;
+- implement HTTP 429 retry/backoff;
+- fetch only new/current records during incremental refresh;
+- deduplicate and chronologically sort;
+- persist the normalized/processed result locally only after API ingestion, e.g. in the project's parquet/data layer;
+- keep source/resource IDs and ingestion metadata for provenance.
+
+Historical data:
+If historical data is needed for model training, obtain it through the API in paginated/incremental batches where the API supports it, rather than downloading the CSV files as a shortcut. If a particular NWIC resource genuinely cannot be accessed through datastore_search, stop and document that limitation before introducing a fallback. Do not silently switch the entire pipeline to CSV downloads.
+
+The existing GWL implementation is the reference architecture to follow. The goal is to extend that same API-first pattern to the additional NWIC parameters.
+
+3. AVAILABLE NWIC/NWDP PARAMETERS
+
+The supplied reference file lists:
+- Groundwater Level — 6-hourly
+- Rainfall — hourly
+- Temperature — hourly
+- River Water Level — hourly
+- River Discharge — hourly
+- Canal Water Level — hourly
+- Canal Discharge — hourly
+- Reservoir Discharge — hourly for multiple resources
+- Relative Humidity — hourly
+- Solar Radiation — hourly
+- Wind Speed — hourly
+- Wind Direction — hourly
+- Atmospheric Pressure — hourly
+
+Priority:
+ESSENTIAL:
+- Groundwater level
+- Rainfall
+
+HIGH:
+- Temperature
+
+MEDIUM:
+- River level/discharge
+- Canal level/discharge
+- Reservoir discharge
+- Humidity
+- Solar radiation
+
+LOW/MEDIUM:
+- Wind speed/direction
+- Atmospheric pressure
+
+Do not add everything blindly. Test incremental predictive value.
+
+4. RECOMMENDED AQUIS ARCHITECTURE
+
+NWIC/NWDP ingestion
+        ↓
+Raw data
+        ↓
+Cleaning + validation
+        ↓
+Station metadata / coordinates
+        ↓
+Spatial association
+        ↓
+Temporal alignment
+        ↓
+Feature engineering
+        ↓
+Forecast model + anomaly model
+        ↓
+AQUIS monitoring / risk / explanation layer
+
+Forecasting and anomaly detection are separate tasks.
+
+Forecasting:
+predict future groundwater level.
+
+Anomaly detection:
+identify unusual current behaviour.
+
+Isolation Forest should NOT be described as the main forecasting algorithm.
+
+5. DYNAMIC vs DERIVED vs STATIC VARIABLES
+
+DYNAMIC:
+Need regular updates:
+- GWL
+- rainfall
+- temperature
+- river level/discharge
+- canal level/discharge
+- other telemetry
+
+DERIVED:
+Can be calculated inside AQUIS; no separate API is inherently required:
+- rainfall accumulations
+- GWL changes
+- lagged variables
+- rolling statistics
+- recharge estimates
+- net groundwater balance
+- ratios
+- expected-response/residual features
+
+STATIC / SLOW-CHANGING:
+Usually attach to a station rather than fetch every 6 hours:
+- aquifer type
+- geology
+- elevation
+- specific yield
+- hydraulic conductivity
+- land-use context
+
+6. SPATIAL ALIGNMENT — CORE PROBLEM
+
+Different telemetry stations do not necessarily measure the same physical location.
+
+Example:
+- GWL station X
+- rainfall station A = 8 km away
+- river gauge B = 3 km away
+
+Do NOT blindly join based on district or timestamp.
+
+Every source should be normalized with:
+- station/source ID
+- latitude
+- longitude
+- district/state
+- timestamp
+- measurement/unit metadata
+
+Build a reusable GWL-station-to-source-station association table.
+
+7. HAVERSINE DISTANCE
+
+For geographic distance between two latitude/longitude points:
+
+d = 2R * asin( sqrt( sin²((φ₂−φ₁)/2) + cos(φ₁)cos(φ₂)sin²((λ₂−λ₁)/2) ) )
+
+where:
+R = Earth radius
+φ = latitude in radians
+λ = longitude in radians
+
+Use this to calculate candidate-source distances.
+
+Preserve distance in the final data:
+- rainfall_source_distance_km
+- river_source_distance_km
+- canal_source_distance_km
+- weather_source_distance_km
+
+8. RAINFALL SPATIAL ASSOCIATION
+
+Rainfall is spatially distributed, so using multiple nearby stations may be better than blindly selecting one.
+
+Inverse-distance weighting (IDW):
+
+w_i = 1 / d_i^p
+
+Estimated value:
+
+X_hat = Σ(w_i X_i) / Σw_i
+
+Use multiple stations when appropriate.
+
+Do not force an association if the nearest valid source is too far away. Any radius threshold should be selected using station density, spatial variability and validation, not treated as a universal scientific constant.
+
+For weather variables, nearest/weighted stations can be evaluated.
+
+9. RIVER/CANAL ASSOCIATION
+
+River and canal variables are different from rainfall.
+
+Geographic proximity alone is insufficient.
+
+A nearby river gauge may not be hydraulically connected to the aquifer feeding a GWL station.
+
+Where possible, consider:
+- river/canal reach
+- upstream/downstream relationship
+- waterbody connectivity
+- hydraulic gradient
+- aquifer context
+- distance
+
+Use hydrological relevance, not just nearest-neighbour distance.
+
+10. TEMPORAL ALIGNMENT
+
+GWL is 6-hourly while many NWIC drivers are hourly.
+
+Create a common prediction grid at the GWL frequency, initially 6-hourly.
+
+Example 6-hour rainfall aggregation:
+
+Rain_6h(t) = Σ rainfall observations in the preceding 6-hour window
+
+Create:
+- rainfall_6h
+- rainfall_24h
+- rainfall_72h
+- rainfall_7d
+- rainfall_30d
+- rainfall_90d
+
+Also evaluate lagged rainfall:
+- rainfall(t−6h)
+- rainfall(t−12h)
+- rainfall(t−24h)
+- rainfall(t−3d)
+- rainfall(t−7d)
+
+The exact useful lag/window must be learned/validated; do not assume groundwater responds immediately.
+
+11. CORE HYDROGEOLOGICAL FORMULAS
+
+11.1 GROUNDWATER STORAGE BALANCE
+
+Conceptual water balance:
+
+ΔS_gw = R + Q_in − Q_out − P − ET_gw
+
+where:
+ΔS_gw = change in groundwater storage
+R = groundwater recharge
+Q_in = groundwater inflow
+Q_out = groundwater outflow
+P = groundwater pumping/extraction
+ET_gw = groundwater evapotranspiration/discharge loss
+
+This is the high-level physical relationship behind groundwater storage change.
+
+11.2 STORAGE CHANGE → WATER-LEVEL CHANGE
+
+For an unconfined aquifer:
+
+ΔS_gw = S_y * Δh
+
+Therefore:
+
+Δh = ΔS_gw / S_y
+
+where:
+S_y = specific yield
+Δh = groundwater-level change
+
+This is a simplified relationship and must not be treated as universally instantaneous.
+
+11.3 COMBINED SIMPLIFIED RELATIONSHIP
+
+Δh ≈ (R + Q_in − Q_out − P − ET_gw) / S_y
+
+Use this as a physical conceptual relationship or derived feature only when the required terms and assumptions are defensible.
+
+Do not invent unavailable terms.
+
+11.4 WATER-TABLE FLUCTUATION (WTF) RELATIONSHIP
+
+R ≈ S_y * Δh
+
+or:
+
+Δh ≈ R / S_y
+
+This links recharge with water-table rise under the assumptions of the WTF approach.
+
+Example:
+If R = 50 mm and S_y = 0.20:
+
+Δh = 50 / 0.20 = 250 mm = 0.25 m
+
+This is illustrative, not a universal forecast.
+
+11.5 RAINFALL / RECHARGE WATER BALANCE
+
+Simplified:
+
+R = P − RO − ET − ΔS_soil
+
+where:
+P = precipitation
+RO = runoff
+ET = evapotranspiration
+ΔS_soil = soil-water storage change
+
+At longer timescales, ΔS_soil may sometimes be approximated as negligible, but do not automatically make that assumption for short-term forecasting.
+
+11.6 PUMPING / EXTRACTION
+
+Simplified storage approximation:
+
+Δh ≈ −P / S_y
+
+This is only a simplified approximation.
+
+Real pumping drawdown depends on:
+- pumping rate
+- duration
+- distance from well
+- transmissivity
+- storage properties
+- hydraulic conductivity
+- aquifer geometry
+- boundary conditions
+
+For well-scale analytical drawdown, the classical Theis solution can be considered only if its assumptions and required aquifer parameters are actually available.
+
+11.7 DARCY'S LAW
+
+Groundwater flow:
+
+Q = −K A (dh/dl)
+
+Specific discharge:
+
+q = −K (dh/dl)
+
+where:
+K = hydraulic conductivity
+A = cross-sectional area
+dh/dl = hydraulic gradient
+
+Hydraulic gradient:
+
+i = Δh / L
+
+Therefore, in magnitude:
+
+q ≈ K * Δh / L
+
+This explains groundwater movement and why geology/aquifer properties matter.
+
+11.8 SURFACE-WATER / GROUNDWATER EXCHANGE
+
+Conceptual Darcy-type relationship:
+
+Q_sw↔gw = −K A (Δh / L)
+
+Direction depends on hydraulic-head difference and hydraulic connectivity.
+
+If river head > groundwater head, river-to-groundwater recharge/infiltration may occur.
+
+If groundwater head > river head, groundwater-to-river discharge may occur.
+
+Do not infer causality from geographic proximity alone.
+
+12. SPECIFIC YIELD — IMPORTANT
+
+Specific yield connects water-table change to drainable groundwater storage in an unconfined aquifer.
+
+The same recharge can create different water-level changes in aquifers with different S_y.
+
+Example:
+R = 100 mm
+
+If S_y = 0.10:
+Δh = 100/0.10 = 1000 mm
+
+If S_y = 0.30:
+Δh = 100/0.30 ≈ 333 mm
+
+Therefore aquifer properties matter when translating water balance into water-level response.
+
+13. RECOMMENDED DERIVED FEATURES
+
+Core:
+- GWL lag 1, 2, 4, 7/28 as appropriate for the 6-hour grid
+- GWL change over 6h, 24h, 7d
+- rainfall 6h/24h/72h/7d/30d/90d
+- rainfall anomaly against seasonal/historical baseline
+- temperature rolling features
+- surface-water level/discharge features where spatial/hydrological association is valid
+- month/season and cyclic time features
+
+Potential physical features:
+- net groundwater balance
+- recharge estimate
+- extraction/recharge ratio
+- expected Δh from available water-balance terms
+- observed minus expected GWL response
+
+Do not calculate a feature if the required inputs are unavailable or the assumptions are unjustified.
+
+14. FORECASTING FORMULATION
+
+A generic forecast model can be represented as:
+
+GWL_hat_(t+h) =
+f(GWL history, rainfall history, weather, surface water, static context)
+
+Possible initial models:
+- persistence/simple statistical baseline
+- XGBoost
+- GPR where justified
+- more complex sequence models only after strong baselines
+
+Do not jump directly to complex deep learning.
+
+The first question is whether the available telemetry and engineered features can produce useful forecasts.
+
+15. ANOMALY DETECTION
+
+Isolation Forest is for anomaly detection, not the main forecast.
+
+Possible input features:
+- current GWL
+- GWL rate of change
+- rainfall accumulations
+- rainfall anomaly
+- temperature/weather features
+- surface-water context
+- forecast residual
+
+Residual:
+
+Residual_t = Observed GWL_t − Expected GWL_t
+
+A persistent/large residual can indicate unusual behaviour worth investigation.
+
+It is not automatically proof of a physical anomaly.
+
+16. FINAL STATION-LEVEL MODELLING SCHEMA
+
+At each GWL station and 6-hour timestamp:
+
+station_id
+latitude
+longitude
+district
+timestamp
+
+gwl_m
+
+rainfall_6h
+rainfall_24h
+rainfall_72h
+rainfall_7d
+rainfall_30d
+rainfall_90d
+
+temperature_current
+temperature_rolling
+
+river_level
+river_discharge
+canal_level
+canal_discharge
+
+gwl_lag_1
+gwl_lag_2
+gwl_lag_4
+gwl_lag_28
+
+gwl_change_6h
+gwl_change_24h
+gwl_change_7d
+
+month / season / cyclic time features
+
+source_station_id(s)
+source_station_distance_km
+source_count
+interpolation/aggregation method
+data quality/provenance flags
+
+optional:
+aquifer_type
+geology
+elevation
+specific_yield
+hydraulic_conductivity
+land-use context
+
+17. DATA LEAKAGE — CRITICAL
+
+Every feature used to forecast t+h must use only information available at forecast issue time t.
+
+Never use:
+- future rainfall
+- future GWL
+- future rolling values
+- future assessment values that would not have been known operationally
+
+Use chronological train/validation/test splits, not random row splits.
+
+Example concept:
+earlier historical period → training
+later historical period → validation
+latest held-out period → final test
+
+Exact dates should be selected after checking completeness and station coverage.
+
+18. DATA QUALITY
+
+The pipeline should:
+- detect duplicate timestamps
+- detect duplicate station records
+- flag impossible/invalid values
+- detect sensor jumps
+- distinguish measured vs imputed vs derived values
+- track missingness
+- track source freshness
+- preserve provenance
+- avoid fabricating spatial values when no valid source exists
+
+Do not silently turn long missing periods into measured telemetry.
+
+19. IMPLEMENTATION ORDER
+
+1. Keep existing GWL incremental ingestion.
+2. Integrate NWIC rainfall into the common feature pipeline.
+3. Normalize station IDs and coordinates.
+4. Build reusable spatial associations.
+5. Align hourly data to the 6-hour GWL grid.
+6. Create rainfall rolling windows and GWL lag/change features.
+7. Establish persistence/simple statistical forecasting baseline.
+8. Evaluate XGBoost against baseline with chronological validation.
+9. Add surface-water variables for valid associations.
+10. Add temperature/humidity/solar/wind-derived features and test incremental value.
+11. Add static aquifer/geology/elevation/specific-yield context where reliable.
+12. Build Isolation Forest separately for anomaly detection.
+13. Expose forecast, anomaly status/score, provenance and key signals in AQUIS.
+
+20. WHAT NOT TO DO
+
+- Do not require a separate API for every derived parameter.
+- Do not feed every available NWIC variable into ML just because it exists.
+- Do not join all datasets only by district.
+- Do not use the nearest river gauge without checking hydrological relevance.
+- Do not use random train/test splits for time-series forecasting.
+- Do not use Isolation Forest as if it were a forecasting algorithm.
+- Do not claim physical causality from ML correlation alone.
+- Do not calculate recharge/storage/drawdown quantities when required inputs are unavailable.
+
+21. IMMEDIATE NEXT TASK
+
+The immediate engineering goal is NOT to find more APIs.
+
+First:
+1) inspect the actual schemas and coordinates of the existing NWIC GWL and rainfall resources;
+2) implement reproducible spatial + temporal association;
+3) create the first station-level modelling table;
+4) benchmark a simple forecast;
+5) then test XGBoost and additional drivers.
+
+The uploaded API reference file should remain available to OpenCode:
+5001f114-5070-4854-b155-dcd7b982db08.txt
+
+It contains the exact NWIC/NWDP dataset/resource URLs and should be consulted before adding new data sources.
+
+22. SOURCE/REFERENCE NOTE
+
+The parameter inventory and NWIC/NWDP resource URLs in this brief are derived from the project-supplied API reference file. Hydrogeological equations above are conceptual/standard relationships and must be implemented with their stated assumptions; they are not a claim that every equation can be directly calculated from the currently available dataset.

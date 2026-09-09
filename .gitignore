@@ -32,6 +32,9 @@ ml/venv/
 *.py[cod]
 *.pyo
 
+# ml_temp experiment (not committed, local sandbox only)
+ml_temp/
+
 # ML data
 ml/data/raw/*
 ml/data/processed/*

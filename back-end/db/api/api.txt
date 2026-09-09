@@ -1,0 +1,121 @@
+# River Discharge
+
+## 1970-2025 -> https://nwdp.nwic.gov.in/dataset/afeb9b54-f3d8-46b8-af2c-27b2cd434023/resource/7409f2ce-942a-48bf-83bf-c0e53376e780/download/river_discharge_tele_hr_uttar_pradesh_sw_up_1970_2025.csv
+
+## 2026-30 -> https://nwdp.nwic.gov.in/dataset/afeb9b54-f3d8-46b8-af2c-27b2cd434023/resource/e06246f2-3ba8-41bb-b638-4ac4da091d5a/download/river_discharge_tele_hr_uttar_pradesh_sw_up_2026_2030.csv
+
+# Reservoir Discharge , Okhla Barrage - SCADA , Uttar Pradesh (Telemetry - Hourly) (2021-2025)
+
+## 2021-25 -> https://nwdp.nwic.gov.in/dataset/c4dc69a1-3fd9-4f65-9eb5-0aa196cfd210/resource/07e7248d-bedd-47b7-a16d-34eab4c489ec/download/reservior_discharge_tel_hr_uttar_pradesh_sw_up_okhla_barrage_-_scada_2021_2025.csv
+
+## 2026-30 -> https://nwdp.nwic.gov.in/dataset/c4dc69a1-3fd9-4f65-9eb5-0aa196cfd210/resource/76b5c177-2ab0-4909-a6fe-feb0b25eabf1/download/reservior_discharge_tel_hr_uttar_pradesh_sw_up_okhla_barrage_-_scada_2026_2030.csv
+
+#Reservoir Discharge , Okhla Barrage-Agra Canal - SCADA , Uttar Pradesh (Telemetry - Hourly) (2021-2025)
+
+## 21-25 -> https://nwdp.nwic.gov.in/dataset/d2f53a05-7381-4958-81ec-aecedfdb9616/resource/29aac408-555d-4d3a-87c8-935e3ea3f57a/download/reservior_discharge_tel_hr_uttar_pradesh_sw_up_okhla_barrage-agra_canal_-_scada_2021_2025.csv
+
+## 26-30 -> https://nwdp.nwic.gov.in/dataset/d2f53a05-7381-4958-81ec-aecedfdb9616/resource/43a2ba27-8be6-488d-8cdb-7c4d23599696/download/reservior_discharge_tel_hr_uttar_pradesh_sw_up_okhla_barrage-agra_canal_-_scada_2026_2030.csv
+
+# Reservoir Discharge , Matatila Dam , Uttar Pradesh (Telemetry - Hourly) (2021-2025)
+
+## 21-25 -> https://nwdp.nwic.gov.in/dataset/cd68ed14-6cb5-4a12-9f0c-9a175ad4a01a/resource/26b88468-256b-4a30-bca5-553600d09e30/download/reservior_discharge_tel_hr_uttar_pradesh_sw_up_matatila_dam_2021_2025.csv
+
+## 26-30 -> https://nwdp.nwic.gov.in/dataset/cd68ed14-6cb5-4a12-9f0c-9a175ad4a01a/resource/cd5160e6-7131-4776-adea-9565786f3870/download/reservior_discharge_tel_hr_uttar_pradesh_sw_up_matatila_dam_2026_2030.csv
+
+# Rainfall (Telemetry - Hourly), Uttar Pradesh SW
+
+## https://nwdp.nwic.gov.in/dataset/9c7f3d81-e9f8-4d7e-a0d5-468b9941c503/resource/5ecd61b8-7464-4dba-9020-68078baa0757/download/rainfall_tel_hr_uttar-pradesh-sw_up_1991_2020.csv
+
+## https://nwdp.nwic.gov.in/dataset/9c7f3d81-e9f8-4d7e-a0d5-468b9941c503/resource/2c0805b7-bc7c-4174-9c5f-cf7bc1ecd148/download/rainfall_tel_hr_uttar_pradesh_sw_up_2021_2025.csv
+
+## https://nwdp.nwic.gov.in/dataset/9c7f3d81-e9f8-4d7e-a0d5-468b9941c503/resource/46e9afa0-7deb-4fac-8fab-49e0b5b1b6d3/download/rainfall_tel_hr_uttar_pradesh_sw_up_2026_2030.csv
+
+#  Ground Water Level (Telemetry - Six Hourly), Uttar Pradesh Ground Water Department
+
+## https://nwdp.nwic.gov.in/dataset/e6a8307d-de95-4773-8e9f-a84d7a177d53/resource/84bfda45-8ead-436d-9c8e-f7a93ee57522/download/gwl_tel_6_hourly_upgw_up_2021_2025.csv
+
+## https://nwdp.nwic.gov.in/dataset/e6a8307d-de95-4773-8e9f-a84d7a177d53/resource/31c66a49-e110-405d-bcf0-a0ea0d9c8b0c/download/gwl_tel_6_hourly_upgw_up_2026_2030.csv
+
+# Wind Speed (Telemetry - Hourly), Uttar Pradesh SW
+
+## https://nwdp.nwic.gov.in/dataset/c418c625-baad-40b7-bf92-19a625ca7138/resource/fc1314ef-a47c-4ebe-b148-5b1ec7a90037/download/wind_speed_tel_hr_uttar_pradesh_sw_up_1970_2025.csv
+
+## https://nwdp.nwic.gov.in/dataset/c418c625-baad-40b7-bf92-19a625ca7138/resource/beb454fb-8400-44c1-aa92-bf8b4b282efa/download/wind_speed_tel_hr_uttar_pradesh_sw_up_2026_2030.csv
+
+#  Wind Direction (Telemetry - Hourly) Uttar Pradesh Surface Water Department
+
+## https://nwdp.nwic.gov.in/dataset/fe3e5c9a-8f10-4d41-8c7c-c07beeb03c94/resource/b9acc862-92fd-40e4-b8e0-57d3580a75b6/download/wind_direction_tel_hr_uttar_pradesh_sw_up_1970_2025.csv
+
+## https://nwdp.nwic.gov.in/dataset/fe3e5c9a-8f10-4d41-8c7c-c07beeb03c94/resource/9e8132bc-97ff-480a-af05-adbac43f7b24/download/wind_direction_tel_hr_uttar_pradesh_sw_up_2026_2030.csv
+
+# Temperature (Telemetry - Hourly), Uttar Pradesh Surface Water Department
+
+## https://nwdp.nwic.gov.in/dataset/799e6b02-4822-4f6b-875d-a2145105a16d/resource/feb54802-f6cc-4061-b873-8311ae04df0e/download/temprature_tel_hr_uttar_pradesh_sw_up_2021_2025.csv
+
+## https://nwdp.nwic.gov.in/dataset/799e6b02-4822-4f6b-875d-a2145105a16d/resource/c2c7b5fa-615d-4b95-8a2d-18eb5297f7b0/download/temprature_tel_hr_uttar_pradesh_sw_up_2026_2030.csv
+
+#  Solar Radiation (Telemetry - Hourly), Uttar Pradesh Surface Water
+
+## https://nwdp.nwic.gov.in/dataset/b473cb05-f583-4373-a039-414254a94428/resource/6128c3ff-6d86-4058-b55f-5b2ef492e700/download/solar_rediation_tel_hr_uttar_pradesh_sw_up_2021_2025.csv
+
+## https://nwdp.nwic.gov.in/dataset/b473cb05-f583-4373-a039-414254a94428/resource/c1666f7a-81e8-4227-b856-39ec192ad004/download/solar_rediation_tel_hr_uttar_pradesh_sw_up_2026_2030.csv
+
+# River Water Level (Telemetry - Hourly), Uttar Pradesh Surface Water Department
+
+## https://nwdp.nwic.gov.in/dataset/92242bf5-b976-49e9-b036-aea753be68b9/resource/9672a7e9-0bfe-43ac-9577-a4128792d070/download/rwl_tel_hr_uttar_pradesh_sw_999_2021_2025.csv
+
+## https://nwdp.nwic.gov.in/dataset/92242bf5-b976-49e9-b036-aea753be68b9/resource/94b5345e-b0d2-45b8-94a4-d93cdede2025/download/rwl_tel_hr_uttar_pradesh_sw_999_2026_2030.csv
+
+#  Reservoir Discharge , Madhya Ganga Barrage-RMC , Uttar Pradesh (Telemetry - Hourly) (2021-2025)
+
+## https://nwdp.nwic.gov.in/dataset/b5a6d866-3598-481b-914d-17206bfc7663/resource/e8301a3d-1ced-4435-a805-f572d6b824db/download/reservior_discharge_tel_hr_uttar_pradesh_sw_up_madhya_ganga_barrage-rmc_2021_2025.csv
+
+## https://nwdp.nwic.gov.in/dataset/b5a6d866-3598-481b-914d-17206bfc7663/resource/3eee06ec-522a-4d71-9495-9268629e852b/download/reservior_discharge_tel_hr_uttar_pradesh_sw_up_madhya_ganga_barrage-rmc_2026_2030.csv
+
+# Reservoir Discharge , Madhya Ganga Barrage_1 , Uttar Pradesh (Telemetry - Hourly) (2021-2025)
+
+## https://nwdp.nwic.gov.in/dataset/850c8310-69cb-4367-8e79-6d773052f13d/resource/ddc0ece2-a025-4d41-8a1d-5b67cf3a3696/download/reservior_discharge_tel_hr_uttar_pradesh_sw_up_madhya_ganga_barrage_1_2021_2025.csv
+
+## https://nwdp.nwic.gov.in/dataset/850c8310-69cb-4367-8e79-6d773052f13d/resource/1939859c-acb0-4210-a4ab-02480e4e1d5c/download/reservior_discharge_tel_hr_uttar_pradesh_sw_up_madhya_ganga_barrage_1_2026_2030.csv
+
+# Relative Humidity (Telemetry - Hourly), Uttar Pradesh SW
+
+## https://nwdp.nwic.gov.in/dataset/bdee1690-2932-41ae-8b1c-3abece099210/resource/14a3cfa8-3eb7-4e6e-8f94-c64693725779/download/humid_tel_hr_uttar_pradesh_sw_up_2021_2025.csv
+
+## https://nwdp.nwic.gov.in/dataset/bdee1690-2932-41ae-8b1c-3abece099210/resource/0fcb6700-0ca1-43ad-8550-41397f417c8c/download/humid_tel_hr_uttar_pradesh_sw_up_2026_2030.csv
+
+# Atmospheric Pressure (Telemetry - Hourly),Uttar Pradesh Surface Water Department
+
+## https://nwdp.nwic.gov.in/dataset/f1bc9009-d25b-4df9-95b5-57664de7fb38/resource/32a8fd55-767a-48f6-9220-ac24c447f28a/download/pressure_tel_hr_uttar_pradesh_sw_up_2021_2025.csv
+
+## https://nwdp.nwic.gov.in/dataset/f1bc9009-d25b-4df9-95b5-57664de7fb38/resource/3525c93c-6122-4174-96b4-3033fd21a645/download/pressure_tel_hr_uttar_pradesh_sw_up_2026_2030.csv
+
+# Canal Discharge Dataset (Telemetry - Hourly), Uttar Pradesh Surface Water Department
+
+## https://nwdp.nwic.gov.in/dataset/11c25d35-d510-457e-844b-7be258610093/resource/a6158de8-089a-4908-9442-6cf5296f161a/download/canal_discharge_tel_hr_uttar_pradesh_sw_up_2021_2025.csv
+
+## https://nwdp.nwic.gov.in/dataset/11c25d35-d510-457e-844b-7be258610093/resource/14a80ee5-da51-4a97-8a57-1f5857b843ff/download/canal_discharge_tel_hr_uttar_pradesh_sw_up_2026_2030.csv
+
+#  Canal Water Level (Telemetry - Hourly),Uttar Pradesh Surface Water
+
+## https://nwdp.nwic.gov.in/dataset/fc0bd3a7-b10b-42d5-a7a6-66b580a156c2/resource/ea65ac74-1f6b-41d6-bf85-f927633def4d/download/canal_water_level_tel_hr_uttar_pradesh_sw_up_2021_2025.csv
+
+## https://nwdp.nwic.gov.in/dataset/fc0bd3a7-b10b-42d5-a7a6-66b580a156c2/resource/8075a3b8-7973-4e60-ba7a-94b193f3936b/download/canal_water_level_tel_hr_uttar_pradesh_sw_up_2026_2030.csv
+
+# Ground Water Level (Telemetry - Hourly), Uttar Pradesh Ground Water Department
+
+## https://nwdp.nwic.gov.in/dataset/e75483db-84de-4684-9884-75a524ca093e/resource/3c19051f-96fc-4b9a-9e71-01a8f8ac9ebc/download/gwl_tel_6_hourly_upgw_up_1991_2020.csv
+
+# Soil Texture — ISRIC SoilGrids v2.0 (SANCTIONED EXCEPTION to the NWDP-only rule)
+## Static per-station texture: sand / silt / clay / bulk density (bdod) at
+## 0-30 cm (thickness-weighted) and 60-100 cm. Fetched via ISRIC REST (query by
+## lon/lat), NOT via NWDP CKAN (NWDP has no soil product). See ml_temp/07_soil.py.
+## REST base: https://rest.isric.org/soilgrids/v2.0/properties/query?lon=..&lat=..
+## doc: https://rest.isric.org/docs/home
+
+# Land Use / Land Cover (LULC) 50K — ISRO Bhuvan Thematic Statistics (SANCTIONED EXCEPTION)
+## Per-district land-cover shares (24 classes) for the 2005-06 and 2011-12 50K cycles.
+## API (GET, requires header Content-Type: application/x-www-form-urlencoded):
+## https://bhuvan-app1.nrsc.gov.in/api/lulc/curljson.php?year=1112&distcode=<0911>&token=<key>
+## Key: LULC_STATISTICS_API_KEY in <repo>/.env (Bhuvan access token, ~1-day expiry).
+## Fetch script: ml_temp/08_lulc.py. API doc page: https://bhuvan-app1.nrsc.gov.in/api/
