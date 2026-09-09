@@ -60,9 +60,11 @@ def load_model_metrics() -> pd.DataFrame:
     return pd.read_csv(OUT / "model_metrics.csv")
 
 
-@st.cache_data(ttl="10m", max_entries=2)
+@st.cache_data(ttl="24h", max_entries=2)
 def load_predictions() -> pd.DataFrame:
-    return pd.read_parquet(OUT / "predictions_2026.parquet")
+    cols = ["Station", "District", "date", "time", "target", "gwl",
+            "xgb", "ridge", "q05_lvl", "q95_lvl"]
+    return pd.read_parquet(OUT / "predictions_2026.parquet", columns=cols)
 
 
 @st.cache_data(ttl="10m", max_entries=2)

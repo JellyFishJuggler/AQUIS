@@ -12,7 +12,7 @@ import streamlit as st
 
 from _model import (load_predictions, load_models, load_feature_config,
                     load_model_metrics, load_quantile_calibration, forward_forecast)
-from _utils import load_table_6h
+from _utils import load_table_6h, station_recency
 
 MODELS = {"xgboost": "XGBoost", "ridge": "Linear (Ridge)"}
 PRED_COL = {"xgboost": "xgb", "ridge": "ridge"}
@@ -28,7 +28,7 @@ metrics = load_model_metrics()
 qcal = load_quantile_calibration()
 has_qband = "q05_lvl" in preds.columns
 
-recency = table6.groupby("Station")["time"].max()
+recency = station_recency()
 stations = [s for s in recency.sort_values(ascending=False).index.astype(str)
             if s in set(preds["Station"].astype(str))]
 stations.extend(sorted(set(preds["Station"].astype(str)) - set(stations)))

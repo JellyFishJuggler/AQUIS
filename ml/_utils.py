@@ -89,6 +89,13 @@ def load_table_6h() -> pd.DataFrame:
     return df.sort_values(["Station", "time"]).reset_index(drop=True)
 
 
+@st.cache_data(ttl="10m", max_entries=2)
+def station_recency() -> pd.Series:
+    """Most-recent reading per station (6h table), already cached on top of
+    load_table_6h so the 3M-row groupby only runs once per TTL window."""
+    return load_table_6h().groupby("Station")["time"].max()
+
+
 def nice(name: str) -> str:
     return DRIVER_LABELS.get(name, name.replace("_", " ").capitalize())
 
