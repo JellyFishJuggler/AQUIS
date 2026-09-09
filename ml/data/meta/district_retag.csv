@@ -1,0 +1,123 @@
+Station,old_district,new_district,Latitude,Longitude,basis
+Aligarh Chandaus  Somana,AGRA,ALIGARH,28.051907,77.940847,name-prefix
+Aligarh Chandaus Maharajpur,AGRA,ALIGARH,28.036628,77.935134,name-prefix
+Aligarh Jawa Bahadurpur Kota,AGRA,ALIGARH,28.028578,78.035291,name-prefix
+Aligarh Jawa Jamalpur Siya,AGRA,ALIGARH,27.980335,78.0421724,name-prefix
+Aligarh Jawa Sogera,AGRA,ALIGARH,28.082428,78.045757,name-prefix
+Aligarh Khair Arrana,AGRA,ALIGARH,27.931641,77.885149,name-prefix
+Aligarh Khair Utwara,AGRA,ALIGARH,27.975292,77.905854,name-prefix
+Aligarh Lodha Aisi Kol,AGRA,ALIGARH,27.819827,78.05289,name-prefix
+Aligarh Lodha Mahrawalpur Nagariya,AGRA,ALIGARH,27.930579,78.028279,name-prefix
+Banda Baberu Anvan,CHITRAKOOT,BANDA,25.571618,80.72094,name-prefix
+Banda Baberu Umrehani,CHITRAKOOT,BANDA,25.534149,80.755587,name-prefix
+Banda Badokhar Khurd Chatgan,CHITRAKOOT,BANDA,25.574309,80.303325,name-prefix
+Banda Bisndha Mrooli,CHITRAKOOT,BANDA,25.420368,80.721114,name-prefix
+Banda Kamasin Tilowsa,CHITRAKOOT,BANDA,25.504452,80.834118,name-prefix
+Banda Tindwari Bhindowra,CHITRAKOOT,BANDA,25.651513,80.492621,name-prefix
+Badaun Salarpur BDO Office,BAREILLY,BUDAUN,28.069433,79.13294,name-prefix
+Badaun Ujhani Sports Stadium,BAREILLY,BUDAUN,28.029062,79.098363,name-prefix
+Badaun Usawan BDO Office,BAREILLY,BUDAUN,27.810859,79.348935,name-prefix
+Deoria Bhaluwani Markna,GORAKHPUR,DEORIA,26.328658,83.796855,name-prefix
+Deoria Bhatani Mishrauli Dichit,GORAKHPUR,DEORIA,26.395355,83.950282,name-prefix
+Deoria Bhatpar Rani Dharkwan,GORAKHPUR,DEORIA,26.281971,83.98506,name-prefix
+Deoria Salempur Manihari,GORAKHPUR,DEORIA,26.324727,83.895237,name-prefix
+Deoria Tarkulwa Tarkulwa,GORAKHPUR,DEORIA,26.627487,83.890943,name-prefix
+Etah Aavagarh Badhawali,AGRA,ETAH,27.527159,78.372312,name-prefix
+Etah Jalesar Hasangarh,AGRA,ETAH,27.492,78.351,name-prefix
+Etah Jalesar Sakrauli,AGRA,ETAH,27.39305,78.30936,name-prefix
+Firozabad Madanpur Rudhawali,AGRA,FIROZABAD,27.038936,78.7711659,name-prefix
+Hamirpur Kurara Damar,CHITRAKOOT,HAMIRPUR,25.983688,79.960714,name-prefix
+Hamirpur Kurara Jalokhar,CHITRAKOOT,HAMIRPUR,25.965865,80.021851,name-prefix
+Hamirpur Sarila Purani,CHITRAKOOT,HAMIRPUR,25.755058,79.771884,name-prefix
+Hamirpur Sumerpur Etara,CHITRAKOOT,HAMIRPUR,25.778761,80.1550852,name-prefix
+Hamirpur Sumerpur Para,CHITRAKOOT,HAMIRPUR,25.807394,80.194179,name-prefix
+Hathras Hathras Hathras,AGRA,HATHRAS,27.627038,78.136311,name-prefix
+Hathras Mursan Chandapa Sandh,AGRA,HATHRAS,27.520875,78.04112,name-prefix
+Jaunpur Dobhi Bagerwa,VARANASI,JAUNPUR,25.596996,83.013419,name-prefix
+Jaunpur Dobhi Bankati,VARANASI,JAUNPUR,25.613383,83.012806,name-prefix
+Jaunpur Dobhi Kachhawan,VARANASI,JAUNPUR,25.62784,83.003728,name-prefix
+Jaunpur Dobhi Kakarapar,VARANASI,JAUNPUR,25.589937,83.038319,name-prefix
+Jaunpur Jalalpur Katuwani,VARANASI,JAUNPUR,25.602903,82.852917,name-prefix
+Jaunpur Jalalpur Vanpurwa,VARANASI,JAUNPUR,25.598358,82.817138,name-prefix
+Jaunpur Jalalpur Vind,VARANASI,JAUNPUR,25.581071,82.845642,name-prefix
+Jaunpur Kerakat  Kharg Senpur,VARANASI,JAUNPUR,25.598953,82.873162,name-prefix
+Jaunpur Kerakat Barbaspur (Sohani),VARANASI,JAUNPUR,25.598945,82.873246,name-prefix
+Jaunpur Kerakat Mahali,VARANASI,JAUNPUR,25.579298,82.947359,name-prefix
+Jaunpur Kerakat Nihalapur,VARANASI,JAUNPUR,25.58865,82.891742,name-prefix
+Jaunpur Rampur Kamaruddin,VARANASI,JAUNPUR,25.435949,82.712692,name-prefix
+Jaunpur Rampur Kaseru Nonara,VARANASI,JAUNPUR,25.476637,82.620935,name-prefix
+Jaunpur Rampur Kathwatiya,VARANASI,JAUNPUR,25.441039,82.700215,name-prefix
+Jaunpur Rampur Sultanpur,VARANASI,JAUNPUR,25.461207,82.638461,name-prefix
+Kushinagar Captanganj Captanganj,GORAKHPUR,KUSHINAGAR,26.929571,83.722809,name-prefix
+Kushinagar Captanganj Senduriya Vishunpur,GORAKHPUR,KUSHINAGAR,26.853547,83.570716,name-prefix
+Kushinagar Dudhai Dudhai,GORAKHPUR,KUSHINAGAR,26.797767,84.156572,name-prefix
+Kushinagar Dudhai Gorariya,GORAKHPUR,KUSHINAGAR,26.842403,84.1513214,name-prefix
+Kushinagar Dudhai Lala Chhapra,GORAKHPUR,KUSHINAGAR,26.816625,84.087488,name-prefix
+Kushinagar Fazilnagar  Belwakala,GORAKHPUR,KUSHINAGAR,26.641525,84.032483,name-prefix
+Kushinagar Fazilnagar Jokwa Bujurg,GORAKHPUR,KUSHINAGAR,26.69364,84.013048,name-prefix
+Kushinagar Fazilnagar Narayanpur Khoti,GORAKHPUR,KUSHINAGAR,26.585795,84.010243,name-prefix
+Kushinagar Khadda Basdila,GORAKHPUR,KUSHINAGAR,27.17613,83.885634,name-prefix
+Kushinagar Khadda Khadda,GORAKHPUR,KUSHINAGAR,26.863188,83.958825,name-prefix
+Kushinagar Motichak Mathauli Bazar,GORAKHPUR,KUSHINAGAR,26.857247,83.748407,name-prefix
+Kushinagar Motichak Motichak,GORAKHPUR,KUSHINAGAR,26.788696,83.716851,name-prefix
+Kushinagar Sewarhi Sewarhi,GORAKHPUR,KUSHINAGAR,26.724761,84.216518,name-prefix
+Kushinagar Tamkuhi Rajwatiya,GORAKHPUR,KUSHINAGAR,26.689937,84.115806,name-prefix
+Kushinagar Tamkuhi Tamkuhi,GORAKHPUR,KUSHINAGAR,26.88383,84.012076,name-prefix
+Maharajganj Dhani Nausagar,GORAKHPUR,MAHARAJGANJ,27.170024,83.18968,name-prefix
+Maharajganj Mithaura Bhagatar,GORAKHPUR,MAHARAJGANJ,27.219543,83.661949,name-prefix
+Maharajganj Mithaura Madanpura,GORAKHPUR,MAHARAJGANJ,27.284935,83.691957,name-prefix
+Maharajganj Nautanwa Purniha,GORAKHPUR,MAHARAJGANJ,27.37898,83.710192,name-prefix
+Maharajganj Nautanwa Sampatiha,GORAKHPUR,MAHARAJGANJ,27.349231,83.374206,name-prefix
+Maharajganj Nichlaul Balaekhor,GORAKHPUR,MAHARAJGANJ,27.23984,83.750953,name-prefix
+Maharajganj Nichlaul Garaura,GORAKHPUR,MAHARAJGANJ,27.428224,83.448121,name-prefix
+Maharajganj Siswa Siswa,GORAKHPUR,MAHARAJGANJ,27.141974,83.767362,name-prefix
+Mahoba Charkhari Kuaan,CHITRAKOOT,MAHOBA,25.547944,79.880034,name-prefix
+Mahoba Charkhari Natara,CHITRAKOOT,MAHOBA,25.463484,79.828343,name-prefix
+Mahoba Charkhari Padha,CHITRAKOOT,MAHOBA,25.486655,79.879987,name-prefix
+Mahoba Jaitpur saguniyamaph,CHITRAKOOT,MAHOBA,25.175313,79.466089,name-prefix
+Mahoba Kabrai Karaha,CHITRAKOOT,MAHOBA,25.48727,80.086818,name-prefix
+Mahoba Kabrai Sisri Kala,CHITRAKOOT,MAHOBA,25.464895,80.093568,name-prefix
+Mahoba Panwari Didvara,CHITRAKOOT,MAHOBA,25.381003,79.45285,name-prefix
+Mainpuri Karhal  Rajpur,AGRA,MAINPURI,26.997657,78.939961,name-prefix
+Mainpuri Karhal Mohabbatpur,AGRA,MAINPURI,26.961816,79.017749,name-prefix
+Mainpuri Karhal Naglamdari,AGRA,MAINPURI,27.101155,78.986265,name-prefix
+Mainpuri Karhal Takhrau,AGRA,MAINPURI,28.994016,78.995099,name-prefix
+Mainpuri Karhal Timrakh,AGRA,MAINPURI,27.069532,79.096808,name-prefix
+Mathura Baldeo  Khanpur,AGRA,MATHURA,27.431282,77.785794,name-prefix
+Mathura Chaumuha Navagaon-11,AGRA,MATHURA,27.706068,77.605101,name-prefix
+Mathura Chhata Chandauri,AGRA,MATHURA,27.771346,77.50228,name-prefix
+Mathura Chhata Sher Nagar,AGRA,MATHURA,27.860366,77.534875,name-prefix
+Mathura Nandgaon Nandgaon Dehat,AGRA,MATHURA,27.716469,77.385499,name-prefix
+Mathura Nandgaon Vathainkala,AGRA,MATHURA,27.777899,77.38627,name-prefix
+Mathura Naujheel Badharra,AGRA,MATHURA,27.871051,77.687433,name-prefix
+Mathura Pharah Nagala Medhaki,AGRA,MATHURA,27.35226,77.72607,name-prefix
+Mathura Rayan Kharaba,AGRA,MATHURA,27.573159,77.793496,name-prefix
+Saint Ravidas Nagar Abholi Abholi,MIRZAPUR,SANT RAVIDAS NAGAR,25.446551,82.368655,name-prefix
+Saint Ravidas Nagar Abholi Gangarampur,MIRZAPUR,SANT RAVIDAS NAGAR,25.458174,82.364247,name-prefix
+Saint Ravidas Nagar Aurai Ugapur,MIRZAPUR,SANT RAVIDAS NAGAR,25.3992,82.434861,name-prefix
+Saint Ravidas Nagar Aurai Uprauth,MIRZAPUR,SANT RAVIDAS NAGAR,25.277409,82.569482,name-prefix
+Saint Ravidas Nagar Bhadohi Munshi,MIRZAPUR,SANT RAVIDAS NAGAR,25.375199,82.534945,name-prefix
+Saint Ravidas Nagar Deegh  Deegh,MIRZAPUR,SANT RAVIDAS NAGAR,25.297279,82.304502,name-prefix
+Saint Ravidas Nagar Deegh Velahua,MIRZAPUR,SANT RAVIDAS NAGAR,25.347588,82.350868,name-prefix
+Saint Ravidas Nagar Gyanpur Kansapur,MIRZAPUR,SANT RAVIDAS NAGAR,25.342994,82.49052,name-prefix
+Saint Ravidas Nagar Gyanpur Samhai,MIRZAPUR,SANT RAVIDAS NAGAR,25.355367,82.508795,name-prefix
+Saint Ravidas Nagar Suriyawan Chhapariya,MIRZAPUR,SANT RAVIDAS NAGAR,25.456331,82.438271,name-prefix
+Saint Ravidas Nagar Suriyawan Mond,MIRZAPUR,SANT RAVIDAS NAGAR,25.428869,82.48589,name-prefix
+Shahjahanpur Bhawal Kheda Bhawal Kheda,BAREILLY,SHAHJAHANPUR,27.895952,79.984973,name-prefix
+Shahjahanpur Bhawal Kheda Chak Bhitara,BAREILLY,SHAHJAHANPUR,27.845415,79.999868,name-prefix
+Shahjahanpur Bhawal Kheda Chaudhera,BAREILLY,SHAHJAHANPUR,27.818291,79.924457,name-prefix
+Shahjahanpur Bhawal Kheda Ladhauli,BAREILLY,SHAHJAHANPUR,27.941568,79.95473,name-prefix
+Shahjahanpur Bhawal Kheda Shahbaj Pur,BAREILLY,SHAHJAHANPUR,27.813481,79.906993,name-prefix
+Shahjahanpur Bhawal Kheda Sutnera,BAREILLY,SHAHJAHANPUR,27.90977,80.03193,name-prefix
+Shahjahanpur Dadraul Banthara,BAREILLY,SHAHJAHANPUR,27.91887,79.819144,name-prefix
+Shahjahanpur Dadraul Saraura (East),BAREILLY,SHAHJAHANPUR,27.799064,79.899495,name-prefix
+Shahjahanpur Puvayan  Badagaon Pratham,BAREILLY,SHAHJAHANPUR,28.05027,80.07123,name-prefix
+Shahjahanpur Puvayan Bhilawan,BAREILLY,SHAHJAHANPUR,28.100451,80.097023,name-prefix
+Shahjahanpur Puvayan Mahua Pathak,BAREILLY,SHAHJAHANPUR,28.025949,80.039412,name-prefix
+Shahjahanpur Puvayan Nahil,BAREILLY,SHAHJAHANPUR,28.12588,80.04257,name-prefix
+Shahjahanpur Sidhauli Korokuiyan,BAREILLY,SHAHJAHANPUR,28.017453,80.028498,name-prefix
+Shahjahanpur Sidhauli Mahanand Pur,BAREILLY,SHAHJAHANPUR,28.007942,80.013319,name-prefix
+Shahjahanpur Sidhauli Sidhauli,BAREILLY,SHAHJAHANPUR,27.965402,79.967845,name-prefix
+Sonbhadra Chopan Khairatiya,MIRZAPUR,SONBHADRA,24.486905,82.988388,name-prefix
+Sonbhadra Duddhi Mahuli,MIRZAPUR,SONBHADRA,24.235831,83.303241,name-prefix
+Sonbhadra Myorpur Agartola,MIRZAPUR,SONBHADRA,24.098713,83.094693,name-prefix

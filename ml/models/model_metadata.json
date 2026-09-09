@@ -6,16 +6,16 @@
     30
   ],
   "n_stations": 549,
-  "n_districts": 29,
+  "n_districts": 37,
   "train_val_rows": 1641221,
   "test_rows": 378554,
   "val_rmse_level_m": {
-    "xgb": 1.2748,
-    "ridge": 1.708
+    "xgb": 1.275035089448638,
+    "ridge": 1.7078527436116036
   },
   "split": {},
-  "trained_at": "2026-09-09 17:03:49",
-  "generated_at": "2026-09-09 20:33:34",
+  "trained_at": "2026-09-10 04:16:52",
+  "generated_at": "2026-09-10 04:16:52",
   "source_archive": "data/processed/common.parquet",
   "validated": {
     "quantile_calibration": {

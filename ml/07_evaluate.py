@@ -160,8 +160,13 @@ def main() -> None:
         qcal = json.loads((MODELS / "quantile_calibration.json").read_text())
         qlev = {q: te["gwl"].values + qmods[q].predict(te[xcols]) for q in qmods}
         kq = float(qcal.get("widen_factor_k", 1.0))
-        preds["q05_lvl"] = qlev["q50"] - kq * (qlev["q50"] - qlev["q05"])
-        preds["q95_lvl"] = qlev["q50"] + kq * (qlev["q95"] - qlev["q50"])
+        # Quantile models trained independently can cross at extreme telemetry;
+        # enforce monotone ordering (lo <= med <= hi) before widening.
+        med = qlev["q50"]
+        lo = np.minimum(qlev["q05"], med)
+        hi = np.maximum(qlev["q95"], med)
+        preds["q05_lvl"] = med - kq * (med - lo)
+        preds["q95_lvl"] = med + kq * (hi - med)
         print("calibrated quantile test band added (q05_lvl/q95_lvl)")
     except Exception as e:  # noqa: BLE001 — quantile models are optional
         print(f"quantile band skipped: {e}")

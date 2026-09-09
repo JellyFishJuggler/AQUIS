@@ -1,609 +1,617 @@
 feature,coef,abs_coef
-num__gwl,-9.734137755540083,9.734137755540083
-num__lag1,0.2627880311994062,0.2627880311994062
-num__lag4,-0.3481219842034591,0.3481219842034591
-num__lag8,-0.2957538192677589,0.2957538192677589
-num__lag28,0.10481507064113593,0.10481507064113593
-num__lag120,-1.020825176955884,1.020825176955884
-num__gwl_roll7_mean,5.728787412095581,5.728787412095581
-num__gwl_roll7_std,-0.15151911691745568,0.15151911691745568
-num__gwl_roll30_mean,-3.032224481422303,3.032224481422303
-num__gwl_roll30_std,0.7189133024434649,0.7189133024434649
-num__rain_1d,0.010408153582705332,0.010408153582705332
-num__rain_7d,-0.005139269710236316,0.005139269710236316
-num__rain_30d,0.12667306175836862,0.12667306175836862
-num__temp,-0.014015181252233652,0.014015181252233652
-num__temp_7d,0.008837750595276722,0.008837750595276722
-num__humidity,0.019057405480040063,0.019057405480040063
-num__humidity_7d,-0.016114097594972135,0.016114097594972135
-num__solar,-0.026272039009372333,0.026272039009372333
-num__wind_speed,-0.03481408920155983,0.03481408920155983
-num__pressure,0.04937520994567933,0.04937520994567933
-num__river_level,-0.033850067743023037,0.033850067743023037
-num__canal_level,-0.06401782645050086,0.06401782645050086
-num__year,-0.04309156085912502,0.04309156085912502
-num__month_sin,-0.07868197492873197,0.07868197492873197
-num__month_cos,-0.04180086791791471,0.04180086791791471
-num__doy_sin,-0.4321005999350751,0.4321005999350751
-num__doy_cos,0.10299805418467223,0.10299805418467223
-num__hour_sin,0.03657005911339828,0.03657005911339828
-num__hour_cos,-0.04406408369923809,0.04406408369923809
-num__monsoon,-0.1688820714526077,0.1688820714526077
-cat__Station_ASHADHA PRATHMIK VIDYALAYA,3.2630198285577308,3.2630198285577308
-cat__Station_Aagan Wadi Kendra Chandni,2.2783189737040175,2.2783189737040175
-cat__Station_Aaganwadi Kendra Pakri Bazaar,0.24774210138241415,0.24774210138241415
-"cat__Station_Adarsh Primary School, Dubar Kalan",4.260788428753813,4.260788428753813
-cat__Station_Agan Wadi Kendra Kuchendu,-15.478885516375385,15.478885516375385
-cat__Station_Alakchandra Inter college Bhinga,-1.3233507469134622,1.3233507469134622
-cat__Station_Aligarh Chandaus  Somana,2.493138530732381,2.493138530732381
-cat__Station_Aligarh Chandaus Maharajpur,2.856647949162152,2.856647949162152
-cat__Station_Aligarh Jawa Bahadurpur Kota,-0.04591127804974349,0.04591127804974349
-cat__Station_Aligarh Jawa Jamalpur Siya,-3.2886838332228763,3.2886838332228763
-cat__Station_Aligarh Jawa Sogera,3.2147462503801307,3.2147462503801307
-cat__Station_Aligarh Khair Arrana,2.8015154261768203,2.8015154261768203
-cat__Station_Aligarh Khair Utwara,2.7870987227321393,2.7870987227321393
-cat__Station_Aligarh Lodha Aisi Kol,-9.15882228314183,9.15882228314183
-cat__Station_Aligarh Lodha Mahrawalpur Nagariya,-7.912257533176216,7.912257533176216
-cat__Station_Amchurnirua,18.76230928158961,18.76230928158961
-"cat__Station_Anganwadi Kedra, Baini",3.314873148349875,3.314873148349875
-cat__Station_Aryavart Madhyamik Vidhyalaya Sindhora,-0.31372238718250856,0.31372238718250856
-cat__Station_Aswaniya Pr. Vid.,0.780806691722205,0.780806691722205
-cat__Station_Awagarh (UP-005),-6.663821482179628,6.663821482179628
-cat__Station_Azamgarh Ahiraula Bahera,0.639066762251332,0.639066762251332
-cat__Station_Azamgarh Ahiraula Kandara,0.6556905351941964,0.6556905351941964
-cat__Station_Azamgarh Atrauliya Atrauliya,1.584934644037446,1.584934644037446
-cat__Station_Azamgarh Jahanganj Godhaura,-0.22013185660318868,0.22013185660318868
-cat__Station_Azamgarh Lalganj Lalganj,0.45842216138072445,0.45842216138072445
-cat__Station_Azamgarh Palhana Balahi Lahucha,-0.702512911421536,0.702512911421536
-cat__Station_Azamgarh Palhana Jamui Bhatauli,1.4471802497431554,1.4471802497431554
-cat__Station_Azamgarh Pavai Velasiya,0.022504582690828556,0.022504582690828556
-cat__Station_Azamgarh Sathiyavn Gajahada,0.6956826244900185,0.6956826244900185
-cat__Station_Azamgarh Thekama Bardah,0.19659900817271136,0.19659900817271136
-cat__Station_B.D.O Office Bhatini,0.8707644092207829,0.8707644092207829
-cat__Station_B.D.O. Office Lar,-0.9789963720733112,0.9789963720733112
-"cat__Station_B.D.O. Office, Binauli",-5.668957862788659,5.668957862788659
-cat__Station_BADHANI PRATHMIK VIDYALAYA,0.12114107107151995,0.12114107107151995
-cat__Station_BANI KHAS C.V. VIDYALAYA,0.45432059590814333,0.45432059590814333
-cat__Station_BANSGAON PRATHMIK VIDYALAYA,-0.31645811875728214,0.31645811875728214
-cat__Station_Babina Rular,20.509639805538768,20.509639805538768
-cat__Station_Badaun Salarpur BDO Office,-8.543477344335088,8.543477344335088
-cat__Station_Badaun Ujhani Sports Stadium,-4.949505523261223,4.949505523261223
-cat__Station_Badaun Usawan BDO Office,-8.793249512958141,8.793249512958141
-cat__Station_Badhai Khurd Pr. Vid.,2.997708533637706,2.997708533637706
-cat__Station_Badhouli,15.376410718710645,15.376410718710645
-cat__Station_Baghpat Meerut Kheda Balrampur Itiyara,-2.301677928135632,2.301677928135632
-cat__Station_Banda Baberu Anvan,-1.010991452753018,1.010991452753018
-cat__Station_Banda Baberu Umrehani,-3.4063775503464058,3.4063775503464058
-cat__Station_Banda Badokhar Khurd Chatgan,-7.629056111108497,7.629056111108497
-cat__Station_Banda Bisndha Mrooli,-1.9223364481206602,1.9223364481206602
-cat__Station_Banda Kamasin Tilowsa,-2.833302904485379,2.833302904485379
-cat__Station_Banda Tindwari Bhindowra,-10.668234896806553,10.668234896806553
-cat__Station_Bdo Office Campus Pipraich,0.7275239006750098,0.7275239006750098
-cat__Station_Bhitari_2,20.037270648437072,20.037270648437072
-cat__Station_Bijijauri_1,13.702244344470955,13.702244344470955
-cat__Station_Birdha /Poorabirdha,19.585430880271815,19.585430880271815
-cat__Station_Block Deoria Campus Deoria Sadar,0.4994398096087025,0.4994398096087025
-cat__Station_Block Development Office-Khekra-Shallow,-6.712864446782902,6.712864446782902
-"cat__Station_Block Office, Kurara",-9.66159966679595,9.66159966679595
-"cat__Station_Block office, Gursarai",-3.417714797744452,3.417714797744452
-cat__Station_Chakara  P_1,20.43036273750397,20.43036273750397
-cat__Station_Chandi Kalan,14.138627935577745,14.138627935577745
-cat__Station_Chhibaw_1,16.755862838891062,16.755862838891062
-cat__Station_Chirautha,16.214419593940647,16.214419593940647
-cat__Station_Chitrakoot Karvi Khoha,-5.5902268170941625,5.5902268170941625
-cat__Station_Chitrakoot Karvi Shivrampur,-14.888178228506774,14.888178228506774
-cat__Station_Chitrakoot Manikpur Agarhudha,-7.2007797261490225,7.2007797261490225
-cat__Station_Chitrakoot Manikpur Sardar Patel,-6.060217600627084,6.060217600627084
-cat__Station_Chorwa Bhari Prathmik Vidyalaya,1.5179212485812172,1.5179212485812172
-"cat__Station_Community Center, Ghorawal",1.5012937458290025,1.5012937458290025
-cat__Station_Comosite School Campus Badalganj,-1.5903357344197957,1.5903357344197957
-cat__Station_Composite Girls Primary School Mai,-12.431867382289056,12.431867382289056
-cat__Station_Composite School Basantpur Saitali-1,0.3594047788467378,0.3594047788467378
-cat__Station_Composite School Biralsi,1.165623790031134,1.165623790031134
-cat__Station_Composite School Kilhora,-5.616360954248307,5.616360954248307
-cat__Station_Composite School Nagla Bair,-0.7424594254761416,0.7424594254761416
-cat__Station_Composite School Sagarpur,-2.014804805480253,2.014804805480253
-cat__Station_Composite School Sanjarpur,3.5599347687879686,3.5599347687879686
-cat__Station_Composite School katar,-0.5108116784455774,0.5108116784455774
-"cat__Station_Composite School, Dhamna Khurd",4.355513269354105,4.355513269354105
-"cat__Station_Composite School, Ghamhapur",-2.6761611518465145,2.6761611518465145
-"cat__Station_Composite School, Mungari",0.2695836475989495,0.2695836475989495
-"cat__Station_Composite School, Pathraha",-3.1605454208831247,3.1605454208831247
-"cat__Station_Composite Uccha Prathmik Vidhyalaya, Paltadevi",-0.11373292645794209,0.11373292645794209
-cat__Station_Composite Upper Primary School Sajania,-2.180089870765414,2.180089870765414
-cat__Station_DEOCHALI C.V. VIDYALAYA,7.378788214996803,7.378788214996803
-cat__Station_Deoria Bhaluwani Markna,0.2850614946675023,0.2850614946675023
-cat__Station_Deoria Bhatani Mishrauli Dichit,0.4177954778816684,0.4177954778816684
-cat__Station_Deoria Bhatpar Rani Dharkwan,0.7940565473014658,0.7940565473014658
-cat__Station_Deoria Salempur Manihari,-0.29747800632367216,0.29747800632367216
-cat__Station_Deoria Tarkulwa Tarkulwa,-2.4408177186032844,2.4408177186032844
-cat__Station_Devrar_1,16.343733696781555,16.343733696781555
-cat__Station_Dhikauli,20.284792796689146,20.284792796689146
-cat__Station_Etah Aavagarh Badhawali,3.917723567825078,3.917723567825078
-cat__Station_Etah Jalesar Hasangarh,-0.056188166492233904,0.056188166492233904
-cat__Station_Etah Jalesar Sakrauli,-4.034428923993801,4.034428923993801
-cat__Station_FAREDUPUR PRATHMIK VIDYALAYA,2.2740604870741663,2.2740604870741663
-cat__Station_Firozabad Madanpur Rudhawali,-12.903127145980193,12.903127145980193
-cat__Station_Gadhela Panchayat Bhawan,-5.158982135736778,5.158982135736778
-cat__Station_Gloragundera/Gewara,19.877705134955704,19.877705134955704
-cat__Station_Gorakhpur Barahalganj Bhatpar (Saukhor),-0.6416674445149511,0.6416674445149511
-cat__Station_Gorakhpur Barahalganj Ojhauli,-0.8956004487533846,0.8956004487533846
-cat__Station_Gorakhpur Belghat Belghat,-1.0763831143349307,1.0763831143349307
-cat__Station_Gorakhpur Belghat Murarpur,-0.4981851005510407,0.4981851005510407
-cat__Station_Gorakhpur Chargaon Beniganj,1.4183824454228215,1.4183824454228215
-cat__Station_Gorakhpur Gagaha Gagaha,0.22777675343604642,0.22777675343604642
-cat__Station_Gorakhpur Gola Dhakwarchak,0.05975766529888915,0.05975766529888915
-cat__Station_Gorakhpur Gola Gopalpur Patham,0.9720888629906312,0.9720888629906312
-cat__Station_Gorakhpur Gola Turkwaliya,-0.05896838302692231,0.05896838302692231
-cat__Station_Gorakhpur Kauriram Dhausa,0.6547685026911267,0.6547685026911267
-cat__Station_Gorakhpur Kauriram Jagdispur Bhaluwan 2Nd,0.7659852516063665,0.7659852516063665
-cat__Station_Gorakhpur Pali Dumari Niwas,-0.2193574785759438,0.2193574785759438
-cat__Station_Gorakhpur Pali Pali,-0.2264836060722928,0.2264836060722928
-cat__Station_Gorakhpur Sahjanwa Kasrol,0.41986134642047546,0.41986134642047546
-cat__Station_Gorakhpur Sardarnagr Awadpur,1.6714468015520652,1.6714468015520652
-cat__Station_Gorakhpur Urwa Malhanpar,0.03358665233804459,0.03358665233804459
-cat__Station_Goshala Bada Gaon,-9.968455500927803,9.968455500927803
-cat__Station_Goshala Bankat,-15.414972872656563,15.414972872656563
-cat__Station_Goshala Basela,-7.7170094089876216,7.7170094089876216
-cat__Station_Goshala Bhadehdu,-14.407180656821538,14.407180656821538
-cat__Station_Goshala Churaha,-24.133239850727023,24.133239850727023
-cat__Station_Goshala Ghuri,-5.897407789322642,5.897407789322642
-cat__Station_Goshala Pachhahan,-14.536000920941888,14.536000920941888
-cat__Station_Goyla,-6.114505566211562,6.114505566211562
-"cat__Station_Gram Panchayat Sachiwalaya / D.B.R. Ambedkar Samudayak Bhawan, Durkhuroo",-12.711544967992154,12.711544967992154
-cat__Station_Grampunchayat Sachiwalaya Deori,1.8916736816054822,1.8916736816054822
-cat__Station_Gyana Majra Pr. Vid.,0.6754234784048094,0.6754234784048094
-cat__Station_HARNHAPUR PRATHAMIK VIDYALAYA,-5.290956138050433,5.290956138050433
-cat__Station_HOLAGARH PURV MADHYAMIK VIDYALAYA,2.8705257970462412,2.8705257970462412
-cat__Station_Halwana,-0.33294161064617356,0.33294161064617356
-cat__Station_Hamirpur Kurara Damar,-2.649307240298725,2.649307240298725
-cat__Station_Hamirpur Kurara Jalokhar,-3.6459659849780053,3.6459659849780053
-cat__Station_Hamirpur Sarila Purani,-16.41036048885033,16.41036048885033
-cat__Station_Hamirpur Sumerpur Etara,-4.959896366201804,4.959896366201804
-cat__Station_Hamirpur Sumerpur Para,-13.306087978491433,13.306087978491433
-cat__Station_Hathras Hathras Hathras,-2.995769566418744,2.995769566418744
-cat__Station_Hathras Mursan Chandapa Sandh,-13.527701019878577,13.527701019878577
-cat__Station_High School & Inter College Boroda,26.038087090197678,26.038087090197678
-"cat__Station_ITI Campus, ITI Campus Area",-1.4473907340153005,1.4473907340153005
-cat__Station_Inter Collage Khampar,0.13964213780730006,0.13964213780730006
-"cat__Station_Inter College, Sarv Hitakari",-4.468070259977878,4.468070259977878
-"cat__Station_Inter college, Tindwara",-8.349934111790162,8.349934111790162
-"cat__Station_Irrigation Department, Amawar",0.07827351642811209,0.07827351642811209
-cat__Station_Jamalpur_2,19.72657187356282,19.72657187356282
-"cat__Station_Janata Inter College, Lachheda",-1.2401754582699027,1.2401754582699027
-cat__Station_Jauharpur,17.275437523795517,17.275437523795517
-cat__Station_Jaunpur Dobhi Bagerwa,-0.08649450176062601,0.08649450176062601
-cat__Station_Jaunpur Dobhi Bankati,-2.0837844031596546,2.0837844031596546
-cat__Station_Jaunpur Dobhi Kachhawan,-1.8824618699355256,1.8824618699355256
-cat__Station_Jaunpur Dobhi Kakarapar,4.1301320156758266,4.1301320156758266
-cat__Station_Jaunpur Jalalpur Katuwani,2.4142017771598603,2.4142017771598603
-cat__Station_Jaunpur Jalalpur Vanpurwa,2.0741949106170523,2.0741949106170523
-cat__Station_Jaunpur Jalalpur Vind,4.388550500998235,4.388550500998235
-cat__Station_Jaunpur Kerakat  Kharg Senpur,3.956815141599236,3.956815141599236
-cat__Station_Jaunpur Kerakat Barbaspur (Sohani),4.331101385981015,4.331101385981015
-cat__Station_Jaunpur Kerakat Mahali,2.317259921404343,2.317259921404343
-cat__Station_Jaunpur Kerakat Nihalapur,4.41363691676753,4.41363691676753
-cat__Station_Jaunpur Rampur Kamaruddin,-0.12074328170302806,0.12074328170302806
-cat__Station_Jaunpur Rampur Kaseru Nonara,4.045964595081273,4.045964595081273
-cat__Station_Jaunpur Rampur Kathwatiya,-1.921172944046475,1.921172944046475
-cat__Station_Jaunpur Rampur Sultanpur,5.641867149423831,5.641867149423831
-"cat__Station_Jr. High School, Purwa Tarouha",20.036607559164054,20.036607559164054
-cat__Station_KOSHAK IMAM PRATHMIK VIDYALAYA,2.5470682391838864,2.5470682391838864
-cat__Station_Kamhariya_1,14.093957401989428,14.093957401989428
-cat__Station_Khojapur,-3.234119124081758,3.234119124081758
-cat__Station_Khursropur,1.9945393394738176,1.9945393394738176
-cat__Station_Kukwa Khaas,16.356509793020905,16.356509793020905
-cat__Station_Kusarma,13.185095641007592,13.185095641007592
-cat__Station_Kushinagar Captanganj Captanganj,-0.9356453194949381,0.9356453194949381
-cat__Station_Kushinagar Captanganj Senduriya Vishunpur,0.8315912625387227,0.8315912625387227
-cat__Station_Kushinagar Dudhai Dudhai,-0.17501941200794136,0.17501941200794136
-cat__Station_Kushinagar Dudhai Gorariya,-0.6151655299162258,0.6151655299162258
-cat__Station_Kushinagar Dudhai Lala Chhapra,0.7457626431050812,0.7457626431050812
-cat__Station_Kushinagar Fazilnagar  Belwakala,0.8756411645889557,0.8756411645889557
-cat__Station_Kushinagar Fazilnagar Jokwa Bujurg,-0.41138792524009204,0.41138792524009204
-cat__Station_Kushinagar Fazilnagar Narayanpur Khoti,-1.3195897818719686,1.3195897818719686
-cat__Station_Kushinagar Khadda Basdila,0.9118442489707377,0.9118442489707377
-cat__Station_Kushinagar Khadda Khadda,0.7216044880550498,0.7216044880550498
-cat__Station_Kushinagar Motichak Mathauli Bazar,0.050710507716644315,0.050710507716644315
-cat__Station_Kushinagar Motichak Motichak,1.050825762107138,1.050825762107138
-cat__Station_Kushinagar Sewarhi  Rampur Bagra N0.2,-0.372624375340024,0.372624375340024
-cat__Station_Kushinagar Sewarhi Sewarhi,0.2588617665486481,0.2588617665486481
-cat__Station_Kushinagar Tamkuhi Rajwatiya,0.3887496730349085,0.3887496730349085
-cat__Station_Kushinagar Tamkuhi Tamkuhi,-0.012211377124344835,0.012211377124344835
-cat__Station_Lagdi Gullar Prathmik Vidyalaya,0.8556904175532054,0.8556904175532054
-cat__Station_Luktra,15.58140582906185,15.58140582906185
-cat__Station_MANDHATA PURV MADHYAMIK VIDYALAYA,-1.0108200933059948,1.0108200933059948
-cat__Station_Madarpur_1,15.079900361568548,15.079900361568548
-"cat__Station_Madhyamik Vidhyalaya, Dulha Daul",2.0731143414232633,2.0731143414232633
-"cat__Station_Mahadeva Temple, Mahadeva",-3.9977247449280355,3.9977247449280355
-cat__Station_Maharajganj Dhani Nausagar,0.2180584261045624,0.2180584261045624
-cat__Station_Maharajganj Mithaura Bhagatar,0.9788433548385456,0.9788433548385456
-cat__Station_Maharajganj Mithaura Madanpura,0.1845009598453089,0.1845009598453089
-cat__Station_Maharajganj Nautanwa Purniha,-0.05056414172588575,0.05056414172588575
-cat__Station_Maharajganj Nautanwa Sampatiha,0.26648331727164987,0.26648331727164987
-cat__Station_Maharajganj Nichlaul Balaekhor,0.8599632322153639,0.8599632322153639
-cat__Station_Maharajganj Nichlaul Garaura,1.152571556153589,1.152571556153589
-cat__Station_Maharajganj Siswa Siswa,0.45031414427330674,0.45031414427330674
-cat__Station_Mahgaon (UP-031),-4.906391451564218,4.906391451564218
-cat__Station_Mahoba Charkhari Kuaan,-6.389915717272828,6.389915717272828
-cat__Station_Mahoba Charkhari Natara,-5.224771514898094,5.224771514898094
-cat__Station_Mahoba Charkhari Padha,-7.289005518951058,7.289005518951058
-cat__Station_Mahoba Jaitpur saguniyamaph,-2.1549066229094933,2.1549066229094933
-cat__Station_Mahoba Kabrai Karaha,-7.209624622939543,7.209624622939543
-cat__Station_Mahoba Kabrai Sisri Kala,-2.7060042730992677,2.7060042730992677
-cat__Station_Mahoba Panwari Didvara,-13.250540993819953,13.250540993819953
-cat__Station_Mainpuri Karhal  Rajpur,3.716834710753119,3.716834710753119
-cat__Station_Mainpuri Karhal Mohabbatpur,4.273037346421006,4.273037346421006
-cat__Station_Mainpuri Karhal Naglamdari,5.692908329626562,5.692908329626562
-cat__Station_Mainpuri Karhal Takhrau,5.4131995948318945,5.4131995948318945
-cat__Station_Mainpuri Karhal Timrakh,5.344407781892642,5.344407781892642
-cat__Station_Mandi Samiti-Muzaffar Nagar-Medium,-6.627144271912869,6.627144271912869
-cat__Station_Mathura Baldeo  Khanpur,-3.8133021888685334,3.8133021888685334
-cat__Station_Mathura Chaumuha Navagaon-11,-1.9681280728472075,1.9681280728472075
-cat__Station_Mathura Chhata Chandauri,1.689772522801377,1.689772522801377
-cat__Station_Mathura Nandgaon Nandgaon Dehat,4.938178318892824,4.938178318892824
-cat__Station_Mathura Nandgaon Vathainkala,6.607777283923042,6.607777283923042
-cat__Station_Mathura Naujheel Badharra,0.6463012431891002,0.6463012431891002
-cat__Station_Mathura Pharah Nagala Medhaki,3.0403874423934667,3.0403874423934667
-cat__Station_Mathura Rayan Kharaba,-2.133557626460515,2.133557626460515
-cat__Station_Meerut Janikhurd Afjalpur Pavati,-0.4226704394694707,0.4226704394694707
-cat__Station_Meerut Janikhurd Satvai,2.613358548201745,2.613358548201745
-cat__Station_Meerut Sardhana Chhabariya,-1.7094196488303623,1.7094196488303623
-"cat__Station_Nagar Palika Campus, Gyanpur",0.5009277385474604,0.5009277385474604
-cat__Station_Naglakabu_1,23.408560020629352,23.408560020629352
-cat__Station_Narajit,16.17192528123701,16.17192528123701
-cat__Station_Navrasia,-0.7362285550304364,0.7362285550304364
-cat__Station_Niwabhari Prathmik Vidyalaya,1.2900236915673133,1.2900236915673133
-"cat__Station_Office of Assistant Director, Resham",0.11483333316073185,0.11483333316073185
-"cat__Station_Office of the Development Officer, Dakore",3.3224320344334046,3.3224320344334046
-cat__Station_PAHARPUR BARIGAWA PRATHMIK VIDYALAYA,-3.2681493044760828,3.2681493044760828
-cat__Station_PRIMARY SCHOOL BAKAR GANJ,-2.8092036793557327,2.8092036793557327
-cat__Station_PRIMARY SCHOOL RAMUGHAT,-0.6806670440403195,0.6806670440403195
-cat__Station_Paderi,17.65543755062299,17.65543755062299
-cat__Station_Pahara_2,19.024391948307226,19.024391948307226
-cat__Station_Panchayat Bhawan Kuda Nar Singhpur,-2.175685596165863,2.175685596165863
-cat__Station_Panchayat Bhawan Usmanpur,5.400350141196213,5.400350141196213
-"cat__Station_Panchayat Bhawan, Dohri",0.9158292740137313,0.9158292740137313
-"cat__Station_Panchayat Bhawan, Kul Doomri",1.1334250762395186,1.1334250762395186
-"cat__Station_Panchayat Bhwan, Kon",-11.043059661469044,11.043059661469044
-cat__Station_Pathrodi,19.10048557222072,19.10048557222072
-cat__Station_Perthivipur Nayakh,20.07335467375401,20.07335467375401
-cat__Station_Piparaond,18.92976908943129,18.92976908943129
-cat__Station_Poorv Madhamik Vidhyalaya Kaseti,-1.807708112673481,1.807708112673481
-cat__Station_Prathmik Vidhyalaya Bant,-2.0609335746275974,2.0609335746275974
-cat__Station_Prathmik Vidhyalaya Barha,4.6428607949526395,4.6428607949526395
-cat__Station_Prathmik Vidhyalaya Mahugarh,4.540791998666947,4.540791998666947
-cat__Station_Prathmik Vidhyalaya Manohari,2.741861404723977,2.741861404723977
-cat__Station_Prathmik Vidhyalaya Pahalgaon,-0.30982919358672234,0.30982919358672234
-cat__Station_Prathmik Vidhyalaya Pipra Sarvan,0.48932258217894287,0.48932258217894287
-cat__Station_Prathmik Vidhyalaya Sirasiya Pawar,-1.1585083090570834,1.1585083090570834
-cat__Station_Prathmik Vidhyalaya Takuli (Durahi Maafi),-5.372864641563638,5.372864641563638
-"cat__Station_Prathmik Vidhyalaya, Katiliaha",-1.7948042255789005,1.7948042255789005
-"cat__Station_Prathmik Vidhyalaya, Makarndpur",-5.040004865800256,5.040004865800256
-"cat__Station_Prathmik Vidhyalaya, Nehlawa",-0.26188920368485924,0.26188920368485924
-"cat__Station_Prathmik Vidhyalaya, Phaprana",0.00963428531551358,0.00963428531551358
-"cat__Station_Prathmik Vidhyalaya, Shahjahanpur_1",-0.2522691837999389,0.2522691837999389
-"cat__Station_Prathmik Vidhyalaya, Thavai",8.122007117888188,8.122007117888188
-"cat__Station_Pratmik Vidhyalaya, Kakaruwa",-2.2023272825355207,2.2023272825355207
-cat__Station_Priamry School Mukasim,3.2097849980372644,3.2097849980372644
-"cat__Station_Primary  School, Nawada Kalan",2.9148271603334877,2.9148271603334877
-"cat__Station_Primary / Composite School, Banwaripur",5.6607887514015545,5.6607887514015545
-"cat__Station_Primary / Composite School, Chiraudi",1.8836851016377523,1.8836851016377523
-"cat__Station_Primary / Composite School, Jainpur",1.57102279329942,1.57102279329942
-"cat__Station_Primary / Composite School, Jasad",0.30570968710520674,0.30570968710520674
-"cat__Station_Primary / Composite School, Mahalaka",-1.0421279081507464,1.0421279081507464
-"cat__Station_Primary / Composite School, Mohaddinpur",8.417449831887438,8.417449831887438
-"cat__Station_Primary / Composite School, Pepala",5.271405240235765,5.271405240235765
-"cat__Station_Primary / Composite School, Saradhana Block Office",6.5370389561764455,6.5370389561764455
-cat__Station_Primary School  Bihasara,-2.672066804683368,2.672066804683368
-cat__Station_Primary School  Biraura,-5.62134416303536,5.62134416303536
-cat__Station_Primary School  Maharaji,0.8210477717394724,0.8210477717394724
-cat__Station_Primary School Ashadh,-6.8744774556315065,6.8744774556315065
-cat__Station_Primary School Babura,-2.177157397369598,2.177157397369598
-cat__Station_Primary School Baijnathpur,-1.1378866881219665,1.1378866881219665
-cat__Station_Primary School Bargdhi,0.45358383579105066,0.45358383579105066
-cat__Station_Primary School Bhata Diha,0.03002361505616591,0.03002361505616591
-cat__Station_Primary School Bilona,-0.8525690765677609,0.8525690765677609
-cat__Station_Primary School Campus Aurangabad,0.4982238361324107,0.4982238361324107
-cat__Station_Primary School Campus Powai,-0.6275071038690498,0.6275071038690498
-cat__Station_Primary School Campus Sikraura,1.6992332580053358,1.6992332580053358
-cat__Station_Primary School Chandrapur Bichpuri,1.4084966135011427,1.4084966135011427
-cat__Station_Primary School Charkonwa,1.7705070954135067,1.7705070954135067
-cat__Station_Primary School Chobla,0.8669704937218512,0.8669704937218512
-cat__Station_Primary School Cholahe,0.12380768207816573,0.12380768207816573
-cat__Station_Primary School Dohriya,-0.8532100804243328,0.8532100804243328
-cat__Station_Primary School English Medium Qutubpur Labdauna,1.985947448612876,1.985947448612876
-cat__Station_Primary School Gudha,-2.561241538203035,2.561241538203035
-cat__Station_Primary School Harinahpur,-6.133786688733835,6.133786688733835
-cat__Station_Primary School Harivanshpur,-0.31486371926303036,0.31486371926303036
-cat__Station_Primary School Jagannathpur,-4.675743331039257,4.675743331039257
-cat__Station_Primary School Jagdishpur Pratham,-1.5002611781466157,1.5002611781466157
-cat__Station_Primary School Jainpur,0.8596177766600022,0.8596177766600022
-cat__Station_Primary School Jairampur,-10.007472932450128,10.007472932450128
-cat__Station_Primary School Jamunia,0.2552448760906145,0.2552448760906145
-cat__Station_Primary School Jatmujheda,0.7715950609434117,0.7715950609434117
-cat__Station_Primary School Karwal,-0.560563206501115,0.560563206501115
-cat__Station_Primary School Keshawpur Pratham,-1.8679238682195773,1.8679238682195773
-cat__Station_Primary School Kucharam,-9.609848618476349,9.609848618476349
-cat__Station_Primary School Kurdi,5.585575231868347,5.585575231868347
-cat__Station_Primary School Madari,-1.3225602767183773,1.3225602767183773
-cat__Station_Primary School Mainhe hardo,0.6122241438342826,0.6122241438342826
-cat__Station_Primary School Masuri,2.7367743766279773,2.7367743766279773
-cat__Station_Primary School Mohammadpur Gurjar,-5.611785522886407,5.611785522886407
-cat__Station_Primary School Nandapur,-1.086405310936243,1.086405310936243
-cat__Station_Primary School No. 1 Barawad,-3.664889422813502,3.664889422813502
-cat__Station_Primary School Odaraha,-4.931008187569887,4.931008187569887
-cat__Station_Primary School Pahara,0.8012219272063703,0.8012219272063703
-cat__Station_Primary School Pinna,-2.3118952579754932,2.3118952579754932
-cat__Station_Primary School Radnool Azizpur,4.66774590926866,4.66774590926866
-cat__Station_Primary School Rathoda,-3.382355942001709,3.382355942001709
-"cat__Station_Primary School Sahjanwa , Pratham Pipra",-1.0949336848643725,1.0949336848643725
-cat__Station_Primary School Sahori,1.8031347846340395,1.8031347846340395
-cat__Station_Primary School Salawa,1.9471737217460259,1.9471737217460259
-cat__Station_Primary School Sanda-Sanee,-15.881181178277075,15.881181178277075
-cat__Station_Primary School Shekhpuri,2.6424412544839697,2.6424412544839697
-cat__Station_Primary School Sonda,2.5249473367427413,2.5249473367427413
-cat__Station_Primary School Vamanpura,-3.749256675745073,3.749256675745073
-cat__Station_Primary School chandsina,-1.9873498296392427,1.9873498296392427
-"cat__Station_Primary School,  Todarpur",-0.4284826199113354,0.4284826199113354
-"cat__Station_Primary School, Anrabali",0.5204035056073053,0.5204035056073053
-"cat__Station_Primary School, Asara Bighawati",0.41825263138019864,0.41825263138019864
-"cat__Station_Primary School, Badagaon bharati form",-0.8094997544462785,0.8094997544462785
-"cat__Station_Primary School, Baghpokhar",-1.4154806624041498,1.4154806624041498
-"cat__Station_Primary School, Bamhauri",19.87041606146886,19.87041606146886
-"cat__Station_Primary School, Bamhoori Khurd",-9.459781600880888,9.459781600880888
-"cat__Station_Primary School, Bandpur",-0.8538674478766097,0.8538674478766097
-"cat__Station_Primary School, Bartha Lala",0.434764856361312,0.434764856361312
-"cat__Station_Primary School, Basti",1.781183856132202,1.781183856132202
-"cat__Station_Primary School, Belatal",-7.527775199525877,7.527775199525877
-"cat__Station_Primary School, Belaukh",1.380288962029681,1.380288962029681
-"cat__Station_Primary School, Bgra khisani bujurg",-1.8199888171195084,1.8199888171195084
-"cat__Station_Primary School, Bhadauda",-1.1396510289255275,1.1396510289255275
-"cat__Station_Primary School, Bhagwanpur",-6.141764608907891,6.141764608907891
-"cat__Station_Primary School, Bhalsona",3.567531335851072,3.567531335851072
-"cat__Station_Primary School, Bhartpura",-1.9438588403654649,1.9438588403654649
-"cat__Station_Primary School, Bilata",-4.245718810210747,4.245718810210747
-"cat__Station_Primary School, Block Office",-1.4633382290337522,1.4633382290337522
-"cat__Station_Primary School, Bodha",4.266075754635125,4.266075754635125
-"cat__Station_Primary School, Bohra",0.6441254392163955,0.6441254392163955
-"cat__Station_Primary School, Brahmpur",-0.22858548840736148,0.22858548840736148
-"cat__Station_Primary School, Chariya Bujrag",1.4488999875187574,1.4488999875187574
-"cat__Station_Primary School, Chiplatha",-1.4425192836783935,1.4425192836783935
-"cat__Station_Primary School, Dagarpur Tigadi",-0.9881212711850935,0.9881212711850935
-"cat__Station_Primary School, Dera Devra bujurg",-5.260934633166698,5.260934633166698
-"cat__Station_Primary School, Dewari",3.6011608466189955,3.6011608466189955
-"cat__Station_Primary School, Dhanaura",-15.61087717044677,15.61087717044677
-"cat__Station_Primary School, Dhanaura Tikari",-4.565894790422021,4.565894790422021
-"cat__Station_Primary School, Dhankharpur",1.2536382258920185,1.2536382258920185
-"cat__Station_Primary School, Dhikana",1.1158675427338949,1.1158675427338949
-"cat__Station_Primary School, Evani",-6.130884729779893,6.130884729779893
-"cat__Station_Primary School, Gaidaira",-1.403668013062429,1.403668013062429
-"cat__Station_Primary School, Garher",0.22648395462579174,0.22648395462579174
-"cat__Station_Primary School, Gauripur Javahar Nagar",-2.5544705473489557,2.5544705473489557
-"cat__Station_Primary School, Gotaka",-6.460512896647742,6.460512896647742
-"cat__Station_Primary School, Gursarai tahrauli tahshil",-2.49964019674934,2.49964019674934
-"cat__Station_Primary School, Jhaaro Kalan",0.12723552729306675,0.12723552729306675
-"cat__Station_Primary School, Jogehthi",-1.2565896269883297,1.2565896269883297
-"cat__Station_Primary School, Johadi",-7.66606632521831,7.66606632521831
-"cat__Station_Primary School, Kailgwan",-2.4254334643206903,2.4254334643206903
-"cat__Station_Primary School, Kakadipur",-1.0217332168281814,1.0217332168281814
-"cat__Station_Primary School, Kakaurkala",2.93765673061543,2.93765673061543
-"cat__Station_Primary School, Kalan Bar Devran",-9.35837522549366,9.35837522549366
-"cat__Station_Primary School, Kalani Khurad",0.0039549884797907,0.0039549884797907
-"cat__Station_Primary School, Kantit",1.8581944958206122,1.8581944958206122
-"cat__Station_Primary School, Kaparwar",-1.117420361297036,1.117420361297036
-"cat__Station_Primary School, Karasdev Mandir",-5.512280693623097,5.512280693623097
-"cat__Station_Primary School, Kevtam",0.8867470438708551,0.8867470438708551
-"cat__Station_Primary School, Khandeura",-11.16276621183124,11.16276621183124
-"cat__Station_Primary School, Khiriya",-0.6844509934660437,0.6844509934660437
-"cat__Station_Primary School, Khujurahokhurd",-0.7151156953376585,0.7151156953376585
-"cat__Station_Primary School, Kodai",-2.6058340060818637,2.6058340060818637
-"cat__Station_Primary School, Koilar",-3.723093690737983,3.723093690737983
-"cat__Station_Primary School, Kritikhand",3.2142298772560025,3.2142298772560025
-"cat__Station_Primary School, Leharthkurpura",-2.5082120976169335,2.5082120976169335
-"cat__Station_Primary School, Manupura",-2.6923372503196106,2.6923372503196106
-"cat__Station_Primary School, Marry",-0.6600382211748865,0.6600382211748865
-"cat__Station_Primary School, Masaurakhurd",-2.8674518507421567,2.8674518507421567
-"cat__Station_Primary School, Mithabel",-0.27019860377549776,0.27019860377549776
-"cat__Station_Primary School, Motiyari, Mahuaa, Banda_1",-5.156126803235566,5.156126803235566
-"cat__Station_Primary School, Narokhar",2.814028893093223,2.814028893093223
-"cat__Station_Primary School, Narouiya Daamar",-4.153804137691566,4.153804137691566
-"cat__Station_Primary School, Nota",-3.7200418797031034,3.7200418797031034
-"cat__Station_Primary School, Pachar",-0.43395238156756477,0.43395238156756477
-"cat__Station_Primary School, Padra",-6.133148627501214,6.133148627501214
-"cat__Station_Primary School, Pakarhut",0.12479504608955949,0.12479504608955949
-"cat__Station_Primary School, Pali",-1.9004060585546085,1.9004060585546085
-"cat__Station_Primary School, Paraon",-2.994340654095879,2.994340654095879
-"cat__Station_Primary School, Pashu palan Vibhag Masuri",-5.440714450934365,5.440714450934365
-"cat__Station_Primary School, Purakalan, Talbehat, Lalitpur_1",-1.6123121915935599,1.6123121915935599
-"cat__Station_Primary School, R.K.Inter college",2.050968207495231,2.050968207495231
-"cat__Station_Primary School, Radhana",-0.6159064067866211,0.6159064067866211
-"cat__Station_Primary School, Safpuram Chandpur",-3.300753511867015,3.300753511867015
-"cat__Station_Primary School, Saina",-16.083443208576625,16.083443208576625
-"cat__Station_Primary School, Salhepur",-6.97803979995615,6.97803979995615
-"cat__Station_Primary School, Sangholi taga",4.209292745046412,4.209292745046412
-"cat__Station_Primary School, Sanori",-1.7579294935193275,1.7579294935193275
-"cat__Station_Primary School, Sarwa",-1.4961515338594609,1.4961515338594609
-"cat__Station_Primary School, Shekhar",-3.35554340795926,3.35554340795926
-"cat__Station_Primary School, Shivpur",-1.0883984361981334,1.0883984361981334
-"cat__Station_Primary School, Silana",-3.5924069551898867,3.5924069551898867
-"cat__Station_Primary School, Sindhan Kalan",17.212172535596665,17.212172535596665
-"cat__Station_Primary School, Sirasi",-0.14049264345084111,0.14049264345084111
-"cat__Station_Primary School, Sirjam",1.1729694322986006,1.1729694322986006
-"cat__Station_Primary School, Surikalan",-3.8782894162766866,3.8782894162766866
-"cat__Station_Primary School, Tewalagarhi",-3.5208046864071605,3.5208046864071605
-"cat__Station_Primary School, Tilaura",0.5255502982824964,0.5255502982824964
-"cat__Station_Primary School, Vansha Gram Panchayt",-0.5617058346216481,0.5617058346216481
-"cat__Station_Primary School, Vijaypura",-3.1404585414034045,3.1404585414034045
-"cat__Station_Primary School/ Composite, Alampur",-4.8618570023811,4.8618570023811
-"cat__Station_Primary School/ Composite, Bhojpur Taga",4.649537618425768,4.649537618425768
-"cat__Station_Primary School/ Composite, Chaappar",-5.449000511905638,5.449000511905638
-"cat__Station_Primary School/ Composite, Chittora",4.619584848560294,4.619584848560294
-"cat__Station_Primary School/ Composite, Dadheru Kaian",0.02800460071262023,0.02800460071262023
-"cat__Station_Primary School/ Composite, Dholla Majra",0.17094484580434255,0.17094484580434255
-"cat__Station_Primary School/ Composite, Fakreda",-3.588808465830425,3.588808465830425
-"cat__Station_Primary School/ Composite, Ghumawati",2.992510149779946,2.992510149779946
-"cat__Station_Primary School/ Composite, Haibatpur",1.540370095120636,1.540370095120636
-"cat__Station_Primary School/ Composite, Harsauli",-5.111298397523001,5.111298397523001
-"cat__Station_Primary School/ Composite, Jaula Dindauli",-2.9606757963607038,2.9606757963607038
-"cat__Station_Primary School/ Composite, Jeevna",-0.883537984225427,0.883537984225427
-"cat__Station_Primary School/ Composite, Jhabiran",1.4055880543008925,1.4055880543008925
-"cat__Station_Primary School/ Composite, Jukhedi",-4.109671467321448,4.109671467321448
-"cat__Station_Primary School/ Composite, Katla Naveen",3.1694107874903352,3.1694107874903352
-"cat__Station_Primary School/ Composite, Landhoura Junardar",-0.6573064564851734,0.6573064564851734
-"cat__Station_Primary School/ Composite, Mandawali Khadar",-1.0209683990169651,1.0209683990169651
-"cat__Station_Primary School/ Composite, Manganpur",-0.32400641015112797,0.32400641015112797
-"cat__Station_Primary School/ Composite, Manoharpur",2.4993900788718406,2.4993900788718406
-"cat__Station_Primary School/ Composite, Manpur Qadeem",4.203375979026703,4.203375979026703
-"cat__Station_Primary School/ Composite, Mehmoodpur",-1.2574981419567166,1.2574981419567166
-"cat__Station_Primary School/ Composite, Mundi Kheri",3.5226773238621263,3.5226773238621263
-"cat__Station_Primary School/ Composite, Nagla Rajput",2.2330732335086623,2.2330732335086623
-"cat__Station_Primary School/ Composite, Nandhera Khurd",2.2995089472041172,2.2995089472041172
-"cat__Station_Primary School/ Composite, Nasrullahgarh",2.4046172514095474,2.4046172514095474
-"cat__Station_Primary School/ Composite, Nunabadi",1.9573314648844757,1.9573314648844757
-"cat__Station_Primary School/ Composite, Pawti",4.398893717131102,4.398893717131102
-"cat__Station_Primary School/ Composite, Peepalhera",-1.9401222075889564,1.9401222075889564
-"cat__Station_Primary School/ Composite, Rasulpur",2.1955623851375208,2.1955623851375208
-"cat__Station_Primary School/ Composite, Sidki",-1.3060420611166705,1.3060420611166705
-"cat__Station_Primary School/ Composite, Tandheda",-0.7524852624258642,0.7524852624258642
-cat__Station_Prmary School Rajpura,-8.02304476203409,8.02304476203409
-cat__Station_Punchayat Bhawan Bhaluwani,-0.5427324098462805,0.5427324098462805
-cat__Station_Punchayat Bhawan Vijaypur,1.4253888793643057,1.4253888793643057
-"cat__Station_Purv Madh Vidhyalaya, Doomradeeh",-1.58833363203496,1.58833363203496
-"cat__Station_Purv Madh Vidhyalaya, Shivpur",3.1408787074681186,3.1408787074681186
-"cat__Station_Purv Madhyamik Vidhyalaya, Doriya",-3.5449884139413257,3.5449884139413257
-"cat__Station_Purv Madhyamik Vidhyalaya, Fattupur",-0.8968744072635957,0.8968744072635957
-"cat__Station_Purv Madhyamik Vidhyalaya, Mahooli",-0.03211324037602026,0.03211324037602026
-"cat__Station_Purv Madhyamik Vidyalaya, Mujehra",-1.4599277594918192,1.4599277594918192
-"cat__Station_Purv Madhyamik Vidyalaya, Ranibari",-0.9950435157756772,0.9950435157756772
-"cat__Station_Purv Madhyamik Vidyalaya,Bharpura",-3.7743470726215094,3.7743470726215094
-cat__Station_Purva Madhyamik Vidhyalaya Achausa,-8.515046678121905,8.515046678121905
-cat__Station_Purva Madhyamik Vidhyalaya Baroda Dang,-0.12989643369030546,0.12989643369030546
-cat__Station_Purva Madhyamik Vidhyalaya Bhitaura,-2.6606398229006345,2.6606398229006345
-cat__Station_Purva Madhyamik Vidhyalaya Ladwari,-2.961751717787479,2.961751717787479
-cat__Station_Purva Madhyamik Vidhyalaya Piphara,0.7164497774101619,0.7164497774101619
-cat__Station_Purva Madhyamik Vidhyalaya Sihari,3.2598167979281243,3.2598167979281243
-"cat__Station_Purva Madhyamik Vidhyalaya, Chackwara",1.2215339732859434,1.2215339732859434
-"cat__Station_Purva Madhyamik Vidhyalaya, Chandapur",3.3025777380735803,3.3025777380735803
-cat__Station_Purva Madhyamik Vidyalaya Chalakpur,3.1904492919779273,3.1904492919779273
-cat__Station_Pv. Compiergang,0.7669622675431356,0.7669622675431356
-cat__Station_R.R.C. Center Aata,4.530030651182869,4.530030651182869
-cat__Station_RASULPUR BARGAON RAJKIYA UCHTTAR PRATHAMIK VIDYALAYA,-2.962366416569239,2.962366416569239
-cat__Station_Rajapur Sikraur,-1.7275846161065829,1.7275846161065829
-cat__Station_Rajkia Balika Inter College Kamasin,-15.497264501893142,15.497264501893142
-cat__Station_Rajkia High School Pakhrauli,-15.22701558447011,15.22701558447011
-cat__Station_Ramchhitoni Sahawar (UP-011),0.9668990664545163,0.9668990664545163
-cat__Station_Rasin_2,19.03492281924457,19.03492281924457
-"cat__Station_Roadways Bus Stand, Robertsganj",1.7477948389815765,1.7477948389815765
-cat__Station_SARAHARI PRATHMIK VIDYALAYA,-1.0440234423203947,1.0440234423203947
-cat__Station_SWASTH KENDR PIPIGANJ,-0.34378175578876835,0.34378175578876835
-cat__Station_Saint Ravidas Nagar Abholi Abholi,-0.7793162658175561,0.7793162658175561
-cat__Station_Saint Ravidas Nagar Abholi Gangarampur,0.18276389605463805,0.18276389605463805
-cat__Station_Saint Ravidas Nagar Aurai Ugapur,-0.341224974172917,0.341224974172917
-cat__Station_Saint Ravidas Nagar Aurai Uprauth,2.245485616170896,2.245485616170896
-cat__Station_Saint Ravidas Nagar Bhadohi Munshi,0.7619436957091921,0.7619436957091921
-cat__Station_Saint Ravidas Nagar Deegh  Deegh,0.459039809402924,0.459039809402924
-cat__Station_Saint Ravidas Nagar Deegh Velahua,1.495670535445754,1.495670535445754
-cat__Station_Saint Ravidas Nagar Gyanpur Kansapur,2.8214663365565116,2.8214663365565116
-cat__Station_Saint Ravidas Nagar Gyanpur Samhai,-1.3591428254378286,1.3591428254378286
-cat__Station_Saint Ravidas Nagar Suriyawan Chhapariya,-2.1755162791148734,2.1755162791148734
-cat__Station_Saint Ravidas Nagar Suriyawan Mond,0.6507555298559851,0.6507555298559851
-cat__Station_Saital,-0.12216770637519403,0.12216770637519403
-cat__Station_Salhakheri,-7.00289039787026,7.00289039787026
-"cat__Station_Samaj Sevak Junir High School, Bhaura Kalan",-11.228004435356638,11.228004435356638
-cat__Station_Sanjhak,-2.121887699960496,2.121887699960496
-cat__Station_Satti Chau Prathmik Vidyalaya,-1.0597449489472694,1.0597449489472694
-"cat__Station_Shahid Chandra Shekhar Kanya P.M.V., Mallupura",-3.4425156829379375,3.4425156829379375
-cat__Station_Shahjahanpur Bhawal Kheda Bhawal Kheda,2.4256230767731495,2.4256230767731495
-cat__Station_Shahjahanpur Bhawal Kheda Chak Bhitara,2.9663713188756446,2.9663713188756446
-cat__Station_Shahjahanpur Bhawal Kheda Chaudhera,1.99376110195999,1.99376110195999
-cat__Station_Shahjahanpur Bhawal Kheda Ladhauli,-0.995220629868868,0.995220629868868
-cat__Station_Shahjahanpur Bhawal Kheda Shahbaj Pur,2.2056563661087694,2.2056563661087694
-cat__Station_Shahjahanpur Bhawal Kheda Sutnera,1.3300918321493782,1.3300918321493782
-cat__Station_Shahjahanpur Dadraul Banthara,2.5374887179236794,2.5374887179236794
-cat__Station_Shahjahanpur Dadraul Saraura (East),1.7888171528883277,1.7888171528883277
-cat__Station_Shahjahanpur Puvayan  Badagaon Pratham,-0.5040590831744112,0.5040590831744112
-cat__Station_Shahjahanpur Puvayan Bhilawan,-1.0439800033288975,1.0439800033288975
-cat__Station_Shahjahanpur Puvayan Mahua Pathak,3.110137349788488,3.110137349788488
-cat__Station_Shahjahanpur Puvayan Nahil,1.1194508611633864,1.1194508611633864
-cat__Station_Shahjahanpur Sidhauli Korokuiyan,3.790101095880118,3.790101095880118
-cat__Station_Shahjahanpur Sidhauli Mahanand Pur,3.314603150013909,3.314603150013909
-cat__Station_Shahjahanpur Sidhauli Sidhauli,0.8263827478612029,0.8263827478612029
-cat__Station_Shitalpur_1,17.042916535975905,17.042916535975905
-cat__Station_Sikhula Pz._1,16.77330719736824,16.77330719736824
-cat__Station_Singhara Pr. Vid.,1.5138730125896132,1.5138730125896132
-cat__Station_Sitapur Mafi,19.190974045622596,19.190974045622596
-cat__Station_Sonbhadra Babhani Bhawar,2.6476926274551147,2.6476926274551147
-cat__Station_Sonbhadra Chopan Khairatiya,0.21306577217598033,0.21306577217598033
-cat__Station_Sonbhadra Duddhi Mahuli,3.2338899963085908,3.2338899963085908
-cat__Station_Srikantpur Pr. Vid.,-0.048414289099412144,0.048414289099412144
-cat__Station_Sujanpura Badhyapar,1.0892226784224022,1.0892226784224022
-"cat__Station_Swarg Dham, Hardua",-7.979174409009033,7.979174409009033
-cat__Station_Terha_1,14.911878334541825,14.911878334541825
-"cat__Station_Thana Prisar, Lalganj",1.8659030841824347,1.8659030841824347
-cat__Station_Uccha Prathmik Vidhyalaya Deaval,-10.884546651619075,10.884546651619075
-cat__Station_Uccha Prathmik Vidhyalaya Devaratha,-7.294977661523717,7.294977661523717
-cat__Station_Uccha Prathmik Vidhyalaya Odera,-7.539501045697534,7.539501045697534
-cat__Station_Uccha Prathmik Vidhyalaya Uldan,-2.758459307137059,2.758459307137059
-"cat__Station_Uccha Prathmik Vidhyalaya, Chero",0.3074313452334536,0.3074313452334536
-"cat__Station_Uccha Prathmik Vidhyalaya, Gangapur",-5.662499584147554,5.662499584147554
-"cat__Station_Uccha Prathmik Vidhyalaya, Hasanpur Kadim",-15.078773458860383,15.078773458860383
-"cat__Station_Uccha Prathmik Vidhyalaya, Kapsarh",2.665965372867845,2.665965372867845
-"cat__Station_Uccha Prathmik Vidhyalaya, Lohra (Pampawan)",-3.681577296041837,3.681577296041837
-"cat__Station_Uccha Prathmik Vidhyalaya, Pathouli",-0.12119355410709431,0.12119355410709431
-"cat__Station_Uccha Prathmik Vidhyalaya, Semra Bhav Nagar",-1.4949006183486517,1.4949006183486517
-"cat__Station_Uccha Prathmik Vidhyalaya, Simra",-5.9918964916381015,5.9918964916381015
-cat__Station_Upper Primary Kasampur,1.0772696765092746,1.0772696765092746
-"cat__Station_Upper Primary School Eng Medium, Hariyabans",-2.7977529573473703,2.7977529573473703
-cat__Station_Upper Primary School Lehra,3.2881487469721833,3.2881487469721833
-cat__Station_Upper Primary School Pohalli,-0.25622613435257335,0.25622613435257335
-cat__Station_Upper Primary School Rijaula,-4.48633036595794,4.48633036595794
-cat__Station_Upper Primary School Sarahan Bujurg,-5.795894367854999,5.795894367854999
-cat__Station_Upper Primary School Urouliya,-4.222938878144532,4.222938878144532
-"cat__Station_Upper Primary School, Khadui",3.1995395448264503,3.1995395448264503
-cat__Station_Varansi Badagaon Gajapur,-1.263742759904062,1.263742759904062
-cat__Station_Varansi Chirai Gaon  Gathiya Jairampur,-7.369022995181638,7.369022995181638
-cat__Station_Varansi Chirai Gaon Chhahi,-4.004597039725979,4.004597039725979
-cat__Station_Varansi Cholapur Chaubepur,4.242174439214182,4.242174439214182
-cat__Station_Varansi Cholapur Munari,-2.3599972459143714,2.3599972459143714
-cat__Station_Varansi Harahua Bhaithauli,1.79391477452441,1.79391477452441
-cat__Station_Varansi Harahua Gurwat,0.7893779400210974,0.7893779400210974
-cat__Station_Varansi Harahua Kakalpur,-8.068122533902681,8.068122533902681
-cat__Station_Varansi Harahua Shivrampur,1.341231505617543,1.341231505617543
-cat__Station_Varansi Harahua Sulemapur,-1.7279631578578574,1.7279631578578574
-cat__Station_Varansi Pindara Gajendra,1.4750354943540174,1.4750354943540174
-cat__Station_Varansi Pindara Molanapur,3.271544579315105,3.271544579315105
-cat__Station_Veterinary Hospital Shahjahanpur,-0.5389205100499339,0.5389205100499339
-"cat__Station_Vikash Khand Parisar, Itwa",1.2328613582903927,1.2328613582903927
-cat__Station_primary school Chaura khurd,-3.9395144733898064,3.9395144733898064
-cat__Station_primary school jalalpura,-0.7083715503363806,0.7083715503363806
-cat__Station_primary school kapasi,1.4297359806602685,1.4297359806602685
-cat__District_AGRA,-2.4042025421817925,2.4042025421817925
-cat__District_AZAMGARH,2.016105511560909,2.016105511560909
-cat__District_BAGHPAT,-7.918501901698619,7.918501901698619
-cat__District_BANDA,6.695177884488203,6.695177884488203
-cat__District_BAREILLY,-0.6882540460960627,0.6882540460960627
-cat__District_BUDAUN,-4.5661154728095426,4.5661154728095426
-cat__District_CHITRAKOOT,4.259163181840904,4.259163181840904
-cat__District_DEORIA,1.8133192131472242,1.8133192131472242
-cat__District_ETAH,-1.8625743800626964,1.8625743800626964
-cat__District_FATEHPUR,-8.730388322114777,8.730388322114777
-cat__District_GHAZIABAD,-0.9803287851316327,0.9803287851316327
-cat__District_GORAKHPUR,2.272162186138985,2.272162186138985
-cat__District_HAMIRPUR,8.465981584531619,8.465981584531619
-cat__District_JALAUN,-0.5700476558095033,0.5700476558095033
-cat__District_JHANSI,3.5432609913716533,3.5432609913716533
-cat__District_KANSIRAM NAGAR,0.966899067514305,0.966899067514305
-cat__District_KAUSHAMBI,-4.4135528639203585,4.4135528639203585
-cat__District_LALITPUR,3.3844964503355186,3.3844964503355186
-cat__District_MAHOBA,9.899783189485333,9.899783189485333
-cat__District_MEERUT,-1.469454213286781,1.469454213286781
-cat__District_MIRZAPUR,-1.2755419971754236,1.2755419971754236
-cat__District_MUZAFFARNAGAR,-3.0610052265992636,3.0610052265992636
-cat__District_PRATAPGARH,-1.1571899493385445,1.1571899493385445
-cat__District_SAHARANPUR,-2.459637710734569,2.459637710734569
-cat__District_SANT RAVIDAS NAGAR,-1.2092605952616395,1.2092605952616395
-cat__District_SHRAWASTI,1.4043473038182128,1.4043473038182128
-cat__District_SIDDHARTHNAGAR,2.1339872701657896,2.1339872701657896
-cat__District_SONBHADRA,-0.5441654884241416,0.5441654884241416
-cat__District_VARANASI,-3.54446268116817,3.54446268116817
+num__gwl,-9.73429818383282,9.73429818383282
+num__lag1,0.26249261950886194,0.26249261950886194
+num__lag4,-0.348085448273892,0.348085448273892
+num__lag8,-0.29559207775505314,0.29559207775505314
+num__lag28,0.10476496329624574,0.10476496329624574
+num__lag120,-1.0215670014898213,1.0215670014898213
+num__gwl_roll7_mean,5.728384979332738,5.728384979332738
+num__gwl_roll7_std,-0.15144225991558224,0.15144225991558224
+num__gwl_roll30_mean,-3.0314832082477494,3.0314832082477494
+num__gwl_roll30_std,0.718919526482322,0.718919526482322
+num__rain_1d,0.01033501888086441,0.01033501888086441
+num__rain_7d,-0.005436408297153417,0.005436408297153417
+num__rain_30d,0.12619950175714323,0.12619950175714323
+num__temp,-0.01402739673645173,0.01402739673645173
+num__temp_7d,0.009003862122021977,0.009003862122021977
+num__humidity,0.019063126590260708,0.019063126590260708
+num__humidity_7d,-0.01609705446131976,0.01609705446131976
+num__solar,-0.026203592967752744,0.026203592967752744
+num__wind_speed,-0.03490475094388579,0.03490475094388579
+num__pressure,0.04933604744048729,0.04933604744048729
+num__river_level,-0.04207387158110029,0.04207387158110029
+num__canal_level,-0.06410400319246602,0.06410400319246602
+num__year,-0.0431859989827067,0.0431859989827067
+num__month_sin,-0.07849777968885707,0.07849777968885707
+num__month_cos,-0.042316145682574025,0.042316145682574025
+num__doy_sin,-0.4316540580886219,0.4316540580886219
+num__doy_cos,0.10383692009722889,0.10383692009722889
+num__hour_sin,0.036282077308829236,0.036282077308829236
+num__hour_cos,-0.04405554140013551,0.04405554140013551
+num__monsoon,-0.1686452433148804,0.1686452433148804
+cat__Station_ASHADHA PRATHMIK VIDYALAYA,3.3452527753547656,3.3452527753547656
+cat__Station_Aagan Wadi Kendra Chandni,2.3199131364590357,2.3199131364590357
+cat__Station_Aaganwadi Kendra Pakri Bazaar,0.22366913989077375,0.22366913989077375
+"cat__Station_Adarsh Primary School, Dubar Kalan",4.60826029187524,4.60826029187524
+cat__Station_Agan Wadi Kendra Kuchendu,-14.104343934530334,14.104343934530334
+cat__Station_Alakchandra Inter college Bhinga,-1.2415533272832135,1.2415533272832135
+cat__Station_Aligarh Chandaus  Somana,2.9356697649988632,2.9356697649988632
+cat__Station_Aligarh Chandaus Maharajpur,3.298841229683262,3.298841229683262
+cat__Station_Aligarh Jawa Bahadurpur Kota,0.3967793031337692,0.3967793031337692
+cat__Station_Aligarh Jawa Jamalpur Siya,-2.8469563818420056,2.8469563818420056
+cat__Station_Aligarh Jawa Sogera,3.6575763639863794,3.6575763639863794
+cat__Station_Aligarh Khair Arrana,3.243997614526279,3.243997614526279
+cat__Station_Aligarh Khair Utwara,3.229563303742509,3.229563303742509
+cat__Station_Aligarh Lodha Aisi Kol,-8.717042712383943,8.717042712383943
+cat__Station_Aligarh Lodha Mahrawalpur Nagariya,-7.4708752264047575,7.4708752264047575
+cat__Station_Amchurnirua,11.757444344197097,11.757444344197097
+"cat__Station_Anganwadi Kedra, Baini",3.2595881551484354,3.2595881551484354
+cat__Station_Aryavart Madhyamik Vidhyalaya Sindhora,0.03346501070313934,0.03346501070313934
+cat__Station_Aswaniya Pr. Vid.,0.8057068821847224,0.8057068821847224
+cat__Station_Awagarh (UP-005),-6.427306570179553,6.427306570179553
+cat__Station_Azamgarh Ahiraula Bahera,0.6642697300590044,0.6642697300590044
+cat__Station_Azamgarh Ahiraula Kandara,0.6805217628129867,0.6805217628129867
+cat__Station_Azamgarh Atrauliya Atrauliya,1.6099189040116926,1.6099189040116926
+cat__Station_Azamgarh Jahanganj Godhaura,-0.1953256960505314,0.1953256960505314
+cat__Station_Azamgarh Lalganj Lalganj,0.4835874384871204,0.4835874384871204
+cat__Station_Azamgarh Palhana Balahi Lahucha,-0.6778266535457078,0.6778266535457078
+cat__Station_Azamgarh Palhana Jamui Bhatauli,1.472060463929779,1.472060463929779
+cat__Station_Azamgarh Pavai Velasiya,0.047344284297764716,0.047344284297764716
+cat__Station_Azamgarh Sathiyavn Gajahada,0.7205970129955404,0.7205970129955404
+cat__Station_Azamgarh Thekama Bardah,0.2215054042758311,0.2215054042758311
+cat__Station_B.D.O Office Bhatini,0.8465259487925465,0.8465259487925465
+cat__Station_B.D.O. Office Lar,-1.002766597399841,1.002766597399841
+"cat__Station_B.D.O. Office, Binauli",-5.649249327137284,5.649249327137284
+cat__Station_BADHANI PRATHMIK VIDYALAYA,0.263836165066877,0.263836165066877
+cat__Station_BANI KHAS C.V. VIDYALAYA,0.5363129379129532,0.5363129379129532
+cat__Station_BANSGAON PRATHMIK VIDYALAYA,-0.1738782641809209,0.1738782641809209
+cat__Station_Babina Rular,20.530498721058905,20.530498721058905
+cat__Station_Badaun Salarpur BDO Office,-3.54361919300959,3.54361919300959
+cat__Station_Badaun Ujhani Sports Stadium,0.050920519185183366,0.050920519185183366
+cat__Station_Badaun Usawan BDO Office,-3.7935251083428057,3.7935251083428057
+cat__Station_Badhai Khurd Pr. Vid.,3.0169244691105632,3.0169244691105632
+cat__Station_Badhouli,19.28913905124216,19.28913905124216
+cat__Station_Baghpat Meerut Kheda Balrampur Itiyara,-2.2788749629994207,2.2788749629994207
+cat__Station_Banda Baberu Anvan,-2.0711151445757423,2.0711151445757423
+cat__Station_Banda Baberu Umrehani,-4.466068916049835,4.466068916049835
+cat__Station_Banda Badokhar Khurd Chatgan,-8.689728036226143,8.689728036226143
+cat__Station_Banda Bisndha Mrooli,-2.982545349809243,2.982545349809243
+cat__Station_Banda Kamasin Tilowsa,-3.893603073830036,3.893603073830036
+cat__Station_Banda Tindwari Bhindowra,-11.729160109923669,11.729160109923669
+cat__Station_Bdo Office Campus Pipraich,0.8705268672797644,0.8705268672797644
+cat__Station_Bhitari_2,13.032531350038994,13.032531350038994
+cat__Station_Bijijauri_1,20.727413991352364,20.727413991352364
+cat__Station_Birdha /Poorabirdha,19.61056898825501,19.61056898825501
+cat__Station_Block Deoria Campus Deoria Sadar,0.4748033319547318,0.4748033319547318
+cat__Station_Block Development Office-Khekra-Shallow,-6.6934570804903615,6.6934570804903615
+"cat__Station_Block Office, Kurara",-5.750690071017289,5.750690071017289
+"cat__Station_Block office, Gursarai",-3.3991015825483544,3.3991015825483544
+cat__Station_Chakara  P_1,20.45129746499316,20.45129746499316
+cat__Station_Chandi Kalan,18.05120534573132,18.05120534573132
+cat__Station_Chhibaw_1,18.133534972959524,18.133534972959524
+cat__Station_Chirautha,17.59196732252485,17.59196732252485
+cat__Station_Chitrakoot Karvi Khoha,-12.59734225404759,12.59734225404759
+cat__Station_Chitrakoot Karvi Shivrampur,-21.89597265597979,21.89597265597979
+cat__Station_Chitrakoot Manikpur Agarhudha,-14.2074765771398,14.2074765771398
+cat__Station_Chitrakoot Manikpur Sardar Patel,-13.066904315906754,13.066904315906754
+cat__Station_Chorwa Bhari Prathmik Vidyalaya,1.5999614000005522,1.5999614000005522
+"cat__Station_Community Center, Ghorawal",1.4468782701434293,1.4468782701434293
+cat__Station_Comosite School Campus Badalganj,-1.5654433886446668,1.5654433886446668
+cat__Station_Composite Girls Primary School Mai,-12.391888767986757,12.391888767986757
+cat__Station_Composite School Basantpur Saitali-1,0.4312241272330084,0.4312241272330084
+cat__Station_Composite School Biralsi,1.1855026859374789,1.1855026859374789
+cat__Station_Composite School Kilhora,-5.545034064236916,5.545034064236916
+cat__Station_Composite School Nagla Bair,-0.6706874128624349,0.6706874128624349
+cat__Station_Composite School Sagarpur,-1.6675366859130918,1.6675366859130918
+cat__Station_Composite School Sanjarpur,3.907541418180699,3.907541418180699
+cat__Station_Composite School katar,-0.48562634840016017,0.48562634840016017
+"cat__Station_Composite School, Dhamna Khurd",4.396901292914208,4.396901292914208
+"cat__Station_Composite School, Ghamhapur",-2.329185399156131,2.329185399156131
+"cat__Station_Composite School, Mungari",0.11383565175242438,0.11383565175242438
+"cat__Station_Composite School, Pathraha",-2.8139670096095415,2.8139670096095415
+"cat__Station_Composite Uccha Prathmik Vidhyalaya, Paltadevi",-0.06042966553036422,0.06042966553036422
+cat__Station_Composite Upper Primary School Sajania,-2.1340611282828377,2.1340611282828377
+cat__Station_DEOCHALI C.V. VIDYALAYA,7.419880047970764,7.419880047970764
+cat__Station_Deoria Bhaluwani Markna,0.7165963642836886,0.7165963642836886
+cat__Station_Deoria Bhatani Mishrauli Dichit,0.8503101097035568,0.8503101097035568
+cat__Station_Deoria Bhatpar Rani Dharkwan,1.2241110752329831,1.2241110752329831
+cat__Station_Deoria Salempur Manihari,0.13396833496106808,0.13396833496106808
+cat__Station_Deoria Tarkulwa Tarkulwa,-2.0111632168746496,2.0111632168746496
+cat__Station_Devrar_1,17.72107671403478,17.72107671403478
+cat__Station_Dhikauli,20.305736452678303,20.305736452678303
+cat__Station_Etah Aavagarh Badhawali,3.6133896610194824,3.6133896610194824
+cat__Station_Etah Jalesar Hasangarh,-0.3608714403394515,0.3608714403394515
+cat__Station_Etah Jalesar Sakrauli,-4.3391221581273385,4.3391221581273385
+cat__Station_FAREDUPUR PRATHMIK VIDYALAYA,2.388792720057154,2.388792720057154
+cat__Station_Firozabad Madanpur Rudhawali,-7.367613665002864,7.367613665002864
+cat__Station_Gadhela Panchayat Bhawan,-5.11832230576465,5.11832230576465
+cat__Station_Gloragundera/Gewara,19.90321703241517,19.90321703241517
+cat__Station_Gorakhpur Barahalganj Bhatpar (Saukhor),-0.4982954462402347,0.4982954462402347
+cat__Station_Gorakhpur Barahalganj Ojhauli,-0.7514722509387752,0.7514722509387752
+cat__Station_Gorakhpur Belghat Belghat,-0.9324969793126456,0.9324969793126456
+cat__Station_Gorakhpur Belghat Murarpur,-0.35520186482074223,0.35520186482074223
+cat__Station_Gorakhpur Chargaon Beniganj,1.5625084622238177,1.5625084622238177
+cat__Station_Gorakhpur Gagaha Gagaha,0.37152372142038814,0.37152372142038814
+cat__Station_Gorakhpur Gola Dhakwarchak,0.20329879268869178,0.20329879268869178
+cat__Station_Gorakhpur Gola Gopalpur Patham,1.115871405616133,1.115871405616133
+cat__Station_Gorakhpur Gola Turkwaliya,0.08499042017824365,0.08499042017824365
+cat__Station_Gorakhpur Kauriram Dhausa,0.7988557390895465,0.7988557390895465
+cat__Station_Gorakhpur Kauriram Jagdispur Bhaluwan 2Nd,0.9101985923762186,0.9101985923762186
+cat__Station_Gorakhpur Pali Dumari Niwas,-0.07573977267387022,0.07573977267387022
+cat__Station_Gorakhpur Pali Pali,-0.08320468372122036,0.08320468372122036
+cat__Station_Gorakhpur Sahjanwa Kasrol,0.5637584024236304,0.5637584024236304
+cat__Station_Gorakhpur Sardarnagr Awadpur,1.8153004526007237,1.8153004526007237
+cat__Station_Gorakhpur Urwa Malhanpar,0.17722225661626823,0.17722225661626823
+cat__Station_Goshala Bada Gaon,-8.59271994524238,8.59271994524238
+cat__Station_Goshala Bankat,-14.039623723823752,14.039623723823752
+cat__Station_Goshala Basela,-3.806470568874829,3.806470568874829
+cat__Station_Goshala Bhadehdu,-13.032157569869696,13.032157569869696
+cat__Station_Goshala Churaha,-20.223568416335638,20.223568416335638
+cat__Station_Goshala Ghuri,-4.521429008487075,4.521429008487075
+cat__Station_Goshala Pachhahan,-13.160556878668785,13.160556878668785
+cat__Station_Goyla,-6.0960641789985175,6.0960641789985175
+"cat__Station_Gram Panchayat Sachiwalaya / D.B.R. Ambedkar Samudayak Bhawan, Durkhuroo",-12.693299737232877,12.693299737232877
+cat__Station_Grampunchayat Sachiwalaya Deori,1.8400525284812375,1.8400525284812375
+cat__Station_Gyana Majra Pr. Vid.,0.6944296103179113,0.6944296103179113
+cat__Station_HARNHAPUR PRATHAMIK VIDYALAYA,-5.17612729843313,5.17612729843313
+cat__Station_HOLAGARH PURV MADHYAMIK VIDYALAYA,2.986007578097997,2.986007578097997
+cat__Station_Halwana,-0.31272544618934717,0.31272544618934717
+cat__Station_Hamirpur Kurara Damar,-2.9451604450081277,2.9451604450081277
+cat__Station_Hamirpur Kurara Jalokhar,-3.9418996929871355,3.9418996929871355
+cat__Station_Hamirpur Sarila Purani,-16.707054187438985,16.707054187438985
+cat__Station_Hamirpur Sumerpur Etara,-5.255590996424758,5.255590996424758
+cat__Station_Hamirpur Sumerpur Para,-13.602247333233208,13.602247333233208
+cat__Station_Hathras Hathras Hathras,1.901925086528081,1.901925086528081
+cat__Station_Hathras Mursan Chandapa Sandh,-8.63080900847649,8.63080900847649
+cat__Station_High School & Inter College Boroda,26.05965882124002,26.05965882124002
+"cat__Station_ITI Campus, ITI Campus Area",-1.4284919209680425,1.4284919209680425
+cat__Station_Inter Collage Khampar,0.11559366208044253,0.11559366208044253
+"cat__Station_Inter College, Sarv Hitakari",-4.448420110953208,4.448420110953208
+"cat__Station_Inter college, Tindwara",-6.974666849587493,6.974666849587493
+"cat__Station_Irrigation Department, Amawar",0.023795239847800076,0.023795239847800076
+cat__Station_Jamalpur_2,19.752242855253314,19.752242855253314
+"cat__Station_Janata Inter College, Lachheda",-1.2213351250709366,1.2213351250709366
+cat__Station_Jauharpur,18.653089947272292,18.653089947272292
+cat__Station_Jaunpur Dobhi Bagerwa,-2.24860214085858,2.24860214085858
+cat__Station_Jaunpur Dobhi Bankati,-4.246054158838632,4.246054158838632
+cat__Station_Jaunpur Dobhi Kachhawan,-4.044719778500195,4.044719778500195
+cat__Station_Jaunpur Dobhi Kakarapar,1.968404960281049,1.968404960281049
+cat__Station_Jaunpur Jalalpur Katuwani,0.25253554775871123,0.25253554775871123
+cat__Station_Jaunpur Jalalpur Vanpurwa,-0.08771192503384384,0.08771192503384384
+cat__Station_Jaunpur Jalalpur Vind,2.2269019748043775,2.2269019748043775
+cat__Station_Jaunpur Kerakat  Kharg Senpur,1.7950999717424594,1.7950999717424594
+cat__Station_Jaunpur Kerakat Barbaspur (Sohani),2.1695646925536494,2.1695646925536494
+cat__Station_Jaunpur Kerakat Mahali,0.15538305203773461,0.15538305203773461
+cat__Station_Jaunpur Kerakat Nihalapur,2.251915614644304,2.251915614644304
+cat__Station_Jaunpur Rampur Kamaruddin,-2.2823295577942417,2.2823295577942417
+cat__Station_Jaunpur Rampur Kaseru Nonara,1.8842878128043452,1.8842878128043452
+cat__Station_Jaunpur Rampur Kathwatiya,-4.0834015539012825,4.0834015539012825
+cat__Station_Jaunpur Rampur Sultanpur,3.4803525059120233,3.4803525059120233
+"cat__Station_Jr. High School, Purwa Tarouha",13.03186863851829,13.03186863851829
+cat__Station_KOSHAK IMAM PRATHMIK VIDYALAYA,2.6292353448247923,2.6292353448247923
+cat__Station_Kamhariya_1,18.006553104452905,18.006553104452905
+cat__Station_Khojapur,-3.209561278420665,3.209561278420665
+cat__Station_Khursropur,2.0136897885032568,2.0136897885032568
+cat__Station_Kukwa Khaas,17.734198504800588,17.734198504800588
+cat__Station_Kusarma,20.210195413296788,20.210195413296788
+cat__Station_Kushinagar Captanganj Captanganj,-0.9061565368151605,0.9061565368151605
+cat__Station_Kushinagar Captanganj Senduriya Vishunpur,0.8612362607690898,0.8612362607690898
+cat__Station_Kushinagar Dudhai Dudhai,-0.14505809135113168,0.14505809135113168
+cat__Station_Kushinagar Dudhai Gorariya,-0.5858033878684523,0.5858033878684523
+cat__Station_Kushinagar Dudhai Lala Chhapra,0.7755550740769763,0.7755550740769763
+cat__Station_Kushinagar Fazilnagar  Belwakala,0.9053250635372478,0.9053250635372478
+cat__Station_Kushinagar Fazilnagar Jokwa Bujurg,-0.3809111876283282,0.3809111876283282
+cat__Station_Kushinagar Fazilnagar Narayanpur Khoti,-1.2900181008540699,1.2900181008540699
+cat__Station_Kushinagar Khadda Basdila,0.9416953494702511,0.9416953494702511
+cat__Station_Kushinagar Khadda Khadda,0.7484748082553665,0.7484748082553665
+cat__Station_Kushinagar Motichak Mathauli Bazar,0.08029342493523473,0.08029342493523473
+cat__Station_Kushinagar Motichak Motichak,1.0826037728711526,1.0826037728711526
+cat__Station_Kushinagar Sewarhi  Rampur Bagra N0.2,-0.22935617771797467,0.22935617771797467
+cat__Station_Kushinagar Sewarhi Sewarhi,0.2895426523049309,0.2895426523049309
+cat__Station_Kushinagar Tamkuhi Rajwatiya,0.4185942597808321,0.4185942597808321
+cat__Station_Kushinagar Tamkuhi Tamkuhi,0.017469283309310413,0.017469283309310413
+cat__Station_Lagdi Gullar Prathmik Vidyalaya,0.9376756978928142,0.9376756978928142
+cat__Station_Luktra,16.959008608656177,16.959008608656177
+cat__Station_MANDHATA PURV MADHYAMIK VIDYALAYA,-0.8964104075898831,0.8964104075898831
+cat__Station_Madarpur_1,18.992580922104025,18.992580922104025
+"cat__Station_Madhyamik Vidhyalaya, Dulha Daul",2.4202633441268517,2.4202633441268517
+"cat__Station_Mahadeva Temple, Mahadeva",-4.154560715187813,4.154560715187813
+cat__Station_Maharajganj Dhani Nausagar,0.0829272352859789,0.0829272352859789
+cat__Station_Maharajganj Mithaura Bhagatar,0.8449152820147106,0.8449152820147106
+cat__Station_Maharajganj Mithaura Madanpura,0.04912540263842402,0.04912540263842402
+cat__Station_Maharajganj Nautanwa Purniha,-0.1863002316148652,0.1863002316148652
+cat__Station_Maharajganj Nautanwa Sampatiha,0.13128476739893813,0.13128476739893813
+cat__Station_Maharajganj Nichlaul Balaekhor,0.7242090062178477,0.7242090062178477
+cat__Station_Maharajganj Nichlaul Garaura,1.0162468362569257,1.0162468362569257
+cat__Station_Maharajganj Siswa Siswa,0.3157945714336847,0.3157945714336847
+cat__Station_Mahgaon (UP-031),-4.824850774975403,4.824850774975403
+cat__Station_Mahoba Charkhari Kuaan,-5.006748197540105,5.006748197540105
+cat__Station_Mahoba Charkhari Natara,-3.842080068266341,3.842080068266341
+cat__Station_Mahoba Charkhari Padha,-5.906532015017319,5.906532015017319
+cat__Station_Mahoba Jaitpur saguniyamaph,-0.7719275655274487,0.7719275655274487
+cat__Station_Mahoba Kabrai Karaha,-5.826500510908318,5.826500510908318
+cat__Station_Mahoba Kabrai Sisri Kala,-1.323049765706969,1.323049765706969
+cat__Station_Mahoba Panwari Didvara,-11.868489959472868,11.868489959472868
+cat__Station_Mainpuri Karhal  Rajpur,-0.661752317875937,0.661752317875937
+cat__Station_Mainpuri Karhal Mohabbatpur,-0.10534251771451864,0.10534251771451864
+cat__Station_Mainpuri Karhal Naglamdari,1.3146294658786815,1.3146294658786815
+cat__Station_Mainpuri Karhal Takhrau,1.035074316415887,1.035074316415887
+cat__Station_Mainpuri Karhal Timrakh,0.9665406379648402,0.9665406379648402
+cat__Station_Mandi Samiti-Muzaffar Nagar-Medium,-6.608151730326256,6.608151730326256
+cat__Station_Mathura Baldeo  Khanpur,-5.0179805854402275,5.0179805854402275
+cat__Station_Mathura Chaumuha Navagaon-11,-3.1725020496121488,3.1725020496121488
+cat__Station_Mathura Chhata Chandauri,0.4854992766720443,0.4854992766720443
+cat__Station_Mathura Nandgaon Nandgaon Dehat,3.7344082892673214,3.7344082892673214
+cat__Station_Mathura Nandgaon Vathainkala,5.404145813732157,5.404145813732157
+cat__Station_Mathura Naujheel Badharra,-0.557859475524765,0.557859475524765
+cat__Station_Mathura Pharah Nagala Medhaki,1.83658945008915,1.83658945008915
+cat__Station_Mathura Rayan Kharaba,-3.338030987570164,3.338030987570164
+cat__Station_Meerut Janikhurd Afjalpur Pavati,-0.40019044229393685,0.40019044229393685
+cat__Station_Meerut Janikhurd Satvai,2.636563547706629,2.636563547706629
+cat__Station_Meerut Sardhana Chhabariya,-1.6869722360119148,1.6869722360119148
+"cat__Station_Nagar Palika Campus, Gyanpur",0.3443286510282064,0.3443286510282064
+cat__Station_Naglakabu_1,23.43355638778329,23.43355638778329
+cat__Station_Narajit,17.54949939771791,17.54949939771791
+cat__Station_Navrasia,-0.7112430127103835,0.7112430127103835
+cat__Station_Niwabhari Prathmik Vidyalaya,1.3720627844022601,1.3720627844022601
+"cat__Station_Office of Assistant Director, Resham",0.06238329975894885,0.06238329975894885
+"cat__Station_Office of the Development Officer, Dakore",3.3641052335458426,3.3641052335458426
+cat__Station_PAHARPUR BARIGAWA PRATHMIK VIDYALAYA,-3.227977027513589,3.227977027513589
+cat__Station_PRIMARY SCHOOL BAKAR GANJ,-2.727448800631464,2.727448800631464
+cat__Station_PRIMARY SCHOOL RAMUGHAT,-0.5378913893168544,0.5378913893168544
+cat__Station_Paderi,19.033218784333258,19.033218784333258
+cat__Station_Pahara_2,12.019521311846233,12.019521311846233
+cat__Station_Panchayat Bhawan Kuda Nar Singhpur,-1.0527933872192534,1.0527933872192534
+cat__Station_Panchayat Bhawan Usmanpur,6.52384798258538,6.52384798258538
+"cat__Station_Panchayat Bhawan, Dohri",1.2627088504598305,1.2627088504598305
+"cat__Station_Panchayat Bhawan, Kul Doomri",1.0790071365192944,1.0790071365192944
+"cat__Station_Panchayat Bhwan, Kon",-11.098116502755033,11.098116502755033
+cat__Station_Pathrodi,12.09560543780458,12.09560543780458
+cat__Station_Perthivipur Nayakh,20.094176164461942,20.094176164461942
+cat__Station_Piparaond,11.925048997115482,11.925048997115482
+cat__Station_Poorv Madhamik Vidhyalaya Kaseti,-1.570556057877866,1.570556057877866
+cat__Station_Prathmik Vidhyalaya Bant,-2.0366379040858646,2.0366379040858646
+cat__Station_Prathmik Vidhyalaya Barha,4.684053685803519,4.684053685803519
+cat__Station_Prathmik Vidhyalaya Mahugarh,4.888268013985453,4.888268013985453
+cat__Station_Prathmik Vidhyalaya Manohari,2.7834067948781467,2.7834067948781467
+cat__Station_Prathmik Vidhyalaya Pahalgaon,-0.29020722244393937,0.29020722244393937
+cat__Station_Prathmik Vidhyalaya Pipra Sarvan,0.46529776941487455,0.46529776941487455
+cat__Station_Prathmik Vidhyalaya Sirasiya Pawar,-1.1825735736424576,1.1825735736424576
+cat__Station_Prathmik Vidhyalaya Takuli (Durahi Maafi),-3.9967373054726067,3.9967373054726067
+"cat__Station_Prathmik Vidhyalaya, Katiliaha",-1.753506539056616,1.753506539056616
+"cat__Station_Prathmik Vidhyalaya, Makarndpur",-4.999412153505546,4.999412153505546
+"cat__Station_Prathmik Vidhyalaya, Nehlawa",-0.20569242652027242,0.20569242652027242
+"cat__Station_Prathmik Vidhyalaya, Phaprana",0.08142234169417861,0.08142234169417861
+"cat__Station_Prathmik Vidhyalaya, Shahjahanpur_1",-0.18046400885782532,0.18046400885782532
+"cat__Station_Prathmik Vidhyalaya, Thavai",8.163640680506887,8.163640680506887
+"cat__Station_Pratmik Vidhyalaya, Kakaruwa",-2.178498060368156,2.178498060368156
+cat__Station_Priamry School Mukasim,3.156384722981329,3.156384722981329
+"cat__Station_Primary  School, Nawada Kalan",2.7584361232557058,2.7584361232557058
+"cat__Station_Primary / Composite School, Banwaripur",5.681150107862919,5.681150107862919
+"cat__Station_Primary / Composite School, Chiraudi",1.9071175384885422,1.9071175384885422
+"cat__Station_Primary / Composite School, Jainpur",1.5907918614203425,1.5907918614203425
+"cat__Station_Primary / Composite School, Jasad",0.32525459972609383,0.32525459972609383
+"cat__Station_Primary / Composite School, Mahalaka",-1.0196030399728642,1.0196030399728642
+"cat__Station_Primary / Composite School, Mohaddinpur",8.437681856983914,8.437681856983914
+"cat__Station_Primary / Composite School, Pepala",5.2914012632253105,5.2914012632253105
+"cat__Station_Primary / Composite School, Saradhana Block Office",6.557282236687001,6.557282236687001
+cat__Station_Primary School  Bihasara,-2.32491956127069,2.32491956127069
+cat__Station_Primary School  Biraura,-5.274835782566242,5.274835782566242
+cat__Station_Primary School  Maharaji,0.9640310163652188,0.9640310163652188
+cat__Station_Primary School Ashadh,-5.265238605698528,5.265238605698528
+cat__Station_Primary School Babura,-1.8303450011765108,1.8303450011765108
+cat__Station_Primary School Baijnathpur,-0.9873588199660617,0.9873588199660617
+cat__Station_Primary School Bargdhi,0.6008119981028557,0.6008119981028557
+cat__Station_Primary School Bhata Diha,0.17676016624105273,0.17676016624105273
+cat__Station_Primary School Bilona,-0.8111722066214497,0.8111722066214497
+cat__Station_Primary School Campus Aurangabad,0.5231418118618194,0.5231418118618194
+cat__Station_Primary School Campus Powai,-0.6023522343356262,0.6023522343356262
+cat__Station_Primary School Campus Sikraura,1.7245919543875061,1.7245919543875061
+cat__Station_Primary School Chandrapur Bichpuri,2.4597579813885204,2.4597579813885204
+cat__Station_Primary School Charkonwa,1.7177788835809906,1.7177788835809906
+cat__Station_Primary School Chobla,0.8900745714240088,0.8900745714240088
+cat__Station_Primary School Cholahe,0.20626843081799962,0.20626843081799962
+cat__Station_Primary School Dohriya,-0.7063366285885877,0.7063366285885877
+cat__Station_Primary School English Medium Qutubpur Labdauna,2.0071442405626385,2.0071442405626385
+cat__Station_Primary School Gudha,-2.537477273554316,2.537477273554316
+cat__Station_Primary School Harinahpur,-5.787441956409793,5.787441956409793
+cat__Station_Primary School Harivanshpur,-0.2584547476510579,0.2584547476510579
+cat__Station_Primary School Jagannathpur,-3.624995819467358,3.624995819467358
+cat__Station_Primary School Jagdishpur Pratham,-1.3529154342405292,1.3529154342405292
+cat__Station_Primary School Jainpur,1.002729115270867,1.002729115270867
+cat__Station_Primary School Jairampur,-9.967550484186404,9.967550484186404
+cat__Station_Primary School Jamunia,0.6032363861097565,0.6032363861097565
+cat__Station_Primary School Jatmujheda,0.7910201614647576,0.7910201614647576
+cat__Station_Primary School Karwal,-0.4176727321177083,0.4176727321177083
+cat__Station_Primary School Keshawpur Pratham,-1.724883750134694,1.724883750134694
+cat__Station_Primary School Kucharam,-16.615988052396233,16.615988052396233
+cat__Station_Primary School Kurdi,5.606096676003119,5.606096676003119
+cat__Station_Primary School Madari,-1.2813664062182397,1.2813664062182397
+cat__Station_Primary School Mainhe hardo,0.6670882238031481,0.6670882238031481
+cat__Station_Primary School Masuri,2.808818034606702,2.808818034606702
+cat__Station_Primary School Mohammadpur Gurjar,-5.591607742731526,5.591607742731526
+cat__Station_Primary School Nandapur,-1.0450416570274683,1.0450416570274683
+cat__Station_Primary School No. 1 Barawad,-3.6451664973318145,3.6451664973318145
+cat__Station_Primary School Odaraha,-3.321801530153465,3.321801530153465
+cat__Station_Primary School Pahara,1.0386012519697942,1.0386012519697942
+cat__Station_Primary School Pinna,-2.2927188752254892,2.2927188752254892
+cat__Station_Primary School Radnool Azizpur,5.790626182469055,5.790626182469055
+cat__Station_Primary School Rathoda,-3.3626136956615937,3.3626136956615937
+"cat__Station_Primary School Sahjanwa , Pratham Pipra",-0.9523890512292184,0.9523890512292184
+cat__Station_Primary School Sahori,2.0405894398991222,2.0405894398991222
+cat__Station_Primary School Salawa,1.9708028907104982,1.9708028907104982
+cat__Station_Primary School Sanda-Sanee,-14.506233488309363,14.506233488309363
+cat__Station_Primary School Shekhpuri,2.6657240822190857,2.6657240822190857
+cat__Station_Primary School Sonda,2.5969382163302726,2.5969382163302726
+cat__Station_Primary School Vamanpura,-2.6269851270517393,2.6269851270517393
+cat__Station_Primary School chandsina,-1.9684299177590674,1.9684299177590674
+"cat__Station_Primary School,  Todarpur",1.1812056390357952,1.1812056390357952
+"cat__Station_Primary School, Anrabali",0.5434939399538514,0.5434939399538514
+"cat__Station_Primary School, Asara Bighawati",0.43785434187608985,0.43785434187608985
+"cat__Station_Primary School, Badagaon bharati form",-0.7905868652125605,0.7905868652125605
+"cat__Station_Primary School, Baghpokhar",-1.4697409020553778,1.4697409020553778
+"cat__Station_Primary School, Bamhauri",19.891007095350943,19.891007095350943
+"cat__Station_Primary School, Bamhoori Khurd",-2.4371074092646268,2.4371074092646268
+"cat__Station_Primary School, Bandpur",-0.8336695352570302,0.8336695352570302
+"cat__Station_Primary School, Bartha Lala",0.4104714131684659,0.4104714131684659
+"cat__Station_Primary School, Basti",1.8223013124522822,1.8223013124522822
+"cat__Station_Primary School, Belatal",-0.50485874681317,0.50485874681317
+"cat__Station_Primary School, Belaukh",1.4575051703202462,1.4575051703202462
+"cat__Station_Primary School, Bgra khisani bujurg",-1.801229329589006,1.801229329589006
+"cat__Station_Primary School, Bhadauda",-1.116934693704362,1.116934693704362
+"cat__Station_Primary School, Bhagwanpur",-6.122552978476648,6.122552978476648
+"cat__Station_Primary School, Bhalsona",3.5905214530280603,3.5905214530280603
+"cat__Station_Primary School, Bhartpura",-1.9202579298129763,1.9202579298129763
+"cat__Station_Primary School, Bilata",-4.222139448457995,4.222139448457995
+"cat__Station_Primary School, Block Office",-1.443763518499253,1.443763518499253
+"cat__Station_Primary School, Bodha",4.285971866530758,4.285971866530758
+"cat__Station_Primary School, Bohra",0.6848807570304416,0.6848807570304416
+"cat__Station_Primary School, Brahmpur",-0.08500254184058065,0.08500254184058065
+"cat__Station_Primary School, Chariya Bujrag",1.424357531443846,1.424357531443846
+"cat__Station_Primary School, Chiplatha",-1.4237938607960245,1.4237938607960245
+"cat__Station_Primary School, Dagarpur Tigadi",-0.9685326449956335,0.9685326449956335
+"cat__Station_Primary School, Dera Devra bujurg",-5.241850742660176,5.241850742660176
+"cat__Station_Primary School, Dewari",3.642839286515027,3.642839286515027
+"cat__Station_Primary School, Dhanaura",-15.593231946157033,15.593231946157033
+"cat__Station_Primary School, Dhanaura Tikari",-4.546683527238429,4.546683527238429
+"cat__Station_Primary School, Dhankharpur",1.3255571838194555,1.3255571838194555
+"cat__Station_Primary School, Dhikana",1.135658363108064,1.135658363108064
+"cat__Station_Primary School, Evani",-6.112475030328369,6.112475030328369
+"cat__Station_Primary School, Gaidaira",-1.3800299398295124,1.3800299398295124
+"cat__Station_Primary School, Garher",0.267201264992309,0.267201264992309
+"cat__Station_Primary School, Gauripur Javahar Nagar",-2.5349718889222856,2.5349718889222856
+"cat__Station_Primary School, Gotaka",-6.437995254794185,6.437995254794185
+"cat__Station_Primary School, Gursarai tahrauli tahshil",-2.4802463986343923,2.4802463986343923
+"cat__Station_Primary School, Jhaaro Kalan",0.07278107338675,0.07278107338675
+"cat__Station_Primary School, Jogehthi",-1.2336828268427844,1.2336828268427844
+"cat__Station_Primary School, Johadi",-7.64699721160008,7.64699721160008
+"cat__Station_Primary School, Kailgwan",-2.4018886405627313,2.4018886405627313
+"cat__Station_Primary School, Kakadipur",-1.0017659142907576,1.0017659142907576
+"cat__Station_Primary School, Kakaurkala",2.957952676036939,2.957952676036939
+"cat__Station_Primary School, Kalan Bar Devran",-9.335140874032504,9.335140874032504
+"cat__Station_Primary School, Kalani Khurad",0.14652012565481698,0.14652012565481698
+"cat__Station_Primary School, Kantit",2.2053063871394443,2.2053063871394443
+"cat__Station_Primary School, Kaparwar",-1.1421923588406315,1.1421923588406315
+"cat__Station_Primary School, Karasdev Mandir",-5.48851309170027,5.48851309170027
+"cat__Station_Primary School, Kevtam",0.8323527621380435,0.8323527621380435
+"cat__Station_Primary School, Khandeura",-9.787485841063926,9.787485841063926
+"cat__Station_Primary School, Khiriya",-0.6656244847394532,0.6656244847394532
+"cat__Station_Primary School, Khujurahokhurd",-0.6962626453276926,0.6962626453276926
+"cat__Station_Primary School, Kodai",-0.9961800369668765,0.9961800369668765
+"cat__Station_Primary School, Koilar",-2.1135380510887956,2.1135380510887956
+"cat__Station_Primary School, Kritikhand",3.2554867580874998,3.2554867580874998
+"cat__Station_Primary School, Leharthkurpura",-2.489459405107766,2.489459405107766
+"cat__Station_Primary School, Manupura",-2.668798958712898,2.668798958712898
+"cat__Station_Primary School, Marry",-0.640703438123694,0.640703438123694
+"cat__Station_Primary School, Masaurakhurd",-2.843994508279536,2.843994508279536
+"cat__Station_Primary School, Mithabel",-0.1270139804628201,0.1270139804628201
+"cat__Station_Primary School, Motiyari, Mahuaa, Banda_1",-3.7806867531589887,3.7806867531589887
+"cat__Station_Primary School, Narokhar",2.7601025955551677,2.7601025955551677
+"cat__Station_Primary School, Narouiya Daamar",-4.208056441696158,4.208056441696158
+"cat__Station_Primary School, Nota",-3.7015119592857957,3.7015119592857957
+"cat__Station_Primary School, Pachar",-0.4150675360521916,0.4150675360521916
+"cat__Station_Primary School, Padra",-6.114732711780277,6.114732711780277
+"cat__Station_Primary School, Pakarhut",0.06919274839469836,0.06919274839469836
+"cat__Station_Primary School, Pali",-1.8775305927414863,1.8775305927414863
+"cat__Station_Primary School, Paraon",-2.9709253301609806,2.9709253301609806
+"cat__Station_Primary School, Pashu palan Vibhag Masuri",-5.418216612471248,5.418216612471248
+"cat__Station_Primary School, Purakalan, Talbehat, Lalitpur_1",-1.5888447481842718,1.5888447481842718
+"cat__Station_Primary School, R.K.Inter college",2.0708665246314695,2.0708665246314695
+"cat__Station_Primary School, Radhana",-0.5931860880952868,0.5931860880952868
+"cat__Station_Primary School, Safpuram Chandpur",-3.277737764923973,3.277737764923973
+"cat__Station_Primary School, Saina",-12.173398797333903,12.173398797333903
+"cat__Station_Primary School, Salhepur",-6.937641737719787,6.937641737719787
+"cat__Station_Primary School, Sangholi taga",4.229264367314556,4.229264367314556
+"cat__Station_Primary School, Sanori",-1.7340121841162386,1.7340121841162386
+"cat__Station_Primary School, Sarwa",-1.4773758104449826,1.4773758104449826
+"cat__Station_Primary School, Shekhar",-3.336587100316848,3.336587100316848
+"cat__Station_Primary School, Shivpur",-0.7416313315015941,0.7416313315015941
+"cat__Station_Primary School, Silana",-3.572896918574884,3.572896918574884
+"cat__Station_Primary School, Sindhan Kalan",18.58980836307228,18.58980836307228
+"cat__Station_Primary School, Sirasi",-0.19500253958256053,0.19500253958256053
+"cat__Station_Primary School, Sirjam",1.1489041737210783,1.1489041737210783
+"cat__Station_Primary School, Surikalan",-3.854914730106259,3.854914730106259
+"cat__Station_Primary School, Tewalagarhi",-3.5011926718945574,3.5011926718945574
+"cat__Station_Primary School, Tilaura",0.5974484484684126,0.5974484484684126
+"cat__Station_Primary School, Vansha Gram Panchayt",-0.5380647492196431,0.5380647492196431
+"cat__Station_Primary School, Vijaypura",-3.1162694975134286,3.1162694975134286
+"cat__Station_Primary School/ Composite, Alampur",-4.841952735486757,4.841952735486757
+"cat__Station_Primary School/ Composite, Bhojpur Taga",4.670359496131141,4.670359496131141
+"cat__Station_Primary School/ Composite, Chaappar",-5.429121421815012,5.429121421815012
+"cat__Station_Primary School/ Composite, Chittora",4.638949385896979,4.638949385896979
+"cat__Station_Primary School/ Composite, Dadheru Kaian",0.04700746544028789,0.04700746544028789
+"cat__Station_Primary School/ Composite, Dholla Majra",0.19193871717652655,0.19193871717652655
+"cat__Station_Primary School/ Composite, Fakreda",-3.568218537202938,3.568218537202938
+"cat__Station_Primary School/ Composite, Ghumawati",3.011675819699292,3.011675819699292
+"cat__Station_Primary School/ Composite, Haibatpur",1.5594040670882805,1.5594040670882805
+"cat__Station_Primary School/ Composite, Harsauli",-5.092666917994222,5.092666917994222
+"cat__Station_Primary School/ Composite, Jaula Dindauli",-2.9407113497170485,2.9407113497170485
+"cat__Station_Primary School/ Composite, Jeevna",-0.8645008578869806,0.8645008578869806
+"cat__Station_Primary School/ Composite, Jhabiran",1.4259192216173915,1.4259192216173915
+"cat__Station_Primary School/ Composite, Jukhedi",-4.089683155281705,4.089683155281705
+"cat__Station_Primary School/ Composite, Katla Naveen",3.1901307659375107,3.1901307659375107
+"cat__Station_Primary School/ Composite, Landhoura Junardar",-0.6366939478973563,0.6366939478973563
+"cat__Station_Primary School/ Composite, Mandawali Khadar",-1.002003589555386,1.002003589555386
+"cat__Station_Primary School/ Composite, Manganpur",-0.3046061742746815,0.3046061742746815
+"cat__Station_Primary School/ Composite, Manoharpur",2.520411216511775,2.520411216511775
+"cat__Station_Primary School/ Composite, Manpur Qadeem",4.224482419746664,4.224482419746664
+"cat__Station_Primary School/ Composite, Mehmoodpur",-1.237065839666002,1.237065839666002
+"cat__Station_Primary School/ Composite, Mundi Kheri",3.543376458530588,3.543376458530588
+"cat__Station_Primary School/ Composite, Nagla Rajput",2.2541493503324546,2.2541493503324546
+"cat__Station_Primary School/ Composite, Nandhera Khurd",2.3202617757698363,2.3202617757698363
+"cat__Station_Primary School/ Composite, Nasrullahgarh",2.4251021692209633,2.4251021692209633
+"cat__Station_Primary School/ Composite, Nunabadi",1.977749133737234,1.977749133737234
+"cat__Station_Primary School/ Composite, Pawti",4.418232732078025,4.418232732078025
+"cat__Station_Primary School/ Composite, Peepalhera",-1.9208365420207087,1.9208365420207087
+"cat__Station_Primary School/ Composite, Rasulpur",2.2150201629028743,2.2150201629028743
+"cat__Station_Primary School/ Composite, Sidki",-1.2857914422914973,1.2857914422914973
+"cat__Station_Primary School/ Composite, Tandheda",-0.7334163711899464,0.7334163711899464
+cat__Station_Prmary School Rajpura,-6.413747482621346,6.413747482621346
+cat__Station_Punchayat Bhawan Bhaluwani,-0.5668185379712156,0.5668185379712156
+cat__Station_Punchayat Bhawan Vijaypur,1.7734975842015501,1.7734975842015501
+"cat__Station_Purv Madh Vidhyalaya, Doomradeeh",-1.642930497749262,1.642930497749262
+"cat__Station_Purv Madh Vidhyalaya, Shivpur",3.0866473929593212,3.0866473929593212
+"cat__Station_Purv Madhyamik Vidhyalaya, Doriya",-3.6008979894945696,3.6008979894945696
+"cat__Station_Purv Madhyamik Vidhyalaya, Fattupur",-1.0535562613030152,1.0535562613030152
+"cat__Station_Purv Madhyamik Vidhyalaya, Mahooli",-0.0863139660524439,0.0863139660524439
+"cat__Station_Purv Madhyamik Vidyalaya, Mujehra",-1.1131398309632914,1.1131398309632914
+"cat__Station_Purv Madhyamik Vidyalaya, Ranibari",-0.6481799120840606,0.6481799120840606
+"cat__Station_Purv Madhyamik Vidyalaya,Bharpura",-3.4277936418732224,3.4277936418732224
+cat__Station_Purva Madhyamik Vidhyalaya Achausa,-8.496143991447724,8.496143991447724
+cat__Station_Purva Madhyamik Vidhyalaya Baroda Dang,-0.10592199743859965,0.10592199743859965
+cat__Station_Purva Madhyamik Vidhyalaya Bhitaura,-2.641608242894506,2.641608242894506
+cat__Station_Purva Madhyamik Vidhyalaya Ladwari,-2.9378903457323418,2.9378903457323418
+cat__Station_Purva Madhyamik Vidhyalaya Piphara,0.9539291835046697,0.9539291835046697
+cat__Station_Purva Madhyamik Vidhyalaya Sihari,3.301057753547184,3.301057753547184
+"cat__Station_Purva Madhyamik Vidhyalaya, Chackwara",1.2467356150459636,1.2467356150459636
+"cat__Station_Purva Madhyamik Vidhyalaya, Chandapur",4.912769490285086,4.912769490285086
+cat__Station_Purva Madhyamik Vidyalaya Chalakpur,3.211360993218136,3.211360993218136
+cat__Station_Pv. Compiergang,0.9098325165574863,0.9098325165574863
+cat__Station_R.R.C. Center Aata,4.5713934456766765,4.5713934456766765
+cat__Station_RASULPUR BARGAON RAJKIYA UCHTTAR PRATHAMIK VIDYALAYA,-2.880295996427776,2.880295996427776
+cat__Station_Rajapur Sikraur,-1.7028882360200441,1.7028882360200441
+cat__Station_Rajkia Balika Inter College Kamasin,-14.12228378748614,14.12228378748614
+cat__Station_Rajkia High School Pakhrauli,-13.852039535540598,13.852039535540598
+cat__Station_Ramchhitoni Sahawar (UP-011),1.2541303523107672,1.2541303523107672
+cat__Station_Rasin_2,12.030233880189257,12.030233880189257
+"cat__Station_Roadways Bus Stand, Robertsganj",1.6938878234856247,1.6938878234856247
+cat__Station_SARAHARI PRATHMIK VIDYALAYA,-0.9009217405483838,0.9009217405483838
+cat__Station_SWASTH KENDR PIPIGANJ,-0.2007156471165672,0.2007156471165672
+cat__Station_Saint Ravidas Nagar Abholi Abholi,-1.0019939808246363,1.0019939808246363
+cat__Station_Saint Ravidas Nagar Abholi Gangarampur,-0.04003665695131531,0.04003665695131531
+cat__Station_Saint Ravidas Nagar Aurai Ugapur,-0.5640316468640663,0.5640316468640663
+cat__Station_Saint Ravidas Nagar Aurai Uprauth,2.0228587628008654,2.0228587628008654
+cat__Station_Saint Ravidas Nagar Bhadohi Munshi,0.5394093207507922,0.5394093207507922
+cat__Station_Saint Ravidas Nagar Deegh  Deegh,0.23634606627922494,0.23634606627922494
+cat__Station_Saint Ravidas Nagar Deegh Velahua,1.2730916853914778,1.2730916853914778
+cat__Station_Saint Ravidas Nagar Gyanpur Kansapur,2.5992041642741697,2.5992041642741697
+cat__Station_Saint Ravidas Nagar Gyanpur Samhai,-1.5817247761611384,1.5817247761611384
+cat__Station_Saint Ravidas Nagar Suriyawan Chhapariya,-2.39830081852233,2.39830081852233
+cat__Station_Saint Ravidas Nagar Suriyawan Mond,0.42800979915341486,0.42800979915341486
+cat__Station_Saital,0.02055501411390992,0.02055501411390992
+cat__Station_Salhakheri,-6.984490992280541,6.984490992280541
+"cat__Station_Samaj Sevak Junir High School, Bhaura Kalan",-11.209950223514284,11.209950223514284
+cat__Station_Sanjhak,-2.1031022113072595,2.1031022113072595
+cat__Station_Satti Chau Prathmik Vidyalaya,-0.9778833316621558,0.9778833316621558
+"cat__Station_Shahid Chandra Shekhar Kanya P.M.V., Mallupura",-3.423632778684805,3.423632778684805
+cat__Station_Shahjahanpur Bhawal Kheda Bhawal Kheda,0.8643557647467901,0.8643557647467901
+cat__Station_Shahjahanpur Bhawal Kheda Chak Bhitara,1.4051646969806484,1.4051646969806484
+cat__Station_Shahjahanpur Bhawal Kheda Chaudhera,0.4324797102227649,0.4324797102227649
+cat__Station_Shahjahanpur Bhawal Kheda Ladhauli,-2.556468673937502,2.556468673937502
+cat__Station_Shahjahanpur Bhawal Kheda Shahbaj Pur,0.6447530078636987,0.6447530078636987
+cat__Station_Shahjahanpur Bhawal Kheda Sutnera,-0.23130871629916783,0.23130871629916783
+cat__Station_Shahjahanpur Dadraul Banthara,0.9768931237288712,0.9768931237288712
+cat__Station_Shahjahanpur Dadraul Saraura (East),0.22746278296233413,0.22746278296233413
+cat__Station_Shahjahanpur Puvayan  Badagaon Pratham,-2.0655978412695504,2.0655978412695504
+cat__Station_Shahjahanpur Puvayan Bhilawan,-2.6055077141958236,2.6055077141958236
+cat__Station_Shahjahanpur Puvayan Mahua Pathak,1.5488859726582405,1.5488859726582405
+cat__Station_Shahjahanpur Puvayan Nahil,-0.4419832550668161,0.4419832550668161
+cat__Station_Shahjahanpur Sidhauli Korokuiyan,2.228924392272461,2.228924392272461
+cat__Station_Shahjahanpur Sidhauli Mahanand Pur,1.7537583785182846,1.7537583785182846
+cat__Station_Shahjahanpur Sidhauli Sidhauli,-0.7343830771936268,0.7343830771936268
+cat__Station_Shitalpur_1,10.037927516314653,10.037927516314653
+cat__Station_Sikhula Pz._1,18.15099905487682,18.15099905487682
+cat__Station_Singhara Pr. Vid.,1.5388367068146636,1.5388367068146636
+cat__Station_Sitapur Mafi,12.185865362775075,12.185865362775075
+cat__Station_Sonbhadra Babhani Bhawar,2.9948557406225973,2.9948557406225973
+cat__Station_Sonbhadra Chopan Khairatiya,-0.5725127254274867,0.5725127254274867
+cat__Station_Sonbhadra Duddhi Mahuli,2.448816890841613,2.448816890841613
+cat__Station_Srikantpur Pr. Vid.,-0.023051987133612784,0.023051987133612784
+cat__Station_Sujanpura Badhyapar,1.232770741668773,1.232770741668773
+"cat__Station_Swarg Dham, Hardua",-7.9602440018239236,7.9602440018239236
+cat__Station_Terha_1,18.824505844503506,18.824505844503506
+"cat__Station_Thana Prisar, Lalganj",2.212991221721495,2.212991221721495
+cat__Station_Uccha Prathmik Vidhyalaya Deaval,-17.891140480153695,17.891140480153695
+cat__Station_Uccha Prathmik Vidhyalaya Devaratha,-5.919406639731051,5.919406639731051
+cat__Station_Uccha Prathmik Vidhyalaya Odera,-3.6286234127804846,3.6286234127804846
+cat__Station_Uccha Prathmik Vidhyalaya Uldan,-2.7394885683358154,2.7394885683358154
+"cat__Station_Uccha Prathmik Vidhyalaya, Chero",0.28338070893835265,0.28338070893835265
+"cat__Station_Uccha Prathmik Vidhyalaya, Gangapur",-5.622023801424348,5.622023801424348
+"cat__Station_Uccha Prathmik Vidhyalaya, Hasanpur Kadim",-15.057122553224158,15.057122553224158
+"cat__Station_Uccha Prathmik Vidhyalaya, Kapsarh",2.6892367986953083,2.6892367986953083
+"cat__Station_Uccha Prathmik Vidhyalaya, Lohra (Pampawan)",-3.735225620581218,3.735225620581218
+"cat__Station_Uccha Prathmik Vidhyalaya, Pathouli",-0.0981616897288724,0.0981616897288724
+"cat__Station_Uccha Prathmik Vidhyalaya, Semra Bhav Nagar",-1.4705781136835299,1.4705781136835299
+"cat__Station_Uccha Prathmik Vidhyalaya, Simra",-5.973066667542156,5.973066667542156
+cat__Station_Upper Primary Kasampur,1.0967173152691316,1.0967173152691316
+"cat__Station_Upper Primary School Eng Medium, Hariyabans",-2.7776180268730286,2.7776180268730286
+cat__Station_Upper Primary School Lehra,3.5257050563095618,3.5257050563095618
+cat__Station_Upper Primary School Pohalli,-0.23318902683991283,0.23318902683991283
+cat__Station_Upper Primary School Rijaula,-3.3636592832881433,3.3636592832881433
+cat__Station_Upper Primary School Sarahan Bujurg,-5.755349614038096,5.755349614038096
+cat__Station_Upper Primary School Urouliya,-3.100175900817021,3.100175900817021
+"cat__Station_Upper Primary School, Khadui",3.145333058394499,3.145333058394499
+cat__Station_Varansi Badagaon Gajapur,0.3459384679224513,0.3459384679224513
+cat__Station_Varansi Chirai Gaon  Gathiya Jairampur,-5.760138056474773,5.760138056474773
+cat__Station_Varansi Chirai Gaon Chhahi,-2.39501570464833,2.39501570464833
+cat__Station_Varansi Cholapur Chaubepur,5.85215924025249,5.85215924025249
+cat__Station_Varansi Cholapur Munari,-0.7506250147323783,0.7506250147323783
+cat__Station_Varansi Harahua Bhaithauli,3.404040608792684,3.404040608792684
+cat__Station_Varansi Harahua Gurwat,2.3990442344801863,2.3990442344801863
+cat__Station_Varansi Harahua Kakalpur,-6.458782743258126,6.458782743258126
+cat__Station_Varansi Harahua Shivrampur,2.9510627934612046,2.9510627934612046
+cat__Station_Varansi Harahua Sulemapur,-0.11802459984735947,0.11802459984735947
+cat__Station_Varansi Pindara Gajendra,3.084940008336787,3.084940008336787
+cat__Station_Varansi Pindara Molanapur,4.881441240860653,4.881441240860653
+cat__Station_Veterinary Hospital Shahjahanpur,-0.5158723116857367,0.5158723116857367
+"cat__Station_Vikash Khand Parisar, Itwa",1.3043911725249018,1.3043911725249018
+cat__Station_primary school Chaura khurd,-3.919546514047056,3.919546514047056
+cat__Station_primary school jalalpura,-0.6881390051801191,0.6881390051801191
+cat__Station_primary school kapasi,1.4504665403518402,1.4504665403518402
+cat__District_ALIGARH,-2.272446756287536,2.272446756287536
+cat__District_AZAMGARH,2.565499093433573,2.565499093433573
+cat__District_BAGHPAT,-7.364706688051228,7.364706688051228
+cat__District_BANDA,5.893809729605891,5.893809729605891
+cat__District_BAREILLY,-1.1652378065641642,1.1652378065641642
+cat__District_BUDAUN,-5.115363355164845,5.115363355164845
+cat__District_CHITRAKOOT,11.841222526281854,11.841222526281854
+cat__District_DEORIA,2.4124752579809865,2.4124752579809865
+cat__District_ETAH,-1.5256415813159947,1.5256415813159947
+cat__District_FATEHPUR,-8.19758242638818,8.19758242638818
+cat__District_FIROZABAD,-7.3676136731696715,7.3676136731696715
+cat__District_GHAZIABAD,-0.4777827240723127,0.4777827240723127
+cat__District_GORAKHPUR,2.699154840769552,2.699154840769552
+cat__District_HAMIRPUR,5.129280338634999,5.129280338634999
+cat__District_HATHRAS,-6.728883918528936,6.728883918528936
+cat__District_JALAUN,-0.036608984004487866,0.036608984004487866
+cat__District_JAUNPUR,-0.8083729230711469,0.8083729230711469
+cat__District_JHANSI,4.098816659609838,4.098816659609838
+cat__District_KANSIRAM NAGAR,1.254130390622322,1.254130390622322
+cat__District_KAUSHAMBI,-3.9217945025111476,3.9217945025111476
+cat__District_KUSHINAGAR,2.8128425634968153,2.8128425634968153
+cat__District_LALITPUR,3.9352305310430893,3.9352305310430893
+cat__District_MAHARAJGANJ,2.978202862123908,2.978202862123908
+cat__District_MAHOBA,3.4503151485860144,3.4503151485860144
+cat__District_MAINPURI,2.549149584847328,2.549149584847328
+cat__District_MATHURA,-0.625730335172193,0.625730335172193
+cat__District_MEERUT,-0.9181789188896801,0.9181789188896801
+cat__District_MIRZAPUR,-1.0485818843362722,1.0485818843362722
+cat__District_MUZAFFARNAGAR,-2.5061659945658903,2.5061659945658903
+cat__District_PRATAPGARH,-0.6977373826066469,0.6977373826066469
+cat__District_SAHARANPUR,-1.9060226578403672,1.9060226578403672
+cat__District_SANT RAVIDAS NAGAR,-0.47868455684056244,0.47868455684056244
+cat__District_SHAHJAHANPUR,1.4474285028391023,1.4474285028391023
+cat__District_SHRAWASTI,1.8965316299809274,1.8965316299809274
+cat__District_SIDDHARTHNAGAR,2.6933522008644104,2.6933522008644104
+cat__District_SONBHADRA,0.08618534502329567,0.08618534502329567
+cat__District_VARANASI,-4.580490138325331,4.580490138325331

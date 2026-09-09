@@ -25,7 +25,7 @@ def check(name, ok, detail=""):
 def main() -> None:
     honest = pd.read_csv(OUT / "honest_metrics.csv")
     xg = honest[honest["model"] == "xgb"].iloc[0]
-    check("honest 30d stride RMSE = 2.339", round(xg["basis_stride_rmse"], 3) == 2.339,
+    check("honest 30d stride RMSE = 2.338", round(xg["basis_stride_rmse"], 3) == 2.338,
           f"got {xg['basis_stride_rmse']:.4f}")
 
     scv = pd.read_csv(OUT / "spatial_cv_metrics.csv")
@@ -35,15 +35,15 @@ def main() -> None:
           f"got {scv['rmse'].median():.4f}")
 
     q = json.loads((MODELS / "quantile_calibration.json").read_text())
-    check("calibrated coverage = 0.911", round(q["coverage_stride"], 3) == 0.911,
+    check("calibrated coverage = 0.908", round(q["coverage_stride"], 3) == 0.908,
           f"got {q['coverage_stride']:.4f}")
-    check("half-width median = 1.034", round(q["half_width_median_m"], 3) == 1.034,
+    check("half-width median = 1.025", round(q["half_width_median_m"], 3) == 1.025,
           f"got {q['half_width_median_m']:.4f}")
-    check("half-width p90 = 2.579", round(q["half_width_p90_m"], 3) == 2.579,
+    check("half-width p90 = 2.575", round(q["half_width_p90_m"], 3) == 2.575,
           f"got {q['half_width_p90_m']:.4f}")
 
     acf = json.loads((OUT / "residual_acf.json").read_text())
-    check("eff-N = 6611", round(acf["effective_sample_size_est"]) == 6611,
+    check("eff-N = 6635", round(acf["effective_sample_size_est"]) == 6635,
           f"got {acf['effective_sample_size_est']:.0f}")
     check("lag1 ACF = 0.858", round(acf["pooled_acf"]["lag1"], 3) == 0.858,
           f"got {acf['pooled_acf']['lag1']:.4f}")

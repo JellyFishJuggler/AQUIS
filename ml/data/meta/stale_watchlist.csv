@@ -1,0 +1,661 @@
+Station,District,Tehsil,Block,Latitude,Longitude,n_2026_months,n_2026_records,first_2026,last_record,full26,reason
+390713- Jairampur PMS -Shallow,VARANASI,-,-,25.41945,83.03,5,544,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+750523- Kakalpur PMS -Medium,VARANASI,-,-,25.4325,82.97945,6,242,2026-01-01 06:00:00,2026-06-02 18:00:00,False,telemetry_stale
+750718- Primary Sch Matuka -Medium,VARANASI,-,-,25.34417,82.76806,2,106,2026-01-01 00:00:00,2026-02-02 00:00:00,False,telemetry_stale
+750825- Primary Sch Shivrampur -Medium,VARANASI,-,-,28.43944,82.97611,1,57,2026-01-01 00:00:00,2026-01-14 18:41:00,False,telemetry_stale
+Aadarsh Kisaan Inter College Bhabhuwa,BANDA,-,-,25.625229,80.777277,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Aadarsh Prathmik Vidhyalaya Mahua,SIDDHARTHNAGAR,-,-,27.245413,83.001053,7,624,2026-01-01 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Aagan Waadi Kender Dwarkapur,FATEHPUR,-,-,26.118428,80.342773,7,564,2026-01-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Aaganwadi Kender Kakrawali,ETAH,-,-,27.5818,78.607615,5,418,2026-05-13 12:00:00,2026-09-05 18:00:00,False,sparse_2026
+Aaganwadi Kender Khanjarpur,GHAZIABAD,-,-,28.809543,77.60082,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Aanganwadi Kendra,BAGHPAT,-,-,28.910131,77.42507,7,794,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Aanganwadi kendra,MEERUT,-,-,28.87292,77.825438,7,794,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Aanganwadi kendra, Barhara",HAMIRPUR,-,-,25.838538,79.690104,7,762,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+Aasao Pura,LALITPUR,-,-,24.89788,78.47971,7,551,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Abdullahpur Primary School -Medium,MEERUT,-,-,28.99111,77.76167,5,573,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Abhauli (UP-153),SANT RAVIDAS NAGAR,St Ravidas Nagar,-,25.44555556,82.36944444,2,153,2026-01-01 00:00:00,2026-02-08 00:00:00,False,telemetry_stale
+Adari_2,BANDA,-,-,25.80405,80.47383,6,494,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Aganwadi Kendra Rupauli,CHITRAKOOT,-,-,25.345757,81.210246,7,784,2026-01-01 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Agra City (UP-017),AGRA,AGRA,-,27.21555556,78.08833333,5,566,2026-01-01 12:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Ahmad Ganj,CHITRAKOOT,-,-,25.222,80.884,5,440,2026-02-01 00:00:00,2026-08-26 06:00:00,False,sparse_2026
+Ahmadpur Savant (UP-163),SAHARANPUR,Saharanpur,-,29.99055556,77.39555556,6,567,2026-01-01 06:00:00,2026-06-03 18:00:00,False,telemetry_stale
+Airayan  (UP-023),FATEHPUR,Fatehpur,-,25.833624,81.184345,5,495,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Aligarh Chandaus Chuharpur,AGRA,-,-,28.008239,77.983395,9,749,2026-01-23 10:50:00,2026-09-05 18:00:00,False,late_start
+Aligarh Gonda Chuhurpur Kinala,AGRA,-,-,27.840112,77.845126,7,492,2026-01-12 00:00:00,2026-08-29 00:00:00,False,sparse_2026
+Alipur Aterna_1,MUZAFFARNAGAR,-,-,29.23,77.512,3,257,2026-02-01 00:00:00,2026-04-18 00:00:00,False,telemetry_stale
+Allaiha Badhaiya,CHITRAKOOT,-,-,25.06057666,81.1390887,7,438,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Amauli (UP-027),FATEHPUR,Fatehpur,-,26.012168,80.297794,5,549,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Amgaon (UP-067),HAMIRPUR,HAMIRPUR,-,25.661966,79.580432,1,76,2026-01-01 00:00:00,2026-01-19 13:29:00,False,telemetry_stale
+Amliha_1,CHITRAKOOT,-,-,25.239118,80.694062,7,460,2026-02-01 00:00:00,2026-09-04 18:00:00,False,sparse_2026
+Asafpur (UP-077),BUDAUN,Budaun,-,28.362584,79.003897,5,567,2026-01-01 00:00:00,2026-05-30 12:00:00,False,telemetry_stale
+Ashapur Dak Banglow-Malawan-Medium,FATEHPUR,-,-,26.18833333,80.5475,5,569,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Ashapur Dak Banglow-Malawan-Shallow,FATEHPUR,-,-,26.18833333,80.5475,5,553,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Atarahat,BANDA,-,-,25.65498,80.43243,4,295,2026-01-01 06:00:00,2026-04-17 00:00:00,False,telemetry_stale
+Atrada Pi_1,MEERUT,-,-,28.834626,77.821875,6,428,2026-01-03 00:00:00,2026-07-19 00:00:00,False,telemetry_stale
+Aurai (UP-150),SANT RAVIDAS NAGAR,St Ravidas Nagar,-,25.25916667,82.55416667,1,49,2026-01-01 00:00:00,2026-01-15 00:00:00,False,telemetry_stale
+"BDO, Bhojpur, Medium",GHAZIABAD,-,-,28.789167,77.636111,5,569,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"BDO, Loni, Shallow",GHAZIABAD,-,-,28.765556,77.299444,5,565,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+BHIKHANIPUR PRATHMIK VIDYALAYA,FATEHPUR,-,-,25.955898,80.395203,1,8,2026-08-08 00:00:00,2026-08-11 12:00:00,False,sparse_2026
+Baba BelkharNath Dham (UP-045),PRATAPGARH,PRATAPGARH,-,25.820808,81.515117,5,558,2026-01-01 06:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Badagaon_1,HAMIRPUR,-,-,25.904996,80.198812,7,662,2026-01-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Bagadari,CHITRAKOOT,-,-,25.017728,81.104314,7,552,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Baghura_1,JHANSI,-,-,25.16264,78.47427,7,482,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Bahuwa (UP-024),FATEHPUR,Fatehpur,-,25.840595,80.625738,2,130,2026-01-01 00:00:00,2026-02-02 06:00:00,False,telemetry_stale
+Baije mau,HAMIRPUR,-,-,25.704,80.29987,3,283,2026-02-01 00:00:00,2026-04-19 00:00:00,False,telemetry_stale
+Bajehta_1,HAMIRPUR,-,-,25.86608,79.922976,3,261,2026-02-01 00:00:00,2026-04-18 00:00:00,False,telemetry_stale
+Bamboari,CHITRAKOOT,-,-,25.22022746,81.37499835,7,441,2026-01-01 00:00:00,2026-09-04 00:00:00,False,sparse_2026
+Bamer,JHANSI,-,-,25.43376,78.41873,4,259,2026-02-01 00:00:00,2026-07-11 12:00:00,False,telemetry_stale
+Bamhauri Khurd,MAHOBA,-,-,25.317235,79.679068,4,377,2026-01-01 12:00:00,2026-04-17 00:00:00,False,telemetry_stale
+Banda Bisndha Para,CHITRAKOOT,-,-,25.381345,80.670083,1,85,2026-01-01 00:00:00,2026-01-23 00:00:00,False,telemetry_stale
+Bandari,CHITRAKOOT,-,-,25.135018,80.743632,6,504,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Bansi_1,BANDA,-,-,25.27275,80.422008,7,552,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Barachh_1,CHITRAKOOT,-,-,25.147497,80.758293,7,589,2026-01-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Bareilly City (UP-078),BAREILLY,Bareilly,-,28.17638889,79.26388889,3,271,2026-01-01 06:00:00,2026-03-17 00:00:00,False,telemetry_stale
+Barsada Maanpur,BANDA,-,-,25.12553611,80.37395556,5,367,2026-02-01 00:00:00,2026-07-21 18:00:00,False,telemetry_stale
+Basariya,HAMIRPUR,-,-,25.903882,79.719534,7,623,2026-01-01 06:00:00,2026-09-05 18:00:00,False,sparse_2026
+Baukhar,HAMIRPUR,-,-,25.857576,79.59957,7,525,2026-01-01 00:00:00,2026-08-10 06:00:00,False,sparse_2026
+Bdo Office Ambiapur-AMBIAPUR-Shallow,BUDAUN,-,-,28.137269,78.916144,2,106,2026-01-01 12:00:00,2026-02-03 18:00:00,False,telemetry_stale
+Berrav (UP-061),BANDA,Banda,-,25.522775,80.815365,5,538,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Bhagwatpur,CHITRAKOOT,-,-,25.142,80.686,6,432,2026-01-01 00:00:00,2026-07-20 18:00:00,False,telemetry_stale
+Bhujpur_1,HAMIRPUR,-,-,25.262426,79.902595,3,261,2026-02-01 00:00:00,2026-04-18 00:00:00,False,telemetry_stale
+Bighana_1,BANDA,-,-,25.3935513,80.504225,6,502,2026-01-01 00:00:00,2026-07-26 12:00:00,False,telemetry_stale
+Bihasara (UP-148),MIRZAPUR,Mirzapur,-,25.144139,82.368129,5,566,2026-01-01 12:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Bihuni Kalan,HAMIRPUR,-,-,25.64288,79.74203,6,472,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Bijauli_1,MEERUT,-,-,28.863545,77.757646,6,512,2026-02-01 00:00:00,2026-08-31 12:00:00,False,sparse_2026
+Bijli Ghar,MEERUT,-,-,28.921519,77.808687,7,792,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Bilsi Naveen Mandi, Block-Ambiapur-AMBIAPUR-Medium",BUDAUN,-,-,28.121373,78.910688,2,106,2026-01-01 12:00:00,2026-02-03 18:00:00,False,telemetry_stale
+"Bilsi Naveen Mandi, Block-Ambiapur-AMBIAPUR-Shallow",BUDAUN,-,-,28.121373,78.910688,4,445,2026-01-01 00:00:00,2026-04-27 00:00:00,False,telemetry_stale
+Bisauli (UP-076),BUDAUN,Budaun,-,28.276805,78.891713,5,484,2026-01-01 00:00:00,2026-05-29 18:00:00,False,telemetry_stale
+Biwar (UP-068),HAMIRPUR,HAMIRPUR,-,25.761768,79.923672,1,28,2026-01-20 18:00:00,2026-01-27 12:00:00,False,telemetry_stale
+"Block Development Office, Medium",VARANASI,-,-,25.5,82.83,5,597,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Block Development Office, Pura Mahadev-Pilana-Medium",BAGHPAT,-,-,28.99694444,77.44888889,5,559,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Block Development Office, Pura Mahadev-Pilana-Shallow",BAGHPAT,-,-,28.99694444,77.44888889,5,578,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Block Development Office, Shallow",VARANASI,-,-,25.47,83.13,5,530,2026-01-01 00:00:00,2026-05-29 18:00:00,False,telemetry_stale
+"Block Development Office, Shallow_1",VARANASI,-,-,25.5,82.83,3,253,2026-01-01 00:00:00,2026-03-09 00:00:00,False,telemetry_stale
+Block Development Office-Baghara-Medium,MUZAFFARNAGAR,-,-,29.46,77.564,5,552,2026-01-01 06:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Block Development Office-Baghara-Shallow,MUZAFFARNAGAR,-,-,29.46,77.564,5,557,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Block Development Office-Kasganj-Medium,Kansiram Nagar,-,-,27.81583333,78.65777778,1,122,2026-01-01 00:00:00,2026-01-31 06:00:00,False,telemetry_stale
+Block Development Office-Kasganj-Shallow,KAUSHAMBI,-,-,27.81583333,78.65777778,5,554,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Block Development Office-Khekra-Medium,BAGHPAT,-,-,28.86972222,77.28805556,5,574,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Block Development Office-Nangal-Medium,SAHARANPUR,-,-,29.75,77.625,5,561,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Block Development Office-Nangal-Shallow,SAHARANPUR,-,-,29.75,77.625,5,471,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Block Development Office-Rajpura-Shallow,MEERUT,-,-,29.00388889,77.77111111,5,568,2026-01-01 06:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Broundha (UP-139),MIRZAPUR,Mirzapur,-,24.74451,82.355991,5,432,2026-01-01 00:00:00,2026-05-29 18:00:00,False,telemetry_stale
+Budhana (UP-156),MUZAFFARNAGAR,MUZAFFARNAGAR,-,29.6036,77.912966,5,588,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Budhanpur (UP-158),SAHARANPUR,Saharanpur,-,29.800337,77.274542,2,168,2026-01-01 00:00:00,2026-02-15 00:00:00,False,telemetry_stale
+Bukara,JHANSI,-,-,25.26080678,79.18139055,7,598,2026-01-01 00:00:00,2026-08-23 12:00:00,False,sparse_2026
+Burhara (UP-002),AGRA,AGRA,-,26.963575,77.842584,5,580,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Chandpurwa,HAMIRPUR,-,-,25.78401,80.16123,7,532,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Chedi Basail_1,HAMIRPUR,-,-,25.811403,79.888339,4,259,2026-02-01 00:00:00,2026-06-26 11:24:00,False,telemetry_stale
+Chhaprauli (UP-054),BAGHPAT,BAGHPAT,-,29.25,77.21055556,3,289,2026-01-01 00:00:00,2026-03-14 00:00:00,False,telemetry_stale
+Chhimauli,HAMIRPUR,-,-,25.65158,80.126,8,534,2026-01-30 18:00:00,2026-09-05 18:00:00,False,late_start
+Chhirka,HAMIRPUR,-,-,25.622252,80.070791,5,386,2026-02-01 00:00:00,2026-07-27 06:00:00,False,telemetry_stale
+Chilbila (UP-037),PRATAPGARH,PRATAPGARH,-,25.955556,81.961667,1,61,2026-01-01 00:00:00,2026-01-16 00:00:00,False,telemetry_stale
+Chitrakoot Manikpur Biyur,CHITRAKOOT,Chitrakoot,-,25.211319,80.024,9,762,2026-01-17 18:00:00,2026-09-05 18:00:00,False,late_start
+Chunar (UP-145),MIRZAPUR,Mirzapur,-,25.15422,82.967094,7,728,2026-01-01 00:00:00,2026-07-18 00:00:00,False,telemetry_stale
+Circuit House-Balli Kheri-Medium,SAHARANPUR,-,-,29.965069,77.5242628,5,565,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Circuit House-Balli Kheri-Shallow,SAHARANPUR,-,-,29.965069,77.5242628,5,577,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Circuit House-Deoband-Medium,SAHARANPUR,-,-,29.6838901,77.6836216,5,565,2026-01-01 00:00:00,2026-05-30 12:00:00,False,telemetry_stale
+Circuit House-Deoband-Shallow,SAHARANPUR,-,-,29.6838901,77.6836216,5,557,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Civil Line Police Chauki, Razapur, Medium",GHAZIABAD,-,-,28.0525,77.035,5,581,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Civil Line Police Chauki, Razapur, Shallow",GHAZIABAD,-,-,28.0525,77.035,3,313,2026-01-01 02:55:00,2026-03-23 02:55:00,False,telemetry_stale
+Composite School Bhitthi,SHRAWASTI,-,-,27.516843,82.004028,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Composite School Erawni,LALITPUR,-,-,24.564665,78.4207,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Composite School Jarar,BANDA,-,-,25.321336,80.360599,7,781,2026-01-01 01:43:00,2026-07-23 01:43:00,False,telemetry_stale
+Composite School Jarifnagar,BUDAUN,-,-,28.15678,78.613206,7,586,2026-01-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Composite School Larauni,JHANSI,-,-,25.304739,79.210748,7,797,2026-01-01 03:05:00,2026-07-23 15:05:00,False,telemetry_stale
+Composite School Rampur Kalyan,CHITRAKOOT,-,-,25.005561,81.063886,7,780,2026-01-01 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Composite School Rampur Kathwar,LALITPUR,-,-,24.94612,78.63188,7,797,2026-01-01 00:35:00,2026-07-23 12:35:00,False,telemetry_stale
+Composite School Siriheera,VARANASI,-,-,25.347158,82.753179,3,220,2026-01-01 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+"Composite School, Chandheri",MUZAFFARNAGAR,-,-,29.265567,77.485478,7,788,2026-01-01 04:32:00,2026-07-23 16:32:00,False,telemetry_stale
+"Composite School, Jobani",BANDA,-,-,25.210124,80.589609,7,792,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Composite School, Kahiniya",MAHOBA,-,-,25.380467,79.352459,7,783,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Composite School, Paswara",MAHOBA,-,-,25.299169,79.94983,7,772,2026-01-02 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+"Composite School, Ranjitpur",BANDA,-,-,25.138053,80.420963,7,792,2026-01-01 06:00:00,2026-07-23 00:00:00,False,telemetry_stale
+"Composite School, Tikariya",MAHOBA,-,-,25.358166,79.372487,7,740,2026-01-01 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+"Compost School, Sadha",BANDA,-,-,25.0884,80.528738,7,758,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+Dagarwaha,JHANSI,-,-,25.471944,78.421389,7,554,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Danaura Silwarnagar_1,BAGHPAT,-,-,29.030556,77.331944,5,422,2026-01-01 00:00:00,2026-07-22 12:00:00,False,telemetry_stale
+"Dav Degree College, Kundal-Barauli Ahir-Medium",AGRA,-,-,27.10416667,78.15388889,5,566,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Dav Degree College, Kundal-Barauli Ahir-Shallow",AGRA,-,-,27.10416667,78.15388889,5,317,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Deeh (UP-151),SANT RAVIDAS NAGAR,St Ravidas Nagar,-,25.251851,82.340776,3,271,2026-01-01 00:00:00,2026-03-14 10:52:00,False,telemetry_stale
+Deoria Bankata Sohanpur,GORAKHPUR,-,-,26.254274,84.073869,5,355,2026-01-01 00:00:00,2026-09-05 00:00:00,False,sparse_2026
+Deoria Barhaj Barhaj,GORAKHPUR,-,-,26.279088,83.726383,9,786,2026-01-19 18:00:00,2026-09-04 00:00:00,False,late_start
+Deoria Lar Harkhauli,GORAKHPUR,-,-,26.205293,83.929132,9,724,2026-01-19 18:00:00,2026-09-05 00:00:00,False,late_start
+Devganpura,MAHOBA,Mahoba,-,25.426043,79.466593,7,793,2026-01-01 00:00:00,2026-07-23 00:00:00,False,telemetry_stale
+Dhagwan_1,HAMIRPUR,-,-,25.839054,79.638227,7,595,2026-01-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+"Dhangaul Panchayat, Dhangaul",LALITPUR,TALBEHAT,TALBEHAT,24.89055556,78.64,7,789,2026-01-01 00:00:00,2026-07-23 00:00:00,False,telemetry_stale
+Dohatara,BANDA,-,-,25.73334,80.5042,7,612,2026-01-01 00:00:00,2026-08-18 12:00:00,False,sparse_2026
+Doramafi,CHITRAKOOT,-,-,25.004621,80.903493,8,600,2026-01-18 00:00:00,2026-09-05 18:00:00,False,late_start
+"Dr. Bhim Rao Ambedkar Primary School, Amara",BANDA,JASPURA,JASPURA,25.77027778,80.34444444,7,776,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Firojpur Phakuwa (UP-028),FATEHPUR,Fatehpur,-,25.97,80.908889,1,17,2026-01-01 00:00:00,2026-01-05 00:00:00,False,telemetry_stale
+Gada Navin,BANDA,-,-,25.18076,80.43521,7,488,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Garha_2,HAMIRPUR,-,-,25.71578,80.32802,5,275,2026-02-01 00:00:00,2026-08-11 14:42:00,False,sparse_2026
+Gaurikalan (UP-064),BANDA,Banda,-,25.826402,80.341111,5,265,2026-01-01 06:00:00,2026-05-29 18:00:00,False,telemetry_stale
+Ghaziabad City (UP-093),GHAZIABAD,GHAZIABAD,-,28.675833,77.431116,5,563,2026-01-01 00:00:00,2026-05-30 12:00:00,False,telemetry_stale
+Gidurha,CHITRAKOOT,-,-,24.983366,81.156082,6,432,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+"Girl Primary School, Asthaun",MAHOBA,-,-,25.394207,79.719657,7,785,2026-01-01 04:13:00,2026-07-23 10:13:00,False,telemetry_stale
+"Girls Primary School, Bhaura",HAMIRPUR,-,-,25.888485,80.340965,7,778,2026-01-01 05:18:00,2026-07-23 11:18:00,False,telemetry_stale
+"Girls Primary School, Luhargawn",MAHOBA,-,-,25.391245,79.362289,6,665,2026-01-01 00:00:00,2026-06-25 06:00:00,False,telemetry_stale
+Gorakhpur Belghat Bela,GORAKHPUR,Gorakhpur,-,26.43956,83.200321,8,791,2026-01-16 15:51:00,2026-08-27 12:00:00,False,late_start
+Gorakhpur Gola Nibi Dubey-2,GORAKHPUR,Gorakhpur,-,26.29987,83.41756,9,786,2026-01-16 13:14:00,2026-09-05 18:00:00,False,late_start
+Goshala Mawal Kalan,CHITRAKOOT,-,-,25.30198,81.38856,7,789,2026-01-01 00:00:00,2026-07-22 06:00:00,False,telemetry_stale
+Goshala Tiluli,CHITRAKOOT,-,-,25.240443,81.43013,7,792,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Government Polytechnic Fatehpur Narayanpur-Telyani-Medium,FATEHPUR,-,-,25.96666667,80.78666667,5,553,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Government Polytechnic Fatehpur Narayanpur-Telyani-Shallow,FATEHPUR,-,-,25.96666667,80.78666667,4,450,2026-01-01 00:00:00,2026-04-27 00:00:00,False,telemetry_stale
+"Gram Panchayat Office, Matanat Nagar",BAGHPAT,-,-,28.99831,77.425428,7,784,2026-01-01 00:00:00,2026-07-23 18:00:00,False,telemetry_stale
+"Gram Panchayat Office, Rajapur",JHANSI,-,-,25.390369,78.35514,3,261,2026-02-01 00:00:00,2026-04-19 00:00:00,False,telemetry_stale
+"Gram Panchayat Sachivalaya, Bhandara",MAHOBA,-,-,25.16067,79.834401,7,785,2026-01-01 01:44:00,2026-07-23 13:44:00,False,telemetry_stale
+"Gram Panchayat goshala, Sahoorpur",BANDA,-,-,25.726134,80.484619,7,793,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Gundela_1,HAMIRPUR,-,-,25.616906,79.750963,3,261,2026-02-01 00:00:00,2026-04-19 00:00:00,False,telemetry_stale
+Gurukul Inter College-Meerut-Shallow,MEERUT,-,-,28.981186,77.714493,5,553,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Gwabali/Chaupura,JHANSI,-,-,25.17054,78.43797,7,556,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Gyanpur (UP-152),SANT RAVIDAS NAGAR,St Ravidas Nagar,-,25.375536,82.456182,5,509,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Hanna vinayak,CHITRAKOOT,-,-,25.301016,81.292986,6,475,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Hasipur (UP-144),MIRZAPUR,Mirzapur,-,25.137507,82.858271,5,559,2026-01-01 00:00:00,2026-05-30 12:00:00,False,telemetry_stale
+Haswa (UP-022),FATEHPUR,Fatehpur,-,25.53925,81.228361,5,523,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Hathgaon (UP-026),FATEHPUR,Fatehpur,-,25.864921,81.127138,5,561,2026-01-01 06:00:00,2026-05-30 06:00:00,False,telemetry_stale
+"Health Center, Akbarpur Girwan",BANDA,-,-,25.290693,80.35944,7,781,2026-01-01 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+"Health Center, Kalauli Jar",HAMIRPUR,-,-,25.860934,80.055763,7,775,2026-01-01 02:25:00,2026-07-23 02:25:00,False,telemetry_stale
+High School_2,BAGHPAT,-,-,28.998314,77.425395,7,786,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Ichora_1,HAMIRPUR,-,-,25.871036,79.542624,7,470,2026-01-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Indrapura_2,HAMIRPUR,-,-,25.87192222,79.7010351,6,463,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+"Inter College, Bamrauli-Baraut-Medium",BAGHPAT,-,-,29.10416667,77.26861111,5,565,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Inter College, Bamrauli-Baraut-Shallow",BAGHPAT,-,-,29.10416667,77.26861111,5,579,2026-01-01 00:00:00,2026-05-30 12:00:00,False,telemetry_stale
+"Inter College, Bhadoi, Shallow",SANT RAVIDAS NAGAR,-,-,25.383272,82.553291,5,532,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Inter College, Bhadoi-Bhadoi-Medium",SANT RAVIDAS NAGAR,-,-,25.383272,82.553291,5,567,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Inter College, Nipura-Binauli-Shallow",BAGHPAT,-,-,29.229167,77.401667,5,561,2026-01-01 00:00:00,2026-05-30 12:00:00,False,telemetry_stale
+"Inter College, Pratapur, Medium",MEERUT,-,-,29.170581,78.039529,2,141,2026-01-01 00:00:00,2026-02-05 00:00:00,False,telemetry_stale
+"Inter College, Pratapur, Shallow",MEERUT,-,-,29.170581,78.039529,2,153,2026-01-01 00:00:00,2026-02-13 00:00:00,False,telemetry_stale
+Jakha_1,MAHOBA,-,-,25.471516,79.466345,7,518,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Jalala_1,HAMIRPUR,-,-,25.889639,80.237526,6,427,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Jalaun (UP-115),JALAUN,JALAUN,-,26.135542,79.33413,5,580,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Jamalpur (UP-146),MIRZAPUR,Mirzapur,-,25.147657,83.090524,5,488,2026-01-01 06:00:00,2026-05-29 18:00:00,False,telemetry_stale
+Jamua Bajar (UP-149),MIRZAPUR,Mirzapur,-,25.203346,82.705092,5,549,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Janta Inter College, Kharkhauda, Medium",MEERUT,-,-,28.843055,77.741942,5,548,2026-01-01 06:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Janta Inter College, Kharkhauda, Shallow",MEERUT,-,-,28.843055,77.741942,5,557,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Jaunpur Jalalpur Marahi,VARANASI,-,-,25.588366,82.852917,9,782,2026-01-16 18:00:00,2026-09-05 18:00:00,False,late_start
+Jaunpur Jalalpur Mathurapur,VARANASI,-,-,25.606294,82.843363,9,758,2026-01-16 18:00:00,2026-09-05 18:00:00,False,late_start
+Jaunpur Rampur Prithvipur,VARANASI,-,-,25.446892,82.681823,9,374,2026-01-28 12:38:00,2026-09-05 18:00:00,False,late_start
+Jawar /Jhabar,LALITPUR,-,-,25.14884,78.56618,4,335,2026-02-01 00:00:00,2026-08-27 06:00:00,False,sparse_2026
+Jharar,LALITPUR,-,-,25.12981438,78.49342005,5,369,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Jitakiri Danda,HAMIRPUR,-,-,25.88535,79.60473,7,494,2026-01-08 12:00:00,2026-09-05 18:00:00,False,sparse_2026
+Joramafi,CHITRAKOOT,-,-,25.004997,80.995863,6,448,2026-01-01 00:00:00,2026-07-11 18:00:00,False,telemetry_stale
+"Jr. High School, Akbarpur",CHITRAKOOT,-,-,25.4194,81.09424,7,610,2026-01-01 00:00:00,2026-08-16 00:00:00,False,sparse_2026
+Junior HIgh School Amawan,CHITRAKOOT,-,-,25.318427,81.2073,7,791,2026-01-01 00:00:00,2026-07-17 12:00:00,False,telemetry_stale
+Junior HIgh School Bhambhet,CHITRAKOOT,-,-,25.366483,81.166755,7,760,2026-01-02 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+Junior HIgh School Cheriya Khurd,CHITRAKOOT,-,-,25.014267,80.99072,7,788,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Junior HIgh School Dhadhawar,CHITRAKOOT,-,-,25.271344,81.32522,7,787,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Junior HIgh School Khatawara,CHITRAKOOT,-,-,25.369462,81.136667,7,792,2026-01-01 02:53:00,2026-07-23 14:53:00,False,telemetry_stale
+Junior HIgh School Sikari,CHITRAKOOT,-,-,25.322186,81.179059,7,786,2026-01-01 10:12:00,2026-07-23 10:12:00,False,telemetry_stale
+"Junior HIgh School, Ballayn",MAHOBA,-,-,25.531496,79.671444,7,786,2026-01-01 00:00:00,2026-07-22 12:00:00,False,telemetry_stale
+"Junior HIgh School, Bhatewara Kala",MAHOBA,-,-,25.438708,79.570416,7,785,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Junior HIgh School, Digaria",MAHOBA,-,-,25.129313,79.822106,7,790,2026-01-01 03:12:00,2026-07-23 09:12:00,False,telemetry_stale
+"Junior HIgh School, Kalla",HAMIRPUR,-,-,25.812662,79.99121,7,774,2026-01-01 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+"Junior HIgh School, Sigaun",MAHOBA,-,-,25.120499,79.409797,7,785,2026-01-01 02:31:00,2026-07-23 14:31:00,False,telemetry_stale
+"Junior HIgh School, Sijaria",MAHOBA,-,-,25.1032,79.8437,7,786,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Junior HIgh School, Surauli Buzurg",HAMIRPUR,-,-,25.879875,80.298302,7,780,2026-01-01 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+"Junior HIgh School, Thathewra",MAHOBA,-,-,25.227793,79.672488,7,790,2026-01-01 00:40:00,2026-07-23 12:40:00,False,telemetry_stale
+Junior High School Alipura,MAHOBA,-,-,25.43143,79.479733,7,764,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Junior High School Bharpura,JHANSI,-,-,25.295985,79.222202,3,262,2026-01-01 00:00:00,2026-03-15 06:00:00,False,telemetry_stale
+Junior High School Madwan,JHANSI,-,-,25.340962,79.199337,7,783,2026-01-01 02:31:00,2026-07-23 14:31:00,False,telemetry_stale
+Junior High School Naya Gaon,JHANSI,-,-,25.258654,79.253985,7,786,2026-01-01 03:13:00,2026-07-23 15:13:00,False,telemetry_stale
+Junior High School Tilera,JHANSI,-,-,25.327386,79.190505,7,770,2026-01-01 02:12:00,2026-07-23 08:12:00,False,telemetry_stale
+"Junior High School, Banai",BANDA,-,-,25.320558,80.698321,7,788,2026-01-01 06:00:00,2026-07-23 00:00:00,False,telemetry_stale
+"Junior High School, Bapretha",MAHOBA,-,-,25.470388,79.628699,7,794,2026-01-01 10:15:00,2026-07-23 10:15:00,False,telemetry_stale
+"Junior High School, Bhasround",BANDA,-,-,25.342237,80.34512,7,782,2026-01-01 01:12:00,2026-07-23 13:12:00,False,telemetry_stale
+"Junior High School, Chandour",BANDA,-,-,25.294451,80.7076,7,776,2026-01-01 02:25:00,2026-07-22 18:00:00,False,telemetry_stale
+"Junior High School, Gudha",MAHOBA,-,-,25.448416,79.6774,7,775,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Junior High School, Jogiya Khera",MUZAFFARNAGAR,-,-,29.294346,77.382071,7,762,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Junior High School, Kamalpura",MAHOBA,-,-,25.295822,79.69586,7,778,2026-01-01 00:11:00,2026-07-23 12:11:00,False,telemetry_stale
+"Junior High School, Kamruddeen Nagar",MUZAFFARNAGAR,-,-,29.273779,77.376764,7,771,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Junior High School, Kharad",MUZAFFARNAGAR,-,-,29.361897,77.412368,7,792,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Junior High School, Khera Mastan",MUZAFFARNAGAR,-,-,29.346313,77.38024,7,790,2026-01-01 00:00:00,2026-07-23 00:00:00,False,telemetry_stale
+"Junior High School, Kolouha",BANDA,-,-,25.119174,80.672052,7,770,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Junior High School, Ladpur",MAHOBA,-,-,25.311363,79.715273,7,786,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Junior High School, Luhedi",MAHOBA,-,-,25.144908,79.635753,7,779,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Junior High School, Nagwara",BANDA,-,-,25.291054,80.627302,7,727,2026-01-01 00:00:00,2026-07-05 18:00:00,False,telemetry_stale
+"Junior High School, Nanaora",MAHOBA,-,-,25.192419,79.695442,5,540,2026-01-01 00:00:00,2026-05-21 00:00:00,False,telemetry_stale
+"Junior High School, Pithaurabad",BANDA,-,-,25.299383,80.358437,7,741,2026-01-01 00:00:00,2026-07-13 18:00:00,False,telemetry_stale
+"Junior High School, Rawatpura Khurd",MAHOBA,-,-,25.258572,79.66424,7,786,2026-01-01 06:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Junior High School, Sahurapur",HAMIRPUR,-,-,25.89018,80.057981,7,789,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Junior High School, Sugira",MAHOBA,-,-,25.34027,79.608336,7,780,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Junior High School, Tika Mau",MAHOBA,-,-,25.324057,79.949324,7,753,2026-01-01 00:00:00,2026-07-17 00:00:00,False,telemetry_stale
+"Junior High School, Turra",BANDA,-,-,25.254282,80.627025,7,788,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Junior High School, Urwara",MAHOBA,-,-,25.176167,79.734834,7,782,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"K.N.S. Mahavidhyalaya, Gyanpur, Medium",SANT RAVIDAS NAGAR,-,-,25.33555556,82.46638889,5,546,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"K.N.S. Mahavidhyalaya, Gyanpur, Shallow",SANT RAVIDAS NAGAR,-,-,25.33555556,82.46638889,5,569,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Kadaura (UP-113),JALAUN,JALAUN,-,25.985663,79.833937,5,574,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Kajitola (UP-062),BANDA,Banda,-,25.655548,80.724427,5,564,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+"Kalkadham P.G College, Medium",VARANASI,-,-,25.368438,82.745323,5,568,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Kalmajara,CHITRAKOOT,-,-,25.161461,81.444827,7,481,2026-01-01 00:00:00,2026-08-12 12:00:00,False,sparse_2026
+Kandhari Khurd,LALITPUR,-,-,25.11125,78.57826,7,473,2026-01-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Kandhouli,HAMIRPUR,-,-,25.611152,79.786977,6,466,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Kara (UP-033),KAUSHAMBI,Kaushambi,-,25.712779,81.232777,5,433,2026-01-01 00:00:00,2026-05-29 18:00:00,False,telemetry_stale
+Khaptiha,CHITRAKOOT,-,-,25.230661,81.347993,7,541,2026-01-01 00:00:00,2026-08-06 06:00:00,False,sparse_2026
+Kharauch,BANDA,-,-,25.17654,80.493108,7,513,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Khichari,CHITRAKOOT,-,-,25.0465603,81.11074045,7,553,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Kihuniya,CHITRAKOOT,-,-,25.01519625,80.95620535,6,496,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Kiswahi,HAMIRPUR,-,-,25.73661272,80.27462258,6,433,2026-01-01 00:00:00,2026-07-04 15:21:00,False,telemetry_stale
+Konch (UP-111),JALAUN,JALAUN,-,25.991409,79.160233,5,564,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Kukargaon (UP-112),JALAUN,JALAUN,-,26.048665,79.39631,5,579,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Kurari,CHITRAKOOT,-,-,25.254,80.708,5,273,2026-02-01 00:00:00,2026-07-25 13:25:00,False,telemetry_stale
+Kushinagar Khadda Shivdatt Chapra,GORAKHPUR,-,-,27.090328,83.88871,7,568,2026-01-01 00:00:00,2026-09-05 00:00:00,False,sparse_2026
+"Lakna Dev Mandir, Mankuwa",JHANSI,-,-,25.20597,78.462413,6,668,2026-01-01 00:00:00,2026-06-28 18:00:00,False,telemetry_stale
+Lakshamanpur (UP-038),PRATAPGARH,PRATAPGARH,-,25.895635,81.759643,3,213,2026-01-01 00:00:00,2026-03-01 00:00:00,False,telemetry_stale
+Lalganj (UP-036),PRATAPGARH,PRATAPGARH,-,25.918423,81.537509,5,542,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Lalganj (UP-141),MIRZAPUR,Mirzapur,-,25.011418,82.429315,2,151,2026-01-01 00:00:00,2026-02-07 12:00:00,False,telemetry_stale
+"Late Prahlad Singh Smarak Mahavidyalay , Gaurikalan",BANDA,Banda,-,25.826463,80.341144,7,757,2026-01-01 00:00:00,2026-07-23 00:00:00,False,telemetry_stale
+Lodhaura Barethi (UP-065),CHITRAKOOT,Chitrakoot,-,25.317093,81.223752,5,518,2026-01-01 00:00:00,2026-05-28 18:00:00,False,telemetry_stale
+Lokadsandha (UP-157),MUZAFFARNAGAR,MUZAFFARNAGAR,-,29.48777778,77.65055556,1,97,2026-01-01 00:00:00,2026-01-28 00:00:00,False,telemetry_stale
+Luhsana_1,MUZAFFARNAGAR,-,-,29.32,77.458,4,322,2026-01-01 00:00:00,2026-04-19 00:00:00,False,telemetry_stale
+Macha_1,HAMIRPUR,-,-,25.688943,80.035201,5,435,2026-02-01 00:00:00,2026-07-29 14:56:00,False,telemetry_stale
+Machhariha,CHITRAKOOT,-,-,25.205156,80.81978,3,257,2026-02-01 00:00:00,2026-04-17 00:00:00,False,telemetry_stale
+Machhra (UP-057),MEERUT,MEERUT,-,28.88888889,77.88638889,5,456,2026-01-01 00:00:00,2026-05-29 18:00:00,False,telemetry_stale
+Madhogarh (UP-116),JALAUN,JALAUN,-,26.271536,79.188666,5,468,2026-01-01 00:00:00,2026-05-29 18:00:00,False,telemetry_stale
+Mahanmai (UP-004),ETAH,Etah,-,27.482222,78.242222,5,528,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Mahewa (UP-117),JALAUN,JALAUN,-,26.152687,79.630203,6,594,2026-01-01 00:00:00,2026-06-03 18:00:00,False,telemetry_stale
+Mahrupur,AZAMGARH,Azamgarh,-,26.191667,82.9125,3,124,2026-07-27 18:00:00,2026-09-05 12:00:00,False,sparse_2026
+Mandhata (UP-034),PRATAPGARH,PRATAPGARH,-,25.801045,81.854965,5,565,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Mandi Samiti-Muzaffar Nagar-Shallow,MUZAFFARNAGAR,-,-,29.486809,77.686751,5,565,2026-01-01 00:00:00,2026-05-29 00:00:00,False,telemetry_stale
+Mandi Tehsi Parisar-Rampur Maniharan-Medium,SAHARANPUR,-,-,29.78,77.45,5,573,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Mandi Tehsi Parisar-Rampur Maniharan-Shallow,SAHARANPUR,-,-,29.78,77.45,5,552,2026-01-01 06:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Manduwala (UP-161),SAHARANPUR,Saharanpur,-,30.08027778,77.74138889,5,549,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Manjhanpur (UP-030),KAUSHAMBI,Kaushambi,-,25.533171,81.383953,1,64,2026-01-01 06:00:00,2026-01-19 00:00:00,False,telemetry_stale
+Meerut City (UP-059),MEERUT,MEERUT,-,28.950715,77.695545,5,572,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Meerut Sardhana Nawabgarhi,MEERUT,-,-,29.161006,77.619488,9,784,2026-01-17 15:40:00,2026-09-05 18:00:00,False,late_start
+Meetli--Medium,BAGHPAT,-,-,28.963056,77.304167,3,272,2026-01-01 06:00:00,2026-03-15 00:00:00,False,telemetry_stale
+Meetli--Shallow,BAGHPAT,-,-,28.963056,77.304167,5,545,2026-01-01 00:00:00,2026-05-29 00:00:00,False,telemetry_stale
+Mirzapur City (UP-154),MIRZAPUR,Mirzapur,-,25.151435,82.58269,5,463,2026-01-01 06:00:00,2026-05-29 18:00:00,False,telemetry_stale
+Mragayan  (UP-006),ETAH,Etah,-,27.573998,78.468927,5,511,2026-01-01 00:00:00,2026-05-29 18:00:00,False,telemetry_stale
+Mukera_1,BANDA,-,-,25.12744875,80.40231075,7,548,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Muranda (UP-001),AGRA,AGRA,-,27.225242,77.844133,3,269,2026-01-01 00:00:00,2026-03-11 00:00:00,False,telemetry_stale
+Muskara Block New 2020,HAMIRPUR,-,-,25.660849,79.7952,7,591,2026-01-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Nagar_7,CHITRAKOOT,-,-,24.98677446,81.08204406,7,559,2026-01-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Nagla Bhagna (UP-010),Kansiram Nagar,Kasganj,-,27.715335,78.941945,6,596,2026-01-01 00:00:00,2026-06-02 12:00:00,False,telemetry_stale
+Narayan_1,BANDA,-,-,25.89027,80.36137,6,510,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Nari_3,BANDA,-,-,25.74300572,80.43468566,7,477,2026-01-01 00:00:00,2026-08-17 18:00:00,False,sparse_2026
+"Naveen Prathmik Health Care Center, Chandaut Danda",HAMIRPUR,-,-,25.900893,79.664902,7,786,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Nihi,CHITRAKOOT,-,-,24.995009,81.117111,5,266,2026-02-01 00:00:00,2026-08-11 15:24:00,False,sparse_2026
+Outside CHC Punawali Kalan,JHANSI,-,-,25.501911,78.47321,7,783,2026-01-01 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"P.M.V, Kotwa, Medium",AZAMGARH,-,-,26.02388889,83.14,5,525,2026-01-01 00:00:00,2026-05-29 18:00:00,False,telemetry_stale
+"P.S, Sathiyaon, Medium",AZAMGARH,-,-,26.044369,83.252363,5,548,2026-01-01 06:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"P.S. ( First), Pindra, Medium",VARANASI,-,-,25.49416667,82.82444444,2,26,2026-01-02 18:00:00,2026-02-01 18:00:00,False,telemetry_stale
+"P.V, Bhadauli, Medium",AZAMGARH,-,-,26.05222,83.139172,5,557,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"P.V, Bhadauli, Shallow",AZAMGARH,-,-,26.05222,83.139172,5,565,2026-01-01 00:00:00,2026-05-28 00:00:00,False,telemetry_stale
+PHOOLTALI UCHTTAR PRATHAMIK VIDYALAYA,PRATAPGARH,-,-,25.750524,81.505659,2,80,2026-08-07 18:00:00,2026-09-05 18:00:00,False,sparse_2026
+PURAB SARIRA PRATHMIK VIDYALAYA,KAUSHAMBI,-,-,25.416618,81.318426,7,650,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Pahadpur_1,BANDA,-,-,25.27187034,80.44857213,7,525,2026-01-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Pahari (UP-143),MIRZAPUR,Mirzapur,-,25.059042,82.68727,5,553,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Pailani (UP-063),BANDA,Banda,-,25.759611,80.425317,5,573,2026-01-01 00:00:00,2026-05-28 00:00:00,False,telemetry_stale
+Panchayat Bhawan  Ahiri,CHITRAKOOT,-,-,25.269265,81.356089,7,785,2026-01-01 01:36:00,2026-07-23 13:36:00,False,telemetry_stale
+Panchayat Bhawan  Banwar,CHITRAKOOT,-,-,25.316688,81.39296,7,778,2026-01-01 01:38:00,2026-07-23 13:38:00,False,telemetry_stale
+Panchayat Bhawan  Luhari,MAHOBA,-,-,25.410616,79.661636,7,783,2026-01-01 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Panchayat Bhawan  Sitaura,JHANSI,-,-,25.27126,79.206834,7,784,2026-01-01 02:02:00,2026-07-23 14:02:00,False,telemetry_stale
+Panchayat Bhawan  Tamai Nadin Kurmiya,CHITRAKOOT,-,-,25.344204,81.151135,7,656,2026-01-01 06:58:00,2026-07-22 18:02:00,False,telemetry_stale
+Panchayat Bhawan  Ugarpur,LALITPUR,-,-,25.158432,78.554512,7,795,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Panchayat Bhawan , Ghatoli",BAGHPAT,-,-,28.924525,77.435893,7,751,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Panchayat Bhawan , Jaraui",MAHOBA,-,-,25.510303,79.703956,7,787,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Panchayat Bhawan , Kaithi",HAMIRPUR,-,-,25.759642,80.297531,6,632,2026-01-01 00:00:00,2026-06-19 18:00:00,False,telemetry_stale
+"Panchayat Bhawan , Ladpura",MAHOBA,-,-,25.188204,79.432844,7,796,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Panchayat Bhawan , Pachkhura Buzurg",HAMIRPUR,-,-,25.861874,80.270541,2,98,2026-01-01 00:00:00,2026-02-02 06:00:00,False,telemetry_stale
+"Panchayat Bhawan, Akathauha",MAHOBA,-,-,25.400687,79.681933,7,784,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Panchayat Bhawan, Bal Khera",BANDA,-,-,25.357694,80.422802,7,783,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Panchayat Bhawan, Barimanpur",BANDA,-,-,25.294985,80.347917,7,788,2026-01-01 02:35:00,2026-07-23 14:35:00,False,telemetry_stale
+"Panchayat Bhawan, Baura",MAHOBA,-,-,25.331681,79.571678,7,781,2026-01-01 02:12:00,2026-07-23 14:12:00,False,telemetry_stale
+"Panchayat Bhawan, Bawana",MUZAFFARNAGAR,-,-,29.323256,77.491142,7,791,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Panchayat Bhawan, Bhusasi",BANDA,-,-,25.261132,80.671146,7,789,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Panchayat Bhawan, Birauna",BANDA,-,-,25.14424,80.551902,7,788,2026-01-01 02:38:00,2026-07-23 14:38:00,False,telemetry_stale
+"Panchayat Bhawan, Chamraha",BANDA,-,-,25.397248,80.185657,7,793,2026-01-01 01:24:00,2026-07-23 13:24:00,False,telemetry_stale
+"Panchayat Bhawan, Gore Mau Kalan",BANDA,-,-,25.075345,80.606057,7,787,2026-01-01 05:20:00,2026-07-22 23:20:00,False,telemetry_stale
+"Panchayat Bhawan, Jamawara",BANDA,-,-,25.16603,80.4147,7,787,2026-01-01 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+"Panchayat Bhawan, Karachha",BANDA,-,-,25.439089,80.262614,7,789,2026-01-01 05:44:00,2026-07-23 11:44:00,False,telemetry_stale
+"Panchayat Bhawan, Shikarpur",MUZAFFARNAGAR,-,-,29.371539,77.492369,7,789,2026-01-01 05:06:00,2026-07-23 11:06:00,False,telemetry_stale
+Panchayat Bhawan_1,MEERUT,-,-,28.94869,77.803722,7,777,2026-01-01 00:00:00,2026-07-23 00:00:00,False,telemetry_stale
+Panchayat Sachivalaya,MEERUT,-,-,29.022418,77.771516,7,784,2026-01-01 03:35:00,2026-07-23 09:35:00,False,telemetry_stale
+Parichhatgarh (UP-058),MEERUT,MEERUT,-,28.978559,77.924058,5,573,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Parsipur (UP-155),SANT RAVIDAS NAGAR,St Ravidas Nagar,-,25.315568,82.450151,5,570,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Patauda,CHITRAKOOT,-,-,25.23686097,80.75435126,4,379,2026-01-01 00:00:00,2026-04-19 00:00:00,False,telemetry_stale
+Patehra (UP-140),MIRZAPUR,Mirzapur,-,24.882444,82.573314,4,333,2026-01-01 00:00:00,2026-04-05 18:00:00,False,telemetry_stale
+Patti (UP-041),PRATAPGARH,PRATAPGARH,-,25.922172,82.198648,7,708,2026-01-01 00:00:00,2026-07-18 00:00:00,False,telemetry_stale
+Paudhiya (UP-070),HAMIRPUR,HAMIRPUR,-,25.896645,80.081072,5,562,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Pawai Khurd (UP-053),AZAMGARH,Azamgarh,-,25.784011,83.096054,5,438,2026-01-01 00:00:00,2026-05-29 18:00:00,False,telemetry_stale
+Pilkhna Rasool (UP-159),SAHARANPUR,Saharanpur,-,29.92055556,77.34694444,5,565,2026-01-01 00:00:00,2026-05-30 12:00:00,False,telemetry_stale
+Pipra Maafi,MAHOBA,-,-,25.146548,79.666116,6,409,2026-01-09 18:00:00,2026-07-06 12:00:00,False,telemetry_stale
+"Police Chawki, Natthi Khera",LALITPUR,LALITPUR,-,25.094571,78.574344,7,785,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Police Station Ghathlachura,JHANSI,-,-,25.332507,79.274459,7,757,2026-01-01 18:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Post Office, Benda",BANDA,Banda,-,25.69896,80.626082,7,789,2026-01-01 00:03:00,2026-07-23 12:03:00,False,telemetry_stale
+Pratapgarh City (UP-047),PRATAPGARH,PRATAPGARH,-,25.915395,82.00041,5,571,2026-01-01 06:00:00,2026-05-30 06:00:00,False,telemetry_stale
+"Prathmik School, Mau Girwan",BANDA,-,-,25.239082,80.42032,7,762,2026-01-01 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik School, Raxi",BANDA,-,-,25.113532,80.568636,7,793,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Uchha Vidhyalaya, Sarnawali",MUZAFFARNAGAR,-,-,29.335908,77.35518,7,788,2026-01-01 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhayalaya, Chur Bara",MAHOBA,-,-,25.263348,79.935012,7,781,2026-01-01 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+"Prathmik Vidhayalaya, Makrown",HAMIRPUR,-,-,25.716305,80.101379,7,783,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Prathmik Vidhayalaya, Rali Chauhan",MEERUT,-,-,28.975052,77.771119,7,792,2026-01-01 00:00:00,2026-07-23 18:00:00,False,telemetry_stale
+"Prathmik Vidhayalaya, Tarsuma",BANDA,-,-,25.215747,80.642153,7,793,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Prathmik Vidhyalaya Akbarpur,JALAUN,-,-,26.016782,79.690003,4,324,2026-01-01 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Prathmik Vidhyalaya Barah Mafi,CHITRAKOOT,-,-,25.015423,81.040419,7,774,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya Inter College, Mataundh(Gramin)",BANDA,-,-,25.444007,80.159851,7,782,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Prathmik Vidhyalaya Itua Kanar,JALAUN,-,-,26.282317,79.324203,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Prathmik Vidhyalaya Kubri,CHITRAKOOT,-,-,25.003496,81.165878,7,776,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Prathmik Vidhyalaya Nagar,CHITRAKOOT,-,-,24.988591,81.056318,7,781,2026-01-01 00:49:00,2026-07-23 12:49:00,False,telemetry_stale
+"Prathmik Vidhyalaya No.1, Valli",MUZAFFARNAGAR,-,-,29.270573,77.517399,7,784,2026-01-02 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+Prathmik Vidhyalaya Panchi Khaspur,BAGHPAT,-,-,28.88862,77.36133,7,781,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya Pani ki Tanki, Khindora",BAGHPAT,-,-,29.006147,77.366099,7,767,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Prathmik Vidhyalaya Sakrouha,CHITRAKOOT,-,-,25.024662,81.186867,7,775,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Aad",MEERUT,-,-,28.865884,77.7894,7,783,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Abdullahpur Mewla",BAGHPAT,-,-,28.922942,77.354441,7,790,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Achi Khurd",MEERUT,-,-,29.002619,77.98364,7,788,2026-01-01 01:42:00,2026-07-23 07:42:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Ahera",BAGHPAT,-,-,28.931969,77.266316,7,788,2026-01-01 02:10:00,2026-07-23 08:10:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Ainjhi",HAMIRPUR,-,-,25.637878,79.797516,7,778,2026-01-01 00:00:00,2026-07-22 00:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Alampur Buzurg",MEERUT,-,-,28.913745,77.776263,7,779,2026-01-01 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Alipur Aterana",MUZAFFARNAGAR,-,-,29.287362,77.537408,1,55,2026-01-01 00:00:00,2026-01-15 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Amehra Adipur (CT)",MEERUT,-,-,29.017791,77.753474,7,792,2026-01-01 02:05:00,2026-07-23 08:05:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Anghaura",MAHOBA,-,-,25.497705,79.668358,7,781,2026-01-01 01:11:00,2026-07-23 13:11:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Ataula",MEERUT,-,-,28.813247,77.830412,7,767,2026-01-01 00:00:00,2026-07-22 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Badhala Kaithwara",MEERUT,-,-,28.909124,77.797888,7,1575,2026-01-01 00:00:00,2026-07-23 16:26:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Badousa",BANDA,-,-,25.243569,80.653652,7,786,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Bahadurkalan",MAHOBA,PANWARI,PANWARI,25.38722222,79.44805556,7,780,2026-01-02 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Bahchaula",MEERUT,-,-,29.036116,77.771097,7,787,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Bahramgarh",MUZAFFARNAGAR,-,-,29.355924,77.484572,7,786,2026-01-01 05:17:00,2026-07-23 11:17:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Barat Pahari",MAHOBA,-,-,25.370567,79.891752,7,786,2026-01-01 04:21:00,2026-07-23 10:21:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Barsia",BAGHPAT,-,-,29.006155,77.404733,7,760,2026-01-02 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Barua Kalinjar",BANDA,-,-,25.110136,80.495351,7,776,2026-01-01 03:52:00,2026-07-23 09:52:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Basahari",BANDA,-,-,25.359225,80.115365,7,773,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Basaud",BAGHPAT,-,-,28.981974,77.323013,7,781,2026-01-01 11:17:00,2026-07-23 11:17:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Bhatewara Khurd",MAHOBA,-,-,25.352748,79.652413,7,773,2026-01-01 00:00:00,2026-07-23 00:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Bhudhera",BAGHPAT,-,-,29.026126,77.309778,2,197,2026-01-01 00:00:00,2026-02-28 00:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Bichhawahi",BANDA,-,-,25.660909,80.468997,7,792,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Bihta",MEERUT,-,-,29.062848,77.795382,7,750,2026-01-01 00:00:00,2026-07-17 06:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Bitaoda",MUZAFFARNAGAR,-,-,29.253343,77.457961,5,563,2026-01-01 00:00:00,2026-05-27 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Chamraha",BANDA,-,-,25.397184,80.185744,7,781,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Chandheri",MUZAFFARNAGAR,-,-,29.260533,77.494782,7,792,2026-01-01 04:49:00,2026-07-23 10:49:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Chhani",HAMIRPUR,-,-,25.600676,79.724076,4,434,2026-01-01 00:00:00,2026-04-28 06:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Chhikahra",MAHOBA,-,-,25.360148,79.863187,7,777,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Chouhalda",BAGHPAT,-,-,28.938384,77.285484,7,790,2026-01-02 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Daharra",BANDA,-,-,25.341426,79.970158,7,781,2026-01-01 01:16:00,2026-07-23 07:16:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Datavali Gesupur",MEERUT,-,-,28.95214,77.780339,7,789,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Daulatpur",BAGHPAT,-,-,28.935439,77.387739,7,785,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Dhir Khera",MEERUT,-,-,28.770013,77.774507,7,789,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Dojha Nagla",BAGHPAT,-,-,29.043251,77.314008,7,776,2026-01-01 06:00:00,2026-07-23 00:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Dubariya",BANDA,-,-,25.221132,80.651162,6,661,2026-01-01 00:00:00,2026-06-29 00:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Dungar",MUZAFFARNAGAR,-,-,29.319877,77.366867,7,756,2026-01-01 18:00:00,2026-07-17 18:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Etawan",BANDA,-,-,25.423941,80.253261,7,780,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Fakharpur Kabatta",MEERUT,-,-,28.79445,77.776513,7,788,2026-01-01 02:20:00,2026-07-23 08:20:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Fatehpur",BAGHPAT,-,-,28.998067,77.358283,7,781,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Fatehpur poothi",BAGHPAT,-,-,29.061511,77.337792,7,772,2026-01-01 00:00:00,2026-07-23 00:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Garhi Nawabad",MUZAFFARNAGAR,-,-,29.36381,77.4663,7,787,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Garhmal Pur",MUZAFFARNAGAR,-,-,29.333923,77.430168,7,791,2026-01-01 14:13:00,2026-07-23 14:13:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Gauripur jawaharnagar",BAGHPAT,-,-,28.989767,77.222892,7,793,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Gauspur",BAGHPAT,-,-,28.980214,77.34775,7,787,2026-01-01 01:16:00,2026-07-23 13:16:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Goyara Mugali",BANDA,-,-,25.4808,80.236971,7,785,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Habibpur Nagla",BAGHPAT,-,-,28.947745,77.442738,5,474,2026-01-01 00:00:00,2026-05-03 06:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Hadaha Mafi",BANDA,-,-,25.275542,80.652393,7,782,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Hariya Khera",MUZAFFARNAGAR,-,-,29.274112,77.336727,7,1574,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Husainpur Kala",MUZAFFARNAGAR,-,-,29.329363,77.462908,7,782,2026-01-01 00:56:00,2026-07-23 12:56:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Islamabad Chhilora",MEERUT,-,-,28.994009,77.784579,7,780,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Jaitpur",MUZAFFARNAGAR,-,-,29.367931,77.452758,7,790,2026-01-01 03:58:00,2026-07-23 15:58:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Jasori",MEERUT,-,-,28.845294,77.83939,7,791,2026-01-01 11:26:00,2026-07-23 11:26:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Jaspura",BANDA,-,-,25.812825,80.372303,7,783,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Jirawathi",MEERUT,-,-,28.5575,77.7708,7,800,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Jitholi",MEERUT,-,-,28.917731,77.782844,7,760,2026-01-01 18:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Kaili",MEERUT,-,-,28.789282,77.759373,7,787,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Kali Pahari",MAHOBA,-,-,25.34519,79.927847,7,796,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Kankua",MAHOBA,-,-,25.32169,79.405975,7,782,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Karam Alipur",BAGHPAT,-,-,29.010108,77.321337,7,768,2026-01-01 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Karaunda Mahajan 137 Kaarar",MUZAFFARNAGAR,-,-,29.359255,77.392725,7,776,2026-01-01 00:00:00,2026-07-23 00:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Kaul",MEERUT,-,-,28.853523,77.793108,7,791,2026-01-01 03:16:00,2026-07-23 09:16:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Khairajpur",GHAZIABAD,-,-,28.817925,77.434281,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+"Prathmik Vidhyalaya, Khairaukalan",MAHOBA,-,-,25.340889,79.376092,7,782,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Khandaila",SHRAWASTI,-,-,27.550013,81.860046,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+"Prathmik Vidhyalaya, Kharka",BAGHPAT,-,-,28.900317,77.394764,7,771,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Kharkhari",MEERUT,-,-,28.84405,77.78141,4,406,2026-01-01 00:00:00,2026-04-23 06:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Khaspur",MEERUT,-,-,28.82178,77.769306,7,798,2026-01-01 11:45:00,2026-07-23 11:45:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Kurawa",MUZAFFARNAGAR,-,-,29.34512,77.432771,7,786,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Lama",BANDA,-,-,25.579916,80.385285,7,789,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Lilwah",MAHOBA,-,-,25.373547,79.320957,7,782,2026-01-01 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Luhara",BAGHPAT,-,-,28.994649,77.395968,7,781,2026-01-01 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Makrandpur ogti",BAGHPAT,-,-,28.910608,77.387757,7,784,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Mandwara",MUZAFFARNAGAR,-,-,29.303054,77.443132,7,784,2026-01-01 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Marwari",MAHOBA,-,-,25.341014,79.377195,7,768,2026-01-01 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Mavi Khurd",BAGHPAT,-,-,29.013208,77.445174,7,788,2026-01-01 03:08:00,2026-07-23 09:08:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Murlipur Phool",MEERUT,-,-,28.927677,77.786733,7,781,2026-01-02 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Nagla Mal",MEERUT,-,-,28.891195,77.830372,7,792,2026-01-01 01:23:00,2026-07-23 13:23:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Nakra",MAHOBA,-,-,25.491293,79.502199,7,796,2026-01-01 06:00:00,2026-07-23 00:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Nalpur",MEERUT,-,-,28.818258,77.750484,7,789,2026-01-01 11:14:00,2026-07-23 11:14:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Nethla",BAGHPAT,-,-,29.002433,77.202731,7,784,2026-01-01 03:54:00,2026-07-23 09:54:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Niwaich",BANDA,-,-,25.681224,80.413844,7,781,2026-01-01 00:17:00,2026-07-23 12:17:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Pabla",MEERUT,-,-,29.052333,77.803169,7,778,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Pachgaon Patti Amar Singh",MEERUT,-,-,28.932357,77.822729,7,800,2026-01-01 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Pachgaon Patti Sanwal",MEERUT,-,-,28.93831,77.824128,7,790,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Pali",BAGHPAT,-,-,28.914363,77.239756,7,783,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Panchi",MEERUT,-,-,28.796286,77.747494,7,785,2026-01-01 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Parasoli",MUZAFFARNAGAR,-,-,29.281625,77.380236,7,787,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Pateora",HAMIRPUR,-,-,25.914483,80.239415,7,777,2026-01-01 00:44:00,2026-07-23 12:44:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Pathakpura",MAHOBA,-,-,25.434349,79.466203,5,524,2026-01-01 12:00:00,2026-05-19 06:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Pawala Begumbad",BAGHPAT,-,-,28.916369,77.302352,4,344,2026-01-01 00:00:00,2026-04-04 18:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Poother",BAGHPAT,-,-,28.971202,77.389036,7,784,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Poothi Bhrahman",BAGHPAT,-,-,28.982428,77.273125,7,776,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Pouhar",BANDA,-,-,25.297893,80.7278,7,789,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Rajpur Chajpur",MUZAFFARNAGAR,-,-,29.292285,77.353547,7,796,2026-01-01 12:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Rampur Aterna",MUZAFFARNAGAR,-,-,29.320386,77.421822,7,775,2026-01-01 01:55:00,2026-07-23 13:55:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Rasulpur Aurangabad",MEERUT,-,-,28.997607,77.812705,7,777,2026-01-01 01:21:00,2026-07-23 01:21:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Reshamgarh urf Muradgaon",BAGHPAT,-,-,28.941999,77.387449,1,7,2026-01-01 00:00:00,2026-01-02 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Saidkhas",BAGHPAT,-,-,28.978135,77.422384,7,787,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Salwlpur Kheri",BAGHPAT,-,-,28.90858,77.31208,7,794,2026-01-01 03:52:00,2026-07-23 09:52:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Sangawali Aher",BAGHPAT,-,-,28.968159,77.404176,7,773,2026-01-01 00:00:00,2026-07-23 00:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Sarai",MUZAFFARNAGAR,-,-,29.286229,77.416532,7,775,2026-01-01 13:17:00,2026-07-23 13:17:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Shahjahanpur Niwada",BAGHPAT,-,-,28.980624,77.433749,7,797,2026-01-01 05:38:00,2026-07-23 11:38:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Sial",MEERUT,-,-,28.967639,77.82895,4,377,2026-01-01 00:00:00,2026-04-07 00:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Sikhera",MEERUT,-,-,28.378498,77.767616,7,786,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Sisoli",MEERUT,-,-,28.914955,77.813828,7,792,2026-01-01 05:19:00,2026-07-23 11:19:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Sururpur Kalan",BAGHPAT,-,-,29.027765,77.233232,7,782,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Taiya",MAHOBA,-,-,27.95938,78.083019,7,792,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Tiyodhi",BAGHPAT,-,-,29.051201,77.240014,7,791,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Uldhan",MEERUT,-,-,28.800758,77.715372,7,788,2026-01-01 04:34:00,2026-07-23 10:34:00,False,telemetry_stale
+"Prathmik Vidhyalaya, Umrai",MAHOBA,-,-,25.335693,79.367456,7,779,2026-01-01 23:52:00,2026-07-22 23:52:00,False,telemetry_stale
+Prathmik Vidyalaya 6Th Wahini-Meerut-Medium,MEERUT,-,-,29.0357,77.7037,1,51,2026-01-01 00:00:00,2026-01-13 12:00:00,False,telemetry_stale
+Prathmik Vidyalaya 6Th Wahini-Meerut-Shallow,MEERUT,-,-,29.0357,77.7037,5,542,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Prathmik vidhayalaya, Badholi",MEERUT,-,-,28.834331,77.790084,7,769,2026-01-01 10:27:00,2026-07-23 10:27:00,False,telemetry_stale
+"Prathmik vidhayalaya, Incholi",MEERUT,-,-,29.025908,77.814892,7,778,2026-01-01 00:06:00,2026-07-23 12:06:00,False,telemetry_stale
+"Prathmik vidhyalaya, Husainpur Kalan",BANDA,-,-,25.290537,80.405157,7,798,2026-01-01 04:34:00,2026-07-23 10:34:00,False,telemetry_stale
+"Prathmik vidhyalaya, Mohan Purwa",BANDA,-,-,25.500926,80.248476,7,776,2026-01-01 04:40:00,2026-07-23 10:40:00,False,telemetry_stale
+"Primaray School, Chherat Sudhal",MAHOBA,-,-,27.959399,78.082863,7,788,2026-01-01 00:30:00,2026-07-23 00:30:00,False,telemetry_stale
+Primary English Medium School,MEERUT,-,-,28.909185,77.830477,7,778,2026-01-01 00:58:00,2026-07-23 12:58:00,False,telemetry_stale
+"Primary English Medium School, Kamalpur",MEERUT,-,-,28.93951,77.7654,7,788,2026-01-01 06:00:00,2026-07-23 00:00:00,False,telemetry_stale
+Primary Health Centre Nanauta-Nanauta-Medium,SAHARANPUR,-,-,29.71527778,77.42166667,5,553,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Primary Health Centre Nanauta-Nanauta-Shallow,SAHARANPUR,-,-,29.71527778,77.42166667,5,512,2026-01-16 06:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Primary Railway, Kulpahar(Rural)",MAHOBA,-,-,25.293879,79.633719,7,795,2026-01-01 06:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Primary School 2, Bataini",BAGHPAT,-,-,28.93056,77.304167,4,336,2026-01-03 18:00:00,2026-04-18 00:00:00,False,telemetry_stale
+Primary School Atrar Maaf,MAHOBA,-,-,25.150961,79.717705,7,790,2026-01-01 01:53:00,2026-07-23 01:53:00,False,telemetry_stale
+Primary School Badgo,GORAKHPUR,-,-,26.713349,83.369436,7,604,2026-01-01 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Primary School Baraura,JHANSI,-,-,25.37182,79.282175,7,792,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Primary School Bargadh,CHITRAKOOT,-,-,25.149349,81.450387,7,781,2026-01-01 05:43:00,2026-07-23 05:43:00,False,telemetry_stale
+Primary School Bedi,VARANASI,-,-,25.423311,82.913258,4,352,2026-01-01 00:00:00,2026-04-03 18:00:00,False,telemetry_stale
+Primary School Chhiolaha,CHITRAKOOT,-,-,25.228315,81.391171,7,796,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Primary School Chungi,LALITPUR,-,-,24.902442,78.640863,7,778,2026-01-01 00:57:00,2026-07-23 12:57:00,False,telemetry_stale
+Primary School Dadri,CHITRAKOOT,-,-,25.264755,81.312094,7,785,2026-01-01 05:22:00,2026-07-23 11:22:00,False,telemetry_stale
+Primary School Dauli Raghuwar Dayal,BAREILLY,-,-,28.35712,79.350078,2,42,2026-05-15 07:00:00,2026-08-15 18:00:00,False,sparse_2026
+Primary School Dharampur Tappa Vaisya,BUDAUN,-,-,28.122539,78.595408,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Primary School Fakharpur,BAGHPAT,-,-,28.843307,77.297654,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Primary School Gangapur,BUDAUN,-,-,28.060281,78.805494,5,413,2026-05-14 18:00:00,2026-09-05 18:00:00,False,sparse_2026
+Primary School Goghara,MIRZAPUR,-,-,25.144305,83.101759,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Primary School Jalalabad Urf Jalalpur,MEERUT,-,-,29.069476,77.771492,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Primary School Jawli,GHAZIABAD,-,-,28.744616,77.34045,6,524,2026-01-01 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Primary School Keshavpur,BUDAUN,-,-,27.884135,79.264961,4,339,2026-05-14 11:00:00,2026-08-17 18:00:00,False,sparse_2026
+Primary School Khandak,BUDAUN,-,-,28.069817,78.807736,5,414,2026-05-14 15:00:00,2026-09-05 18:00:00,False,sparse_2026
+Primary School Khandarka,JHANSI,-,-,25.373267,79.211603,7,754,2026-01-01 00:00:00,2026-07-18 06:00:00,False,telemetry_stale
+Primary School Mataur,MEERUT,-,-,29.134261,77.713552,6,568,2026-01-01 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Primary School Nainkhera,SAHARANPUR,-,-,29.865128,77.517288,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Primary School Nibi,CHITRAKOOT,-,-,25.222663,81.325998,7,787,2026-01-01 02:28:00,2026-07-23 14:28:00,False,telemetry_stale
+"Primary School No. 1, Gadhi",BAGHPAT,-,-,29.000227,77.278349,7,793,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School No.1, Dhikoli",BAGHPAT,-,-,28.901672,77.359394,7,783,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School No.1, Loi",MUZAFFARNAGAR,-,-,29.315711,77.40538,4,336,2026-01-01 06:00:00,2026-04-07 00:00:00,False,telemetry_stale
+"Primary School No.2, Chamrawal",BAGHPAT,-,-,28.87644,77.384273,7,786,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Primary School No.2, Fatehpur Kheri",MUZAFFARNAGAR,-,-,29.300874,77.393388,7,787,2026-01-01 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Primary School Parsona,BUDAUN,-,-,28.092283,78.708835,7,565,2026-01-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Primary School Patna Khas,SHRAWASTI,-,-,27.682682,81.88304,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Primary School Ragauli,CHITRAKOOT,-,-,25.351394,81.184458,7,768,2026-01-01 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+Primary School Rajpura,MAHOBA,-,-,25.13665,79.525735,7,786,2026-01-01 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Primary School Sandi,BUDAUN,-,-,27.906904,79.318112,5,496,2026-04-08 00:00:00,2026-08-26 18:00:00,False,sparse_2026
+Primary School Satheri,MUZAFFARNAGAR,-,-,29.262427,77.450967,7,772,2026-01-01 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+Primary School Sesa Suvakara,CHITRAKOOT,-,-,25.26641,81.388392,7,796,2026-01-01 00:00:00,2026-07-23 00:00:00,False,telemetry_stale
+Primary School Siduwapar,GORAKHPUR,-,-,26.298656,83.501166,2,153,2026-01-01 00:00:00,2026-02-10 06:00:00,False,telemetry_stale
+Primary School Sijari Khurd,JHANSI,-,-,25.36119,79.256657,6,660,2026-01-01 00:00:00,2026-06-14 18:00:00,False,telemetry_stale
+Primary School Simardha,LALITPUR,-,-,24.496795,78.394992,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Primary School Simra Harchand Singh,BAREILLY,-,-,28.111625,79.610466,4,294,2026-05-15 16:00:00,2026-08-30 18:00:00,False,sparse_2026
+Primary School Uruwa,GORAKHPUR,-,-,26.455209,83.255473,3,188,2026-01-01 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Primary School kharaka Muaf,JHANSI,-,-,25.267284,79.228424,7,786,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School, Barkata",MUZAFFARNAGAR,-,-,29.255784,77.479473,7,793,2026-01-01 04:15:00,2026-07-23 16:15:00,False,telemetry_stale
+"Primary School, Barokhar Khurd",BANDA,-,-,25.338297,80.384605,7,763,2026-01-01 00:00:00,2026-07-21 18:00:00,False,telemetry_stale
+"Primary School, Bihar",MAHOBA,-,-,25.305456,79.543815,7,786,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School, Biral",MUZAFFARNAGAR,-,-,29.24998,77.358282,7,644,2026-01-01 06:00:00,2026-07-22 00:00:00,False,telemetry_stale
+"Primary School, Chirgoan block office",JHANSI,Jhansi,-,25.570001,78.805263,9,752,2026-01-25 12:45:00,2026-09-03 00:00:00,False,late_start
+"Primary School, Dariba",MAHOBA,-,-,25.305017,79.903353,7,792,2026-01-01 02:46:00,2026-07-23 14:46:00,False,telemetry_stale
+"Primary School, Dewarniya",BAREILLY,-,-,28.222775,79.469179,5,338,2026-05-15 13:00:00,2026-09-05 18:00:00,False,sparse_2026
+"Primary School, Gorkha",MAHOBA,-,-,25.386239,79.64064,7,782,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Primary School, Hanpa",CHITRAKOOT,-,-,25.289636,81.321121,6,477,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+"Primary School, Jamunipur",BANDA,-,-,25.49765,80.393891,7,796,2026-01-01 03:03:00,2026-07-23 09:03:00,False,telemetry_stale
+"Primary School, Kanwara",BANDA,-,-,25.524444,80.30755,7,799,2026-01-01 02:19:00,2026-07-23 14:19:00,False,telemetry_stale
+"Primary School, Karahiya",BANDA,-,-,25.578391,80.37522,7,785,2026-01-01 04:17:00,2026-07-23 10:17:00,False,telemetry_stale
+"Primary School, Khanpur",MUZAFFARNAGAR,-,-,29.341388,77.484654,7,777,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Primary School, Kharka",MAHOBA,-,-,25.361096,80.108193,7,800,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School, Khera",MEERUT,-,-,29.229205,77.59462,7,653,2026-01-01 06:00:00,2026-07-31 12:00:00,False,telemetry_stale
+"Primary School, Kheri Gani",MUZAFFARNAGAR,-,-,29.342905,77.445778,7,789,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School, Kolawal Raipur",BANDA,-,-,25.261293,80.375516,7,794,2026-01-01 00:00:00,2026-07-23 00:00:00,False,telemetry_stale
+"Primary School, Kuralasi",MUZAFFARNAGAR,-,-,29.26289,77.40559,7,771,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School, Mahaljana",MUZAFFARNAGAR,-,-,29.243175,77.502553,7,780,2026-01-01 05:02:00,2026-07-23 11:02:00,False,telemetry_stale
+"Primary School, Makarbai",MAHOBA,-,-,25.358483,79.999033,7,778,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School, Mau Manpur",BANDA,-,-,25.246808,80.412485,7,637,2026-01-01 00:00:00,2026-08-25 12:00:00,False,sparse_2026
+"Primary School, Mawai",MAHOBA,-,-,25.14414,79.851803,7,762,2026-01-01 00:00:00,2026-07-20 06:00:00,False,telemetry_stale
+"Primary School, Medpur",MEERUT,-,-,28.96845,77.791596,7,788,2026-01-01 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School, Mindkali",MUZAFFARNAGAR,-,-,29.23531,77.447043,7,785,2026-01-01 02:53:00,2026-07-23 14:53:00,False,telemetry_stale
+"Primary School, Mudhari",MAHOBA,-,-,25.267263,79.62425,7,782,2026-01-01 05:48:00,2026-07-23 11:48:00,False,telemetry_stale
+"Primary School, Nagwa",MUZAFFARNAGAR,-,-,29.2025992,77.499328,5,547,2026-01-01 00:00:00,2026-05-27 12:00:00,False,telemetry_stale
+"Primary School, Nahdaora",MAHOBA,-,-,25.40632,80.074332,5,535,2026-01-01 00:00:00,2026-05-21 00:00:00,False,telemetry_stale
+"Primary School, Nibi",BANDA,-,-,25.14754,80.54797,7,787,2026-01-01 03:01:00,2026-07-23 15:01:00,False,telemetry_stale
+"Primary School, Pachanehi",BANDA,-,-,25.562308,80.426302,7,786,2026-01-01 03:36:00,2026-07-23 15:36:00,False,telemetry_stale
+"Primary School, Pagnara",BANDA,-,-,25.207717,80.462429,7,775,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School, Pahra",MAHOBA,-,-,25.361424,80.072414,7,769,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School, Raipura Khurd",MAHOBA,-,-,25.390439,79.895704,7,791,2026-01-01 03:59:00,2026-07-23 09:59:00,False,telemetry_stale
+"Primary School, Ratauli",MAHOBA,-,-,25.311774,79.989544,7,790,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School, Rehutan",BANDA,Banda,-,25.710113,80.379614,5,556,2026-01-01 00:00:00,2026-05-27 06:00:00,False,telemetry_stale
+"Primary School, Satarwans",LALITPUR,-,-,24.59365,78.499464,3,317,2026-01-01 00:00:00,2026-03-22 12:00:00,False,telemetry_stale
+"Primary School, Shambhupur Lauri",CHITRAKOOT,Chitrakoot,-,25.206538,81.236027,7,789,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School, Tikaria Jamunihai",CHITRAKOOT,-,-,25.019393,80.892272,7,785,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School, Udaipur",BANDA,-,-,25.277153,80.670421,7,784,2026-01-01 12:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primary School/ Composite, Bahedha",MUZAFFARNAGAR,-,-,29.40595,77.943561,9,757,2026-01-25 18:00:00,2026-09-05 18:00:00,False,late_start
+"Primary School/ Composite, Dariyapur",MUZAFFARNAGAR,-,-,29.403005,77.965121,3,323,2026-01-01 00:00:00,2026-03-25 12:00:00,False,telemetry_stale
+"Primary School/ Composite, Ghatampur",SAHARANPUR,Saharanpur,-,29.854358,77.292772,7,658,2026-01-01 00:00:00,2026-07-21 18:00:00,False,telemetry_stale
+"Primary School/ Composite, Simbhalki",MUZAFFARNAGAR,-,-,29.598879,77.725107,3,333,2026-01-01 00:00:00,2026-03-25 12:00:00,False,telemetry_stale
+"Primary Shool, Karahara Khurd",MAHOBA,-,-,25.47637,79.594223,7,787,2026-01-01 05:04:00,2026-07-23 11:04:00,False,telemetry_stale
+"Primay School, Bhasana",MUZAFFARNAGAR,-,-,29.299256,77.498168,7,774,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Primay School, Kurthal",MUZAFFARNAGAR,-,-,29.230577,77.483987,5,540,2026-01-01 00:00:00,2026-05-27 18:00:00,False,telemetry_stale
+Pukari,BANDA,-,-,25.12519,80.41928,7,560,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+"Purv Madhyamik Vidhyalaya, Basetkheri",BAGHPAT,-,-,28.941112,77.312145,6,458,2026-01-01 00:00:00,2026-09-05 00:00:00,False,sparse_2026
+"Purv Madhyamik Vidhyalaya, Hisawada",BAGHPAT,-,-,28.973586,77.36285,7,788,2026-01-01 18:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Purv Madhyamik Vidhyalaya, Khattla Prhaladpur",BAGHPAT,-,-,28.916403,77.332221,7,779,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Purv Madhyamik Vidhyalaya, Sankalpoothi",BAGHPAT,-,-,28.933905,77.35243,7,783,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Purv Madhyamik Vidhyalaya, Tilpani",BAGHPAT,-,-,29.015518,77.396231,7,763,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Purva Madhyamik Vidhyalaya Beera,HAMIRPUR,-,-,25.730799,79.583422,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Purva Madhyamik Vidhyalaya Chelra,JHANSI,-,-,25.649328,78.947032,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Purva Madhyamik Vidhyalaya Dohra,BAREILLY,-,-,28.377602,79.465786,2,22,2026-05-15 10:00:00,2026-08-15 18:00:00,False,sparse_2026
+Purva Madhyamik Vidhyalaya Jamuniya,LALITPUR,-,-,24.525137,78.31922,7,504,2026-01-02 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+"Purva Madhyamik Vidhyalaya, Baikunthpur",DEORIA,-,-,26.55517,83.806942,4,244,2026-01-01 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+"Purva Madhyamik Vidhyalaya, Barora",JHANSI,-,-,25.156221,78.460525,7,773,2026-01-01 00:00:00,2026-07-19 00:00:00,False,telemetry_stale
+"Purva Madhyamik Vidhyalaya, Kazampur",GHAZIABAD,-,-,28.799482,77.549222,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+"Purva Madhyamik Vidhyalaya, Lodhipura",HAMIRPUR,-,-,25.863124,79.706295,7,772,2026-01-01 00:00:00,2026-07-22 18:00:00,False,telemetry_stale
+"Purva Madhyamik Vidhyalaya, Motiyari",CHITRAKOOT,-,-,25.19088,80.504498,3,265,2026-01-01 00:00:00,2026-03-14 00:00:00,False,telemetry_stale
+"Purva Madhyamik Vidhyalaya, Palara",BANDA,Banda,-,25.698238,80.465182,7,787,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Rajkiy Goverment Polytechnic Deoria,DEORIA,Deoria,-,26.53396,83.759349,3,136,2026-01-01 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+"Rajkiya Balika Sector 9, Vijay Nagar, Shallow",GHAZIABAD,-,-,28.64638889,77.42555556,5,565,2026-01-01 00:00:00,2026-05-29 00:00:00,False,telemetry_stale
+"Rajkiya Balika Sector 9, Vijay Nagar-Razapur-Medium",GHAZIABAD,-,-,28.64638889,77.42555556,5,569,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Rajkiya I.C. Maldahiya, Medium",VARANASI,-,-,25.322195,82.993275,5,561,2026-01-01 00:00:00,2026-05-30 12:00:00,False,telemetry_stale
+"Rajkiya I.C. Maldahiya, Shallow",VARANASI,-,-,25.322195,82.993275,5,565,2026-01-01 00:00:00,2026-05-30 12:00:00,False,telemetry_stale
+"Rajkiya Inter college, Pailani",BANDA,Banda,-,25.759707,80.425327,7,787,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Rajkiya Snatakottar Mahavidhyalaya-Fatehabad-Medium,AGRA,-,-,27.035,78.28722222,1,52,2026-01-01 00:00:00,2026-01-13 12:48:00,False,telemetry_stale
+Rajkiya Snatakottar Mahavidhyalaya-Fatehabad-Shallow,AGRA,-,-,27.035,78.28722222,5,561,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Ramnagar (UP-072),BAREILLY,Bareilly,-,28.36944444,79.11944444,5,558,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Rora_2,JHANSI,-,-,25.29411832,79.21271029,7,611,2026-01-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Ruri Para,HAMIRPUR,-,-,25.236905,79.906734,3,257,2026-02-01 00:00:00,2026-04-18 00:00:00,False,telemetry_stale
+Sahabpur Mujehra (UP-147),MIRZAPUR,Mirzapur,-,25.178724,82.552154,1,65,2026-01-01 00:00:00,2026-01-18 06:00:00,False,telemetry_stale
+Saharanpur City (UP-167),SAHARANPUR,Saharanpur,-,29.875118,77.55156,5,574,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Sahaswan (UP-075),BUDAUN,Budaun,-,28.092598,78.789246,5,561,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Saini Pi,MEERUT,-,-,29.040593,77.790506,3,261,2026-02-01 00:00:00,2026-04-19 00:00:00,False,telemetry_stale
+Sandwa Chandika (UP-043),PRATAPGARH,PRATAPGARH,-,26.037881,81.88412,5,569,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Sangampur,CHITRAKOOT,-,-,25.19764,80.240374,6,397,2026-02-01 00:00:00,2026-08-25 18:00:00,False,sparse_2026
+Sarali (UP-069),HAMIRPUR,HAMIRPUR,-,25.772097,79.67627,5,566,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Sarhat_1,CHITRAKOOT,-,-,25.077097,81.095294,5,265,2026-02-01 00:00:00,2026-07-14 14:26:00,False,telemetry_stale
+"Sarkari Samity, Block-Islamnagar-Islamnagar-Medium",BUDAUN,-,-,28.335061,78.715714,5,548,2026-01-02 06:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Sarkari Samity, Block-Islamnagar-Islamnagar-Shallow",BUDAUN,-,-,28.335061,78.715714,5,557,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Sarkati Sekh (UP-160),SAHARANPUR,Saharanpur,-,30.064306,77.566295,5,542,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Sarnath (UP-110),VARANASI,VARANASI,-,25.378977,73.029819,5,560,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Sarsai (UP-071),HAMIRPUR,HAMIRPUR,-,25.988304,79.938457,5,573,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+"Sarv Hitaari Inter Colledge, Meetli",BAGHPAT,-,-,28.953665,77.29167,7,776,2026-01-01 12:00:00,2026-07-23 06:00:00,False,telemetry_stale
+Sewathan (UP-029),KAUSHAMBI,Kaushambi,-,25.357325,81.584864,5,481,2026-01-01 00:00:00,2026-05-29 18:00:00,False,telemetry_stale
+Shivgarh (UP-035),PRATAPGARH,PRATAPGARH,-,25.811524,82.089433,5,566,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Sijnaura,HAMIRPUR,-,-,25.65102027,80.14844743,6,298,2026-02-01 00:00:00,2026-09-03 12:00:00,False,sparse_2026
+Sijwahi,HAMIRPUR,-,-,25.59969,80.19027,7,538,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Sikraun,CHITRAKOOT,Chitrakoot,-,25.302449,81.317216,7,797,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Silauli,HAMIRPUR,-,-,25.708027,80.056112,6,319,2026-01-01 00:00:00,2026-07-27 10:19:00,False,telemetry_stale
+Sirathu (UP-032),KAUSHAMBI,Kaushambi,-,25.645556,81.319723,5,563,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Sirsa Kalar (UP-118),JALAUN,JALAUN,-,26.287489,79.42595,2,151,2026-01-01 00:00:00,2026-02-07 12:00:00,False,telemetry_stale
+Sonbhadra Rabarts Gaurdeeha,MIRZAPUR,-,-,24.682354,83.046064,6,266,2026-01-01 00:00:00,2026-07-28 12:00:00,False,telemetry_stale
+Sports Stadium Campus Dallpur Road-Nawabganj-Medium,BAREILLY,-,-,28.550293,79.593566,5,555,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Sports Stadium Campus Dallpur Road-Nawabganj-Shallow,BAREILLY,-,-,28.550293,79.593566,5,478,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Sudeenpur,CHITRAKOOT,-,-,25.21795987,80.7099962,6,472,2026-01-01 00:00:00,2026-07-26 00:00:00,False,telemetry_stale
+"Sujan Singh Inter College, Medium",MEERUT,-,-,28.988216,77.758012,5,561,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+"Sujan Singh Inter College, Shallow",MEERUT,-,-,28.988216,77.758012,3,319,2026-01-01 00:00:00,2026-03-26 00:00:00,False,telemetry_stale
+Sumariya Charandasi,CHITRAKOOT,-,-,25.19699863,81.00657845,6,496,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Sunvilian School Teela Shahbazpur,GHAZIABAD,-,-,28.725343,77.322112,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Supa_1,MAHOBA,-,-,25.321979,79.745872,6,500,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Takhtupur,CHITRAKOOT,-,-,25.198,81.032,6,421,2026-01-01 00:00:00,2026-07-18 06:00:00,False,telemetry_stale
+Tara (Bajarangi Dera),BANDA,-,-,25.7511,80.51294,7,548,2026-02-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Tarkhari,BANDA,-,-,25.26356661,80.44980308,6,515,2026-01-01 06:00:00,2026-07-25 12:00:00,False,telemetry_stale
+Tehsil Premises-Chail-Medium,KAUSHAMBI,-,-,25.447347,81.610337,5,553,2026-01-01 00:00:00,2026-05-30 00:00:00,False,telemetry_stale
+Tehsil Premises-Chail-Shallow,KAUSHAMBI,-,-,25.447347,81.610337,3,237,2026-01-01 00:00:00,2026-03-08 00:00:00,False,telemetry_stale
+Telipahari_1,MAHOBA,-,-,25.311431,79.381222,3,261,2026-02-01 00:00:00,2026-04-19 00:00:00,False,telemetry_stale
+Teta_1,LALITPUR,-,-,24.90651,78.48834,7,399,2026-01-25 18:00:00,2026-09-05 18:00:00,False,sparse_2026
+Thana/ Tapariyan,LALITPUR,-,-,25.09685,78.39596,7,633,2026-01-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Tihar Block office (UP-119),JALAUN,JALAUN,-,26.373565,79.221669,5,578,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+Titar Khalispur (UP-114),JALAUN,JALAUN,-,26.076009,79.190383,5,585,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+UPS Sheo Rampur,CHITRAKOOT,-,-,25.216905,80.837638,7,784,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Uccha Prathmik Vidhyalaya,MEERUT,-,-,28.980105,77.810863,7,1130,2026-01-01 00:50:00,2026-07-23 12:50:00,False,telemetry_stale
+Uccha Prathmik Vidhyalaya Composite V0 Sardhana dehat,MEERUT,-,-,29.149324,77.615072,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+"Uccha Prathmik Vidhyalaya, Hamedabad Mill",BAGHPAT,-,-,28.944542,77.245365,7,778,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Uccha Prathmik Vidhyalaya, Narayetch",HAMIRPUR,-,-,25.662741,80.084162,7,777,2026-01-01 00:00:00,2026-07-23 00:00:00,False,telemetry_stale
+"Uccha Prathmik Vidhyalaya, Rajpura",MEERUT,-,-,29.011901,77.768949,7,794,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Uccha Prathmik Vidhyalaya, Siswa",DEORIA,-,-,26.497163,83.908073,9,793,2026-01-19 06:00:00,2026-09-05 18:00:00,False,late_start
+"Uccha Prathmik Vidhyalaya, Tulsi",MIRZAPUR,-,-,25.036993,82.419747,4,171,2026-03-11 18:00:00,2026-06-08 12:00:00,False,telemetry_stale
+"Uchha Prathmik Vidhyalaya, Amarpur",JHANSI,-,-,25.381972,78.397731,5,546,2026-01-01 00:00:00,2026-05-27 06:00:00,False,telemetry_stale
+"Uchha Prathmik Vidhyalaya, Budhana Bagar",MUZAFFARNAGAR,-,-,29.305398,77.479396,7,787,2026-01-01 00:56:00,2026-07-23 12:56:00,False,telemetry_stale
+"Uchha Prathmik Vidhyalaya, Jamauri Danda",HAMIRPUR,-,-,25.914837,79.616833,7,772,2026-01-01 00:44:00,2026-07-23 12:44:00,False,telemetry_stale
+"Uchha Prathmik Vidhyalaya, Khairada",BANDA,-,-,25.463997,80.205807,7,792,2026-01-01 03:39:00,2026-07-23 09:39:00,False,telemetry_stale
+"Uchha Prathmik Vidhyalaya, Khanpur",BANDA,-,-,25.274635,80.384733,7,798,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+"Uchha Prathmik Vidhyalaya, Khutaha",CHITRAKOOT,Chitrakoot,-,25.208626,80.853927,7,797,2026-01-01 02:57:00,2026-07-23 14:57:00,False,telemetry_stale
+"Uchha Prathmik Vidhyalaya, Pilana",BAGHPAT,-,-,28.942044,77.369782,7,798,2026-01-01 00:00:00,2026-07-23 06:00:00,False,telemetry_stale
+"Uchha Prathmik Vidhyalaya, Rampur",BANDA,JASPURA,JASPURA,25.84472222,80.37416667,7,792,2026-01-01 04:11:00,2026-07-23 10:11:00,False,telemetry_stale
+"Uchha Prathmik Vidhyalaya, Vidhokar Purai",HAMIRPUR,-,-,25.784848,80.079725,7,781,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Uchha Prathmik Vidhyalaya_1,MEERUT,-,-,28.862633,77.8568,7,812,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Ujhani (UP-074),BUDAUN,Budaun,-,28.01583333,79.08333333,5,569,2026-01-01 06:00:00,2026-05-30 06:00:00,False,telemetry_stale
+"Up Rajya Hindi Sansthan Campus, Medium",VARANASI,-,-,25.35611111,82.97166667,5,269,2026-01-01 18:00:00,2026-05-29 18:00:00,False,telemetry_stale
+"Up Rajya Hindi Sansthan Campus, Shallow",VARANASI,-,-,25.35611111,82.97166667,1,19,2026-01-01 18:00:00,2026-01-19 14:40:00,False,telemetry_stale
+Upper Primary Kheri Sundiyan,MUZAFFARNAGAR,-,-,29.425538,77.482191,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Upper Primary School Basawanpur,BUDAUN,-,-,28.028995,78.939434,6,506,2026-04-08 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Upper Primary School Bhuwapur,MUZAFFARNAGAR,-,-,29.447794,77.970028,2,56,2026-01-01 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+Upper Primary School Doharia,BAREILLY,-,-,28.369896,79.476845,6,454,2026-01-01 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Upper Primary School Rampuriya,BAREILLY,-,-,28.137911,79.529607,7,544,2026-01-01 00:00:00,2026-07-11 18:00:00,False,telemetry_stale
+Upper Primary School Simauni,BANDA,-,-,25.598864,80.600947,7,752,2026-01-01 00:00:00,2026-07-29 18:00:00,False,telemetry_stale
+Upper Primary School Udaybhanpur,BAREILLY,-,-,28.362897,79.147974,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026
+"Upper Primary School, Jed",BAREILLY,-,-,28.249794,79.524933,4,335,2026-05-15 14:00:00,2026-08-17 18:00:00,False,sparse_2026
+"Upper Primary School, Kiyara",BAREILLY,-,-,28.256539,79.419254,5,401,2026-05-15 12:00:00,2026-09-05 18:00:00,False,sparse_2026
+"Upper Primary School, Pura Mahadev",BAGHPAT,-,-,28.998112,77.450604,7,788,2026-01-01 00:00:00,2026-07-23 12:00:00,False,telemetry_stale
+Usraina (UP-025),FATEHPUR,Fatehpur,-,25.893598,81.12565,5,514,2026-01-01 00:00:00,2026-05-15 00:00:00,False,telemetry_stale
+Varansi Badagaon Badagaon Pratham,VARANASI,-,-,25.292609,82.79784,7,209,2026-01-01 06:00:00,2026-09-05 18:00:00,False,sparse_2026
+Varansi Cholapur Degarupur,VARANASI,-,-,25.448312,83.027032,7,290,2026-03-11 16:17:00,2026-09-05 18:00:00,False,sparse_2026
+Varansi Pindara Bavatpur Ada Karmi,VARANASI,-,-,25.448866,82.870016,6,374,2026-04-30 00:00:00,2026-09-05 18:00:00,False,sparse_2026
+Vighana (UP-066),HAMIRPUR,HAMIRPUR,-,25.661235,80.012699,2,105,2026-01-01 00:00:00,2026-02-03 06:00:00,False,telemetry_stale
+Vikas Khand Bhmai,CHITRAKOOT,-,-,25.17578,80.863944,7,784,2026-01-01 04:07:00,2026-07-23 10:07:00,False,telemetry_stale
+kadar Chowk (UP-073),BUDAUN,Budaun,-,27.87083333,79.08083333,5,564,2026-01-01 00:00:00,2026-05-30 06:00:00,False,telemetry_stale
+mangaonwa,CHITRAKOOT,-,-,25.002555,80.875093,3,261,2026-02-01 00:00:00,2026-04-19 00:00:00,False,telemetry_stale
+primary school Gangdaspur,MUZAFFARNAGAR,-,-,29.388545,77.978073,1,12,2026-08-12 00:00:00,2026-08-15 18:00:00,False,sparse_2026

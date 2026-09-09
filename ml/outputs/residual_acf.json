@@ -1,18 +1,18 @@
 {
   "stations": 511,
   "raw_test_rows": 378554,
-  "effective_sample_size_est": 6611.0,
+  "effective_sample_size_est": 6635.0,
   "effective_N_ratio": 0.0175,
   "pooled_acf": {
     "lag1": 0.8584,
     "lag2": 0.8303,
     "lag3": 0.8176,
-    "lag6": 0.7719,
-    "lag12": 0.723,
-    "lag24": 0.5775,
-    "lag48": 0.3347,
-    "lag120": -0.1063,
-    "lag239": -0.0566
+    "lag6": 0.7718,
+    "lag12": 0.7225,
+    "lag24": 0.5768,
+    "lag48": 0.3337,
+    "lag120": -0.108,
+    "lag239": -0.0562
   },
   "lags_explanation": "lags in 6h steps: 1=6h, 120=30d (full target overlap)",
   "n_eff_method": "n / (1 + 2*sum_{k=1..120} rho_k^+) (positive autocorrelation)"

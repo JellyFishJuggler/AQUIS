@@ -171,14 +171,15 @@ def forward_forecast(station: str) -> dict:
     anchor = float(last["gwl"].iloc[0])
     date_from = pd.to_datetime(last["time"]).iloc[0]
 
-    # calibrated quantile interval (delta target -> level via anchor)
+    # calibrated quantile interval (delta target -> level via anchor);
+    # clamp lo/hi to the median so independent quantile models never cross.
     qlev: dict[str, float] = {}
     k = float(load_quantile_calibration().get("widen_factor_k", 1.0))
     if qmods.get("q05") and qmods.get("q95") and qmods.get("q50"):
         pred_q = {q: float(m.predict(last[fnames])[0]) for q, m in qmods.items() if m is not None}
         med = anchor + pred_q["q50"]
-        lo = anchor + pred_q["q05"]
-        hi = anchor + pred_q["q95"]
+        lo = anchor + min(pred_q["q05"], pred_q["q50"])
+        hi = anchor + max(pred_q["q95"], pred_q["q50"])
         qlev = {"q05": med - k * (med - lo), "q50": med,
                 "q95": med + k * (hi - med)}
     band_half = float((qlev["q95"] - qlev["q05"]) / 2) if qlev else None

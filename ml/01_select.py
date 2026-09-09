@@ -88,6 +88,26 @@ def main() -> None:
     keep.to_csv(config.META / "selected_gwl_stations.csv", index=False)
     (config.META / "selected_districts.json").write_text(json.dumps(districts, indent=2))
 
+    # stale-coverage watchlist: stations with 2026 telemetry that failed the live
+    # gate, bucketed by why (stale vs sparse vs late start). Coarse gaps like
+    # telemetry going quiet mid-year show up here even though the station had a
+    # healthy 2025 archive.
+    watch = sel[(sel["full26"] == False) & (sel["n_2026_months"] >= 1)].copy()  # noqa: E712
+    if not watch.empty:
+        wbreak = pd.to_datetime(config.FULL26_LAST_MIN)
+        wstart = pd.to_datetime(config.FULL26_FIRST_MAX)
+        watch["reason"] = "other"
+        watch.loc[watch["last_record"] < wbreak, "reason"] = "telemetry_stale"
+        watch.loc[(watch["reason"] == "other") & (watch["n_2026_months"] < config.FULL26_MIN_MONTHS),
+                  "reason"] = "sparse_2026"
+        watch.loc[(watch["reason"] == "other") & (watch["first_2026"] > wstart),
+                  "reason"] = "late_start"
+    watch.to_csv(config.META / "stale_watchlist.csv", index=False)
+    print(f"\nstale-coverage watchlist: {len(watch):,} stations -> "
+          f"{config.META / 'stale_watchlist.csv'}")
+    if not watch.empty:
+        print(watch["reason"].value_counts().to_string())
+
     print(f"\nfull-2026 qualifying stations: {len(keep):,} of {len(sel):,}")
     print(f"selected districts ({len(districts)}): {', '.join(districts)}")
     print(f"saved -> {config.META / 'selected_gwl_stations.csv'}")

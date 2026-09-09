@@ -588,7 +588,7 @@
     "primary school kapasi"
   ],
   "districts": [
-    "AGRA",
+    "ALIGARH",
     "AZAMGARH",
     "BAGHPAT",
     "BANDA",
@@ -598,21 +598,29 @@
     "DEORIA",
     "ETAH",
     "FATEHPUR",
+    "FIROZABAD",
     "GHAZIABAD",
     "GORAKHPUR",
     "HAMIRPUR",
+    "HATHRAS",
     "JALAUN",
+    "JAUNPUR",
     "JHANSI",
     "KANSIRAM NAGAR",
     "KAUSHAMBI",
+    "KUSHINAGAR",
     "LALITPUR",
+    "MAHARAJGANJ",
     "MAHOBA",
+    "MAINPURI",
+    "MATHURA",
     "MEERUT",
     "MIRZAPUR",
     "MUZAFFARNAGAR",
     "PRATAPGARH",
     "SAHARANPUR",
     "SANT RAVIDAS NAGAR",
+    "SHAHJAHANPUR",
     "SHRAWASTI",
     "SIDDHARTHNAGAR",
     "SONBHADRA",
@@ -623,13 +631,13 @@
   "test_rows": 378554,
   "xgb": {
     "n_trees": 15,
-    "val_rmse_delta": 1.2748,
-    "val_rmse_level": 1.2748
+    "val_rmse_delta": 1.275,
+    "val_rmse_level": 1.275
   },
   "ridge": {
     "alpha": 0.1,
-    "val_rmse_delta": 1.708,
-    "val_rmse_level": 1.708
+    "val_rmse_delta": 1.7079,
+    "val_rmse_level": 1.7079
   },
-  "trained_at": "2026-09-09 17:03:49"
+  "trained_at": "2026-09-10 04:16:52"
 }
