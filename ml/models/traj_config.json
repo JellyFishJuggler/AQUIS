@@ -1,0 +1,134 @@
+{
+  "paradigm": "direct multi-horizon shared model (no recursion)",
+  "target": "GWL(t+h*6h) - GWL(t); level = anchor + delta (anchor observed only)",
+  "feature_cols": [
+    "gwl",
+    "lag1",
+    "lag4",
+    "lag8",
+    "lag28",
+    "lag120",
+    "gwl_roll7_mean",
+    "gwl_roll7_std",
+    "gwl_roll30_mean",
+    "gwl_roll30_std",
+    "rain_1d",
+    "rain_7d",
+    "rain_30d",
+    "temp",
+    "temp_7d",
+    "humidity",
+    "humidity_7d",
+    "solar",
+    "wind_speed",
+    "pressure",
+    "river_level",
+    "canal_level",
+    "year",
+    "month_sin",
+    "month_cos",
+    "doy_sin",
+    "doy_cos",
+    "hour_sin",
+    "hour_cos",
+    "monsoon",
+    "h",
+    "h_sin",
+    "h_cos"
+  ],
+  "quantiles": {
+    "q05": 0.05,
+    "q50": 0.5,
+    "q95": 0.95
+  },
+  "max_h": 120,
+  "early_stopping_tail_frac": 0.1,
+  "fit_rows": 5879538,
+  "eval_rows": 653281,
+  "val_rows_scored": 1071080,
+  "smoke": false,
+  "val_per_h_metrics": [
+    {
+      "h": 1,
+      "n": 13029,
+      "rmse": 0.1869,
+      "mae": 0.0574,
+      "bias": 0.0013,
+      "coverage": 0.9398,
+      "halfwidth_median": 0.2226
+    },
+    {
+      "h": 2,
+      "n": 12366,
+      "rmse": 0.2082,
+      "mae": 0.0706,
+      "bias": 0.0019,
+      "coverage": 0.927,
+      "halfwidth_median": 0.232
+    },
+    {
+      "h": 3,
+      "n": 11737,
+      "rmse": 0.2191,
+      "mae": 0.0774,
+      "bias": 0.0015,
+      "coverage": 0.9198,
+      "halfwidth_median": 0.2378
+    },
+    {
+      "h": 4,
+      "n": 11114,
+      "rmse": 0.2235,
+      "mae": 0.0789,
+      "bias": -0.0005,
+      "coverage": 0.914,
+      "halfwidth_median": 0.241
+    },
+    {
+      "h": 8,
+      "n": 8847,
+      "rmse": 0.2825,
+      "mae": 0.1165,
+      "bias": -0.0,
+      "coverage": 0.898,
+      "halfwidth_median": 0.2817
+    },
+    {
+      "h": 12,
+      "n": 6838,
+      "rmse": 0.3495,
+      "mae": 0.1697,
+      "bias": 0.0016,
+      "coverage": 0.8636,
+      "halfwidth_median": 0.3151
+    },
+    {
+      "h": 28,
+      "n": 6213,
+      "rmse": 0.7246,
+      "mae": 0.2535,
+      "bias": 0.0609,
+      "coverage": 0.8653,
+      "halfwidth_median": 0.425
+    },
+    {
+      "h": 60,
+      "n": 8923,
+      "rmse": 1.0141,
+      "mae": 0.3754,
+      "bias": 0.0973,
+      "coverage": 0.883,
+      "halfwidth_median": 0.6499
+    },
+    {
+      "h": 120,
+      "n": 11047,
+      "rmse": 1.2756,
+      "mae": 0.5392,
+      "bias": 0.1717,
+      "coverage": 0.8666,
+      "halfwidth_median": 0.8366
+    }
+  ],
+  "trained_at": "2026-09-10 16:03:38"
+}

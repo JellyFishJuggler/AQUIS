@@ -66,12 +66,15 @@ def build_climatology(tbl: pd.DataFrame | None = None) -> tuple[pd.DataFrame, di
 
     weather = (tr.dropna(subset=SEASONAL_WEATHER)
                  .groupby(["Station", "doy"])[SEASONAL_WEATHER].mean().reset_index())
-    rc = (tr.dropna(subset=RIVER_CANAL)
+    rc = (tr.dropna(subset=RIVER_CANAL, how="all")
             .groupby(["Station", "doy"])[RIVER_CANAL].mean().reset_index())
     out = weather if not weather.empty else pd.DataFrame()
     if not rc.empty:
-        out = out.merge(rc, on=["Station", "doy"], how="left")
+        out = rc if out.empty else out.merge(rc, on=["Station", "doy"], how="outer")
     if not out.empty:
+        present = [c for c in SEASONAL_WEATHER + RIVER_CANAL if c in out.columns]
+        out = (out.dropna(subset=present, how="all")
+                  .reset_index(drop=True))
         out["trained_from"] = str(TRAIN_CUT.date())
     return out, daily
 

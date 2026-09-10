@@ -1,0 +1,26 @@
+{
+  "engine": "direct multi-horizon shared XGBoost, h feature (30_traj/31_traj)",
+  "anchors_scored": 73881,
+  "stations_sampled": 600,
+  "period": [
+    "2025-10-01",
+    "2026-08-20"
+  ],
+  "anchor_spacing_days": 14,
+  "no_overlap_windows": true,
+  "no_future_observed_values": true,
+  "30d_rmse_traj": 2.105924434925737,
+  "30d_rmse_persistence": 2.1510493959071875,
+  "30d_rmse_climatology": 28.72255578814738,
+  "30d_rmse_direct30_production": 2.1315,
+  "30d_rmse_prev_recursive": 1.8555,
+  "30d_dir_acc": 0.7468,
+  "30d_coverage_calibrated": 0.9,
+  "success_short_horizons": true,
+  "success_vs_persist_30d": true,
+  "success_vs_direct30_30d": true,
+  "promote_trajectory": true,
+  "trajectory_validated": "trajectory + level (endpoint benchmarked to direct-30d)",
+  "calibration_file": "/home/srijan/Downloads/Developement/AQUIS/ml/models/traj_calibration.json",
+  "elapsed_sec": 252
+}

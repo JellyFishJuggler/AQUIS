@@ -53,6 +53,8 @@ ml/data/selected/*.csv
 
 # ML training feature matrices (rebuilt by 06_features; app reads aligned/ at runtime)
 ml/data/features/
+# refresh pipeline runtime state (forecasts, journal, lock, candidate models)
+ml/data/refresh/
 # redundant 50MB wide export of table.parquet (app reads parquet)
 ml/data/aligned/*.csv
 # runtime/deploy logs
@@ -76,3 +78,5 @@ Thumbs.db
 
 .opencode
 .agents
+.paper
+ml/data/features_traj/

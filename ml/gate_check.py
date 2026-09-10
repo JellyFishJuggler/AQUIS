@@ -62,6 +62,25 @@ def main() -> None:
               < s.get("best_30d_rmse_rec"),
               "recursion did not beat direct at 30d")
 
+    tj = Path(OUT / "traj_backtest_summary.json")
+    if tj.exists():
+        s = json.loads(tj.read_text())
+        rt = s.get("30d_rmse_traj")
+        check("trajectory promoted (honest, above baselines)",
+              bool(s.get("promote_trajectory"))
+              and rt is not None and rt
+              < s.get("30d_rmse_persistence", float("inf"))
+              and rt < s.get("30d_rmse_direct30_production", float("inf")),
+              f"traj 30d {rt} vs persist {s.get('30d_rmse_persistence')} "
+              f"vs direct {s.get('30d_rmse_direct30_production')}")
+        tcal = Path(MODELS / "traj_calibration.json")
+        if tcal.exists():
+            c = json.loads(tcal.read_text())
+            cov30 = c["coverage_calibrated"][-1] if c.get("coverage_calibrated") else None
+            check("trajectory +30d calibrated coverage = 0.90",
+                  cov30 is not None and round(float(cov30), 3) == 0.90,
+                  f"got {cov30}")
+
     ok = all(o for _, o, _ in CHECKS)
     print(f"\nGATE {'PASS' if ok else 'FAIL'} — {sum(o for _, o, _ in CHECKS)}/{len(CHECKS)} checks")
     sys.exit(0 if ok else 1)

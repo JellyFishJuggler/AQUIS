@@ -1,221 +1,331 @@
-"""Forecast page — 2026 backtest curve + deterministic 30-day forward forecast.
+"""Forecast page — the 6-hourly groundwater trajectory forecast card.
 
-Forward forecasts rebuild the feature frame from the 6-hourly aligned table for
-the selected station (same code path as training via 06_features.build_full) and
-predict the 30-day change GWL(t+120) − GWL(t); level = anchor + change. The
-anchor (latest observed GWL) is shown as a KPI, never as a predicted value.
+Presents the 120 genuine 6-hour forecast points produced by the multi-horizon
+trajectory engine (_trajectory.py) as a single, clean dashboard card on the
+app's dark theme. Observed history stops at the anchor; the forecast begins
+6 h later and never turns the anchor value into a predicted path. Only the
+backend-produced q05/q50/q95 values are drawn — nothing is smoothed, bridged
+or interpolated. The trajectory v2 forecast is the only forecast shown on
+this page; no other forecast model appears here.
+
+Confidence (HIGH / DIRECTIONAL / LOW) carries an evidence-based reason from
+the backend and is surfaced prominently; the per-point confidence levels and
+their driver sources live in the tooltip, the detail table and the metrics.
+
+Caching: the trajectory run is cached per (station, data version); the version
+fingerprint invalidates exactly when data or weights change (or daily, so the
+recency metric stays honest). The exported Snapshot PNG is cached on the same
+key.
 """
 
-import altair as alt
+import hashlib
+import io
+from pathlib import Path
+
 import pandas as pd
 import streamlit as st
 
-from _model import (load_predictions, load_models, load_feature_config,
-                    load_model_metrics, load_quantile_calibration, forward_forecast)
+from _model import load_predictions
 from _utils import load_table_6h, station_recency
 
-MODELS = {"xgboost": "XGBoost", "ridge": "Linear (Ridge)"}
-PRED_COL = {"xgboost": "xgb", "ridge": "ridge"}
-HORIZON = 30
-Z = 1.96
+from app_charts import (COL_OBSERVED, COL_TRAJECTORY, CONF_COLORS, CONF_ORDER,
+                        trajectory_chart)
+from snapshot import trajectory_snapshot_png
+
+_DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+_MODELS_DIR = Path(__file__).resolve().parent.parent / "models"
+
+# confidence level -> (label, accent colour, one-line guidance)
+CONF_STYLE = {
+    "HIGH": ("High confidence", "#34d399",
+             "Strengths dominate — interval, direction and drivers all agree."),
+    "DIRECTIONAL": ("Directional", "#fbbf24",
+                    "Direction is supported; the exact numerical level has higher uncertainty."),
+    "LOW": ("Indicative only", "#f472b6",
+            "Forecast is indicative only — inspect the evidence before relying on exact values."),
+}
+DIR_GLYPH = {
+    "rising": ("↑", "Rising", "#34d399"),
+    "declining": ("↓", "Falling", "#f472b6"),
+    "stable": ("→", "Stable", "#fbbf24"),
+}
+_OBS_TAIL_DAYS = 15
+
+
+def _traj_version() -> str:
+    """Fingerprint of everything the trajectory depends on (models, calibration,
+    reliability tables, weather, aligned 6h table) + the calendar day, so the
+    cache refreshes exactly when data or weights change (or daily, to keep the
+    recency metric honest)."""
+    paths = [
+        _DATA_DIR / "aligned" / "table_6h.parquet",
+        _MODELS_DIR / "traj_config.json",
+        _MODELS_DIR / "traj_calibration.json",
+        _MODELS_DIR / "traj_reliability.json",
+        _MODELS_DIR / "xgb_q50.joblib",
+        _MODELS_DIR / "xgb_multihorizon.joblib",
+        _MODELS_DIR / "xgb_q05.joblib",
+        _MODELS_DIR / "xgb_q95.joblib",
+        _DATA_DIR / "cfs" / "openmeteo_weather_daily.parquet",
+    ]
+    h = hashlib.sha256()
+    for p in paths:
+        h.update(str(p).encode())
+        if p.exists():
+            h.update(str(p.stat().st_mtime_ns).encode())
+    h.update(pd.Timestamp.now().date().isoformat().encode())
+    return h.hexdigest()[:12]
+
+
+@st.cache_data(show_spinner="6-hourly trajectory run…", max_entries=32)
+def _trajectory_cached(station: str, version: str) -> dict:
+    from _trajectory import trajectory_forecast
+    return trajectory_forecast(station)
+
+
+@st.cache_data(ttl="1h", max_entries=2)
+def _river_forecast_districts() -> tuple[str, ...]:
+    """Districts covered by the live CWC river forecast snapshot (if any)."""
+    try:
+        from refresh.future_drivers import _load_river_forecast
+
+        rfc = _load_river_forecast()
+        if rfc is None or rfc.empty:
+            return ()
+        return tuple(sorted({str(d).upper() for d in rfc["district"]}))
+    except Exception:  # noqa: BLE001 - availability display is decorative only
+        return ()
+
+
+def _observed_tail(station, up_to, table6, days: int = _OBS_TAIL_DAYS) -> pd.DataFrame:
+    """Daily-mean observed GWL for the last `days` days up to `up_to` (Timestamp)
+    — never anything later than the anchor."""
+    obs_t = (table6[table6["Station"] == station]
+             .dropna(subset=["gwl"]).sort_values("time"))
+    window = obs_t[(obs_t["time"] <= up_to)
+                   & (obs_t["time"] >= up_to - pd.Timedelta(days=days))].copy()
+    tail = window.groupby(window["time"].dt.normalize()).agg(
+        date=("time", "last"), gwl=("gwl", "mean"))
+    tail = tail[tail["gwl"].notna()]
+    return tail.reset_index(drop=True)
+
+
+@st.cache_data(ttl="1h", max_entries=16)
+def _snapshot_png(station: str, version: str) -> bytes:
+    """Render the forecast-card PNG bytes via matplotlib (dark theme)."""
+    traj = _trajectory_cached(station, version)
+    if not traj or "error" in traj:
+        return b""
+    tail = _observed_tail(station, pd.Timestamp(traj["anchor_time"]), table6)
+    return trajectory_snapshot_png(traj=traj, tail=tail, station=station)
+
 
 st.set_page_config(page_title="AQUIS — forecast", page_icon=":material/troubleshoot:", layout="wide")
-st.title("Forecast — 30-day groundwater outlook")
+st.title("Forecast")
+st.caption("30-day groundwater outlook · **120 genuine 6-hour forecast points** · "
+           "multi-horizon trajectory model anchored on the latest observed reading")
 
-preds = load_predictions()
+st.markdown(
+    """
+    <style>
+    div[data-testid="stVerticalBlockBorderWrapper"] {
+        border: 1px solid #262b3d !important;
+        border-radius: 12px;
+    }
+    .aquis-legend {
+        font-family: monospace; font-size: 0.8rem; color: #9aa0a6;
+        display: flex; flex-wrap: wrap; gap: 0.9rem; align-items: center;
+        margin: 0.4rem 0 0.2rem 0;
+    }
+    .aquis-legend .chip { display: inline-flex; align-items: center; gap: 0.35rem; }
+    .aquis-legend .sw { width: 16px; height: 3px; border-radius: 2px; display: inline-block; }
+    .aquis-legend .sw-band { width: 16px; height: 10px; border-radius: 2px; display: inline-block; }
+    .aquis-legend .sw-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+    .aquis-dir {
+        font-family: monospace; font-weight: 700; font-size: 1.05rem;
+        padding: 0.05rem 0 0.35rem 0;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 table6 = load_table_6h()
-metrics = load_model_metrics()
-qcal = load_quantile_calibration()
-has_qband = "q05_lvl" in preds.columns
+preds = load_predictions()
 
 recency = station_recency()
 stations = [s for s in recency.sort_values(ascending=False).index.astype(str)
             if s in set(preds["Station"].astype(str))]
 stations.extend(sorted(set(preds["Station"].astype(str)) - set(stations)))
-col1, col2 = st.columns(2)
-with col1:
-    station = st.selectbox("Station", stations, key="fc_station")
-with col2:
-    model_name = st.selectbox("Model", list(MODELS), format_func=lambda k: MODELS[k], key="fc_model")
+station = st.selectbox("Station", stations, key="fc_station")
+last_t = recency.get(station)
+if last_t is not None:
+    st.caption(f"Latest reading: **{pd.Timestamp(last_t):%Y-%m-%d %H:%M}** — the forecast anchor")
 
-full = load_models()
-xgb = full["xgboost"]()
-ridge = full["ridge"]()
-cfg = load_feature_config()
+try:
+    from refresh.publish import freshness_for
 
-rs = metrics[(metrics["model"] == model_name) & (metrics["horizon"] == HORIZON)]["resid_std"].iloc[0]
-pred_col = PRED_COL[model_name]
+    _fr = freshness_for(station)
+    if _fr.get("published") and _fr.get("forecast_generated"):
+        _dot = {"fresh": "🟢", "stale": "🟠", "unknown": "⚪"}.get(_fr.get("data_status"), "⚪")
+        st.caption(f"{_dot} Refresh pipeline · data **{_fr['data_status']}** · "
+                   f"forecast generated {pd.Timestamp(_fr['forecast_generated']):%Y-%m-%d %H:%M} · "
+                   f"model {_fr.get('model_version') or '—'} · "
+                   f"anchor {_fr.get('latest_observed') or '—'}"
+                   + (f" · {_fr['stale_reason']}" if _fr.get("stale_reason") else ""))
+except Exception:  # noqa: BLE001 - freshness is decorative, never break the page
+    pass
 
-p = preds[(preds["Station"] == station)].sort_values("date")
-obs = p[p["gwl"].notna()]
-act = p[p["target"].notna()]
 
-g1, g2, g3, g4 = st.columns(4)
-g1.metric("Latest observed GWL", f"{obs['gwl'].iloc[-1]:.2f} m" if not obs.empty else "—",
-          help="Today's reading — the anchor for the 30-day outlook. Never modeled/predicted.")
-g2.metric("2026 anchored reads", f"{p['target'].notna().sum():,}")
-g3.metric("Model RMSE (2026 test)", f"{metrics[(metrics['model']==model_name)&(metrics['horizon']==HORIZON)]['rmse'].iloc[0]:.3f} m")
-if model_name == "xgboost" and qcal:
-    g4.metric("Outlook 90% interval ±", f"~{qcal.get('half_width_median_m', 0):.2f} m",
-              help=f"calibrated median half-width (coverage {qcal.get('coverage_stride_raw_q', ''):.0%} "
-                   f"on non-overlap windows); ±p90 {qcal.get('half_width_p90_m', '')} m")
-else:
-    g4.metric("Outlook 95% band ±", f"{Z*rs:.2f} m")
+def _render_trajectory(station, table6):
+    try:
+        traj = _trajectory_cached(station, _traj_version())
+    except Exception as e:  # noqa: BLE001
+        st.warning(f"Trajectory engine unavailable: {e}")
+        return
+    if not traj or "error" in traj:
+        st.warning(traj.get("error", "No trajectory available for this station."))
+        return
 
-st.subheader(f"2026 backtest — {MODELS[model_name]}, 30-day outlook")
-wide = p.melt(
-    id_vars=["date", "gwl"],
-    value_vars=["target", pred_col],
-    var_name="series", value_name="gwl_m",
-)
-if has_qband and model_name == "xgboost":
-    b = p[p["target"].notna()]
-    band = pd.DataFrame({"date": b["date"], "lo": b["q05_lvl"], "hi": b["q95_lvl"]})
-    band_help = "Calibrated q05/q95 interval (non-overlap coverage ≥80%)."
-else:
-    band = pd.DataFrame({
-        "date": p[p["target"].notna()]["date"],
-        "lo": p[p["target"].notna()][pred_col] - Z * rs,
-        "hi": p[p["target"].notna()][pred_col] + Z * rs,
-    })
-    band_help = f"±{Z}× test residual std ({Z*rs:.2f} m, uncalibrated)."
-lines = alt.Chart(wide).mark_line().encode(
-    x=alt.X("date:T", title=None),
-    y=alt.Y("gwl_m:Q", title="GWL (m)"),
-    color=alt.Color("series:N", scale=alt.Scale(
-        domain=["target", pred_col],
-        range=["#9b9b9b", "#4ecca3"])),
-    strokeDash=alt.condition(alt.datum.series == "target", alt.value([1]), alt.value([0])),
-    tooltip=["date", "series", "gwl_m"],
-)
-band_chart = alt.Chart(band).mark_errorband(extent="ci", color="#4ecca3", opacity=0.08).encode(
-    x="date:T", y="lo:Q", y2="hi:Q",
-    tooltip=[alt.Tooltip("lo:Q", title=band_help)],
-)
-st.altair_chart(band_chart + lines, use_container_width=True, height=380)
-st.caption(f"Shaded band = {band_help}")
+    pts = pd.DataFrame(traj["trajectory"])
+    pts["time"] = pd.to_datetime(pts["time"])
+    anchor_t = pd.Timestamp(traj["anchor_time"])
+    anchor_gwl = float(traj["anchor_gwl"])
+    t30 = traj["trajectory_30d"]
+    dir_ = traj["direction"]
+    oc = traj["overall_confidence"]
 
-st.subheader("Forward outlook (from latest data)")
-fc = forward_forecast(station)
-if not fc:
-    st.warning("No feature frame for this station.")
-else:
-    anchor, date_from = fc["anchor"], fc["date_from"]
-    pred_xgb, pred_ridge = fc["pred_xgb"], fc["pred_ridge"]
-    bh = fc["band_half"]
-    fwd_rows = [
-        ["Anchor date", date_from.strftime("%Y-%m-%d %H:%M")],
-        ["Outlook date (+30 d)", (date_from + pd.Timedelta(days=30)).strftime("%Y-%m-%d %H:%M")],
-        ["Anchor GWL (observed)", f"{anchor:.2f} m"],
-        ["XGBoost outlook", f"{anchor + pred_xgb:.2f} m"],
-        ["Ridge outlook", f"{anchor + pred_ridge:.2f} m"],
-        ["Persistence", f"{anchor:.2f} m"],
-        ["XGBoost 90% interval (q05–q95)",
-         f"{fc['q05_level']:.2f} … {fc['q95_level']:.2f} m" if fc.get("q05_level") is not None else "—"],
-    ]
-    if bh is not None:
-        fwd_rows.append(["90% interval ± (median)", f"{bh:.2f} m"])
-    fwd = pd.DataFrame(fwd_rows, columns=["metric", "value"])
-    st.dataframe(fwd, use_container_width=True, hide_index=True)
-    sm = fc.get("station_stride_rmse")
-    if sm is not None:
-        ref = float(qcal.get("half_width_median_m", 1.0)) if qcal else 1.0
-        st.caption(f"Station honest RMSE (non-overlap windows): **{sm:.2f} m** — its "
-                   f"90% interval half-width is {fc['band_half'] or 0:.2f} m "
-                   f"({sm / ref:.1f}× the fleet-median band) when Q-calibrated.")
+    with st.container(border=True):
+        # --- header: title + metadata | Snapshot (right-aligned) ------------
+        head, snap = st.columns([3, 1], vertical_alignment="center")
+        with head:
+            st.markdown("#### 30-day groundwater outlook")
+            st.caption("120 genuine 6-hour forecast points · **Anchor** "
+                       f"{anchor_t:%d %b %Y · %H:%M} · **Forecast** "
+                       f"{pts['time'].iloc[0]:%d %b %H:%M} → {pts['time'].iloc[-1]:%d %b %Y}")
+        with snap:
+            png = _snapshot_png(station, _traj_version())
+            if png:
+                fname = f"AQUIS_{station.replace(' ', '_')}_forecast_30d.png"
+                st.download_button("Snapshot", data=png, file_name=fname,
+                                   mime="image/png", width="stretch",
+                                   help="Export this forecast card as a PNG image (dark theme).")
 
-    seg = pd.DataFrame({
-        "date": [date_from, date_from + pd.Timedelta(days=30)],
-        "XGBoost": [anchor, anchor + pred_xgb],
-        "Ridge": [anchor, anchor + pred_ridge],
-        "Persistence": [anchor, anchor],
-    }).melt("date", var_name="model", value_name="gwl_m")
-    seg_chart = alt.Chart(seg).mark_line().encode(
-        x=alt.X("date:T", title=None),
-        y=alt.Y("gwl_m:Q", title="GWL (m)"),
-        color=alt.Color("model:N"),
-        tooltip=["model", "date", "gwl_m"],
-    ).properties(height=260)
-    st.altair_chart(seg_chart, use_container_width=True)
-    st.caption("Outlook = latest observed GWL (anchor) carried forward + predicted 30-day change. "
-               "Persistence assumes the reading holds unchanged for 30 days.")
+        # --- observed history ----------------------------------------------
+        tail = _observed_tail(station, anchor_t, table6)
 
-    # --- combined observed + forward trend (present date -> +30 d) ---
-    st.subheader("Forward trend — from latest data through +30 days")
-    obs_t = table6[table6["Station"] == station].copy()
-    obs_t = obs_t[obs_t["gwl"].notna()].sort_values("time")
-    tail = obs_t[obs_t["time"] >= date_from - pd.Timedelta(days=120)].copy()
-    tail["gwl"] = tail["gwl"].rolling(28, min_periods=1).mean()
-    tail_d = tail.groupby(tail["time"].dt.normalize()).agg(date=("time", "last"), gwl=("gwl", "mean"))
-    tail_d = tail_d[(tail_d["gwl"].notna()) & (tail_d["date"].dt.date <= date_from.date())]
-    if len(tail_d) >= 2:
-        tail_line = alt.Chart(tail_d).mark_line(color="#9b9b9b", strokeDash=[2, 2]).encode(
-            x=alt.X("date:T", title=None),
-            y=alt.Y("gwl:Q", title="GWL (m)"),
-            tooltip=["date", "gwl"],
-        )
-    else:
-        tail_line = None
-
-    date_to = date_from + pd.Timedelta(days=30)
-    lo = fc["q05_level"] if fc.get("q05_level") is not None else anchor - bh
-    hi = fc["q95_level"] if fc.get("q95_level") is not None else anchor + bh
-    fwd_band = pd.DataFrame({
-        "date": [date_from, date_to],
-        "lo": [anchor, lo],
-        "hi": [anchor, hi],
-    })
-    band_ch = alt.Chart(fwd_band).mark_errorband(extent="ci", color="#4ecca3", opacity=0.10).encode(
-        x="date:T", y="lo:Q", y2="hi:Q")
-    fwd_line = alt.Chart(seg[seg["model"] == "XGBoost"]).mark_line(
-        color="#4ecca3", strokeWidth=2.5).encode(
-        x=alt.X("date:T", title=None),
-        y=alt.Y("gwl_m:Q", title="GWL (m)"),
-        tooltip=["model", "date", "gwl_m"],
-    )
-    fwd_end = alt.Chart(seg[seg["model"] == "XGBoost"]).mark_point(
-        color="#4ecca3", filled=True, size=70).encode(
-        x="date:T", y="gwl_m:Q", tooltip=["date", "gwl_m"])
-    combined = (band_ch + (tail_line or alt.Chart(pd.DataFrame()).mark_line()) + fwd_line + fwd_end)
-    st.altair_chart(combined, use_container_width=True, height=320)
-    st.caption(
-        f"Grey dashed = observed GWL (daily mean, last ~120 days). Green = 30-day forward "
-        f"trend from the pooled XGBoost model on {date_from.date()}; shaded funnel = "
-        f"calibrated q05–q95 interval ({lo:.2f} … {hi:.2f} m at +30 d)."
-    )
-
-with st.expander("Station static context (soil · LULC)", icon=":material/api:"):
-    from _soil import load_soil
-    from _lulc import load_lulc
-    sp = load_soil()
-    sr = sp[sp["Station"] == station]
-    if sr.empty:
-        st.caption("No soil profile mapped for this station.")
-    else:
-        r = sr.iloc[0]
+        # --- manual compact legend (no Altair legend) ------------------------
         st.markdown(
-            f"**Soil (ISRIC SoilGrids v2)** — sand {r['sand_0_30']:.0f}% / silt "
-            f"{r['silt_0_30']:.0f}% / clay {r['clay_0_30']:.0f}% at 0–30 cm; "
-            f"sand {r['sand_60_100']:.0f}% / clay {r['clay_60_100']:.0f}% at 60–100 cm; "
-            f"BDOD {r['bdod_0_30']:.2f} g/cm³."
+            f"""
+            <div class="aquis-legend">
+              <span class="chip"><span class="sw" style="background:{COL_OBSERVED};"></span>Observed</span>
+              <span class="chip"><span class="sw" style="background:{COL_TRAJECTORY};"></span>Forecast (q50)</span>
+              <span class="chip"><span class="sw-band" style="background:{COL_TRAJECTORY};opacity:0.3;"></span>90% uncertainty</span>
+              <span class="chip">
+                <span class="sw-dot" style="background:{CONF_COLORS['HIGH']};opacity:0.55;"></span>HIGH
+                <span class="sw-dot" style="background:{CONF_COLORS['DIRECTIONAL']};opacity:0.55;"></span>DIRECTIONAL
+                <span class="sw-dot" style="background:{CONF_COLORS['LOW']};opacity:0.55;"></span>LOW
+                <span style="color:#666;">· confidence per horizon</span>
+              </span>
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
-    dist = None
-    if "District" in p.columns:
-        dist = p["District"].iloc[0] if "District" in p.columns else None
-    if dist is None:
-        dsel = table6[table6["Station"] == station]
-        dist = dsel["District"].iloc[0] if "District" in dsel.columns and len(dsel) else None
-    if dist:
-        lu = load_lulc()
-        lr = lu[lu["District"] == dist]
-        if not lr.empty:
-            r2 = lr.iloc[0]
-            top = sorted(
-                [(c[:-4].replace("_", " "), r2[c]) for c in lu.columns if c.endswith("_pct")],
-                key=lambda x: x[1], reverse=True)
-            st.markdown(f"**LULC ({dist})** — " + "; ".join(
-                f"{k} {v:.0f}%" for k, v in top[:4]))
-        else:
-            st.markdown(f"**LULC ({dist})** — no district data fetched.")
-    st.caption("Static layers are displayed for context only; the forecast uses the 30-day "
-               "change model (soil/LULC gated).")
+
+        # --- the chart: observed tail | anchor | genuine 120-point trajectory --
+        chart = trajectory_chart(pts=pts, tail=tail, anchor_t=anchor_t, height=480)
+        st.altair_chart(chart, width="stretch")
+
+        # --- direction banner ------------------------------------------------
+        glyph, dlabel, dcolor = DIR_GLYPH.get(dir_["label"], ("→", dir_["label"], "#fbbf24"))
+        sa = dir_.get("sign_accuracy_30d")
+        sa_txt = f" · sign-accuracy {sa:.0%}" if sa is not None else ""
+        st.markdown(
+            f'<div class="aquis-dir" style="color:{dcolor};">'
+            f"{glyph} {dlabel} · {dir_['change_q50_30d']:+.2f} m over 30 days{sa_txt}"
+            f"</div>",
+            unsafe_allow_html=True,
+        )
+
+        # --- compact metric cards (6) ----------------------------------------
+        c1, c2, c3, c4, c5, c6 = st.columns(6)
+        c1.metric("Anchor GWL (observed)", f"{anchor_gwl:.2f} m",
+                  help="Latest observed reading — the anchor. Never predicted.")
+        c2.metric("+24 h", f"{pts['q50'].iloc[4]:.2f} m",
+                  help=f"6-hourly median at +24 h · confidence {pts['confidence_level'].iloc[4]}")
+        c3.metric("+7 d", f"{pts['q50'].iloc[27]:.2f} m",
+                  help=f"6-hourly median at day 7 · confidence {pts['confidence_level'].iloc[27]}")
+        c4.metric("+30 d", f"{t30['level']:.2f} m",
+                  delta=f"{t30['change']:+.2f} m",
+                  help="The genuine 120th 6-hourly forecast point (30 days).")
+        c5.metric("30 d change", f"{t30['change']:+.2f} m",
+                  delta=f"sign-accuracy {sa:.0%}" if sa is not None else None,
+                  help="q50 level at +30 d minus the anchor.")
+        lvl = oc["level"]
+        _label, _color, _guide = CONF_STYLE.get(lvl, (lvl, "#34d399", ""))
+        c6.metric("Confidence", _label,
+                  help=(oc.get("reason") or "—") + ((" · " + _guide) if _guide else ""))
+
+        # --- future drivers ---------------------------------------------------
+        src = pts["driver_source"].astype(str)
+        has_om = any(s.strip().lower().startswith("open-meteo") for s in src)
+        has_clim = any(s.strip().lower().startswith("climatology") for s in src)
+        any_unavailable = any(s.strip().lower().startswith("driver source unavailable")
+                              for s in src)
+        dist = None
+        dd = table6[table6["Station"] == station]
+        if len(dd) and "District" in dd.columns:
+            dist = str(dd["District"].iloc[0])
+        has_cwc = bool(dist) and dist.upper() in _river_forecast_districts()
+
+        drivers = []
+        if has_om:
+            drivers.append("**Open-Meteo** forecast · days 1–16")
+        if has_cwc:
+            drivers.append("**CWC** river forecast · where available (this district)")
+        if has_clim:
+            drivers.append("**Climatology** · beyond the 16-day forecast limit")
+        drivers.append("**Persistence** · final fallback")
+        with st.expander("Future drivers"):
+            st.markdown("· ".join(drivers))
+            if any_unavailable:
+                st.caption("A driver source is unavailable for part of this horizon — "
+                           "the backend downgrades confidence at those points.")
+            else:
+                st.caption("Drivers used ahead of the anchor are legitimate forecasts, "
+                           "not future observations — the anchor is the latest observed reading.")
+
+        # --- detail table -----------------------------------------------------
+        with st.expander("120-point forecast table"):
+            detail = pts[["time", "q05", "q50", "q95", "confidence_level", "driver_source"]].copy()
+            detail["time"] = detail["time"].dt.strftime("%Y-%m-%d %H:%M")
+            detail = detail.rename(columns={
+                "time": "timestamp", "q05": "q05 (m)", "q50": "q50 (m)",
+                "q95": "q95 (m)", "confidence_level": "confidence", "driver_source": "driver"})
+            st.dataframe(detail, width="stretch", hide_index=True)
+
+        # --- confidence & reliability details ---------------------------------
+        with st.expander("Confidence & reliability details"):
+            counts = {c: 0 for c in CONF_ORDER}
+            for c in pts["confidence_level"]:
+                if c in counts:
+                    counts[c] += 1
+            st.caption("Per-point confidence across the 120 horizons: "
+                       + " · ".join(f"**{counts[c]} {c}**" for c in CONF_ORDER if counts[c]))
+            st.caption(f"**{lvl}** — confident direction: {dir_['label']} "
+                       f"({dir_['change_q50_30d']:+.2f} m). {oc.get('reason') or '—'}")
+            ev = traj["evidence"]
+            st.json({
+                "anchor": anchor_t.isoformat(),
+                "trajectory_30d": t30,
+                "direction": dir_,
+                "overall_confidence": oc,
+                "station_integrity": ev["station_integrity"],
+                "anchor_out_of_range": ev["anchor_ood"],
+                "oscillation": ev["stability_oscillation"],
+                "recency_days": ev["recency_days"],
+                "recent90_coverage": ev["recent90_coverage"],
+            })
+
+
+_render_trajectory(station, table6)
