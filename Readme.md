@@ -20,6 +20,8 @@ NWDP Telemetry API + Assessment Excel files → PostgreSQL → Statistical Analy
 
 The **ML module (`ml/`)** is the forecasting/analytics engine. It consumes a cleaned 6-hourly telemetry archive, trains one **pooled (global) XGBoost** model over 600 Uttar Pradesh groundwater stations, calibrates q05/q50/q95 quantile forecasts into 90% prediction intervals, scans the whole fleet for 30-day moves, and exposes an 8-page **Streamlit dashboard** (`ml/app.py`, port 8501).
 
+The forecast surface is a dedicated **trajectory v2** engine (`ml/_trajectory.py`): a genuine **120-step, 6-hourly, 30-day** forecast per station (no interpolation — one real model output per 6 h step), with per-horizon q05/q50/q95 and an **evidence-based confidence label** (HIGH / DIRECTIONAL / LOW). Drivers ahead of the anchor are legitimate forecasts — **Open-Meteo** weather (days 1–16) with climatology beyond, and **CWC 3-day river forecasts** where the district is covered. The Forecast page renders this as a single dark-theme dashboard card with a Snapshot PNG export.
+
 > A headless **Flask HTTP API** that the Node gateway (`ML_SERVICE_URL` → `http://localhost:5000`) would proxy under `/ml/*` is **planned but not yet merged** — see `merge_later` and `docs/api.md`. Currently the backend's `/ml/*` routes have no live Python service backing them; run the Streamlit app below for the current analysis surface.
 
 ---
@@ -84,22 +86,32 @@ ml/
 ├─ app.py                        # Streamlit dashboard (8 pages)
 ├─ app_pages/                    # page scripts (overview, correlation, drivers, stations,
 │                                #   model, forecast, assistant, sources/fleet)
+├─ app_charts.py                 # dark-theme Altair helpers for the forecast chart
+├─ snapshot.py                   # matplotlib PNG export of the forecast card (Snapshot)
 ├─ config.py                     # sources, resource IDs, radii, coverage rules, paths
-├─ 00_probe.py … 13_refresh_nwic.py   # ordered pipeline (see below)
-├─ _model.py _assistant.py _utils.py _soil.py _lulc.py   # shared libs
+├─ 00_probe.py … 13_refresh_nwic.py   # classic pooled pipeline (see below)
+├─ 16_future_drivers.py          # driver-climatology refresh + future-driver bridge
+├─ 18_cwc_river_forecast.py      # CWC 3-day river-forecast fetch (per district)
+├─ 20_openmeteo_fetch.py         # Open-Meteo daily weather (365d history + 16d forecast)
+├─ 30_traj_datasets.py … 33_traj_reliability.py   # trajectory v2 train/backtest/reliability
+├─ _model.py _trajectory.py _assistant.py _utils.py _soil.py _lulc.py  # shared libs
+├─ refresh/                      # refresh pipeline (config, features, inference,
+│                                #   model_update, publish, scheduler, state, CLI)
 ├─ validation/                   # P0 honesty suite (spatial CV, overlap, residual ACF)
 ├─ data/
 │  ├─ processed/common.parquet   # cleaned 6-hourly GWL archive 2021→2026 (source of truth)
 │  ├─ selected/ gwl_selected.csv # per-source selected-district pulls
 │  ├─ raw/          *_norm.parquet (cleaned standardised), nwic.py (NWIC client)
 │  ├─ aligned/      table.parquet (daily) + table_6h.parquet (6h grid, 2.99M rows)
+│  ├─ cfs/          openmeteo_weather_daily.parquet + river_forecast_cwc.parquet
 │  └─ meta/         associations, manifest, probe, station flags
 ├─ models/                      # joblib + feature_config.json + quantile_calibration.json
-│                               #   + model_metadata.json
-├─ outputs/                     # correlation, benchmark, honest metrics, fleet, diagnostics
+│                               #   + model_metadata.json + traj_*.json (trajectory v2)
+├─ outputs/                     # correlation, benchmark, honest metrics, fleet, diagnostics,
+│                               #   traj_backtest_{metrics.csv,summary.json}
 ├─ tests/                       # stdlib unittest suite (no pytest dependency)
 ├─ MODEL_CARD.md                # lifecycle card for the pooled model
-└─ gate_check.py                # regression gate: verifies forecast baselines survive edits
+└─ gate_check.py                # regression gate: 12 checks (frozen baselines + trajectory)
 ```
 
 ### Pipeline (run in order, each step from `ml/`)
@@ -122,6 +134,13 @@ ml/
 11_fleet.py           whole-fleet 30-day forecast scan + recovery snapshot
 12_diagnostics.py     VIF + permutation importance + OAT sensitivity
 13_refresh_nwic.py    incremental NWIC refresh (+ optional retrain / deploy sync)
+16_future_drivers.py  driver-climatology refresh + future-driver bridge
+18_cwc_river_forecast.py  CWC 3-day river forecast fetch (per district, resume-safe)
+20_openmeteo_fetch.py     Open-Meteo daily weather: 365d history + 16d forecast
+30_traj_datasets.py       trajectory v2 feature frames (train/val, exact-time targets)
+31_train_traj.py          trajectory shared multi-horizon XGBoost (q05/q50/q95)
+32_backtest_traj.py       honest non-overlap trajectory backtest + per-horizon calibration
+33_traj_reliability.py    reliability bucket rules + evidence weights
 ```
 
 ### Data
@@ -142,6 +161,14 @@ One **pooled** model, not one per station:
 - **Ridge** (linear baseline), **persistence** (0-change), and per-station **day-of-year climatology** are benchmarked in `07_evaluate.py`.
 - **Quantile uncertainty** (`11_quantile.py`): native `reg:quantileerror` q05/q50/q95 pooled forecasters, empirically calibrated on non-overlapping windows → `quantile_calibration.json` (stride coverage 0.911 ≥ 0.80 target, so `k = 1.0`; median band ±~1.03 m).
 
+### Trajectory v2 (`_trajectory.py`) — the Forecast page model
+A separate **direct multi-horizon shared XGBoost** on the 6 h grid: horizon `h ∈ 1..120` is an input feature, each step is a genuine model output (no recursion, no interpolation). Full spec + results: **[`docs/ml-trajectory-v2-spec.md`](docs/ml-trajectory-v2-spec.md)**.
+
+- **Forward drivers (forecasts, never future observations):** Open-Meteo weather → days 1–16 (past-window features only); beyond 16 d the backend falls back to climatology; CWC 3-day river forecasts bridge the near horizon where the district is covered. A missing driver **downgrades** confidence at those horizons.
+- **Honest 2026 backtest (full fleet, 73,881 non-overlap windows):** 30-day RMSE **trajectory 2.106 m < production direct-30d 2.132 m < persistence 2.151 m** → trajectory **promoted** (`promote_trajectory = True`). Calibrated to **90% coverage at every horizon** (widening `s ∈ [0.80, 1.28]`).
+- **Confidence framework:** per-point label from **weighted evidence** (interval quality, vs-persistence, direction, width, station integrity, driver availability, anchor OOD, stability) — not interval width alone. Anchor = latest observed reading, never predicted; `q05 ≤ q50 ≤ q95` at every step.
+- **Forecast page:** single dark-theme card — one "Forecast starts" boundary, observed tail, q50 + q05/q95 band, per-horizon confidence dots, 6 metric cards (+24h/+7d/+30d/change/confidence), collapsed 120-point table, direction banner, Snapshot PNG export. The card intentionally references only the trajectory forecast.
+
 ### Head-to-head (30-day, 2026 held-out, 6h grid)
 | Model | Level RMSE (m) | Notes |
 |---|---|---|
@@ -155,12 +182,12 @@ One **pooled** model, not one per station:
 ### Verify after editing
 ```bash
 cd ml
-venv/bin/python -m unittest discover -s tests    # 21 data-gated tests
-venv/bin/python gate_check.py                    # 8 baseline checks (RMSE/CV/coverage/eff-N/ACF)
+venv/bin/python -m unittest discover -s tests    # 130-unit test suite (AppTest gated via AQUIS_APPTEST=1)
+venv/bin/python gate_check.py                    # 12 baseline checks (frozen RMSE/CV/coverage/eff-N/ACF + trajectory)
 ```
 
 ### Dashboard (`app.py`, Streamlit, 8 pages)
-Overview · Correlation · Drivers · Stations · Model (benchmark + honest validation + diagnostics) · Forecast (2026 backtest + forward outlook with calibrated band) · Assistant (station-pinned LLM) · Sources (manifest quality, association method, soil/LULC status). Fleet scan + significant-movers alerts surface on the Sources/Fleet view.
+Overview · Correlation · Drivers · Stations · Model (benchmark + honest validation + diagnostics) · **Forecast (single dark-theme trajectory card: 120 genuine 6-hourly points, q05/q50/q95 + confidence, direction, drivers, Snapshot PNG)** · Assistant (station-pinned LLM) · Sources (manifest quality, association method, soil/LULC status). Fleet scan + significant-movers alerts surface on the Sources/Fleet view.
 
 ---
 
@@ -196,7 +223,7 @@ npm test
 ```
 Backend tests cover classification, statistics, telemetry utilities, ML gateway, and app configuration.
 
-ML validation: stdlib `unittest` suite in `ml/tests/` (data-gated, no pytest) + `ml/gate_check.py` regression gate + `streamlit.testing.v1.AppTest` smoke over the 8 dashboard pages.
+ML validation: stdlib `unittest` suite in `ml/tests/` (130 data-gated tests, no pytest; the full Forecast-page AppTest is gated behind `AQUIS_APPTEST=1` because the trajectory engine is slow) + `ml/gate_check.py` regression gate (12 checks).
 
 ---
 
@@ -206,6 +233,7 @@ ML validation: stdlib `unittest` suite in `ml/tests/` (data-gated, no pytest) + 
 - Assessment years: 2016-2017 … 2025-2026 · 154-column CentralReport Excel (3-level merged headers).
 - CGWB classification: Safe (<70%) / Semi-Critical (70–90%) / Critical (90–100%) / Over-Exploited (>100%).
 - Forecast uncertainty: **calibrated 90% interval** (q05/q95, `k=1.0`), median half-width ≈1.03 m; 30-day outlooks are **directional**, not exact.
+- Forecast surface: the Forecast page shows the **trajectory v2** forecast — **120 genuine 6-hourly steps to +30 d** per station (30-day RMSE 2.106 m, beats both the direct benchmark 2.132 m and persistence 2.151 m on the honest non-overlap 2026 set; calibrated to 90% coverage per horizon). Every point carries an evidence-based confidence label; drivers are Open-Meteo (days 1–16) + CWC river forecasts where available.
 - Assistant: Ollama `llama3.2:3b`, station-pinned, grounded in the same data the model consumes.
 - Fleet (Sep 2026 scan): **502 stations scored** — median Δ **+0.32 m**, decline 0, recovering 259 at ±0.3 m; no station clears its 90% band (post-monsoon recovery).
 

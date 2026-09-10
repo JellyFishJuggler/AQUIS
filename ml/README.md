@@ -1,10 +1,14 @@
-# ml — pooled GWL forecasting + correlation
+# ml — pooled GWL forecasting + trajectory v2
 
 > This is the **single** ML module (post-merge 2026-09). Big data dirs
-> (`data/`, `models/*.joblib`, `outputs/`, `venv/`) are git-ignored and
-> regenerable from `data/processed/common.parquet` + the numbered pipeline.
+> (`data/processed`, `data/features*`, `outputs/*.parquet`, `venv/`) are git-ignored
+> and regenerable from `data/processed/common.parquet` + the numbered pipeline.
+> Models are committed as weights (`models/*.joblib`, `models/traj_*.json`).
 > The old per-station `ml/` (Flask API, `agent/`, `artifacts/`, `xgboost_quantile.py`)
 > was merged into this module and deleted — see `merge_later` items in the merge spec.
+> The forecast surface is the **trajectory v2** engine (`_trajectory.py`) — see
+> [Trajectory v2](#trajectory-v2) below; the pooled direct-30d model remains the
+> backend +30 d benchmark used by the assistant, the fleet scan and the ML SDK.
 
 ## Setup & selection rule
 
@@ -143,6 +147,39 @@ Model override: `AQUIS_OLLAMA_MODEL` in the repo `.env` (same read pattern as
   marginal value; river/canal (−0.005) and GWL lags (≈0) are neutral at 30 d given
   the anchor + calendar — all deltas are within overlap-adjusted noise (~±0.05 m).
 
+## Trajectory v2 — genuine 6-hourly global forecast
+The Forecast page's model (`_trajectory.py`). A **direct multi-horizon shared XGBoost**
+on the 6 h grid: horizon `h ∈ 1..120` is an input feature, every step is a real model
+output (no recursion, no interpolation), `q05 ≤ q50 ≤ q95` at every horizon. Spec +
+full results: [`../docs/ml-trajectory-v2-spec.md`](../docs/ml-trajectory-v2-spec.md).
+
+| Step | Script | Output |
+|---|---|---|
+| Datasets | `30_traj_datasets.py` | `data/features_traj/{train,val}.parquet` + `prep_traj.json` (6.53M rows; targets by exact-time lookup, never positional shift across grid gaps) |
+| Models | `31_train_traj.py` | `models/traj_xgb_{q05,q50,q95}.json` + `traj_config.json` (33 features incl. `h,h_sin,h_cos`) |
+| Honest backtest | `32_backtest_traj.py [n_stations]` | `outputs/traj_backtest_metrics.csv`, `traj_backtest_summary.json`, `models/traj_calibration.json` |
+| Reliability tables | `33_traj_reliability.py` | `models/traj_reliability.json` (bucket rules + evidence weights) |
+| Weather | `20_openmeteo_fetch.py` | `data/cfs/openmeteo_weather_daily.parquet` (37 districts, 365 d history + 16 d forecast) |
+| River | `18_cwc_river_forecast.py` | `data/cfs/river_forecast_cwc.parquet` (CWC 3-day forecasts, per district) |
+
+- **Backtest (2026, honest):** anchors every 14 d → non-overlap windows only; full fleet
+  73,881 scored windows. 30-d RMSE **trajectory 2.106 < direct-30d 2.132 < persistence 2.151**,
+  `promote_trajectory = True`. Calibrated to **0.90 coverage at every horizon**
+  (`traj_calibration.json`, widening `s ∈ [0.80, 1.28]`).
+- **Confidence:** per-point HIGH / DIRECTIONAL / LOW from **weighted evidence**
+  (0.15 interval quality + 0.20 vs-persistence + 0.20 direction + 0.10 width +
+  0.15 station integrity + 0.10 driver availability + 0.05 anchor OOD + 0.05 stability),
+  with inference-time downgrades (stale anchor, missing/climatology-only drivers, OOD anchor,
+  oscillation) each carrying a reason string.
+- **Forward drivers are forecasts, not observations:** Open-Meteo days 1–16, climatology
+  beyond, CWC river forecast where the district is covered (`refresh/future_drivers.py`).
+- **Forecast UI:** single dark-theme card — "Forecast starts" boundary marker, observed tail,
+  q50 + q05/q95 band, confidence dots, 6 metrics (anchor/+24h/+7d/+30d/change/confidence),
+  collapsed 120-point table, direction banner, **Snapshot** PNG export (`snapshot.py`).
+  The page references only the trajectory forecast.
+- **Gate:** `gate_check.py` now 12 checks — frozen round-1 baselines + trajectory promotion
+  and `+30 d` calibrated coverage = 0.90.
+
 ## Outputs
 
 * `outputs/correlation_report.csv` — ranked driver×metric×mode table
@@ -183,8 +220,12 @@ Model override: `AQUIS_OLLAMA_MODEL` in the repo `.env` (same read pattern as
 * `MODEL_CARD.md` — lifecycle card for the pooled model (features, training, honest
   performance, limitations)
 * `tests/` — forecast-validation suite (stdlib `unittest`, data-gated, no pytest):
-  `python -m unittest discover -s tests -v`
+  `python -m unittest discover -s tests -v` (130 tests; the Forecast-page AppTest is
+  gated behind `AQUIS_APPTEST=1`)
 * `data/meta/` — association CSVs, manifest, probe results, per-station flags
+* `outputs/traj_backtest_metrics.csv` + `traj_backtest_summary.json` — trajectory v2
+  honest 2026 backtest (full-fleet, non-overlap) + per-horizon calibration
+* `data/cfs/` — Open-Meteo daily weather + CWC river-forecast snapshots (trajectory drivers)
 
 ## Residual / next steps
 
@@ -229,14 +270,21 @@ Model override: `AQUIS_OLLAMA_MODEL` in the repo `.env` (same read pattern as
    in the model, test XGB 30 d 2.242 → 2.277 m, best_iteration 15 → 2, so gated out
    (`ENABLE_SOIL_FEATURES = False`). Mapped stations shown in the Sources page.
 10. **Future-rain expectation** (`ENABLE_RAIN_EXP = False` in `06_features.py`): a
-   leak-free *trailing* district-day climatology of observed NWIC rainfall summed
-   over the next 30 days. Offline ablation (2026 test, XGB 30 d): **2.242 → 2.226 m
-   (+2.8% vs +2.1% over persistence)** — small but real, so the feature stays
-   available behind the gate. CFSv2 seasonal-lite fetch is staged in `09_cfs_rain.py`
-   (NCEI 6h-FLX, quarterly runs 2021–2025, ~2.4 GB). Paused: NCEI gridded services
-   (NCSS/OPeNDAP) returned S3-403 and IRI/NMME became login-gated; raw per-step GRIB
-   downloads (≈4 MB/file) are the working path — and since the aligned table starts
-   2021-01-01, a CFS history fetch would cover **every** training row (no climo-fill).
+    leak-free *trailing* district-day climatology of observed NWIC rainfall summed
+    over the next 30 days. Offline ablation (2026 test, XGB 30 d): **2.242 → 2.226 m**
+    (+2.8% vs +2.1% over persistence) — small but real, so the feature stays
+    available behind the gate. CFSv2 seasonal-lite fetch is staged in `09_cfs_rain.py`
+    (NCEI 6h-FLX, quarterly runs 2021–2025, ~2.4 GB). Paused: NCEI gridded services
+    (NCSS/OPeNDAP) returned S3-403 and IRI/NMME became login-gated; raw per-step GRIB
+    downloads (≈4 MB/file) are the working path — and since the aligned table starts
+    2021-01-01, a CFS history fetch would cover **every** training row (no climo-fill).
+11. **Trajectory v2** — **shipped** (see [Trajectory v2](#trajectory-v2)): the Forecast
+    page now presents the genuine 120-step trajectory with confidence + Snapshot export.
+    Outstanding: (a) the refresh pipeline still runs in `feature_mode: "flat"` /
+    `model_version: null` — promote the trajectory build via a wet refresh so
+    `runtime.json` reports it; (b) run a full wet refresh to regenerate
+    `driver_climatology.*` from the latest archive; (c) revisit sub-daily
+    DIRECTIONAL-only reads if a denser objective (e.g., pumpage) ever arrives.
 
 ## Important technical decisions
 
