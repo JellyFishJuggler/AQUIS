@@ -94,7 +94,8 @@ def flag_regime_shift(tbl: pd.DataFrame, max_delta: float = 15.0) -> list[str]:
     return sorted(str(s) for s in bad)
 
 
-def build(tbl: pd.DataFrame, keep_na: bool = False) -> pd.DataFrame:
+def build(tbl: pd.DataFrame, keep_na: bool = False,
+          horizon_steps: int = HORIZON_STEPS, horizon_label: int = 30) -> pd.DataFrame:
     df = tbl.sort_values(["Station", "time"]).copy()
     df["date"] = df["time"].dt.normalize()
 
@@ -131,9 +132,10 @@ def build(tbl: pd.DataFrame, keep_na: bool = False) -> pd.DataFrame:
     df["hour_cos"] = np.cos(2 * np.pi * hr / 24)
     df["monsoon"] = doy - 152
 
-    # --- the ONLY horizon: 30 days = 120 steps ---
-    df["target"] = g.shift(-HORIZON_STEPS)
-    df["horizon"] = 30
+    # --- the target horizon (space-separated so the same builder serves the
+    #     30-day endpoint model and the recursive +6h one-step model) ---
+    df["target"] = g.shift(-horizon_steps)
+    df["horizon"] = horizon_label
     df["target_d"] = df["target"] - df["gwl"]
 
     if not keep_na:
@@ -190,7 +192,9 @@ def rain_exp_30d(tbl: pd.DataFrame, feats: pd.DataFrame) -> pd.DataFrame:
     return feats.merge(exp, on=["District", "date"], how="left")
 
 
-def build_full(tbl: pd.DataFrame, keep_na: bool = False) -> tuple[pd.DataFrame, list[str]]:
+def build_full(tbl: pd.DataFrame, keep_na: bool = False,
+               horizon_steps: int = HORIZON_STEPS,
+               horizon_label: int = 30) -> tuple[pd.DataFrame, list[str]]:
     """build() + static soil texture + district-year extraction.
 
     Returns (features, extra_num_cols) so train/test/val AND the app's
@@ -199,7 +203,8 @@ def build_full(tbl: pd.DataFrame, keep_na: bool = False) -> tuple[pd.DataFrame, 
     bad = set(flag_regime_shift(tbl))
     if bad:
         tbl = tbl[~tbl["Station"].isin(bad)]
-    feats = build(tbl, keep_na=keep_na)
+    feats = build(tbl, keep_na=keep_na,
+                  horizon_steps=horizon_steps, horizon_label=horizon_label)
     extra: list[str] = []
 
     soil = load_soil()

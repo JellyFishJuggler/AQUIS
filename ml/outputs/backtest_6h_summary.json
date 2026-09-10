@@ -1,0 +1,19 @@
+{
+  "engine": "recursive 6h x120 (17_recursive)",
+  "anchors_scored": 13538,
+  "stations_sampled": 150,
+  "period": [
+    "2025-10-01",
+    "2026-08-20"
+  ],
+  "anchor_spacing_days": 14,
+  "no_overlap_windows": true,
+  "no_future_observed_values": true,
+  "best_30d_rmse_rec": 1.8555,
+  "best_30d_rmse_direct_baseline": 1.0828287402798107,
+  "best_30d_rmse_persistence": 1.8397,
+  "best_30d_rmse_climatology": 4.4427,
+  "success_vs_direct": false,
+  "calibration_file": "/home/srijan/Downloads/Developement/AQUIS/ml/models/backtest_6h_calibration.json",
+  "elapsed_sec": 1196
+}

@@ -140,6 +140,50 @@ else:
     st.caption("Outlook = latest observed GWL (anchor) carried forward + predicted 30-day change. "
                "Persistence assumes the reading holds unchanged for 30 days.")
 
+    # --- combined observed + forward trend (present date -> +30 d) ---
+    st.subheader("Forward trend — from latest data through +30 days")
+    obs_t = table6[table6["Station"] == station].copy()
+    obs_t = obs_t[obs_t["gwl"].notna()].sort_values("time")
+    tail = obs_t[obs_t["time"] >= date_from - pd.Timedelta(days=120)].copy()
+    tail["gwl"] = tail["gwl"].rolling(28, min_periods=1).mean()
+    tail_d = tail.groupby(tail["time"].dt.normalize()).agg(date=("time", "last"), gwl=("gwl", "mean"))
+    tail_d = tail_d[(tail_d["gwl"].notna()) & (tail_d["date"].dt.date <= date_from.date())]
+    if len(tail_d) >= 2:
+        tail_line = alt.Chart(tail_d).mark_line(color="#9b9b9b", strokeDash=[2, 2]).encode(
+            x=alt.X("date:T", title=None),
+            y=alt.Y("gwl:Q", title="GWL (m)"),
+            tooltip=["date", "gwl"],
+        )
+    else:
+        tail_line = None
+
+    date_to = date_from + pd.Timedelta(days=30)
+    lo = fc["q05_level"] if fc.get("q05_level") is not None else anchor - bh
+    hi = fc["q95_level"] if fc.get("q95_level") is not None else anchor + bh
+    fwd_band = pd.DataFrame({
+        "date": [date_from, date_to],
+        "lo": [anchor, lo],
+        "hi": [anchor, hi],
+    })
+    band_ch = alt.Chart(fwd_band).mark_errorband(extent="ci", color="#4ecca3", opacity=0.10).encode(
+        x="date:T", y="lo:Q", y2="hi:Q")
+    fwd_line = alt.Chart(seg[seg["model"] == "XGBoost"]).mark_line(
+        color="#4ecca3", strokeWidth=2.5).encode(
+        x=alt.X("date:T", title=None),
+        y=alt.Y("gwl_m:Q", title="GWL (m)"),
+        tooltip=["model", "date", "gwl_m"],
+    )
+    fwd_end = alt.Chart(seg[seg["model"] == "XGBoost"]).mark_point(
+        color="#4ecca3", filled=True, size=70).encode(
+        x="date:T", y="gwl_m:Q", tooltip=["date", "gwl_m"])
+    combined = (band_ch + (tail_line or alt.Chart(pd.DataFrame()).mark_line()) + fwd_line + fwd_end)
+    st.altair_chart(combined, use_container_width=True, height=320)
+    st.caption(
+        f"Grey dashed = observed GWL (daily mean, last ~120 days). Green = 30-day forward "
+        f"trend from the pooled XGBoost model on {date_from.date()}; shaded funnel = "
+        f"calibrated q05–q95 interval ({lo:.2f} … {hi:.2f} m at +30 d)."
+    )
+
 with st.expander("Station static context (soil · LULC)", icon=":material/api:"):
     from _soil import load_soil
     from _lulc import load_lulc
