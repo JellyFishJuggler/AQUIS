@@ -8,13 +8,19 @@ trajectory exactly as produced by the backend.
 
 Visual contract (matches the app's dark dashboard theme):
 
-* one forecast card: observed history (muted) -> forecast q50 (brand teal) ->
-  q05/q95 uncertainty envelope -> a single "Forecast starts" boundary marker;
+* one forecast card: observed history (dashed, muted) -> a bright q05–q95
+  uncertainty envelope with crisp edge lines -> brand q50 median line -> a
+  single "Forecast starts" boundary marker;
+* the quantile envelope is drawn BRIGHT, not a washed-out 14% tint: the q05/q95
+  edge lines and the translucent fill use vivid cyan so the uncertainty does not
+  disappear against the dark panel;
+* the q50 median is a continuous line — NO dot markers, NO point cloud that
+  rattles the trajectory into a scatter of dots;
 * clean axes: a handful of readable date labels, sub-horizontal gridlines only;
-* a compact 3-item legend (Observed / Forecast / 90% uncertainty) is rendered
-  by the page, not by Altair (so the chart carries no detached legend);
-* confidence tiers are shown as subtle per-horizon dots; the exact tier is
-  preserved in the tooltip and the detail table — never a noisy rainbow.
+* a compact legend (Observed / Forecast / 90% uncertainty / q05 · q95) is
+  rendered by the page, not by Altair (so the chart carries no detached legend);
+* confidence tiers are surfaced in the tooltip, the detail table and the metric
+  cards — never as a noisy dot rainbow on the line.
 
 The trajectory v2 forecast is the only forecast presented — the page
 intentionally carries no other forecast model, marker or reference.
@@ -28,9 +34,11 @@ import pandas as pd
 # --- dark-theme palette (single source of truth) ----------------------------
 BG = "#0a0a0a"
 PANEL = "#14161d"
-COL_OBSERVED = "#6c7683"
-COL_TRAJECTORY = "#4ecca3"   # app primaryColor
-COL_ANCHOR = "#e0e0e0"
+COL_OBSERVED = "#9aa0a6"
+COL_TRAJECTORY = "#4ecca3"   # app primaryColor — brand q50 median line
+COL_BAND = "#38bdf8"         # bright cyan uncertainty fill
+COL_QEDGE = "#7dd3fc"        # bright cyan q05 / q95 edge lines
+COL_ANCHOR = "#e5e7eb"
 AXIS_LABEL = "#9aa0a6"
 AXIS_TITLE = "#c8cdd3"
 GRID = "#232834"
@@ -80,6 +88,18 @@ def _walk(d):
             yield from _walk(v)
 
 
+def _q_tooltip(extra: str):
+    return [
+        alt.Tooltip("kind:N"),
+        alt.Tooltip("time:T", title="Timestamp", format=TIME_TIP),
+        alt.Tooltip("q05:Q", title="q05", format=".2f"),
+        alt.Tooltip("q50:Q", title="q50", format=".2f"),
+        alt.Tooltip("q95:Q", title="q95", format=".2f"),
+        alt.Tooltip("confidence_level:N", title="Confidence"),
+        alt.Tooltip("driver_source:N", title="Driver source"),
+    ]
+
+
 def trajectory_chart(*, pts: pd.DataFrame, tail: pd.DataFrame | None = None,
                      anchor_t, height: int = 480,
                      interactive: bool = True) -> alt.LayerChart:
@@ -108,14 +128,14 @@ def trajectory_chart(*, pts: pd.DataFrame, tail: pd.DataFrame | None = None,
 
     layers: list[alt.Chart] = []
 
-    # A) observed history — muted, secondary, last days up to the anchor
+    # A) observed history — dashed, muted, never beyond the anchor
     if tail is not None and len(tail) >= 2:
         t = tail.copy()
         t["time"] = pd.to_datetime(t["date"])
         t["kind"] = "Observed"
         layers.append(
             alt.Chart(t)
-            .mark_line(color=COL_OBSERVED, strokeDash=[5, 3], strokeWidth=1.4)
+            .mark_line(color=COL_OBSERVED, strokeDash=[6, 4], strokeWidth=1.5)
             .encode(
                 _xaxis(domain_start=domain_start, domain_end=domain_end),
                 _yenco("gwl"),
@@ -127,24 +147,47 @@ def trajectory_chart(*, pts: pd.DataFrame, tail: pd.DataFrame | None = None,
             )
         )
 
-    # B) q05-q95 uncertainty envelope — subtle translucent band
-    band = alt.Chart(pts).mark_errorband(
-        extent="ci", color=COL_TRAJECTORY, opacity=0.14).encode(
-        _xaxis(domain_start=domain_start, domain_end=domain_end),
-        alt.Y("q05:Q", title=_Y_TITLE, axis=_yaxis_config()), alt.Y2("q95:Q"),
-        tooltip=[
-            alt.Tooltip("kind:N"),
-            alt.Tooltip("time:T", title="Timestamp", format=TIME_TIP),
-            alt.Tooltip("q05:Q", title="q05", format=".2f"),
-            alt.Tooltip("q95:Q", title="q95", format=".2f"),
-        ],
-    )
-    layers.append(band)
-
-    # C) forecast q50 — the primary visual element (brand teal, continuous)
+    # B) q05–q95 uncertainty envelope — BRIGHT cyan fill (opaque enough to be
+    #    read on the dark panel) with its own crisp bright edge lines.
     layers.append(
         alt.Chart(pts)
-        .mark_line(color=COL_TRAJECTORY, strokeWidth=2.5)
+        .mark_area(color=COL_BAND, opacity=0.30)
+        .encode(
+            _xaxis(domain_start=domain_start, domain_end=domain_end),
+            alt.Y("q05:Q", title=_Y_TITLE, axis=_yaxis_config()),
+            alt.Y2("q95:Q"),
+            tooltip=[
+                alt.Tooltip("kind:N"),
+                alt.Tooltip("time:T", title="Timestamp", format=TIME_TIP),
+                alt.Tooltip("q05:Q", title="q05", format=".2f"),
+                alt.Tooltip("q95:Q", title="q95", format=".2f"),
+            ],
+        )
+    )
+
+    # C) quantile edge lines — bright, continuous, no dots
+    layers.append(
+        alt.Chart(pts)
+        .mark_line(color=COL_QEDGE, strokeWidth=1.1, strokeOpacity=0.85)
+        .encode(
+            _xaxis(domain_start=domain_start, domain_end=domain_end),
+            _yenco("q05"),
+        )
+    )
+    layers.append(
+        alt.Chart(pts)
+        .mark_line(color=COL_QEDGE, strokeWidth=1.1, strokeOpacity=0.85)
+        .encode(
+            _xaxis(domain_start=domain_start, domain_end=domain_end),
+            _yenco("q95"),
+        )
+    )
+
+    # D) forecast q50 — the primary visual element: clean, thick, continuous,
+    #    NO dot markers (the line is the result, not a dot cloud).
+    layers.append(
+        alt.Chart(pts)
+        .mark_line(color=COL_TRAJECTORY, strokeWidth=3.0)
         .encode(
             _xaxis(domain_start=domain_start, domain_end=domain_end),
             _yenco("q50"),
@@ -157,22 +200,6 @@ def trajectory_chart(*, pts: pd.DataFrame, tail: pd.DataFrame | None = None,
                 alt.Tooltip("confidence_level:N", title="Confidence"),
                 alt.Tooltip("driver_source:N", title="Driver source"),
             ],
-        )
-    )
-
-    # confidence per horizon — subtle dots, tier kept in tooltip + table
-    layers.append(
-        alt.Chart(pts)
-        .mark_point(filled=True, size=22, opacity=0.45)
-        .encode(
-            _xaxis(domain_start=domain_start, domain_end=domain_end),
-            _yenco("q50"),
-            color=alt.Color(
-                "confidence_level:N",
-                scale=alt.Scale(domain=CONF_ORDER,
-                                range=[CONF_COLORS[c] for c in CONF_ORDER]),
-                legend=None,
-            ),
         )
     )
 
@@ -206,6 +233,6 @@ def trajectory_chart(*, pts: pd.DataFrame, tail: pd.DataFrame | None = None,
 
 
 __all__ = ["trajectory_chart", "CONF_COLORS", "CONF_ORDER", "COL_OBSERVED",
-           "COL_TRAJECTORY", "COL_ANCHOR", "BG", "PANEL", "AXIS_LABEL",
-           "AXIS_TITLE", "GRID", "DOMAIN", "TIME_TIP", "AXIS_TIP",
-           "_OBS_DAYS", "_walk"]
+           "COL_TRAJECTORY", "COL_BAND", "COL_QEDGE", "COL_ANCHOR", "BG",
+           "PANEL", "AXIS_LABEL", "AXIS_TITLE", "GRID", "DOMAIN", "TIME_TIP",
+           "AXIS_TIP", "_OBS_DAYS", "_walk"]

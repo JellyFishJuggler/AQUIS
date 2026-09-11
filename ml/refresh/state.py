@@ -55,6 +55,19 @@ def _utcnow_iso() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+def _parse_iso(iso: str):
+    from datetime import datetime
+    try:
+        return datetime.fromisoformat(iso)
+    except (ValueError, TypeError):
+        return datetime.now()
+
+
+def _as_iso(dt) -> str:
+    from datetime import timezone
+    return dt.astimezone(timezone.utc).isoformat(timespec="seconds")
+
+
 def state_path() -> Path:
     return REFRESH_DIR / "state.json"
 
@@ -68,9 +81,15 @@ def lock_path() -> Path:
 
 
 def _atomic_write(path: Path, text: str) -> None:
-    tmp = path.with_suffix(path.suffix + ".tmp")
+    # PID-suffixed tmp so two processes writing the same file at the same time
+    # cannot trash each other's buffer (this is what was corrupting state.json
+    # when the daemon and a manual CLI overlapped). replace() is atomic.
+    tmp = path.with_suffix(f"{path.suffix}.tmp{os.getpid()}")
     tmp.write_text(text)
-    tmp.replace(path)
+    try:
+        tmp.replace(path)
+    finally:
+        tmp.unlink(missing_ok=True)
 
 
 @contextlib.contextmanager
@@ -111,8 +130,33 @@ class RefreshState:
         if self._path.exists():
             try:
                 self._data.update(json.loads(self._path.read_text()))
-            except Exception:  # noqa: BLE001 - a corrupt state must not kill the run
-                self.record("state.corrupt", ok=False, msg="state.json unreadable; resetting")
+            except Exception as exc:  # noqa: BLE001 - a corrupt state must not kill the run
+                # Re-arm the schedule instead of leaving due=None, otherwise a
+                # repeated corruption would make the daemon refire immediately
+                # every poll loop (that was the rapid-cycle storm we saw).
+                #
+                # Preserve forensic evidence: whatever the previous writer left
+                # gets copied aside before we overwrite, so if this keeps
+                # happening we can diff the broken bytes instead of guessing.
+                from datetime import timedelta
+                try:
+                    raw = self._path.read_bytes()
+                    evidence = self._path.with_suffix(
+                        ".corrupt.{}.{}".format(
+                            self._path.suffix.lstrip("."),
+                            _utcnow_iso().replace(":", "").replace("+00:00", "z")))
+                    evidence.write_bytes(raw)
+                    trunc_hint = "truncated<{}B".format(len(raw)) if len(raw) < 512 else "{}B".format(len(raw))
+                except Exception:  # noqa: BLE001
+                    trunc_hint = "unreadable"
+                now_iso = _utcnow_iso()
+                if self._data.get("next_refresh_due") is None:
+                    self._data["next_refresh_due"] = _as_iso(
+                        _parse_iso(now_iso) + timedelta(minutes=90))
+                if self._data.get("next_retrain_due") is None:
+                    self._data["next_retrain_due"] = _as_iso(
+                        _parse_iso(now_iso) + timedelta(hours=6))
+                self.record("state.corrupt", ok=False, msg=f"state.json unreadable ({trunc_hint}); resetting")
         self._guard = None
 
     # -- access ---------------------------------------------------------------

@@ -19,7 +19,6 @@ key.
 """
 
 import hashlib
-import io
 from pathlib import Path
 
 import pandas as pd
@@ -28,9 +27,8 @@ import streamlit as st
 from _model import load_predictions
 from _utils import load_table_6h, station_recency
 
-from app_charts import (COL_OBSERVED, COL_TRAJECTORY, CONF_COLORS, CONF_ORDER,
+from app_charts import (COL_OBSERVED, COL_TRAJECTORY, COL_BAND, COL_QEDGE,
                         trajectory_chart)
-from snapshot import trajectory_snapshot_png
 
 _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 _MODELS_DIR = Path(__file__).resolve().parent.parent / "models"
@@ -83,20 +81,6 @@ def _trajectory_cached(station: str, version: str) -> dict:
     return trajectory_forecast(station)
 
 
-@st.cache_data(ttl="1h", max_entries=2)
-def _river_forecast_districts() -> tuple[str, ...]:
-    """Districts covered by the live CWC river forecast snapshot (if any)."""
-    try:
-        from refresh.future_drivers import _load_river_forecast
-
-        rfc = _load_river_forecast()
-        if rfc is None or rfc.empty:
-            return ()
-        return tuple(sorted({str(d).upper() for d in rfc["district"]}))
-    except Exception:  # noqa: BLE001 - availability display is decorative only
-        return ()
-
-
 def _observed_tail(station, up_to, table6, days: int = _OBS_TAIL_DAYS) -> pd.DataFrame:
     """Daily-mean observed GWL for the last `days` days up to `up_to` (Timestamp)
     — never anything later than the anchor."""
@@ -108,16 +92,6 @@ def _observed_tail(station, up_to, table6, days: int = _OBS_TAIL_DAYS) -> pd.Dat
         date=("time", "last"), gwl=("gwl", "mean"))
     tail = tail[tail["gwl"].notna()]
     return tail.reset_index(drop=True)
-
-
-@st.cache_data(ttl="1h", max_entries=16)
-def _snapshot_png(station: str, version: str) -> bytes:
-    """Render the forecast-card PNG bytes via matplotlib (dark theme)."""
-    traj = _trajectory_cached(station, version)
-    if not traj or "error" in traj:
-        return b""
-    tail = _observed_tail(station, pd.Timestamp(traj["anchor_time"]), table6)
-    return trajectory_snapshot_png(traj=traj, tail=tail, station=station)
 
 
 st.set_page_config(page_title="AQUIS — forecast", page_icon=":material/troubleshoot:", layout="wide")
@@ -196,20 +170,10 @@ def _render_trajectory(station, table6):
     oc = traj["overall_confidence"]
 
     with st.container(border=True):
-        # --- header: title + metadata | Snapshot (right-aligned) ------------
-        head, snap = st.columns([3, 1], vertical_alignment="center")
-        with head:
-            st.markdown("#### 30-day groundwater outlook")
-            st.caption("120 genuine 6-hour forecast points · **Anchor** "
-                       f"{anchor_t:%d %b %Y · %H:%M} · **Forecast** "
-                       f"{pts['time'].iloc[0]:%d %b %H:%M} → {pts['time'].iloc[-1]:%d %b %Y}")
-        with snap:
-            png = _snapshot_png(station, _traj_version())
-            if png:
-                fname = f"AQUIS_{station.replace(' ', '_')}_forecast_30d.png"
-                st.download_button("Snapshot", data=png, file_name=fname,
-                                   mime="image/png", width="stretch",
-                                   help="Export this forecast card as a PNG image (dark theme).")
+        st.markdown("#### 30-day groundwater outlook")
+        st.caption("120 genuine 6-hour forecast points · **Anchor** "
+                   f"{anchor_t:%d %b %Y · %H:%M} · **Forecast** "
+                   f"{pts['time'].iloc[0]:%d %b %H:%M} → {pts['time'].iloc[-1]:%d %b %Y}")
 
         # --- observed history ----------------------------------------------
         tail = _observed_tail(station, anchor_t, table6)
@@ -220,13 +184,9 @@ def _render_trajectory(station, table6):
             <div class="aquis-legend">
               <span class="chip"><span class="sw" style="background:{COL_OBSERVED};"></span>Observed</span>
               <span class="chip"><span class="sw" style="background:{COL_TRAJECTORY};"></span>Forecast (q50)</span>
-              <span class="chip"><span class="sw-band" style="background:{COL_TRAJECTORY};opacity:0.3;"></span>90% uncertainty</span>
-              <span class="chip">
-                <span class="sw-dot" style="background:{CONF_COLORS['HIGH']};opacity:0.55;"></span>HIGH
-                <span class="sw-dot" style="background:{CONF_COLORS['DIRECTIONAL']};opacity:0.55;"></span>DIRECTIONAL
-                <span class="sw-dot" style="background:{CONF_COLORS['LOW']};opacity:0.55;"></span>LOW
-                <span style="color:#666;">· confidence per horizon</span>
-              </span>
+              <span class="chip"><span class="sw-band" style="background:{COL_BAND};opacity:0.35;"></span>90% uncertainty</span>
+              <span class="chip"><span class="sw" style="background:{COL_QEDGE};opacity:0.85;"></span>q05 · q95 edges</span>
+              <span style="color:#666;">· confidence per horizon (in tooltips)</span>
             </div>
             """,
             unsafe_allow_html=True,
@@ -265,67 +225,5 @@ def _render_trajectory(station, table6):
         _label, _color, _guide = CONF_STYLE.get(lvl, (lvl, "#34d399", ""))
         c6.metric("Confidence", _label,
                   help=(oc.get("reason") or "—") + ((" · " + _guide) if _guide else ""))
-
-        # --- future drivers ---------------------------------------------------
-        src = pts["driver_source"].astype(str)
-        has_om = any(s.strip().lower().startswith("open-meteo") for s in src)
-        has_clim = any(s.strip().lower().startswith("climatology") for s in src)
-        any_unavailable = any(s.strip().lower().startswith("driver source unavailable")
-                              for s in src)
-        dist = None
-        dd = table6[table6["Station"] == station]
-        if len(dd) and "District" in dd.columns:
-            dist = str(dd["District"].iloc[0])
-        has_cwc = bool(dist) and dist.upper() in _river_forecast_districts()
-
-        drivers = []
-        if has_om:
-            drivers.append("**Open-Meteo** forecast · days 1–16")
-        if has_cwc:
-            drivers.append("**CWC** river forecast · where available (this district)")
-        if has_clim:
-            drivers.append("**Climatology** · beyond the 16-day forecast limit")
-        drivers.append("**Persistence** · final fallback")
-        with st.expander("Future drivers"):
-            st.markdown("· ".join(drivers))
-            if any_unavailable:
-                st.caption("A driver source is unavailable for part of this horizon — "
-                           "the backend downgrades confidence at those points.")
-            else:
-                st.caption("Drivers used ahead of the anchor are legitimate forecasts, "
-                           "not future observations — the anchor is the latest observed reading.")
-
-        # --- detail table -----------------------------------------------------
-        with st.expander("120-point forecast table"):
-            detail = pts[["time", "q05", "q50", "q95", "confidence_level", "driver_source"]].copy()
-            detail["time"] = detail["time"].dt.strftime("%Y-%m-%d %H:%M")
-            detail = detail.rename(columns={
-                "time": "timestamp", "q05": "q05 (m)", "q50": "q50 (m)",
-                "q95": "q95 (m)", "confidence_level": "confidence", "driver_source": "driver"})
-            st.dataframe(detail, width="stretch", hide_index=True)
-
-        # --- confidence & reliability details ---------------------------------
-        with st.expander("Confidence & reliability details"):
-            counts = {c: 0 for c in CONF_ORDER}
-            for c in pts["confidence_level"]:
-                if c in counts:
-                    counts[c] += 1
-            st.caption("Per-point confidence across the 120 horizons: "
-                       + " · ".join(f"**{counts[c]} {c}**" for c in CONF_ORDER if counts[c]))
-            st.caption(f"**{lvl}** — confident direction: {dir_['label']} "
-                       f"({dir_['change_q50_30d']:+.2f} m). {oc.get('reason') or '—'}")
-            ev = traj["evidence"]
-            st.json({
-                "anchor": anchor_t.isoformat(),
-                "trajectory_30d": t30,
-                "direction": dir_,
-                "overall_confidence": oc,
-                "station_integrity": ev["station_integrity"],
-                "anchor_out_of_range": ev["anchor_ood"],
-                "oscillation": ev["stability_oscillation"],
-                "recency_days": ev["recency_days"],
-                "recent90_coverage": ev["recent90_coverage"],
-            })
-
 
 _render_trajectory(station, table6)

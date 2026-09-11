@@ -53,12 +53,16 @@ ALPHAS = {"q05": 0.05, "q50": 0.50, "q95": 0.95}
 MAX_H = 120
 SEED = 42
 EVAL_FRAC = 0.10
-TRAIN_STRIDE = 8
+# Sampling stride in the candidate long-frame. 16 = half the rows of the old 8
+# (the box has limited RAM and the shared scheduler runs alongside a live app);
+# the much larger historical window still dominates the fit while keeping the
+# candidate's peak memory under the machine's available headroom.
+TRAIN_STRIDE = 16
 HORIZONS_TRAIN = list(range(1, 21)) + [24, 28, 32, 36, 40, 48, 56, 64, 80, 96, 120]
 HORIZONS_VAL = list(range(1, MAX_H + 1))
 PARAMS = dict(max_depth=7, learning_rate=0.05, min_child_weight=60,
               subsample=0.9, colsample_bytree=0.8, n_estimators=900,
-              tree_method="hist", n_jobs=12, random_state=SEED)
+              tree_method="hist", max_bin=128, n_jobs=6, random_state=SEED)
 EARLY = 25
 
 
@@ -88,40 +92,97 @@ def build_candidate_longframe(cfg, *, tbl: pd.DataFrame | None = None,
 
     feats, _ = F.build_full(tbl, keep_na=True, horizon_steps=MAX_H, horizon_label=30)
     feats["time"] = pd.to_datetime(feats["time"], errors="coerce")
+    for c in list(F.NUM_COLS) + ["h", "h_sin", "h_cos"]:
+        if c in feats.columns:
+            feats[c] = feats[c].astype(np.float32)
     if smoke:
         stations = sorted(feats["Station"].astype(str).unique())[:smoke_stations]
         feats = feats[feats["Station"].astype(str).isin(stations)]
 
-    train_rows, val_rows = [], []
-    for st in feats["Station"].astype(str).unique():
+    out_dir.mkdir(parents=True, exist_ok=True)
+    tr_path, va_path = out_dir / "train.parquet", out_dir / "val.parquet"
+    tr_path.unlink(missing_ok=True)
+    va_path.unlink(missing_ok=True)
+
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    # Per-station row budgets so the total stays inside candidate_*_row_cap.
+    # We stride-sample each station's *expanded* rows uniformly (deterministic
+    # order = station then horizon) instead of dropping whole stations, which
+    # would bias the fleet. This bounds both disk and the DMatrix in RAM.
+    all_st = feats["Station"].astype(str).unique()
+    tr_budget = max(8, cfg.candidate_train_row_cap // max(1, len(all_st)))
+    va_budget = max(8, cfg.candidate_val_row_cap // max(1, len(all_st)))
+
+    # Write per-station expanded chunks straight to parquet (streaming) instead
+    # of accumulating every station's rows in RAM. Peak memory is now bounded
+    # by a single station's feature blocks rather than the whole candidate set,
+    # which is what was letting the shared scheduler retrain OOM the box.
+    writers: dict[Path, pq.ParquetWriter] = {}
+    n_tr = n_va = 0
+    for st in all_st:
         sub = feats[feats["Station"].astype(str) == st].sort_values("time")
         times_st, gwl_st = T._axis_and_targets([sub[["time", "gwl"]]])
         rows_va = sub[(sub["time"] >= train_cut) & (sub["time"] < val_end)]
         rows_va = rows_va[rows_va["gwl"].notna()]
         rows_tr = sub[(sub["time"] < train_cut) & sub["gwl"].notna()].iloc[::TRAIN_STRIDE]
-        if len(rows_tr):
-            train_rows.append(T._expand(rows_tr, times_st, gwl_st, HORIZONS_TRAIN))
-        if len(rows_va):
-            val_rows.append(T._expand(rows_va, times_st, gwl_st, HORIZONS_VAL))
+        if not rows_tr.empty:
+            chunk = T._expand(rows_tr, times_st, gwl_st, HORIZONS_TRAIN)
+            if not chunk.empty:
+                if len(chunk) > tr_budget:
+                    k = int(np.ceil(len(chunk) / tr_budget))
+                    chunk = chunk.iloc[::k]
+                for c in list(F.NUM_COLS) + ["h", "h_sin", "h_cos"]:
+                    if c in chunk.columns:
+                        chunk[c] = chunk[c].astype(np.float32)
+                chunk["h"] = chunk["h"].astype(np.int16)
+                chunk["target_delta"] = chunk["target_delta"].astype(np.float32)
+                tbl_arrow = pa.Table.from_pandas(chunk, preserve_index=False)
+                if tr_path not in writers:
+                    writers[tr_path] = pq.ParquetWriter(tr_path, tbl_arrow.schema)
+                writers[tr_path].write_table(tbl_arrow)
+                n_tr += len(chunk)
+                del chunk, tbl_arrow
+        if not rows_va.empty:
+            chunk = T._expand(rows_va, times_st, gwl_st, HORIZONS_VAL)
+            if not chunk.empty:
+                if len(chunk) > va_budget:
+                    k = int(np.ceil(len(chunk) / va_budget))
+                    chunk = chunk.iloc[::k]
+                for c in list(F.NUM_COLS) + ["h", "h_sin", "h_cos"]:
+                    if c in chunk.columns:
+                        chunk[c] = chunk[c].astype(np.float32)
+                chunk["h"] = chunk["h"].astype(np.int16)
+                chunk["target_delta"] = chunk["target_delta"].astype(np.float32)
+                tbl_arrow = pa.Table.from_pandas(chunk, preserve_index=False)
+                if va_path not in writers:
+                    writers[va_path] = pq.ParquetWriter(va_path, tbl_arrow.schema)
+                writers[va_path].write_table(tbl_arrow)
+                n_va += len(chunk)
+                del chunk, tbl_arrow
+        del sub
+    for w in writers.values():
+        w.close()
 
-    trb = pd.concat(train_rows, ignore_index=True) if train_rows else pd.DataFrame()
-    vab = pd.concat(val_rows, ignore_index=True) if val_rows else pd.DataFrame()
-    for df in (trb, vab):
-        if not df.empty:
-            df["h"] = df["h"].astype(np.int16)
-            for c in list(F.NUM_COLS):
-                df[c] = df[c].astype(np.float32)
-            df["target_delta"] = df["target_delta"].astype(np.float32)
-
-    out_dir.mkdir(parents=True, exist_ok=True)
-    trb.to_parquet(out_dir / "train.parquet", index=False)
-    vab.to_parquet(out_dir / "val.parquet", index=False)
+    trb = pd.read_parquet(tr_path) if n_tr else pd.DataFrame()
+    vab = pd.read_parquet(va_path) if n_va else pd.DataFrame()
+    if not trb.empty:
+        trb["h"] = trb["h"].astype(np.int16)
+    if not vab.empty:
+        vab["h"] = vab["h"].astype(np.int16)
+    n_stations = int(feats["Station"].astype(str).nunique())
+    del feats
     prep = {
         "paradigm": "direct multi-horizon shared model (no recursion)",
         "train_period": [str(train_cut.date()), str(val_end.date())],
         "backtest_window": [str(val_end.date()), str(now.date())],
         "train_rows": int(len(trb)), "val_rows": int(len(vab)),
-        "stations": int(feats["Station"].astype(str).nunique()),
+        "row_budgets": {"train_cap": cfg.candidate_train_row_cap,
+                         "val_cap": cfg.candidate_val_row_cap,
+                         "per_station_train": tr_budget,
+                         "per_station_val": va_budget},
+        "stations": n_stations,
         "smoke": bool(smoke),
         "built_at": time.strftime("%Y-%m-%d %H:%M:%S"),
     }

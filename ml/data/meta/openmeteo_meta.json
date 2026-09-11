@@ -1,11 +1,11 @@
 {
   "source": "open-meteo",
-  "hist_api": "https://archive-api.open-meteo.com/v1/archive?models=era5_seamless",
-  "fwd_api": "https://api.open-meteo.com/v1/forecast",
-  "start": "2025-09-10",
-  "end": "2026-09-10",
   "forecast_days": 16,
   "districts": 37,
-  "rows": 13912,
-  "fetched_at": "2026-09-10T06:38:33.178131+00:00"
+  "rows": 15244,
+  "fetched_at": "2026-09-11T10:13:15+00:00",
+  "district_failures": {
+    "SONBHADRA": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "VARANASI": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429"
+  }
 }

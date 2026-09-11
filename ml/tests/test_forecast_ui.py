@@ -183,23 +183,34 @@ class TestTrajectoryChartSpec(unittest.TestCase):
                   and n["mark"].get("strokeDash") is not None]
         self.assertTrue(dashed, "observed tail is a dashed line layer")
 
-    # -- confidence dots --- --------------------------------------------------
+    # -- no dot / point marks anywhere ---------------------------------------
 
-    def test_confidence_color_scale_domain(self):
+    def test_no_point_marks_on_trajectory(self):
+        """Design requires a clean continuous line, never a dot cloud."""
         for node in _walk(self.spec):
-            col = (node.get("encoding") or {}).get("color")
-            if isinstance(col, dict):
-                sc = col.get("scale") or {}
-                if sc.get("domain") == ["HIGH", "DIRECTIONAL", "LOW"]:
+            mk = node.get("mark")
+            if isinstance(mk, dict) and mk.get("type") == "point":
+                self.fail("point marks are not allowed on the trajectory")
+            if isinstance(mk, dict) and mk.get("filled") is True:
+                self.fail("filled point marks are not allowed")
+
+    # -- bright quantile envelope layer present ------------------------------
+
+    def test_quantile_band_layer_present(self):
+        """Envelope layer exists with bright COL_BAND area."""
+        from app_charts import COL_BAND
+        for node in _walk(self.spec):
+            mk = node.get("mark")
+            if isinstance(mk, dict) and mk.get("type") == "area":
+                enc = node.get("encoding") or {}
+                y_f = (enc.get("y") or {}).get("field")
+                y2_f = (enc.get("y2") or {}).get("field")
+                if y_f == "q05" and y2_f == "q95":
+                    self.assertEqual(
+                        node["mark"].get("color") or node["mark"].get("fill", ""),
+                        COL_BAND)
                     return
-        self.fail("confidence color scale not found")
-
-    def test_no_altair_legend(self):
-        """Confidence marks must not render a detached Altair legend."""
-        for node in _walk(self.spec):
-            col = (node.get("encoding") or {}).get("color")
-            if isinstance(col, dict) and col.get("field") in ("confidence_level",):
-                self.assertIsNone(col.get("legend"), "confidence legend must be None")
+        self.fail("q05-q95 area band not found")
 
     # -- dark presentation ---------------------------------------------------
 
@@ -237,10 +248,9 @@ class TestNoOtherForecastInForecastUI(unittest.TestCase):
                     re.search(tok, src, re.I),
                     f"{p.name} contains forbidden token {tok!r}")
 
-    def test_snapshot_action_present(self):
+    def test_no_snapshot_button(self):
         src = (ROOT / "app_pages" / "forecast.py").read_text()
-        self.assertIn("snapshot_png", src)
-        self.assertIn("download_button", src)
+        self.assertNotIn("snapshot_png(", src)
 
 
 # ===========================================================================
@@ -300,9 +310,9 @@ class TestForecastAppTest(unittest.TestCase):
         at.run(timeout=420)
         self.assertEqual(len(at.exception), 0, at.exception)
 
-        # single card, no tabs, chart covered by spec tests, Snapshot present
+        # single card, no tabs, no download buttons, chart covered by spec tests
         self.assertEqual(len(at.tabs), 0)
-        self.assertEqual(len(at.get("download_button")), 1)
+        self.assertEqual(len(at.get("download_button")), 0)
 
         # exactly the 6 forecast-card metrics
         self.assertEqual(len(at.metric), 6)
@@ -310,14 +320,6 @@ class TestForecastAppTest(unittest.TestCase):
         for want in ("Anchor GWL (observed)", "+24 h", "+7 d", "+30 d",
                      "30 d change", "Confidence"):
             self.assertIn(want, labels)
-
-        # 120-point detail table columns
-        frames = at.get("dataframe")
-        self.assertEqual(len(frames), 1)
-        cols = set(frames[0].value.columns)
-        for c in ("timestamp", "q05 (m)", "q50 (m)", "q95 (m)", "confidence", "driver"):
-            self.assertIn(c, cols)
-        self.assertEqual(len(frames[0].value), 120)
 
         # station switch re-renders in the same session
         at.selectbox[0].set_value("BADHANI PRATHMIK VIDYALAYA")

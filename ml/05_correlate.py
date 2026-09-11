@@ -7,11 +7,19 @@ pooled N is reported. Outputs:
   ml/outputs/correlation_by_district.csv
   ml/outputs/lag_curves.csv                — median lagged correlation vs rain
   ml/outputs/scatter_top.html, lag_heat.html — plotly charts
+
+Besides the raw daily drivers, the report also covers the same engineered
+6-hourly feature set the forecast model trains on (06_features.NUM_COLS, e.g.
+GWL lags/rolling stats, calendar cycles) so the app's correlation matrix and the
+model feature-importance chart line up feature-for-feature. Ordinal station /
+district codes (st_id, dist_id) are deliberately excluded — they are arbitrary
+encodings, not hydrologically interpretable drivers.
 """
 
 from __future__ import annotations
 
 import sys
+from importlib import import_module
 from pathlib import Path
 
 import numpy as np
@@ -21,6 +29,16 @@ import config  # noqa: E402
 
 TARGET = "gwl"
 RAIN_WINDOWS = (1, 7, 30)
+
+# Engineered features never correlated in the daily block (the daily raw drivers
+# such as temp / rain_7d are also present here, so they stay on the daily grid).
+_ENG_BLOCK_COLS = [
+    "gwl", "lag1", "lag4", "lag8", "lag28", "lag120",
+    "gwl_roll7_mean", "gwl_roll7_std", "gwl_roll30_mean", "gwl_roll30_std",
+    "temp_7d", "humidity_7d",
+    "year", "month_sin", "month_cos", "doy_sin", "doy_cos",
+    "hour_sin", "hour_cos", "monsoon",
+]
 
 # (column, is_within_station_deseason) — mobility drivers we also deseasonalise.
 LEVEL_COLS = ["temp", "humidity", "solar", "wind_speed", "pressure", "river_level",
@@ -73,6 +91,35 @@ def per_station_corr(tbl: pd.DataFrame, a: str, b: str,
         lambda g: int(g[["_a", "_b"]].dropna().shape[0]), include_groups=False
     ).values
     return out
+
+
+def per_station_corr_many(tbl: pd.DataFrame, target: str, cols: list[str],
+                          how: str, min_rows: int = 20) -> pd.DataFrame:
+    """Median per-station correlation of ``target`` with many drivers in one pass.
+
+    Vectorised ``DataFrameGroupBy.corr`` — same pair-wise semantics as
+    ``per_station_corr`` (>= ``min_rows`` shared non-NaN rows per station), but
+    computed in C for the full 6-hourly grid at once.
+    """
+    sub = tbl[["Station"] + cols].copy()
+    sub[target] = sub[target].astype("float32")
+    feat = list(dict.fromkeys([target] + cols))
+    for c in cols:
+        sub[c] = sub[c].astype("float32")
+    mat = sub.groupby("Station")[feat].corr(method=how, min_periods=min_rows)
+    corr = mat.xs(target, level=1)[cols].reset_index()
+    return corr
+
+
+def load_6h_features() -> pd.DataFrame:
+    """Model-space features on the 6-hourly grid (same builder the model trains on)."""
+    F = import_module("06_features")
+    tbl = pd.read_parquet(config.ALIGNED / "table_6h.parquet")
+    tbl["time"] = pd.to_datetime(tbl["time"], errors="coerce")
+    tbl["date"] = tbl["time"].dt.normalize()
+    tbl = F.drop_gwl_spikes(tbl)
+    feats, _ = F.build_full(tbl)
+    return feats
 
 
 def what_n(a: str, b: str) -> str:
@@ -137,6 +184,21 @@ def main() -> None:
                 "corr": None if pd.isna(med) else round(float(med), 4),
                 "stations_ok": int(r.notna().sum()),
             })
+
+    # -------- engineered model features (6-hourly grid, same as the model) --------
+    print("\nbuilding 6h feature frame (same pipeline as the model)...", flush=True)
+    eng = load_6h_features()
+    print(f"engineered frame: {len(eng):,} rows / {eng['Station'].nunique():,} stations", flush=True)
+    for how in ("spearman", "pearson"):
+        corr = per_station_corr_many(eng, TARGET, _ENG_BLOCK_COLS, how)
+        for col in _ENG_BLOCK_COLS:
+            med = corr[col].median()
+            report.append({
+                "driver": col, "metric": how, "mode": "raw",
+                "corr": None if pd.isna(med) else round(float(med), 4),
+                "stations_ok": int(corr[col].notna().sum()),
+            })
+    print("engineered correlations added:\n", flush=True)
 
     out = pd.DataFrame(report)
     out = out.sort_values(["driver", "metric", "mode"]).reset_index(drop=True)

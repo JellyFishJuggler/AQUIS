@@ -22,6 +22,7 @@ import pandas as pd
 from refresh.config import REFRESH_DIR
 
 FORECASTS_DIR = REFRESH_DIR / "forecasts"
+FORECAST_ARCHIVE = REFRESH_DIR / "forecast_archive"
 STAGING_DIR = REFRESH_DIR / "staging"
 META_PATH = REFRESH_DIR / "meta.json"
 RUNTIME_PATH = REFRESH_DIR / "runtime.json"
@@ -141,9 +142,22 @@ def publish_forecasts(forecasts: list[dict], *, engine: str, model_version: str 
     }
 
     # commit: swap staged per-station files, then parquet, manifest last.
+    FORECAST_ARCHIVE.mkdir(parents=True, exist_ok=True)
     for fc in clean:
+        dst = station_forecast_path(fc["station"])
+        if dst.exists():
+            # keep the previous generation in the archive so verification can
+            # score realised values against it later (current forecast anchors
+            # at the latest reading, so realisations land only afterwards)
+            key = station_key(fc["station"])
+            anchor = str(fc.get("anchor_time", "unknown")).replace(":", "").replace(" ", "_")
+            archived = FORECAST_ARCHIVE / f"{key}-{anchor}.json"
+            if not archived.exists():
+                prev = json.loads(dst.read_text())
+                prev.setdefault("forecast_generated", meta.get("forecast_generation_ts"))
+                atomic_write_json(archived, prev)
         src = STAGING_DIR / f"{station_key(fc['station'])}.json"
-        os.replace(src, station_forecast_path(fc["station"]))
+        os.replace(src, dst)
     os.replace(STAGING_DIR / "forecasts.parquet", PARCEL_PATH)
     atomic_write_json(META_PATH, meta)
     if not keep_staging:
@@ -157,7 +171,10 @@ def update_freshness(meta: dict, stale_after_hours: float,
     """Augment the committed meta with a data-status verdict + per-source lag."""
     meta["stale_after_hours"] = float(stale_after_hours)
     now = pd.Timestamp.now(tz="UTC")
-    last = pd.Timestamp(last_refresh_ts).tz_localize("UTC") if last_refresh_ts else None
+    last = None
+    if last_refresh_ts and last_refresh_ts != "now":
+        ts = pd.Timestamp(last_refresh_ts)
+        last = ts.tz_convert("UTC") if ts.tzinfo is not None else ts.tz_localize("UTC")
     lag_h = float((now - last).total_seconds() / 3600) if last is not None else None
     if last is None or lag_h is None or lag_h > float(stale_after_hours):
         status, reason = "stale", ("no refresh within the configured window"

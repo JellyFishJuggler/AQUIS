@@ -90,36 +90,98 @@ def _per_district_max(df: pd.DataFrame) -> dict:
     return {k: v for k, v in g.items()}
 
 
+def _per_station_max(df: pd.DataFrame) -> dict:
+    """Latest timestamp already present per station.
+
+    The district-wide max is not enough: a station that reports less often than
+    the fleet average has its *genuinely new* readings silently dropped when the
+    incremental window is keyed on the district max alone (that is what stranded
+    monsoon stations at stale dates). We therefore advance each station by its
+    own max and copy the whole recent window forward.
+    """
+    if df.empty or nwic.TIME_FIELD not in df.columns:
+        return {}
+    df = df.copy()
+    df[nwic.TIME_FIELD] = pd.to_datetime(df[nwic.TIME_FIELD], errors="coerce")
+    g = df.groupby(nwic.STATION_FIELD)[nwic.TIME_FIELD].max()
+    return {k: v for k, v in g.items()}
+
+
+def _district_min_station_max(df: pd.DataFrame) -> dict:
+    """Earliest station-max within each district.
+
+    The district's leading edge (= district max) comes from the most frequent
+    reporter. Trading on it alone starves lagging stations. To pick up every
+    station's latest reading we must scan back at least as far as the *oldest*
+    station's last reading in that district (plus a margin), nothing more.
+    """
+    if df.empty or nwic.TIME_FIELD not in df.columns:
+        return {}
+    df = df.copy()
+    df[nwic.TIME_FIELD] = pd.to_datetime(df[nwic.TIME_FIELD], errors="coerce")
+    df = df.dropna(subset=[nwic.TIME_FIELD])
+    if df.empty:
+        return {}
+    st_max = df.groupby(nwic.STATION_FIELD)[nwic.TIME_FIELD].max()
+    st_dist = df.groupby(nwic.STATION_FIELD)[nwic.DISTRICT_FIELD].agg(
+        lambda s: s.value_counts().index[0])
+    per_d: dict = {}
+    for station, district in st_dist.items():
+        t = st_max[station]
+        per_d[district] = min(per_d[district], t) if district in per_d else t
+    return per_d
+
+
 def refresh(districts: list[str], parquet_path: Path, dry_run: bool = False,
-            sleep: float = 0.2) -> tuple[list[pd.DataFrame], int]:
+            sleep: float = 0.2, lookback_days: int = 45) -> tuple[list[pd.DataFrame], int]:
     """Fetch + merge the latest per-district 2026 rows.
 
     Returns (new_frames, total_new_rows). If dry_run, returns frames but does
     not write to disk.
+
+    The scan window starts from the district's *slowest* station (its oldest
+    station-max, minus one day) so that stations reporting less often than the
+    district's leading edge still get their newest reading picked up. Rows are
+    kept per-station: a row is "new" iff it is newer than that *station's* max,
+    not the district's. ``lookback_days`` caps how far back an empty district
+    (no station maxima) reaches.
     """
     cur = pd.read_parquet(parquet_path)
-    cur_max = _per_district_max(cur)
+    cur_max_dist = _per_district_max(cur)
+    cur_max_st = _per_station_max(cur)
+    cur_min_st = _district_min_station_max(cur)
     new_frames: list[pd.DataFrame] = []
     total_new = 0
 
     for d in districts:
-        start_ts = cur_max.get(d)
-        # Fetch strictly-new rows: start a microsecond after the current max.
-        start = (start_ts + pd.Timedelta(microseconds=1)).strftime("%Y-%m-%d") if start_ts else "2021-01-01"
+        dist_max = cur_max_dist.get(d)
+        slowest = cur_min_st.get(d)
+        if slowest is not None:
+            scan_from = (slowest - pd.Timedelta(days=1)).strftime("%Y-%m-%d")
+        elif dist_max is not None:
+            scan_from = (dist_max - pd.Timedelta(days=lookback_days)).strftime("%Y-%m-%d")
+        else:
+            scan_from = "2021-01-01"
         try:
-            records = nwic.fetch_district(LIVE_RESOURCE, d, start=start, end=None,
+            records = nwic.fetch_district(LIVE_RESOURCE, d, start=scan_from, end=None,
                                           limit=5000, sleep=sleep)
         except RuntimeError as e:
             print(f"  [FAIL] {d}: {e}")
             continue
         if not records:
-            print(f"  [ok]  {d}: no new rows (up to {start_ts})")
+            print(f"  [ok]  {d}: no rows in scan window (up to {dist_max})")
             continue
         frame = nwic.normalize_records(records)
-        if start_ts is not None and nwic.TIME_FIELD in frame.columns:
-            frame = frame[pd.to_datetime(frame[nwic.TIME_FIELD]) > start_ts]
         if frame.empty:
-            print(f"  [ok]  {d}: no new rows")
+            print(f"  [ok]  {d}: no rows")
+            continue
+        # per-station incremental: keep only rows newer than that station's max
+        if nwic.TIME_FIELD in frame.columns and nwic.STATION_FIELD in frame.columns:
+            frame[nwic.TIME_FIELD] = pd.to_datetime(frame[nwic.TIME_FIELD], errors="coerce")
+            st_max = frame[nwic.STATION_FIELD].map(cur_max_st)
+            frame = frame[st_max.isna() | (frame[nwic.TIME_FIELD] > st_max)]
+        if frame.empty:
+            print(f"  [ok]  {d}: no new rows (per-station up to date, scan since {scan_from})")
             continue
         new_frames.append(frame)
         total_new += len(frame)

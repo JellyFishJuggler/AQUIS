@@ -21,6 +21,7 @@ Never fabricated: a failed source keeps the previous parquet and is reported as
 from __future__ import annotations
 
 import importlib
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -28,6 +29,8 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT.parent))
 
 
 def _utcnow() -> datetime:

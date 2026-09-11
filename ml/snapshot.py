@@ -32,9 +32,11 @@ PANEL = "#14161d"
 TEXT = "#e0e0e0"
 MUTED = "#9aa0a6"
 GRID = "#232834"
-COL_OBSERVED = "#6c7683"
+COL_OBSERVED = "#9aa0a6"
 COL_TRAJECTORY = "#4ecca3"
-COL_ANCHOR = "#e0e0e0"
+COL_BAND = "#38bdf8"
+COL_QEDGE = "#7dd3fc"
+COL_ANCHOR = "#e5e7eb"
 CONF_COLORS = {"HIGH": "#34d399", "DIRECTIONAL": "#fbbf24", "LOW": "#f472b6"}
 
 FOOTER = "AQUIS · 30-day groundwater outlook"
@@ -86,19 +88,19 @@ def trajectory_snapshot_png(*, traj: dict, tail: pd.DataFrame | None = None,
         ax.plot(t["date"], t["gwl"], color=COL_OBSERVED, linestyle="--",
                 linewidth=1.3, zorder=2, alpha=0.85)
 
-    # q05–q95 uncertainty envelope (subtle translucent band)
+    # q05–q95 uncertainty envelope (bright translucent band)
     ax.fill_between(pts["time"], pts["q05"], pts["q95"],
-                    color=COL_TRAJECTORY, alpha=0.14, linewidth=0, zorder=3)
+                    color=COL_BAND, alpha=0.30, linewidth=0, zorder=3)
+
+    # quantile edge lines — bright, continuous, no dots
+    ax.plot(pts["time"], pts["q05"], color=COL_QEDGE, linewidth=1.1,
+            alpha=0.85, zorder=3)
+    ax.plot(pts["time"], pts["q95"], color=COL_QEDGE, linewidth=1.1,
+            alpha=0.85, zorder=3)
 
     # 6-hour q50 trajectory (primary element, genuine values)
-    ax.plot(pts["time"], pts["q50"], color=COL_TRAJECTORY, linewidth=2.4, zorder=4)
-
-    # confidence tiers — subtle dots
-    for lvl, col in CONF_COLORS.items():
-        sub = pts[pts["confidence_level"] == lvl]
-        if len(sub):
-            ax.scatter(sub["time"], sub["q50"], color=col, s=13, alpha=0.55,
-                       marker="o", linewidths=0, zorder=5)
+    ax.plot(pts["time"], pts["q50"], color=COL_TRAJECTORY, linewidth=2.8,
+            zorder=4)
 
     # "Forecast starts" boundary at the anchor
     ax.axvline(anchor_t, color=COL_ANCHOR, linestyle="--", linewidth=1.0,
@@ -124,11 +126,13 @@ def trajectory_snapshot_png(*, traj: dict, tail: pd.DataFrame | None = None,
     handles = [
         Line2D([], [], color=COL_OBSERVED, linestyle="--", linewidth=1.3,
                label="Observed"),
-        Line2D([], [], color=COL_TRAJECTORY, linewidth=2.4, label="Forecast"),
-        Patch(facecolor=COL_TRAJECTORY, alpha=0.22, label="90% uncertainty"),
+        Line2D([], [], color=COL_TRAJECTORY, linewidth=2.8, label="Forecast (q50)"),
+        Patch(facecolor=COL_BAND, alpha=0.35, label="90% uncertainty"),
+        Line2D([], [], color=COL_QEDGE, linewidth=1.1, alpha=0.85,
+               label="q05 · q95 edges"),
     ]
     leg = ax.legend(handles=handles, loc="upper left", frameon=False,
-                    fontsize=8, labelcolor=TEXT, ncol=3)
+                    fontsize=8, labelcolor=TEXT, ncol=4)
     leg.get_frame().set_facecolor(PANEL)
 
     fig.subplots_adjust(left=0.075, right=0.97, top=0.78, bottom=0.30)

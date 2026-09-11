@@ -61,6 +61,7 @@ ml/data/aligned/*.csv
 ml/app.log
 ml/fetch.log
 ml/soil_run.log
+ml/logs/
 
 # AI assistant embedding cache (regenerated on first index)
 ml/agent/cache/

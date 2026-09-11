@@ -17,11 +17,12 @@ directly (the page shows an instant data panel regardless of LLM availability).
 from __future__ import annotations
 
 import os
-import subprocess
+import re
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import requests
 
 _BASE = Path(__file__).resolve().parent
 REPO = _BASE.parent
@@ -65,25 +66,31 @@ def ollama_model() -> str:
             or "llama3.2:3b").strip()
 
 
+def ollama_host() -> str:
+    env = read_env(REPO)
+    host = (env.get("AQUIS_OLLAMA_HOST")
+            or os.environ.get("AQUIS_OLLAMA_HOST")
+            or "http://127.0.0.1:11434").strip()
+    return host.rstrip("/")
+
+
 def ollama_status() -> dict:
-    """Live check: is the Ollama server reachable and the configured model pulled?"""
+    """Live check: is the Ollama server reachable and the configured model pulled?
+
+    Talks directly to the Ollama HTTP API (no ``ollama`` pip client / CLI
+    dependency, so it works from any interpreter that has ``requests``).
+    """
     model = ollama_model()
-    try:
-        res = subprocess.run(
-            ["ollama", "list"], capture_output=True, text=True, timeout=10)
-    except Exception as e:  # noqa: BLE001 - never break the page on a probe
-        return {"server": False, "models": set(), "model": model, "error": str(e)}
     models: set[str] = set()
-    if res.returncode == 0:
-        for line in res.stdout.splitlines()[1:]:
-            if line.strip():
-                models.add(line.split()[0])
-    return {
-        "server": res.returncode == 0,
-        "models": models,
-        "model": model,
-        "error": res.stderr.strip() or None,
-    }
+    try:
+        r = requests.get(f"{ollama_host()}/api/tags", timeout=5)
+        r.raise_for_status()
+        models = {m.get("name") for m in r.json().get("models", [])}
+        server, err = True, None
+    except Exception as e:  # noqa: BLE001 - never break the page on a probe
+        return {"server": False, "models": models, "model": model, "error": str(e)}
+    return {"server": server, "models": models, "model": model,
+            "error": err or (f"model '{model}' not pulled" if model not in models else None)}
 
 
 # ---------------------------------------------------------------------------
@@ -256,6 +263,364 @@ def _annual_facts(station: str, last_years: int = 3) -> list[dict]:
     return rows[-last_years:]
 
 
+# ---------------------------------------------------------------------------
+# Temporal records (answer "what was the level on <date / time / month / year>?")
+# ---------------------------------------------------------------------------
+_MONTH_NUM = {
+    "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
+    "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12,
+}
+_MONTH_FULL = ["", "January", "February", "March", "April", "May", "June",
+               "July", "August", "September", "October", "November", "December"]
+_WEEKDAYS = {"monday": 0, "tuesday": 1, "wednesday": 2, "thursday": 3,
+             "friday": 4, "saturday": 5, "sunday": 6}
+_MONTH_BLOB = r"(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*"
+
+
+def _mkdate(y: int, m: int, d: int):
+    try:
+        return pd.Timestamp(y, m, d).date()
+    except ValueError:
+        return None
+
+
+def _mon(word: str) -> int | None:
+    return _MONTH_NUM.get(word[:3].casefold())
+
+
+def _strip_spans(text: str, spans: list[tuple[int, int]]) -> str:
+    if not spans:
+        return text
+    out, last = [], 0
+    for s, e in sorted(spans):
+        out.append(text[last:s])
+        last = e
+    out.append(text[last:])
+    return "".join(out)
+
+
+def _parse_time_refs(question: str, since) -> list[dict]:
+    """Extract date / month / year / relative-time references from a question.
+
+    ``since`` is the station's last-reading date; relative words ("yesterday",
+    "last week") and year-less dates resolve against it so answers always match
+    what the telemetry actually contains.
+    """
+    refs: list[dict] = []
+    text = question
+    spent: list[tuple[int, int]] = []
+    flags = re.IGNORECASE
+
+    def _flush() -> None:
+        nonlocal text, spent
+        text = _strip_spans(text, spent)
+        spent = []
+
+    # ISO YYYY-MM-DD
+    for m in re.finditer(r"\b(20\d{2})-(\d{1,2})-(\d{1,2})\b", text, flags):
+        d = _mkdate(int(m[1]), int(m[2]), int(m[3]))
+        if d is None or len(refs) >= 4:
+            continue
+        spent.append(m.span())
+        refs.append({"kind": "date", "date": d})
+    _flush()
+
+    # "15 March 2023" / "15th March" (day first)
+    for m in re.finditer(
+            rf"(?<!\d)(\d{{1,2}})(?:st|nd|rd|th)?\s+(?:of\s+)?({_MONTH_BLOB})\.?[,\s]+((?:19|20)\d{{2}})?(?!\d)",
+            text, flags):
+        mon = _mon(m[2])
+        day = int(m[1])
+        if mon is None or not (1 <= day <= 31) or len(refs) >= 4:
+            continue
+        yr = int(m[3]) if m[3] else _resolve_year_no(mon, day, since)
+        d = _mkdate(yr, mon, day)
+        if d is None:
+            continue
+        spent.append(m.span())
+        refs.append({"kind": "date", "date": d})
+    _flush()
+
+    # "March 15, 2023" / "March 15th" (month first)
+    for m in re.finditer(
+            rf"(?<!\d)({_MONTH_BLOB})\.?\s+(\d{{1,2}})(?:st|nd|rd|th)?[,\s]+((?:19|20)\d{{2}})?(?!\d)",
+            text, flags):
+        mon = _mon(m[1])
+        day = int(m[2])
+        if mon is None or not (1 <= day <= 31) or len(refs) >= 4:
+            continue
+        yr = int(m[3]) if m[3] else _resolve_year_no(mon, day, since)
+        d = _mkdate(yr, mon, day)
+        if d is None:
+            continue
+        spent.append(m.span())
+        refs.append({"kind": "date", "date": d})
+    _flush()
+
+    # "March 2023" (month + year)
+    for m in re.finditer(rf"(?<!\w)({_MONTH_BLOB})\.?[,\s]+((?:19|20)\d{{2}})(?!\d)", text, flags):
+        mon = _mon(m[1])
+        if mon is None or len(refs) >= 4:
+            continue
+        spent.append(m.span())
+        refs.append({"kind": "month", "year": int(m[2]), "month": mon})
+    _flush()
+
+    # dd/mm/yyyy or dd-mm-yyyy (day first, India convention) — after verbose patterns
+    for m in re.finditer(r"\b(\d{1,2})[-/](\d{1,2})[-/]((?:19|20)\d{2})\b", text, flags):
+        day, mon, yr = int(m[1]), int(m[2]), int(m[3])
+        d = _mkdate(yr, mon, day)
+        if d is None or len(refs) >= 4:
+            continue
+        spent.append(m.span())
+        refs.append({"kind": "date", "date": d})
+    _flush()
+
+    # standalone year
+    for m in re.finditer(r"(?<!\d)((?:19|20)\d{2})(?!\d)", text, flags):
+        if len(refs) >= 4:
+            break
+        spent.append(m.span())
+        refs.append({"kind": "year", "year": int(m[1])})
+    _flush()
+
+    # standalone month ("in June") -> most recent such month <= since
+    for m in re.finditer(rf"(?<!\w)({_MONTH_BLOB})\.?(?!\w)", text, flags):
+        mon = _mon(m[1])
+        if mon is None or len(refs) >= 4:
+            continue
+        spent.append(m.span())
+        if mon > since.month:
+            yr = since.year - 1
+        else:
+            yr = since.year
+        refs.append({"kind": "month", "year": yr, "month": mon})
+    _flush()
+
+    # relative terms (resolved against the station's latest reading)
+    low = question.casefold()
+
+    def _has(phrase: str) -> bool:
+        return phrase in low
+
+    if len(refs) < 4:
+        if _has("day before yesterday") or _has("two days ago"):
+            refs.append({"kind": "date", "date": since - pd.Timedelta(days=2)})
+        elif _has("yesterday"):
+            refs.append({"kind": "date", "date": since - pd.Timedelta(days=1)})
+        elif _has("today"):
+            refs.append({"kind": "date", "date": since})
+    if len(refs) < 4:
+        if _has("last week") or _has("past week") or _has("last 7 days"):
+            refs.append({"kind": "range", "days": 7, "label": "last week"})
+        elif _has("past month") or _has("last 30 days") or _has("past 30 days") or _has("last month."):
+            refs.append({"kind": "range", "days": 30, "label": "last 30 days"})
+    if len(refs) < 4:
+        if _has("this month"):
+            refs.append({"kind": "month", "year": since.year, "month": since.month})
+        elif _has("last month"):
+            refs.append({"kind": "month", "year": since.year if since.month > 1 else since.year - 1,
+                         "month": since.month - 1 if since.month > 1 else 12})
+        elif _has("this year"):
+            refs.append({"kind": "year", "year": since.year})
+        elif _has("last year"):
+            refs.append({"kind": "year", "year": since.year - 1})
+    if len(refs) < 4:
+        for name, wd in _WEEKDAYS.items():
+            if _has(name):
+                off = (since.weekday() - wd) % 7
+                refs.append({"kind": "date", "date": since - pd.Timedelta(days=off),
+                             "label": name.capitalize()})
+                break
+
+    # de-duplicate identical references, keep the most specific first
+    seen: set[tuple] = set()
+    out: list[dict] = []
+    for r in refs:
+        if r["kind"] == "date":
+            key = ("d", r["date"])
+        elif r["kind"] == "month":
+            key = ("m", r["year"], r["month"])
+        elif r["kind"] == "year":
+            key = ("y", r["year"])
+        else:
+            key = ("r", r.get("days"), r.get("label"))
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(r)
+    return out[:4]
+
+
+def _resolve_year_no(mon: int, day: int, since) -> int:
+    """Year for a year-less date: the most recent occurrence that is <= ``since``."""
+    yr = since.year
+    if (mon, day) > (since.month, since.day):
+        yr -= 1
+    return yr
+
+
+def _rain_str(day: pd.DataFrame) -> str:
+    if "rain" not in day.columns:
+        return "n/a"
+    s = day["rain"]
+    return "n/a" if s.notna().sum() == 0 else f"{float(s.sum()):.1f}"
+
+
+def _date_lines(lines: list[str], g: pd.DataFrame, d, label: str | None = None) -> None:
+    label = label or str(d)
+    day = g[g[TIME_COL].dt.date == d]
+    if day.empty:
+        gv = g[g[GWL_COL].notna()][[TIME_COL, GWL_COL]]
+        if gv.empty:
+            lines.append(f"- {label}: no GWL data for this station.")
+            return
+        diff = (gv[TIME_COL].dt.normalize() - pd.Timestamp(d)).abs().dt.days
+        i = diff.idxmin()
+        off = int(diff.loc[i])
+        if off > 60:
+            lines.append(
+                f"- {label}: no reading within ~60 days (station data spans "
+                f"{gv[TIME_COL].min().date()} to {gv[TIME_COL].max().date()}).")
+            return
+        r = gv.loc[i]
+        lines.append(
+            f"- {label}: no exact reading; nearest is {r[TIME_COL]:%Y-%m-%d %H:%M} "
+            f"= {r[GWL_COL]:.2f} m ({off} day(s) away).")
+        return
+    vals = day[GWL_COL].dropna()
+    if vals.empty:
+        lines.append(f"- {label}: GWL missing that day; rain {_rain_str(day)} mm.")
+        return
+    mean = float(vals.mean())
+    rdgs = day.dropna(subset=[GWL_COL])[[TIME_COL, GWL_COL]]
+    rstr = "; ".join(f"{t:%H:%M}={v:.2f}" for t, v in zip(rdgs[TIME_COL], rdgs[GWL_COL]))
+    prev = g[(g[TIME_COL].dt.date == (pd.Timestamp(d) - pd.Timedelta(days=1)).date())][GWL_COL].dropna()
+    prev_s = f"; prev day {prev.mean():.2f} m" if not prev.empty else ""
+    lines.append(
+        f"- {label}: GWL mean {mean:.2f} m over {len(vals)} readings "
+        f"(min {float(vals.min()):.2f}, max {float(vals.max()):.2f}); "
+        f"rain {_rain_str(day)} mm; readings: {rstr}{prev_s}"
+    )
+
+
+def _month_lines(lines: list[str], g: pd.DataFrame, year: int, month: int,
+                 label: str | None = None) -> None:
+    label = label or f"{_MONTH_FULL[month]} {year}"
+    sub = g[(g[TIME_COL].dt.year == year) & (g[TIME_COL].dt.month == month)]
+    vals = sub[GWL_COL].dropna()
+    if vals.empty:
+        lines.append(f"- {label}: no GWL readings that month.")
+        return
+    rain = float(sub["rain"].sum()) if "rain" in sub.columns and sub["rain"].notna().sum() else np.nan
+    r = f"; rain {rain:.1f} mm" if np.isfinite(rain) else ""
+    lines.append(
+        f"- {label}: GWL mean {float(vals.mean()):.2f} m over {len(vals)} readings "
+        f"(min {float(vals.min()):.2f}, max {float(vals.max()):.2f}){r}."
+    )
+
+
+def _year_lines(lines: list[str], g: pd.DataFrame, year: int) -> None:
+    sub = g[g[TIME_COL].dt.year == year]
+    vals = sub[GWL_COL].dropna()
+    if vals.empty:
+        lines.append(f"- {year}: no GWL readings that year.")
+        return
+    rain = float(sub["rain"].sum()) if "rain" in sub.columns and sub["rain"].notna().sum() else np.nan
+    r = f"; rain {rain:.1f} mm" if np.isfinite(rain) else ""
+    lines.append(
+        f"- {year}: GWL mean {float(vals.mean()):.2f} m over {len(vals)} readings "
+        f"(min {float(vals.min()):.2f}, max {float(vals.max()):.2f}){r}."
+    )
+
+
+def _range_lines(lines: list[str], g: pd.DataFrame, days: int, label: str | None = None) -> None:
+    label = label or f"last {days} days"
+    last = g[TIME_COL].max()
+    sub = g[g[TIME_COL] >= last - pd.Timedelta(days=days)]
+    rows = []
+    for d, day in sub.groupby(sub[TIME_COL].dt.date):
+        v = day[GWL_COL].dropna()
+        if v.empty:
+            continue
+        rows.append((d, float(v.mean()), float(v.min()), float(v.max()), len(v)))
+    rows.sort()
+    if not rows:
+        lines.append(f"- {label}: no readings in this window.")
+        return
+    if days <= 14:
+        for d, mean, lo, hi, n in rows:
+            r = day_g = sub[sub[TIME_COL].dt.date == d]
+            lines.append(
+                f"- {d.strftime('%Y-%m-%d')}: GWL mean {mean:.2f} m "
+                f"({lo:.2f}..{hi:.2f}, n={n}); rain {_rain_str(day_g)} mm")
+    else:
+        means = [r[1] for r in rows]
+        alo = min(r[2] for r in rows)
+        ahi = max(r[3] for r in rows)
+        lines.append(
+            f"- {label}: {len(rows)} days with data, mean GWL "
+            f"{float(np.mean(means)):.2f} m (min {alo:.2f}, max {ahi:.2f}).")
+        for d, mean, _lo, _hi, _n in rows[-7:]:
+            day_g = sub[sub[TIME_COL].dt.date == d]
+            lines.append(
+                f"- {d.strftime('%Y-%m-%d')}: GWL mean {mean:.2f} m; "
+                f"rain {_rain_str(day_g)} mm")
+
+
+def _append_ref(lines: list[str], g: pd.DataFrame, ref: dict) -> None:
+    kind = ref["kind"]
+    if kind == "date":
+        _date_lines(lines, g, ref["date"], ref.get("label"))
+    elif kind == "month":
+        _month_lines(lines, g, ref["year"], ref["month"])
+    elif kind == "year":
+        _year_lines(lines, g, ref["year"])
+    elif kind == "range":
+        _range_lines(lines, g, ref["days"], ref.get("label"))
+
+
+def _temporal_context(station: str, question: str) -> list[str]:
+    """Exact observed records for the date/time the user asked about.
+
+    Parses date / month / year / relative-time mentions out of the question and
+    returns deterministic facts (daily means, 6-hourly readings, rain) so the LLM
+    can answer "what was the level on <when>" without inventing numbers.
+    """
+    g = get_df()[get_df()[STATION_COL] == station]
+    if g.empty or not question or not question.strip():
+        return []
+    since = g[TIME_COL].max().date()
+    refs = _parse_time_refs(question, since)
+    lines: list[str] = []
+    for ref in refs:
+        _append_ref(lines, g, ref)
+    return lines
+
+
+def _fleet_recency(days: int = 14) -> dict:
+    """Fleet-wide fact: how many stations have their MOST RECENT reading on each date.
+
+    Lets the LLM answer questions like "how many stations have their latest reading
+    on 11 September" with an exact count instead of guessing — the counts are handed
+    to it verbatim. Reuses the cached recency Series from ``_utils.station_recency``
+    (built once per TTL window on top of ``table_6h``).
+    """
+    try:
+        from _utils import station_recency
+
+        t = station_recency()
+        counts = t.dt.normalize().value_counts().sort_index(ascending=False)
+        recent = {str(d.date()): int(c) for d, c in counts.head(days).items()}
+        return {
+            "recent_dates": recent,
+            "stations_with_data": int(t.count()),
+            "latest_date": str(t.max().date()),
+        }
+    except Exception:  # noqa: BLE001 - recency is a convenience fact, never fatal
+        return {}
+
+
 def _district_context(district: str, top_k: int = 5) -> dict:
     """District-level context: median level, spread, and the most-stressed stations.
 
@@ -423,20 +788,26 @@ class StationAssistant:
         self.model = model or ollama_model()
         self._llm = None
 
-    def _get_llm(self):
-        if self._llm is None:
-            import ollama
-
-            self._llm = ollama.Client(timeout=None)
-        return self._llm
-
     def _invoke_llm(self, prompt: str) -> str:
-        resp = self._get_llm().chat(
-            model=self.model,
-            messages=[{"role": "user", "content": prompt}],
-            options={"temperature": 0.2},
-        )
-        return resp["message"]["content"]
+        try:
+            r = requests.post(
+                f"{ollama_host()}/api/chat",
+                json={"model": self.model, "stream": False,
+                      "messages": [{"role": "user", "content": prompt}],
+                      "options": {"temperature": 0.2}},
+                timeout=600,
+            )
+            r.raise_for_status()
+            content = r.json().get("message", {}).get("content", "")
+        except requests.RequestException as e:
+            raise RuntimeError(
+                f"Ollama server unreachable at {ollama_host()} — "
+                f"start it with `ollama serve` and ensure `{self.model}` is pulled "
+                f"(`ollama pull {self.model}`). ({e})"
+            ) from e
+        if not content:
+            raise RuntimeError(f"Ollama returned an empty answer for model '{self.model}'.")
+        return content
 
     def facts(self, station: str) -> dict:
         df = get_df()
@@ -460,6 +831,7 @@ class StationAssistant:
         facts["district_context"] = _district_context(dist)
         facts["precautions"] = _precautions(facts)
         facts["forecast"] = _forecast_summary(station)
+        facts["fleet_recency"] = _fleet_recency()
         return facts
 
     def facts_for_mentions(self, question: str, base_station: str | None = None) -> list[dict]:
@@ -513,17 +885,20 @@ class StationAssistant:
                 "station": station,
             }
         mentions = self.facts_for_mentions(question, base_station=station)
-        prompt = _build_prompt(question, facts, mentions=mentions, history=history)
+        temporal = _temporal_context(station, question)
+        prompt = _build_prompt(question, facts, mentions=mentions, history=history,
+                               temporal=temporal)
         answer = self._invoke_llm(prompt)
         return {"answer": answer, "facts": facts, "station": station,
-                "mentions": mentions}
+                "mentions": mentions, "temporal": temporal}
 
 
 # ---------------------------------------------------------------------------
 # Prompt (station branch only — ported from ml/agent/data_assistant.py)
 # ---------------------------------------------------------------------------
 def _build_prompt(question: str, facts: dict, mentions: list[dict] | None = None,
-                  history: list[dict] | None = None) -> str:
+                  history: list[dict] | None = None,
+                  temporal: list[str] | None = None) -> str:
     lines = [
         "You are the AQUIS groundwater advisory assistant. Answer the user's question",
         "using ONLY the given observed facts. No speculation, no invented numbers.",
@@ -535,6 +910,12 @@ def _build_prompt(question: str, facts: dict, mentions: list[dict] | None = None
         "GWL is a water-table LEVEL in metres (not depth-to-water). A RISING value means",
         "the water table rose / recharge; a FALLING value means drawdown.",
         "",
+        "When the user asks about a SPECIFIC date, time, month, or year (e.g. 'what was",
+        "the level on 15 March 2023', 'what happened last week', 'level in June 2021',",
+        "'reading at 06:00 on <date>'): answer ONLY from the HISTORICAL RECORDS block",
+        "below — give the exact reading (mean, per-time values, rain) for that moment.",
+        "If the asked date has no reading, report the nearest one in the block and say",
+        "what it is — never guess a number.",
         "When the user asks about FACTORS or 'what is driving the level': use the",
         "DRIVER CORRELATIONS (Spearman). A strongly negative corr with rain is normal",
         "in aquifer terms only if stated carefully — prefer: 'rain is the dominant",
@@ -543,6 +924,10 @@ def _build_prompt(question: str, facts: dict, mentions: list[dict] | None = None
         "When asked for PRECAUTIONS / STRATEGY: pick the matching PRECAUTIONS entries",
         "and phrase them as practical suggestions (monitor, conserve, recharge watch).",
         "Never attach totals or changes to a station that are not in its facts.",
+        "When asked a FLEET / all-stations question (e.g. 'how many stations have their",
+        "latest reading on <date>'): answer from the FLEET RECENT-UPDATE block below —",
+        "give the exact station count for that date, or say so if the date is not present",
+        "and give the closest listed dates. Never invent a count.",
     ]
     if history:
         lines += [
@@ -627,6 +1012,14 @@ def _build_prompt(question: str, facts: dict, mentions: list[dict] | None = None
             top_s = ", ".join(
                 f"{d['driver']} r={d['corr']:+.2f} (n={d['n']})" for d in top)
             lines.append(f"top drivers of level: {top_s}")
+    fr = facts.get("fleet_recency") or {}
+    if fr.get("recent_dates"):
+        lines.append(
+            f"FLEET RECENT-UPDATE (all stations): {fr['stations_with_data']} stations "
+            f"with data; most recent update date overall: {fr.get('latest_date')}."
+        )
+        for d, n in fr["recent_dates"].items():
+            lines.append(f"  stations whose latest reading is on {d}: {n}")
     dc = facts.get("district_context") or {}
     if dc and dc.get("most_stressed"):
         worst = ", ".join(
@@ -658,6 +1051,14 @@ def _build_prompt(question: str, facts: dict, mentions: list[dict] | None = None
                     f"180d {_fmt(m.get('change_180d'))} m"
                 )
         lines.append("Use these only if the question compares or refers to them.")
+    if temporal:
+        lines.append("")
+        lines.append("HISTORICAL RECORDS (observed values for the time the user asked about):")
+        lines.extend(temporal)
+        lines.append(
+            "Answer date/time questions with these exact values only. If a date is not "
+            "covered, say the nearest available reading shown here."
+        )
     lines += ["", f"QUESTION: {question}", "ANSWER:"]
     return "\n".join(lines)
 

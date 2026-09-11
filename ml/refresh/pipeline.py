@@ -18,8 +18,9 @@ from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 
-from refresh import features, inference, model_update, sources
+from refresh import features, inference, model_update, sources, verification
 from refresh.config import load_config
+from refresh.schedule import next_grid_due
 from refresh.state import RefreshState, refresh_lock
 
 
@@ -66,8 +67,11 @@ def run_forecast_cycle(*, cfg=None, state=None, dry_run: bool = False,
                          msg=f"{inf.get('forecasted', 0)} stations forecast",
                          forecasted=inf.get("forecasted"), skipped=inf.get("unchanged_skipped"))
 
+        if not dry_run and do_inference and inf.get("published"):
+            report["verification"] = verification.verify_forecasts()
+
         if not dry_run:
-            state.update(next_refresh_due=_iso(now + timedelta(hours=cfg.refresh_interval_hours)),
+            state.update(next_refresh_due=_iso(next_grid_due(cfg, now)),
                          last_forecast_refresh_ts=_iso(now))
         return report
 

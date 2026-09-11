@@ -11,16 +11,21 @@ bucket / fleet-global anchor), then publishes:
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
 
 import _trajectory as traj
-from refresh import publish
+from refresh import publish as pubmod
 from refresh.config import REFRESH_DIR
 from refresh.state import RefreshState, refresh_lock
 
 LAST_ANCHORS = REFRESH_DIR / "last_anchors.parquet"
+
+
+def _now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
 def _load_engine():
@@ -90,17 +95,17 @@ def refresh_forecasts(*, cfg, state: RefreshState, stations=None, max_stations: 
         import json
         cfgj = json.loads(tcfg.read_text()) if tcfg.exists() else {}
         model_version = cfgj.get("version") or str(cfgj.get("trained_at", ""))
-        meta = publish.publish_forecasts(
+        meta = pubmod.publish_forecasts(
             forecasts, engine="trajectory-v2", model_version=model_version,
             model_trained_at=cfgj.get("trained_at"), source_report=source_report,
             keep_staging=True)
-        publish.update_freshness(meta, cfg.stale_after_hours,
-                                 state.get("last_forecast_refresh_ts"))
+        pubmod.update_freshness(meta, cfg.stale_after_hours,
+                                state.get("last_forecast_refresh_ts"))
         # persist per-station anchor map (for skip-unchanged next cycle)
         anchors_df = pd.DataFrame({"Station": list(cur.index), "anchor_time": list(cur.values)})
-        publish.atomic_write_parquet(LAST_ANCHORS, anchors_df)
+        pubmod.atomic_write_parquet(LAST_ANCHORS, anchors_df)
 
-    state.update(last_forecast_refresh_ts=state.get("last_forecast_refresh_ts") or "now")
+    state.update(last_forecast_refresh_ts=_now_iso() if not state.get("last_forecast_refresh_ts") or state.get("last_forecast_refresh_ts") == "now" else state.get("last_forecast_refresh_ts"))
 
     return {
         "dry_run": dry_run,
@@ -116,7 +121,7 @@ def refresh_forecasts(*, cfg, state: RefreshState, stations=None, max_stations: 
 
 def status() -> dict:
     """Convenience summary for the CLI/UI without running anything."""
-    meta = publish.read_meta()
+    meta = pubmod.read_meta()
     anchors = current_anchors()
     return {
         "forecast_generation_ts": meta.get("forecast_generation_ts"),

@@ -35,9 +35,14 @@ CAPS: dict[str, tuple[float | None, float | None]] = {
 }
 
 # Per-station robust quantile trim (kills telemetry spikes/dry-well sentinels
-# without imposing a global datum).
+# without imposing a global datum). Low side trims dry-well sentinels; the high
+# side is relaxed to a physically-implausible bound so genuine monsoon-recharge
+# (shallow) readings survive instead of silently vanishing from the aligned set.
 STATION_TRIM_SOURCES = {"gwl"}
 TRIM_LOW, TRIM_HIGH = 0.005, 0.995
+# Mirror inverse-water-level datum: values shallower than this (i.e. water above
+# the well datum) are reading errors, not real recovery.
+GWL_HIGH_PLAUSIBLE_M = -0.1
 
 # Discharge resources carry gate-wise columns; we keep the single auto-detected
 # series (Gate-1). This is a known approximation (documented in README).
@@ -66,6 +71,7 @@ def clean(df: pd.DataFrame, lo: float | None, hi: float | None, name: str) -> tu
     if name in STATION_TRIM_SOURCES and len(df):
         lo_q = df.groupby("Station")["value"].quantile(TRIM_LOW).rename("lo")
         hi_q = df.groupby("Station")["value"].quantile(TRIM_HIGH).rename("hi")
+        hi_q = hi_q.clip(lower=GWL_HIGH_PLAUSIBLE_M)
         df = df.join(lo_q, on="Station").join(hi_q, on="Station")
         df = df[df["value"].between(df["lo"], df["hi"])]
         df = df.drop(columns=["lo", "hi"])

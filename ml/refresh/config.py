@@ -28,6 +28,7 @@ class ConfigError(ValueError):
 class RefreshConfig:
     # ---- cadences (independent) -------------------------------------------
     refresh_interval_hours: float = 6.0      # data + forecast every 6 h
+    refresh_at_hours: list[int] = field(default_factory=lambda: [1, 7, 13, 19])  # fixed local-time slots
     retrain_cadence_hours: float = 24.0      # model update independently configurable
     retrain_at_hours: list[int] = field(default_factory=lambda: [2, 14])  # allowed windows
     # ---- freshness / retry -------------------------------------------------
@@ -43,6 +44,13 @@ class RefreshConfig:
     backtest_stations: int = 60              # candidate/incumbent backtest sample (0 = all)
     anchor_spacing_days: int = 14
     coverage_target: float = 0.90
+    # memory budgets for the shared-box candidate build. The long-frame expands
+    # every station x horizon; without caps a 600-station retrain holds several
+    # GB of float rows and OOMs the box that also runs streamlit + the daemon.
+    # Rows are stride-sampled down to these budgets before parquet, so peak RAM
+    # stays bounded while the window/station spread is preserved.
+    candidate_train_row_cap: int = 1_200_000
+    candidate_val_row_cap: int = 300_000
     # ---- inference environment ---------------------------------------------
     feature_mode: str = "flat"               # "future" only after backtest-validated
     min_fresh_stations: int = 20

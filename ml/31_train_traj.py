@@ -37,7 +37,7 @@ EVAL_FRAC = 0.10      # time-ordered tail used for early stopping
 PARAMS = dict(
     max_depth=7, learning_rate=0.05, min_child_weight=60,
     subsample=0.9, colsample_bytree=0.8,
-    n_estimators=900, tree_method="hist", n_jobs=12, random_state=SEED,
+    n_estimators=900, tree_method="hist", max_bin=128, n_jobs=6, random_state=SEED,
 )
 EARLY = 25
 

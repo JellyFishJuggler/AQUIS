@@ -67,8 +67,24 @@ class TestAssistantFacts(unittest.TestCase):
     def test_facts_full_contract(self):
         facts = self.a.StationAssistant().facts(self.station)
         for k in ("drivers", "annual", "rain_recent", "district_context",
-                  "precautions", "district_median", "forecast"):
+                  "precautions", "district_median", "forecast", "fleet_recency"):
             self.assertIn(k, facts)
+
+    def test_fleet_recency_counts_consistent(self):
+        fr = self.a.StationAssistant().facts(self.station)["fleet_recency"]
+        self.assertTrue(fr.get("recent_dates"))
+        counts = list(fr["recent_dates"].values())
+        self.assertLessEqual(sum(counts), fr["stations_with_data"])
+        self.assertGreaterEqual(fr["stations_with_data"], 1)
+
+    def test_fleet_recency_prompt_contains_counts(self):
+        facts = self.a.StationAssistant().facts(self.station)
+        prompt = self.a._build_prompt(
+            "how many stations have their latest reading on 11 september?", facts)
+        self.assertIn("FLEET RECENT-UPDATE", prompt)
+        self.assertIn("stations whose latest reading is on", prompt)
+        top = list(facts["fleet_recency"]["recent_dates"].items())[0][0]
+        self.assertIn(top, prompt)
 
     def test_mention_routing_finds_explicit_station(self):
         other = next(s for s in self.a.station_names() if s != self.station)

@@ -31,6 +31,26 @@ FETCH_START = (pd.to_datetime(config.START) - pd.Timedelta(days=40)).strftime("%
 FETCH_END = (pd.to_datetime(config.END) + pd.Timedelta(days=1)).strftime("%Y-%m-%d")
 
 
+def _get_effective_end() -> str:
+    """End-of-window for re-extraction: prefer the newest timestamp actually
+    present in the refreshed archive so a hard-coded ``config.END`` never lops
+    off freshly fetched readings (the 6h refresh re-runs this script)."""
+    try:
+        if config.GWL_PARQUET.exists():
+            import pyarrow.parquet as pq
+            names = [n.lower() for n in pq.ParquetFile(config.GWL_PARQUET).schema.names]
+            tc = "Data Acquisition Time" if "data acquisition time" in names else "time"
+            ts = pd.to_datetime(
+                pq.ParquetFile(config.GWL_PARQUET).read(columns=[tc]).to_pandas()[tc],
+                errors="coerce")
+            max_ts = ts.max()
+            if max_ts is not None and pd.notna(max_ts):
+                return str(max_ts)
+    except Exception:  # noqa: BLE001 - never block extraction on a probe
+        pass
+    return config.END
+
+
 def fetch_district(resource_id: str, district: str,
                    *, limit: int = 5000, sleep: float = 0.25) -> list[dict]:
     session = requests.Session()
@@ -70,7 +90,7 @@ def extract_gwl() -> pd.DataFrame:
     df = df[df["Station"].isin(stations)].copy()
     df["time"] = pd.to_datetime(df["Data Acquisition Time"], errors="coerce")
     df = df.dropna(subset=["time"])
-    df = df[(df["time"] >= config.START) & (df["time"] <= config.END)]
+    df = df[(df["time"] >= config.START) & (df["time"] <= pd.to_datetime(_get_effective_end()))]
     df = df.rename(columns={config.GWL_FIELD: "value"})
     return df.sort_values(["Station", "time"])
 

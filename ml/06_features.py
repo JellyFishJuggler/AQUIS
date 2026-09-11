@@ -200,6 +200,9 @@ def build_full(tbl: pd.DataFrame, keep_na: bool = False,
     Returns (features, extra_num_cols) so train/test/val AND the app's
     forward-forecast share byte-identical columns.
     """
+    if "date" not in tbl.columns:
+        tbl = tbl.copy()
+        tbl["date"] = tbl["time"].dt.normalize()
     bad = set(flag_regime_shift(tbl))
     if bad:
         tbl = tbl[~tbl["Station"].isin(bad)]

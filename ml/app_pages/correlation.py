@@ -1,128 +1,61 @@
-from pathlib import Path
+"""Correlation page — correlation matrix + feature importance (same feature set)."""
 
 import pandas as pd
 import streamlit as st
 
-from _utils import load_report, load_lag_curves, nice
+from _model import load_importance
+from _utils import load_report, nice
 
 st.title("Correlation report")
 st.caption(
-    "Per-station Spearman/Pearson aggregated as the median across stations. "
-    "Three modes expose different artefacts: raw, deseasoned (DoY-removed) and "
-    "first-differenced (day-to-day change)."
+    "Two complementary views of the same feature set. The matrix correlates every "
+    "feature the forecast model uses against current groundwater level; the chart "
+    "shows how much each feature contributes inside the XGBoost model."
 )
 
-rep = load_report()
+rep = load_report().dropna(subset=["corr"])
+rep["series"] = rep["mode"] + " · " + rep["metric"]
 
-mode = st.segmented_control("Correlation mode", ["raw", "deseason", "diff"], default="raw")
-if not mode:
-    st.stop()
+raw_sp = rep[rep["series"] == "raw · spearman"].set_index("driver")
+order = raw_sp["corr"].abs().sort_values(ascending=False).index
 
-metric = st.segmented_control("Metric", ["spearman", "pearson"], default="spearman")
-if not metric:
-    st.stop()
+st.subheader("Feature correlation with groundwater level")
+st.caption(
+    "Median Spearman/Pearson across stations — raw drivers plus the engineered "
+    "features the model trains on (GWL lags and rolling stats, calendar cycles). "
+    "Ordinal station/district codes are kept out here; they only appear in the "
+    "model chart below."
+)
+raw = rep[rep["mode"] == "raw"].pivot_table(
+    index="driver", columns="metric", values="corr"
+).reindex(order)
+raw.index = raw.index.map(nice)
+st.dataframe(
+    raw.round(3),
+    hide_index=True,
+    column_config={
+        "spearman": st.column_config.NumberColumn("Spearman r", format="%.3f"),
+        "pearson": st.column_config.NumberColumn("Pearson r", format="%.3f"),
+    },
+    width="stretch",
+)
 
-sub = rep[(rep["mode"] == mode) & (rep["metric"] == metric)].copy()
-sub = sub.dropna(subset=["corr"])
-sub = sub.sort_values("corr", ascending=False)
-
-col1, col2 = st.columns([2, 3])
-with col1:
-    with st.container(border=True):
-        st.markdown(f"**{metric} · {mode}**")
-        st.dataframe(
-            sub[["driver", "corr", "stations_ok"]]
-            .rename(columns={"driver": "Driver", "corr": "Correlation", "stations_ok": "Stations"}),
-            hide_index=True,
-        )
-with col2:
-    chart = sub.copy()
-    chart["label"] = chart["driver"].map(nice)
-    st.bar_chart(chart, x="label", y="corr", color="#4ecca3")
-
-st.header("Recharge lag — GWL vs rainfall")
-lag = load_lag_curves()
-st.line_chart(lag, x="lag", y="pearson_med")
-best = lag.iloc[lag["pearson_med"].abs().idxmax()]
-st.success(f"Best rainfall recharge lag: **{int(best['lag'])} days** (median Pearson **{best['pearson_med']:+.3f}**)")
-
-with st.expander("Full report table", icon=":material/table_chart:"):
-    clean = rep.dropna(subset=["corr"]).sort_values(["driver", "metric", "mode"])
-    st.dataframe(
-        clean.rename(columns={
-            "driver": "Driver", "metric": "Metric", "mode": "Mode",
-            "corr": "Correlation", "stations_ok": "Stations"}),
-        hide_index=True,
-        height=420,
+with st.expander("Detrended views — level drivers only"):
+    st.caption(
+        "First-difference and de-seasonalised correlations isolate short-term "
+        "driver effects from the slow seasonal GWL cycle."
     )
+    det = rep[rep["mode"].isin(["diff", "deseason"])].pivot_table(
+        index="driver", columns=["mode", "metric"], values="corr"
+    )
+    det.index = det.index.map(nice)
+    st.dataframe(det.round(3), hide_index=True, width="stretch")
 
-st.header("Static features vs station groundwater")
-
-from _soil import load_soil
-from _utils import load_table
-
-tbl = load_table()
-if tbl.empty:
-    st.caption("No aligned table — cannot summarise per-station GWL.")
-else:
-    summ = tbl.groupby("Station")["gwl"].agg(["mean", "std", "median"]).reset_index()
-    soil = load_soil()
-    if soil.empty:
-        st.caption("Soil profiles not yet fetched.")
-    else:
-        m = summ.merge(soil[["Station", "District", "sand_0_30", "silt_0_30", "clay_0_30",
-                             "bdod_0_30", "sand_60_100", "silt_60_100", "clay_60_100"]],
-                       on="Station", how="inner")
-        rows = []
-        for col in ["sand_0_30", "silt_0_30", "clay_0_30", "bdod_0_30",
-                    "sand_60_100", "silt_60_100", "clay_60_100"]:
-            r = m[[col, "mean", "std"]].dropna()
-            if len(r) >= 10:
-                rows.append({
-                    "feature": col, "n": len(r),
-                    "corr_vs_mean_gwl": r[col].corr(r["mean"], method="spearman"),
-                    "corr_vs_spread_gwl": r[col].corr(r["std"], method="spearman"),
-                })
-        soil_corr = pd.DataFrame(rows).sort_values("corr_vs_mean_gwl", key=abs, ascending=False)
-        st.markdown("**Soil texture vs station-level GWL** (mean depth & variability, Spearman, n stations)")
-        c1, c2 = st.columns([1, 2])
-        with c1:
-            st.dataframe(soil_corr.rename(columns={
-                "feature": "Soil feature", "n": "Stations",
-                "corr_vs_mean_gwl": "ρ vs mean GWL", "corr_vs_spread_gwl": "ρ vs GWL spread"}),
-                hide_index=True, use_container_width=True)
-        with c2:
-            if not soil_corr.empty:
-                top = soil_corr.reindex(soil_corr["corr_vs_mean_gwl"].abs().sort_values(
-                    ascending=False).index).head(8)
-                import altair as alt
-                chart = top.copy()
-                chart["label"] = chart["feature"]
-                st.altair_chart(alt.Chart(chart).mark_bar(color="#4ecca3").encode(
-                    x=alt.X("corr_vs_mean_gwl:Q", title="ρ vs mean GWL"),
-                    y=alt.Y("label:N", title=None, sort="-x"),
-                    tooltip=["feature", "corr_vs_mean_gwl", "corr_vs_spread_gwl", "n"],
-                ).properties(height=240), use_container_width=True)
-        st.caption("Static texture is mapped for " +
-                   f"**{m.Station.nunique():,} stations**. Same 'exploratory' caveat as LULC — "
-                   "it is not fed to the model.")
-
-        lulc = pd.read_csv(Path(__file__).resolve().parent.parent / "outputs" / "correlation_lulc.csv") \
-            if Path(__file__).resolve().parent.parent.joinpath("outputs", "correlation_lulc.csv").exists() \
-            else pd.DataFrame()
-        if not lulc.empty:
-            lc = lulc.reindex(lulc["pearson_r"].abs().sort_values(ascending=False).index)
-            st.markdown("**LULC class share vs district GWL** (Pearson, exploratory)")
-            lc1, lc2 = st.columns([1, 2])
-            with lc1:
-                st.dataframe(lc.rename(columns={
-                    "lulc_feature": "LULC class", "pearson_r": "r vs district GWL",
-                    "districts": "Districts", "gwl_metric": "GWL metric"}),
-                    hide_index=True, use_container_width=True)
-            with lc2:
-                topc = lc.head(8)
-                st.altair_chart(alt.Chart(topc).mark_bar(color="#e67676").encode(
-                    x=alt.X("pearson_r:Q", title="r vs district GWL"),
-                    y=alt.Y("lulc_feature:N", title=None, sort="-x"),
-                    tooltip=["lulc_feature", "pearson_r", "districts"],
-                ).properties(height=240), use_container_width=True)
+st.subheader("Model feature importance")
+st.caption(
+    "XGBoost gain on the 30-day forecast target — top 15 of the same features "
+    "listed above (station / district are ordinal codes)."
+)
+imp = load_importance().sort_values("gain", ascending=False).head(15)
+imp["label"] = imp["feature"].map(lambda f: nice(f) if pd.notna(f) else "(overall)")
+st.bar_chart(imp, x="label", y="gain", color="#4ecca3")

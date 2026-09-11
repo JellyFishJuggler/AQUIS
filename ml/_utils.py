@@ -33,6 +33,30 @@ DRIVER_LABELS = {
     "pressure": "Atmospheric pressure",
     "river_level": "River water level",
     "canal_level": "Canal water level",
+    # engineered model features (6-hourly grid)
+    "gwl": "GWL (current)",
+    "lag1": "GWL lag 6h",
+    "lag4": "GWL lag 1d",
+    "lag8": "GWL lag 2d",
+    "lag28": "GWL lag 7d",
+    "lag120": "GWL lag 30d",
+    "gwl_roll7_mean": "GWL 7d mean",
+    "gwl_roll7_std": "GWL 7d spread",
+    "gwl_roll30_mean": "GWL 30d mean",
+    "gwl_roll30_std": "GWL 30d spread",
+    "temp_7d": "Temp 7d mean",
+    "humidity_7d": "Humidity 7d mean",
+    "year": "Year",
+    "month_sin": "Month (sin)",
+    "month_cos": "Month (cos)",
+    "doy_sin": "Day-of-year (sin)",
+    "doy_cos": "Day-of-year (cos)",
+    "hour_sin": "Hour (sin)",
+    "hour_cos": "Hour (cos)",
+    "monsoon": "Monsoon season",
+    # ordinal encodings (model inputs, not hydrologically meaningful)
+    "st_id": "Station (ordinal)",
+    "dist_id": "District (ordinal)",
 }
 
 SOURCE_LABELS = {
