@@ -79,18 +79,22 @@ Physically consistent with monsoon recharge delay.
 
 ## Visualisation app
 
-Streamlit explorer in `app.py` (8 pages). Run:
+Streamlit explorer in `app.py` (4 pages). Run:
 
 ```bash
 venv/bin/streamlit run app.py
 ```
 
-Pages: Overview (KPIs + ranked drivers) · Correlation (mode/metric pickers + recharge-lag
-curve) · Drivers (per-station driver overlay vs GWL) · Stations (district filter, coverage,
-top-series) · **Model (metrics by horizon, RMSE bars, importances)** ·
-**Forecast (2026 backtest curves + forward forecast from latest data)** ·
-**Assistant (station-locked NL chat, llama3.2:3b via local Ollama — see below)** ·
+Pages: **Assistant (station-locked NL chat, llama3.2:3b via local Ollama — default)** ·
+Correlation (mode/metric pickers + recharge-lag curve) ·
+**Forecast (single dark-theme trajectory v2 card)** ·
 Sources (manifest quality + association method + soil/extraction status).
+
+> Older explorer pages (Overview, Drivers, Stations, Model, Fleet) still exist in
+> `app_pages/` but are **no longer in the navigation** (`app.py` uses `st.navigation`);
+> their code is covered by the Streamlit guide. The **Verification** page
+> (`app_pages/verification.py`) reads the refresh pipeline's realised-forecast scores —
+> wire it into `app.py` when you want it in the nav.
 
 ### Assistant page (Ollama, local)
 
@@ -174,11 +178,38 @@ full results: [`../docs/ml-trajectory-v2-spec.md`](../docs/ml-trajectory-v2-spec
 - **Forward drivers are forecasts, not observations:** Open-Meteo days 1–16, climatology
   beyond, CWC river forecast where the district is covered (`refresh/future_drivers.py`).
 - **Forecast UI:** single dark-theme card — "Forecast starts" boundary marker, observed tail,
-  q50 + q05/q95 band, confidence dots, 6 metrics (anchor/+24h/+7d/+30d/change/confidence),
-  collapsed 120-point table, direction banner, **Snapshot** PNG export (`snapshot.py`).
+  q50 + q05/q95 bright uncertainty band (no dot markers), direction banner, 6 metrics
+  (anchor/+24h/+7d/+30d/change/confidence).
   The page references only the trajectory forecast.
 - **Gate:** `gate_check.py` now 12 checks — frozen round-1 baselines + trajectory promotion
   and `+30 d` calibrated coverage = 0.90.
+
+## Refresh pipeline (`refresh/`)
+
+The production-facing near-real-time loop. A systemd daemon
+(`python -m refresh.cli schedule`) polls on a **fixed 6-hourly wall-clock grid**
+(01:00 / 07:00 / 13:00 / 19:00 IST — `refresh/schedule.py`, `refresh_at_hours`
+in `refresh_config.json`) and runs fetch → feature/align → inference → publish,
+re-arming ~24 h model updates:
+
+| Module | Responsibility |
+|---|---|
+| `refresh/config.py` | paths + `refresh_config.json` (intervals, grid hours, gates) |
+| `refresh/state.py` | `state.json` atomic writes (PID-unique tmp + `os.replace`), corrupt auto-re-arm, journal `journal.jsonl`, refresh lock |
+| `refresh/schedule.py` | `next_grid_due()` — next fixed local-time slot (with rolling-interval fallback) |
+| `refresh/sources.py` | NWIC incremental fetch (`13_refresh_nwic`, per-station max), Open-Meteo, CWC |
+| `refresh/features.py` | align chain + climatology rebuild, backup/restore guarded |
+| `refresh/inference.py` | per-station `_trajectory.trajectory_forecast` for changed anchors, publish-or-abort gate |
+| `refresh/publish.py` | staged per-station JSON + `forecasts.parquet` + `meta.json` last (commit point), freshness verdict (`data_status` fresh/stale/unknown) |
+| `refresh/model_update.py` | drift-gated retrain (trajectory v2 + reliability) — 24 h cadence, memory-bounded |
+| `refresh/verification.py` | score archived anchors against realised readings, sign-accuracy ledger + drift detection |
+| `refresh/cli.py` | `refresh.cli fetch|forecast|schedule|status|verify` |
+
+Runtime state lives in `data/refresh/` (git-ignored): `state.json`,
+`journal.jsonl`, `forecasts/`, `forecast_archive/`, `refresh_config.json`.
+
+The **Verification** page (`app_pages/verification.py`) reads
+`data/refresh/verification_summary.json` + the sign-accuracy ledger.
 
 ## Outputs
 
@@ -220,8 +251,8 @@ full results: [`../docs/ml-trajectory-v2-spec.md`](../docs/ml-trajectory-v2-spec
 * `MODEL_CARD.md` — lifecycle card for the pooled model (features, training, honest
   performance, limitations)
 * `tests/` — forecast-validation suite (stdlib `unittest`, data-gated, no pytest):
-  `python -m unittest discover -s tests -v` (130 tests; the Forecast-page AppTest is
-  gated behind `AQUIS_APPTEST=1`)
+  `python -m unittest discover -s tests -v` (138 tests + 2 skipped; the Forecast-page
+  AppTest is gated behind `AQUIS_APPTEST=1`)
 * `data/meta/` — association CSVs, manifest, probe results, per-station flags
 * `outputs/traj_backtest_metrics.csv` + `traj_backtest_summary.json` — trajectory v2
   honest 2026 backtest (full-fleet, non-overlap) + per-horizon calibration
@@ -273,18 +304,16 @@ full results: [`../docs/ml-trajectory-v2-spec.md`](../docs/ml-trajectory-v2-spec
     leak-free *trailing* district-day climatology of observed NWIC rainfall summed
     over the next 30 days. Offline ablation (2026 test, XGB 30 d): **2.242 → 2.226 m**
     (+2.8% vs +2.1% over persistence) — small but real, so the feature stays
-    available behind the gate. CFSv2 seasonal-lite fetch is staged in `09_cfs_rain.py`
-    (NCEI 6h-FLX, quarterly runs 2021–2025, ~2.4 GB). Paused: NCEI gridded services
-    (NCSS/OPeNDAP) returned S3-403 and IRI/NMME became login-gated; raw per-step GRIB
-    downloads (≈4 MB/file) are the working path — and since the aligned table starts
-    2021-01-01, a CFS history fetch would cover **every** training row (no climo-fill).
+    available behind the gate. The CFSv2 seasonal-lite fetch (`09_cfs_rain.py`) has
+    been **removed** — NCEI gridded services returned S3-403 and Open-Meteo replaced
+    the driver feed.
 11. **Trajectory v2** — **shipped** (see [Trajectory v2](#trajectory-v2)): the Forecast
-    page now presents the genuine 120-step trajectory with confidence + Snapshot export.
-    Outstanding: (a) the refresh pipeline still runs in `feature_mode: "flat"` /
-    `model_version: null` — promote the trajectory build via a wet refresh so
-    `runtime.json` reports it; (b) run a full wet refresh to regenerate
-    `driver_climatology.*` from the latest archive; (c) revisit sub-daily
-    DIRECTIONAL-only reads if a denser objective (e.g., pumpage) ever arrives.
+    page presents the genuine 120-step trajectory with evidence-based confidence.
+    The **refresh daemon** now runs the full fetch→inference→publish cycle on a fixed
+    6-hourly grid and publishes `data/refresh/forecasts/` + `meta.json` (freshness UI
+    reads the verdict). Outstanding: (a) promote the trajectory build via a wet refresh
+    so `runtime.json` reports `model_version` (feature_mode is `"flat"`); (b) revisit
+    sub-daily DIRECTIONAL-only reads if a denser objective (e.g., pumpage) ever arrives.
 
 ## Important technical decisions
 

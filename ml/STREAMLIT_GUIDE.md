@@ -1,9 +1,15 @@
 # AQUIS dashboard — Streamlit component guide
 
 Every Streamlit widget in the AQUIS groundwater dashboard, explained at the
-same depth as the Correlation page below. The app is a 9-page multi-page
-Streamlit app under `ml/`; every page is a plain script that runs top-to-bottom
-on each rerun.
+same depth as the Correlation page below. The app is a multi-page Streamlit
+app under `ml/`; every page is a plain script that runs top-to-bottom on each
+rerun.
+
+**Live navigation (4 pages):** Assistant (default) · Correlation · Forecast ·
+Sources — declared in `app.py` via `st.navigation`. The older explorer pages
+(Overview, Drivers, Stations, Model, Fleet) still exist under `app_pages/` and
+are documented below but are **not wired into the nav**; the **Verification**
+page (`app_pages/verification.py`) reads the refresh pipeline's realisations.
 
 **Run it:** `cd ml && streamlit run app.py` (opinionated dark theme is in
 `ml/.streamlit/config.toml`).
@@ -19,15 +25,16 @@ value up, "declining" = value down.
 1. Application entry (`app.py`)
 2. Theme (`.streamlit/config.toml`)
 3. Page-by-page, widget-by-widget
-   - 3.1 Overview
-   - 3.2 Correlation (the "depth template")
-   - 3.3 Drivers
-   - 3.4 Stations (Station explorer)
-   - 3.5 Model
-   - 3.6 Forecast (trajectory v2)
-   - 3.7 Fleet
-   - 3.8 Assistant
-   - 3.9 Sources
+   - 3.1 Overview (deactivated)
+   - 3.2 Correlation (active — the "depth template")
+   - 3.3 Drivers (deactivated)
+   - 3.4 Stations / Station explorer (deactivated)
+   - 3.5 Model (deactivated)
+   - 3.6 Forecast (active — trajectory v2)
+   - 3.7 Fleet (deactivated)
+   - 3.8 Assistant (active — default page)
+   - 3.9 Sources (active)
+   - 3.10 Verification (deactivated)
 4. Cross-page component reference
 5. Under the hood (data loaders, labels, outputs)
 
@@ -58,17 +65,18 @@ page.run()
   this list = order in the sidebar. `page.run()` renders the currently selected
   page.
 
-| # | Page file                | Title        | Icon                          |
-|---|--------------------------|--------------|-------------------------------|
-| 1 | `app_pages/overview.py`          | Overview    | `:material/home:`             |
-| 2 | `app_pages/correlation.py`       | Correlation | `:material/query_stats:`      |
-| 3 | `app_pages/drivers.py`           | Drivers     | `:material/science:`          |
-| 4 | `app_pages/station_explorer.py`  | Stations    | `:material/monitoring:`       |
-| 5 | `app_pages/model.py`             | Model       | `:material/model_training:`   |
-| 6 | `app_pages/forecast.py`          | Forecast    | `:material/troubleshoot:`     |
-| 7 | `app_pages/fleet.py`             | Fleet       | `:material/query_stats:`      |
-| 8 | `app_pages/assistant.py`         | Assistant   | `:material/smart_toy:`        |
-| 9 | `app_pages/data_sources.py`      | Sources     | `:material/database:`         |
+| # | Page file                | Title        | Icon                          | In nav |
+|---|--------------------------|--------------|-------------------------------|--------|
+| 1 | `app_pages/assistant.py`         | Assistant   | `:material/smart_toy:`        | ✅ (default) |
+| 2 | `app_pages/correlation.py`       | Correlation | `:material/query_stats:`      | ✅ |
+| 3 | `app_pages/forecast.py`          | Forecast    | `:material/troubleshoot:`     | ✅ |
+| 4 | `app_pages/data_sources.py`      | Sources     | `:material/database:`         | ✅ |
+| — | `app_pages/overview.py`          | Overview    | `:material/home:`             | off |
+| — | `app_pages/drivers.py`           | Drivers     | `:material/science:`          | off |
+| — | `app_pages/station_explorer.py`  | Stations    | `:material/monitoring:`       | off |
+| — | `app_pages/model.py`             | Model       | `:material/model_training:`   | off |
+| — | `app_pages/fleet.py`             | Fleet       | `:material/query_stats:`      | off |
+| — | `app_pages/verification.py`      | Verification| `:material/verified:`         | off |
 
 ---
 
@@ -251,15 +259,11 @@ This is the *only* forecast shown here.
 | `st.caption` | "Latest reading: **…** — the forecast anchor" | Reads `station_recency()` for the anchor timestamp. |
 | `st.caption` ×2 | refresh-pipeline freshness | `refresh.publish.freshness_for(station)`: 🟢/🟠/⚪ data status, forecast-generated time, model version, anchor, staleness reason. Wrapped in `try/except` — **decorative, never breaks the page**. |
 | `st.container(border=True)` | the whole trajectory card | Single bordered container holds everything below (the rounded-corner card). |
-| `st.columns([3,1])` | header + Snapshot column | [3,1] split: left = `st.markdown("#### 30-day groundwater outlook")` + caption (anchor↦forecast range); right holds the export button. |
-| `st.download_button` | `st.download_button("Snapshot", data=png, file_name=f"AQUIS_{station}_forecast_30d.png", mime="image/png", width="stretch", help=…)` | **File download button.** `data` = PNG bytes from `snapshot.trajectory_snapshot_png()` (matplotlib, dark theme, cached `1h` per station+version). Clients save the card as an image. Tooltip via `help=`. |
-| `st.markdown` | manual **compact legend** HTML | Recreates the chart legend by hand (observed line, q50 line, 90% band, HIGH/DIRECTIONAL/LOW dots) because the Altair chart hides its official legend for a cleaner card. |
-| `st.altair_chart` | `trajectory_chart(pts, tail, anchor_t, height=480)`, `width="stretch"` | The card's centerpiece (`app_charts.py`): observed tail (grey) → anchor rule **"Forecast starts"** → 120-point q50 line (teal) with a translucent q05–q95 band + per-point confidence dots. X-domain = anchor−15 d → +30 d. |
+| `st.markdown` + `st.caption` | header | `"#### 30-day groundwater outlook"` + caption (120 points · anchor ↦ forecast range). |
+| `st.markdown` | manual **compact legend** HTML | Recreates the chart legend by hand (observed line, q50 line, bright 90% band, q05·q95 edges) because the Altair chart hides its official legend for a cleaner card. |
+| `st.altair_chart` | `trajectory_chart(pts, tail, anchor_t, height=480)`, `width="stretch"` | The card's centerpiece (`app_charts.py`): observed tail (grey, dashed) → anchor rule **"Forecast starts"** → 120-point q50 line (teal, wide) with a **bright q05–q95 band** (`COL_BAND`, 30% opacity) + bright edge lines (`COL_QEDGE`), continuous lines — **no dot markers**. X-domain = anchor−15 d → +30 d. |
 | `st.markdown` | direction banner | Big ↑ / ↓ / → glyph + "Rising/Falling/Stable" + q50 change over 30 d (+ sign-accuracy when available), coloured per `DIR_GLYPH`. |
 | `st.columns(6)` + `st.metric` ×6 | metric strip | **Anchor GWL (observed)** (never predicted), **+24 h**, **+7 d**, **+30 d** (the genuine 120th point, delta = change), **30 d change** (q50 at +30 d − anchor, delta = sign-accuracy), **Confidence** (label from `CONF_STYLE`; tooltip = reason + guidance). |
-| `st.expander` + `st.markdown` + `st.caption` | "Future drivers" | Lists which driver sources are active for this horizon: Open-Meteo days 1–16, CWC river forecast (this district), Climatology beyond 16 d, Persistence final fallback. Adds a warning caption when a source is unavailable part-way. |
-| `st.expander` + `st.dataframe` | "120-point forecast table" | Full `time, q05, q50, q95, confidence_level, driver_source` × 120 rows, `width="stretch"`. |
-| `st.expander` + `st.caption` + `st.json` | "Confidence & reliability details" | Per-point confidence histogram caption (N HIGH / N DIRECTIONAL / N LOW), then `st.json` of the raw evidence dict — anchor, trajectory_30d, direction, overall_confidence, station integrity, anchor-out-of-range, oscillation, recency days, recent-90% coverage. |
 | `st.warning` ×2 | trajectory failure paths | "Trajectory engine unavailable: {e}" or the backend's `error` string — the page degrades to a warning instead of crashing. |
 
 **Caching (visible behaviour):** `_trajectory_cached(station, version)` caches the
@@ -328,6 +332,22 @@ Goal: per-source quality summary for the selected 29-district / 600-station set.
 | `st.expander` + `st.dataframe` | "Association link counts" | Counts well↔gauge links per driver from `meta/assoc_*.csv`. |
 | `st.caption` | "All values from `ml/data/`. Nothing here is committed or production." | Footer honesty note. |
 
+### 3.10 Verification — `app_pages/verification.py` (deactivated)
+
+Goal: realised-forecast quality. Reads `refresh/verification.py`'s
+`data/refresh/verification_summary.json` + the sign-accuracy ledger — archived
+forecasts scored against readings that have since materialised.
+
+| Element | Code | What it is / does |
+|---|---|---|
+| `st.title` / `st.caption` | "Forecast verification" | Heading + description of archive/realised scoring. |
+| `st.info` | no-summary guard | "No verification summary yet — it appears after forecast cycles…" |
+| `st.columns` + `st.metric` ×5 | KPI strip | `Ledger rows`, 24 h / 7 d / 30 d `Sign accuracy` (with `delta`), RMSE, coverage vs 90% target — each `border=True`. |
+| `st.subheader` + `st.dataframe` | "Windows (rolling)" | Per-window RMSE/sign-accuracy rows from `windows`; caption when nothing is scored yet. |
+| `st.subheader` + `st.dataframe` | "Ledger sample" | Latest 200 ledger rows (`target_time` desc), `width="stretch"`, `hide_index=True`. |
+
+Not wired into `app.py` nav — add an `st.Page("app_pages/verification.py", …)` to enable it.
+
 ---
 
 ## 4. Cross-page component reference
@@ -338,7 +358,7 @@ does — the quick lookup table.
 | Component | Where used | Purpose |
 |---|---|---|
 | `st.set_page_config` | app entry + Model / Forecast / Fleet / Assistant pages | Global options (title, material icon, wide layout). |
-| `st.navigation` + `st.Page` | `app.py` | Declares the 9-page sidebar structure; `page.run()` renders the active page. |
+| `st.navigation` + `st.Page` | `app.py` | Declares the sidebar structure (4 active pages + optional ones when wired); `page.run()` renders the active page. |
 | `st.title` | every page | Page heading. |
 | `st.header` | Correlation, Sources | Section heading (level 2). |
 | `st.subheader` | Stations, Model, Fleet | Block heading (level 3). |
@@ -392,21 +412,23 @@ does — the quick lookup table.
 ### Supporting modules
 
 - `ml/app_charts.py` — `trajectory_chart()`, colour constants
-  (`COL_OBSERVED`, `COL_TRAJECTORY`, `CONF_COLORS`, `CONF_ORDER`) shared by the
-  Forecast page and the Snapshot export.
+  (`COL_OBSERVED`, `COL_TRAJECTORY`, `COL_BAND`, `COL_QEDGE`) shared by the
+  Forecast page; `snapshot.py` reuses the same palette for its PNG export
+  (kept for the export tests).
 - `ml/snapshot.py` — `trajectory_snapshot_png()`: matplotlib (Agg) render of the
-  forecast card for the PNG download.
+  forecast card; no longer wired to a button on the Forecast page (exercised by tests).
 - `ml/_model.py` — model-page loaders (`load_model_metrics`,
   `load_honest_metrics`, `load_spatial_cv_metrics`, `load_importance`,
   `load_coefficients`, `load_ablation`, `load_diagnostics`, `load_predictions`,
   fleet loaders…).
 - `ml/_trajectory.py` — `trajectory_forecast(station)` — the multi-horizon
-  engine behind `outputs/predictions.csv` and the Forecast card.
+  engine behind the Forecast card and `/forecast/<slug>`.
 - `ml/_assistant.py` — `StationAssistant` (facts + Ollama phrasing),
   `ollama_status`, station/district name lists.
 - `ml/_soil.py`, `ml/_lulc.py` — static ISRIC soil + ISRO Bhuvan LULC loaders.
-- `ml/refresh/` — publish/freshness markers and future-driver (CWC, Open-Meteo)
-  access used only cosmetically by the Forecast page.
+- `ml/refresh/` — the 6-hourly daemon: `publish.freshness_for()` (nav-level
+  freshness caption), `verification.py` (Verification page), `future_drivers.py`
+  (CWC, Open-Meteo) used by the trajectory engine.
 
 ### Key outputs read by the app
 

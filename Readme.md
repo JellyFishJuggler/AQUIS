@@ -18,11 +18,15 @@ docs/              Documentation
 **Data flow:**
 NWDP Telemetry API + Assessment Excel files → PostgreSQL → Statistical Analysis + ML → Express APIs → Frontend
 
-The **ML module (`ml/`)** is the forecasting/analytics engine. It consumes a cleaned 6-hourly telemetry archive, trains one **pooled (global) XGBoost** model over 600 Uttar Pradesh groundwater stations, calibrates q05/q50/q95 quantile forecasts into 90% prediction intervals, scans the whole fleet for 30-day moves, and exposes an 8-page **Streamlit dashboard** (`ml/app.py`, port 8501).
+The **ML module (`ml/`)** is the forecasting/analytics engine. It consumes a cleaned 6-hourly telemetry archive, trains one **pooled (global) XGBoost** model over 600 Uttar Pradesh groundwater stations, calibrates q05/q50/q95 quantile forecasts into 90% prediction intervals, scans the whole fleet for 30-day moves, and exposes a **4-page Streamlit dashboard** (`ml/app.py`, port 8501).
 
-The forecast surface is a dedicated **trajectory v2** engine (`ml/_trajectory.py`): a genuine **120-step, 6-hourly, 30-day** forecast per station (no interpolation — one real model output per 6 h step), with per-horizon q05/q50/q95 and an **evidence-based confidence label** (HIGH / DIRECTIONAL / LOW). Drivers ahead of the anchor are legitimate forecasts — **Open-Meteo** weather (days 1–16) with climatology beyond, and **CWC 3-day river forecasts** where the district is covered. The Forecast page renders this as a single dark-theme dashboard card with a Snapshot PNG export.
+The forecast surface is a dedicated **trajectory v2** engine (`ml/_trajectory.py`): a genuine **120-step, 6-hourly, 30-day** forecast per station (no interpolation — one real model output per 6 h step), with per-horizon q05/q50/q95 and an **evidence-based confidence label** (HIGH / DIRECTIONAL / LOW). Drivers ahead of the anchor are legitimate forecasts — **Open-Meteo** weather (days 1–16) with climatology beyond, and **CWC 3-day river forecasts** where the district is covered. The Forecast page renders this as a single dark-theme dashboard card (bright q05/q95 band, no dot markers).
 
-> A headless **Flask HTTP API** that the Node gateway (`ML_SERVICE_URL` → `http://localhost:5000`) would proxy under `/ml/*` is **planned but not yet merged** — see `merge_later` and `docs/api.md`. Currently the backend's `/ml/*` routes have no live Python service backing them; run the Streamlit app below for the current analysis surface.
+A **near-real-time refresh daemon** (`ml/refresh/`) keeps forecast surfaces current: it runs fetch → align → inference → publish on a fixed 6-hourly wall-clock grid (01:00 / 07:00 / 13:00 / 19:00 IST), writes per-station forecasts + `meta.json`, and scores realised readings (verification + drift gating).
+
+> A headless **Flask HTTP API** (`ml/api.py`) runs alongside the Streamlit dashboard —
+> root `/` lists endpoints, `/health`, `/stations`, `/forecast/<slug>`, `/assistant/chat`.
+> The Node gateway can proxy it via `ML_SERVICE_URL` (`http://localhost:5000`).
 
 ---
 
@@ -83,35 +87,37 @@ npm run dev                 # Start Next.js at http://localhost:3000
 
 ```
 ml/
-├─ app.py                        # Streamlit dashboard (8 pages)
-├─ app_pages/                    # page scripts (overview, correlation, drivers, stations,
-│                                #   model, forecast, assistant, sources/fleet)
+├─ app.py                        # Streamlit dashboard (4 pages: Assistant, Correlation,
+│                                #   Forecast, Sources; older pages exist but are not wired)
+├─ app_pages/                    # page scripts (assistant, correlation, forecast,
+│                                #   data_sources, verification + deactivated: overview,
+│                                #   drivers, stations, model, fleet)
 ├─ app_charts.py                 # dark-theme Altair helpers for the forecast chart
-├─ snapshot.py                   # matplotlib PNG export of the forecast card (Snapshot)
 ├─ config.py                     # sources, resource IDs, radii, coverage rules, paths
-├─ 00_probe.py … 13_refresh_nwic.py   # classic pooled pipeline (see below)
+├─ 00_probe.py … 13_refresh_nwic.py   # classic pooled pipeline
+├─ 14_6h_features.py             # causal 6h feature frames (used by 30_traj_datasets)
 ├─ 16_future_drivers.py          # driver-climatology refresh + future-driver bridge
 ├─ 18_cwc_river_forecast.py      # CWC 3-day river-forecast fetch (per district)
 ├─ 20_openmeteo_fetch.py         # Open-Meteo daily weather (365d history + 16d forecast)
 ├─ 30_traj_datasets.py … 33_traj_reliability.py   # trajectory v2 train/backtest/reliability
 ├─ _model.py _trajectory.py _assistant.py _utils.py _soil.py _lulc.py  # shared libs
-├─ refresh/                      # refresh pipeline (config, features, inference,
-│                                #   model_update, publish, scheduler, state, CLI)
-├─ validation/                   # P0 honesty suite (spatial CV, overlap, residual ACF)
+├─ api.py                        # Flask HTTP API (JSON; /health, /stations, /forecast/<slug>, /assistant/chat)
+├─ snapshot.py                   # matplotlib PNG export (used by Snapshot tests only)
+├─ refresh/                      # refresh pipeline: config, features, inference,
+│                                #   model_update, publish, schedule, scheduler, state, verification, CLI
 ├─ data/
 │  ├─ processed/common.parquet   # cleaned 6-hourly GWL archive 2021→2026 (source of truth)
-│  ├─ selected/ gwl_selected.csv # per-source selected-district pulls
-│  ├─ raw/          *_norm.parquet (cleaned standardised), nwic.py (NWIC client)
-│  ├─ aligned/      table.parquet (daily) + table_6h.parquet (6h grid, 2.99M rows)
+│  ├─ aligned/      table.parquet (daily) + table_6h.parquet (6h grid, ~3M rows)
 │  ├─ cfs/          openmeteo_weather_daily.parquet + river_forecast_cwc.parquet
-│  └─ meta/         associations, manifest, probe, station flags
-├─ models/                      # joblib + feature_config.json + quantile_calibration.json
-│                               #   + model_metadata.json + traj_*.json (trajectory v2)
-├─ outputs/                     # correlation, benchmark, honest metrics, fleet, diagnostics,
-│                               #   traj_backtest_{metrics.csv,summary.json}
+│  ├─ meta/         associations, manifest, probe, station flags, climatology
+│  ├─ features_6h/  train/val/test parquet (causal 6h feature frames; built by 14_6h_features)
+│  └─ soil/         ISRIC SoilGrids + ISRO LULC (one-off fetch)
+├─ models/                      # joblib (pooled) + traj_*.json (trajectory v2)
+├─ outputs/                     # correlation, benchmark, honest metrics, fleet, diagnostics
 ├─ tests/                       # stdlib unittest suite (no pytest dependency)
 ├─ MODEL_CARD.md                # lifecycle card for the pooled model
-└─ gate_check.py                # regression gate: 12 checks (frozen baselines + trajectory)
+├─ STREAMLIT_GUIDE.md           # page-by-page widget-level reference
+└─ gate_check.py                # regression gate (frozen baselines + trajectory)
 ```
 
 ### Pipeline (run in order, each step from `ml/`)
@@ -128,12 +134,12 @@ ml/
 07_evaluate.py        4-way benchmark (XGB / Ridge / persistence / climatology) + honest re-score
 07_soil.py            ISRIC SoilGrids per-station texture (background fetch)
 08_lulc.py            ISRO Bhuvan LULC 50K district stats
-09_cfs_rain.py        CFSv2 seasonal-rain fetch (optional, staged)
 10_ablate.py          drop-group ablation sweep
 11_quantile.py        pooled q05/q50/q95 + empirical coverage calibration
 11_fleet.py           whole-fleet 30-day forecast scan + recovery snapshot
 12_diagnostics.py     VIF + permutation importance + OAT sensitivity
 13_refresh_nwic.py    incremental NWIC refresh (+ optional retrain / deploy sync)
+14_6h_features.py     causal 6h feature frames (used by 30_traj_datasets for traj v2)
 16_future_drivers.py  driver-climatology refresh + future-driver bridge
 18_cwc_river_forecast.py  CWC 3-day river forecast fetch (per district, resume-safe)
 20_openmeteo_fetch.py     Open-Meteo daily weather: 365d history + 16d forecast
@@ -167,7 +173,7 @@ A separate **direct multi-horizon shared XGBoost** on the 6 h grid: horizon `h �
 - **Forward drivers (forecasts, never future observations):** Open-Meteo weather → days 1–16 (past-window features only); beyond 16 d the backend falls back to climatology; CWC 3-day river forecasts bridge the near horizon where the district is covered. A missing driver **downgrades** confidence at those horizons.
 - **Honest 2026 backtest (full fleet, 73,881 non-overlap windows):** 30-day RMSE **trajectory 2.106 m < production direct-30d 2.132 m < persistence 2.151 m** → trajectory **promoted** (`promote_trajectory = True`). Calibrated to **90% coverage at every horizon** (widening `s ∈ [0.80, 1.28]`).
 - **Confidence framework:** per-point label from **weighted evidence** (interval quality, vs-persistence, direction, width, station integrity, driver availability, anchor OOD, stability) — not interval width alone. Anchor = latest observed reading, never predicted; `q05 ≤ q50 ≤ q95` at every step.
-- **Forecast page:** single dark-theme card — one "Forecast starts" boundary, observed tail, q50 + q05/q95 band, per-horizon confidence dots, 6 metric cards (+24h/+7d/+30d/change/confidence), collapsed 120-point table, direction banner, Snapshot PNG export. The card intentionally references only the trajectory forecast.
+- **Forecast page:** single dark-theme card — one "Forecast starts" boundary, observed tail, q50 + a bright q05/q95 band (no dot markers), 6 metric cards (+24h/+7d/+30d/change/confidence), direction banner. The card intentionally references only the trajectory forecast.
 
 ### Head-to-head (30-day, 2026 held-out, 6h grid)
 | Model | Level RMSE (m) | Notes |
@@ -182,12 +188,14 @@ A separate **direct multi-horizon shared XGBoost** on the 6 h grid: horizon `h �
 ### Verify after editing
 ```bash
 cd ml
-venv/bin/python -m unittest discover -s tests    # 130-unit test suite (AppTest gated via AQUIS_APPTEST=1)
-venv/bin/python gate_check.py                    # 12 baseline checks (frozen RMSE/CV/coverage/eff-N/ACF + trajectory)
+venv/bin/python -m unittest discover -s tests    # 138-unit test suite (AppTest gated via AQUIS_APPTEST=1)
+venv/bin/python gate_check.py                    # baseline checks (frozen RMSE/CV/coverage/eff-N/ACF + trajectory)
 ```
 
-### Dashboard (`app.py`, Streamlit, 8 pages)
-Overview · Correlation · Drivers · Stations · Model (benchmark + honest validation + diagnostics) · **Forecast (single dark-theme trajectory card: 120 genuine 6-hourly points, q05/q50/q95 + confidence, direction, drivers, Snapshot PNG)** · Assistant (station-pinned LLM) · Sources (manifest quality, association method, soil/LULC status). Fleet scan + significant-movers alerts surface on the Sources/Fleet view.
+### Dashboard (`app.py`, Streamlit, 4 active pages)
+**Assistant** (station-pinned LLM, default page) · Correlation (mode/metric pickers + recharge-lag curve) ·
+**Forecast (single dark-theme trajectory v2 card: 120 genuine 6-hourly points, bright q05/q95 band, confidence, direction)** ·
+Sources (manifest quality, association method, soil/LULC status). Older pages (Overview, Drivers, Stations, Model, Fleet) exist in `app_pages/` but are not wired into the nav; Verification (`app_pages/verification.py`) can be wired in when wanted.
 
 ---
 
@@ -198,7 +206,7 @@ Overview · Correlation · Drivers · Stations · Model (benchmark + honest vali
 | DATABASE_URL | — | PostgreSQL connection string |
 | PORT | 3000 | Backend port |
 | NODE_ENV | development | Environment |
-| ML_SERVICE_URL | http://localhost:5000 | Python ML service URL — **not active** until the Flask layer is merged |
+| ML_SERVICE_URL | http://localhost:5000 | Python ML service URL (Flask api.py; proxy via Node gateway) |
 | ML_TIMEOUT_MS | 60000 | ML request timeout |
 | BACKEND_URL | http://localhost:3000 | Data/CSV paths used by some ML helper scripts |
 | AQUIS_OLLAMA_MODEL | llama3.2:3b | Assistant model override |
@@ -211,8 +219,7 @@ Overview · Correlation · Drivers · Stations · Model (benchmark + honest vali
 Full backend/ML endpoint reference lives in **[`docs/api.md`](docs/api.md)**. Summary:
 
 - **Node `:3000`** endpoints: stations, telemetry, assessments (CGWB), trends (Mann-Kendall + Sen's slope), ml-data, data-quality, ingestion.
-- **ML `/ml/*` (live, Python-backed)** — the Flask service that would serve recency-sorted stations, per-station facts, forecasts, fleet recovery/scan, and the assistant **is planned (`merge_later`), so these routes currently return "ML service unavailable"** until it lands.
-- **ML legacy** (DB-registry) endpoints remain for backward compatibility.
+- **ML Flask `:5000` (`ml/api.py`, live)** — JSON endpoints: root `/` (lists available routes), `/health`, `/stations` (with district/q filtering), `/forecast/<slug>` (trajectory v2), `/assistant/chat` (Ollama-backed LLM). CORS enabled; the Node gateway can proxy via `ML_SERVICE_URL`.
 
 ---
 
@@ -223,7 +230,7 @@ npm test
 ```
 Backend tests cover classification, statistics, telemetry utilities, ML gateway, and app configuration.
 
-ML validation: stdlib `unittest` suite in `ml/tests/` (130 data-gated tests, no pytest; the full Forecast-page AppTest is gated behind `AQUIS_APPTEST=1` because the trajectory engine is slow) + `ml/gate_check.py` regression gate (12 checks).
+ML validation: stdlib `unittest` suite in `ml/tests/` (138 data-gated tests, no pytest; the full Forecast-page AppTest is gated behind `AQUIS_APPTEST=1` because the trajectory engine is slow) + `ml/gate_check.py` regression gate.
 
 ---
 

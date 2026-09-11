@@ -1,12 +1,18 @@
-# Model Card — AQUIS pooled 30-day groundwater-level forecast (ml)
+# Model Card — AQUIS groundwater-level forecasting (ml)
 
 | Field | Value |
 |---|---|
-| Model | Pooled **XGBoost** (delta) trained once across all stations + Ridge baseline |
-| Task | Forecast the **30-day change** in groundwater level, GWL(t+120) − GWL(t), on a 6-hourly grid |
-| Package | `ml`: `06_train.py` → `models/xgb_multihorizon.joblib`, `linear_multihorizon.joblib` |
-| Intended use | 30-day outlook per monitored station / district; whole-fleet scan (`11_fleet.py`) |
+| Model | Two production forecasts: **(a) trajectory v2** direct multi-horizon XGBoost (`31_train_traj.py` → `models/traj_xgb_q{05,50,95}.json`) for the Forecast page + API; **(b) pooled 30-day XGBoost (delta)** (`06_train.py` → `models/xgb_multihorizon.joblib`) + Ridge baseline for the assistant, fleet scan and +30 d benchmark |
+| Task | Forecast the **30-day trajectory** in groundwater level on a 6-hourly grid: horizon `h ∈ 1..120` (trajectory v2, q05/q50/q95 each step) or the single change `GWL(t+120) − GWL(t)` (pooled) |
+| Package | `ml` — trajectory v2: `30_traj_datasets.py` → `31_train_traj.py` → `32_backtest_traj.py` → `33_traj_reliability.py`; pooled: `06_features.py` → `06_train.py` → `07_evaluate.py` |
+| Intended use | 30-day per-station outlook (Forecast page, `/forecast/<slug>`), whole-fleet scan (`11_fleet.py`), station-locked assistant |
 | Not for | Sub-day decisions, wells outside the 511 test stations, attribution/causal claims |
+
+> This card documents the model that powers the forecast surface. Data scope, the
+> pooled-model internals, honest performance and diagnostics below remain the
+> authority for **both** models' inputs; trajectory v2 specifics (training frames,
+> backtest, calibration, confidence framework) are in `ml/README.md`
+> ("Trajectory v2") and `../docs/ml-trajectory-v2-spec.md`.
 
 ## Data coverage & sources
 
@@ -43,6 +49,7 @@ Source material (why most UP groundwater monitoring is manual):
 - One random 6-hourly slot per station-day sampled for training (`cumcount() % 4 == 0`).
 - XGBoost with early stopping on the validation split (best_iteration ≈ 15, ~few ×100 trees), objectives/min_child_weight tuned in `06_train.py`.
 - Feature matrix materialized to `data/features/{train,val,test}.parquet` (reused by spatial CV, ablation, diagnostics).
+- **Trajectory v2:** causal 6h feature frames (`14_6h_features.py` → `data/features_6h/`) are expanded to multi-horizon long-form (`30_traj_datasets.py`, exact-time target lookup, 6.53M rows) and trained as a **shared direct multi-horizon XGBoost** (`31_train_traj.py`, horizon `h` as an input feature, q05/q50/q95 heads). Confidence bucket rules come from `33_traj_reliability.py`.
 
 ## Performance (honest numbers)
 
@@ -55,6 +62,8 @@ Source material (why most UP groundwater monitoring is manual):
 | Effective test sample | ≈6,611 rows (ACF-based; lag-1 residual ACF 0.858) |
 | Quantile coverage (q05–q95, stride) | 0.911 vs target 0.80 → widen factor k=1.0 |
 | Interval half-width | median ~1.03 m, p90 ~2.58 m (calibrated) |
+| **Trajectory v2 30-d RMSE (honest, 2026)** | **2.106 m** (73,881 non-overlap windows; < pooled direct-30d 2.132 m < persistence 2.151 m) |
+| **Trajectory v2 calibrated coverage** | **0.90 at every horizon** (`traj_calibration.json`, `s ∈ [0.80, 1.28]`) |
 
 Pre-row deltas below ~±0.05 m are within overlap noise; driver features are additive but marginal at 30 d (ablation, diagnostics).
 
@@ -66,7 +75,9 @@ Pre-row deltas below ~±0.05 m are within overlap noise; driver features are add
 
 ## Expected behavior & limitations
 
-- Forecasts are **near-flat** at 30 d for most stations; real moves are rare and only meaningful when |Δ| exceeds the calibrated 90% interval width.
+- Forecasts by **both** engines are **near-flat** at 30 days for most stations; real moves are rare and only meaningful when |Δ| exceeds the calibrated 90% interval width. The trajectory v2 forecast is calibrated to **90% coverage at every horizon**.
 - Stations with missing recent drivers or a spike-flagged last reading produce unreliable forecasts (NaN anchor → delta saturation); Fleet gates these as `unreliable` (43/545).
 - Static soil/LULC are fetched and shown for context but deliberately **excluded** (proven redundant with station/district ordinals: adding them raised RMSE and collapsed early stopping).
-- Re-running: any change to feature engineering or training data requires `06_train` → `07_evaluate` → validation suite → regenerate quantile/fleet/diagnostics.
+- Trajectory v2 relies on **forward driver forecasts** (Open-Meteo days 1–16, climatology beyond, CWC river where covered); a missing driver **downgrades confidence** at those horizons (`refresh/future_drivers.py`).
+- Production surfaces refresh on a **6-hourly daemon grid** (`refresh/`); the verdict (`data_status`, freshness) and realised-score verification keep the forecasts honest.
+- Re-running: any change to feature engineering or training data requires `06_train` → `07_evaluate` → validation suite → regenerate quantile/fleet/diagnostics, and re-run `30_traj_datasets` → `31_train_traj` → `32_backtest_traj` → `33_traj_reliability` for trajectory v2.
