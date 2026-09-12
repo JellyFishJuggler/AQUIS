@@ -3,6 +3,28 @@
   "forecast_days": 16,
   "districts": 37,
   "rows": 15318,
-  "fetched_at": "2026-09-12T10:31:39+00:00",
-  "district_failures": {}
+  "fetched_at": "2026-09-12T11:00:32+00:00",
+  "district_failures": {
+    "JAUNPUR": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "JHANSI": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "KAUSHAMBI": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "KUSHINAGAR": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "Kansiram Nagar": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "MAHARAJGANJ": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "LALITPUR": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "MAINPURI": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "MAHOBA": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "MATHURA": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "MEERUT": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "MIRZAPUR": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "MUZAFFARNAGAR": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "PRATAPGARH": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "SAHARANPUR": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "SHAHJAHANPUR": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "SANT RAVIDAS NAGAR": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "SHRAWASTI": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "SIDDHARTHNAGAR": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "SONBHADRA": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "VARANASI": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429"
+  }
 }
