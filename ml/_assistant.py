@@ -656,6 +656,8 @@ def _district_context(district: str, top_k: int = 5) -> dict:
         stressed.append({"station": str(st), "level": last, "change_180d": chg})
     stressed.sort(key=lambda s: (s["change_180d"] if s["change_180d"] is not None else 1e9))
     ctx["n_analysed"] = len(stressed)
+    ctx["n_deep_180d"] = sum(1 for s in stressed
+                             if s.get("change_180d") is not None and s["change_180d"] <= -2.0)
     ctx["most_stressed"] = [
         {k: (s[k] if k != "level" else round(s[k], 2))
          for k in ("station", "level", "change_180d")}

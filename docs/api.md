@@ -26,6 +26,10 @@ The remainder of this page documents the **live Flask contract** plus the Node e
 - **Errors:** every failure returns `{ "error": "...", "detail": "..." }` with an appropriate status code.
 - **Slugs:** ML endpoints identify stations by **slug** — lowercase hyphenated station name, e.g. `ashadha-prathmik-vidyalaya`. Always fetch the current slug from `GET /stations` — never hand-type one. (Fallback: the exact station name also resolves when URL-encoded, e.g. `ASHADHA%20PRATHMIK%20VIDYALAYA` — use `encodeURIComponent` in JS.)
 
+- **Path tolerance:** trailing slashes are ignored (`/health/` == `/health`), and
+  underscore variants route to the same handler (`POST /assistant_chat` ==
+  `POST /assistant/chat`). Genuine 404s include a `did_you_mean` hint.
+
 ### Status codes (ML service)
 
 | Code | Meaning |
@@ -48,7 +52,7 @@ Service status + model/Ollama health. Fast, call on app boot.
 {
   "status": "ok",
   "service": "aquis-ml",
-  "version": "3.0.0",
+  "version": "3.2.0",
   "stations": 549,
   "dataset_last": "2026-09-10T19:00:00+05:30",
   "ollama": { "server": true, "model": "llama3.2:3b" },
@@ -105,11 +109,16 @@ GET  /health                           status, version, stations, dataset_last, 
 GET  /stations                         ?district=&q=&limit=        recency-sorted station list (slugs + lat/lon)
 GET  /stations/<slug>                  per-station facts — same rich object as chat "facts", no LLM call
 GET  /stations/<slug>/series           6-hourly gwl + driver points for relation charts (?drivers=&from=&to=&limit=)
+GET  /stations/<slug>/alerts           notification-ready zone (safe/alert/danger/unknown) + reasons + top drivers (?n=), no LLM call
+GET  /fleet/alerts                     fleet-wide zones in one call (?zone=&district=&sort=&limit=) — bell-icon source
+GET  /districts                        district list with water-scarcity status (?sort=&limit=) — scarcity-page source
+GET  /districts/<name>                 district detail: levels, most-stressed stations, top driver, model accuracy + station list
+GET  /fleet/recovery                   recovery/decline ranking (?district=&sort=&limit=)
 GET  /forecast/<slug>                  trajectory v2 — 120×6h q05/q50/q95 (slug URL-encoded)
 POST /assistant/chat                   {question, station?, model?}   station-locked LLM answer
 ```
 
-> **Planned (not yet implemented):** `/districts`, `/models`, `/fleet/forecasts`, `/fleet/recovery`, `/fleet/scan`.
+> **Planned (not yet implemented):** `/models`, `/fleet/forecasts`, `/fleet/scan`.
 
 ### Series endpoint (relation charts)
 
@@ -135,6 +144,11 @@ How the current `ml/` module maps to this contract:
 | `/stations` | `data/meta/selected_gwl_stations.csv` (549 stations, recency-sorted; `latitude`/`longitude` included per item) |
 | `/stations/<slug>` | `_assistant.StationAssistant().facts()` (same object as chat `"facts"`, no LLM) + `slug`/`latitude`/`longitude` envelope |
 | `/stations/<slug>/series` | aligned 6h table slice (`_data()` filtered by station + date, downsampled to `limit`) — chart-ready gwl+driver points |
+| `/stations/<slug>/alerts` | zone from rule-based `precautions` (action→danger, watch→alert, else safe; fleet-`unreliable`→unknown) + top-`n` drivers by \|Spearman\| + forecast summary — no LLM, notification-pop ready |
+| `/fleet/alerts` | zones from the published fleet scan (`outputs/fleet_forecast.csv`): `unreliable`→unknown, 30d change ≤−1.0 m→danger, ≤−0.5 m→alert, else safe (+`counts`, `?zone=`/`?district=`/`?sort=`/`?limit=`) |
+| `/districts` | district list with water-scarcity status (`outputs/fleet_district.csv` + history signals): `unknown` if <3 stations or >50% unreliable; `scarce` on broad decline (share≥0.25 / median≤−0.5 m) or deep+corroborated (≥2 wells down ≥2 m); `watch` on any stressed wells; else `healthy` (+`counts`, `?sort=`/`?limit=`) |
+| `/districts/<name>` | district detail: GWL levels, `most_stressed` stations (slug+zone), top driver (`correlation_by_district.csv`), district model accuracy (`eval_by_district.csv`), full station list with scan zones |
+| `/fleet/recovery` | recovery/decline ranking by 30d model change (`?district=`, `?sort=recovery\|decline`, `?limit=`) with ±0.15 m direction + band |
 | `/forecast/<slug>` | `_trajectory.trajectory_forecast()` (trajectory v2, 120×6h q05/q50/q95) |
 | `/assistant/chat` | `_assistant.py` (station-pinned facts + Ollama) |
 

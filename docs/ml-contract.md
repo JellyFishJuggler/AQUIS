@@ -55,7 +55,7 @@ venv/bin/python -m unittest discover -s tests   # 151 tests (2 skipped)
 venv/bin/python gate_check.py                   # baseline regression checks (GATE PASS 10/10)
 ```
 
-## 2. HTTP contract (live — `ml/api.py`, version 3.1.0)
+## 2. HTTP contract (live — `ml/api.py`, version 3.3.0)
 
 The Flask service runs on `:5000` and exposes:
 
@@ -65,6 +65,11 @@ GET  /health                           status, version, stations, dataset_last, 
 GET  /stations                         ?district=&q=&limit=        recency-sorted station list (slugs + lat/lon)
 GET  /stations/<slug>                  per-station facts — same rich object as chat "facts", no LLM call
 GET  /stations/<slug>/series           6-hourly gwl + driver points for relation charts (?drivers=&from=&to=&limit=)
+GET  /stations/<slug>/alerts           notification-ready zone + reasons + top drivers (?n=), no LLM call
+GET  /fleet/alerts                     fleet-wide zones (?zone=&district=&sort=&limit=) — bell-icon source
+GET  /districts                        district list with water-scarcity status (?sort=&limit=)
+GET  /districts/<name>                 district detail + station list
+GET  /fleet/recovery                   recovery/decline ranking (?district=&sort=&limit=)
 GET  /forecast/<slug>                  trajectory v2 — 120×6h q05/q50/q95 (slug URL-encoded)
 POST /assistant/chat                   {question, station?, model?}   station-locked LLM answer
 ```
@@ -75,7 +80,7 @@ POST /assistant/chat                   {question, station?, model?}   station-lo
 - **Slugs:** lowercase hyphenated station names (e.g. `ashadha-prathmik-vidyalaya`) — always URL-encode; resolve current slugs from `/stations`. The exact station name also resolves as a fallback.
 
 ### Planned additions (not yet implemented)
-`/districts`, `/models`, `/fleet/forecasts`, `/fleet/recovery`, `/fleet/scan`.
+`/models`, `/fleet/forecasts`, `/fleet/scan`.
 
 ### Behavior notes
 - Data sources for each endpoint are already produced by the current artifact contract (table above).

@@ -25,7 +25,7 @@ import pandas as pd
 import streamlit as st
 
 from _model import load_predictions
-from _utils import load_table_6h, sidebar_station_picker, station_recency
+from _utils import load_table_6h, selected_from_sidebar, station_recency
 
 from app_charts import (COL_OBSERVED, COL_TRAJECTORY, COL_BAND, COL_QEDGE,
                         trajectory_chart)
@@ -132,8 +132,8 @@ stations = [s for s in recency.sort_values(ascending=False).index.astype(str)
             if s in set(preds["Station"].astype(str))]
 stations.extend(sorted(set(preds["Station"].astype(str)) - set(stations)))
 
-# shared sidebar pickers (same keys on every page — Assistant follows along)
-district, station = sidebar_station_picker(table6, stations)
+# global sidebar pickers (rendered once in app.py — visible on every page)
+district, station = selected_from_sidebar(table6, stations)
 st.caption(f"**{station}** · {district}")
 last_t = recency.get(station)
 if last_t is not None:

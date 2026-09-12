@@ -131,6 +131,14 @@ async function getStation(slug) {
   } catch (err) { return { success: false, error: err.message }; }
 }
 
+async function getSeries(slug, params = {}) {
+  try {
+    const res = await makeRequest(
+      `/stations/${encodeURIComponent(slug)}/series${_qs(params)}`, "GET");
+    return { success: true, data: res.data };
+  } catch (err) { return { success: false, error: err.message }; }
+}
+
 async function getDistricts() {
   try {
     const res = await makeRequest(`/districts`, "GET");
@@ -183,7 +191,7 @@ async function assistantChat(body) {
 module.exports = {
   healthCheck, getForecast, getAnomalies, getRisk,
   trainModel, getModelComparison, makeRequest,
-  getStations, getStation, getDistricts, getLiveForecast,
+  getStations, getStation, getSeries, getDistricts, getLiveForecast,
   getFleetForecasts, getFleetRecovery, getFleetScan, getLiveModels,
   assistantChat,
 };

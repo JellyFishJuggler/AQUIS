@@ -219,7 +219,7 @@ Sources (manifest quality, association method, soil/LULC status). Legacy pages (
 Full backend/ML endpoint reference lives in **[`docs/api.md`](docs/api.md)**. Summary:
 
 - **Node `:3000`** endpoints: stations, telemetry, assessments (CGWB), trends (Mann-Kendall + Sen's slope), ml-data, data-quality, ingestion.
-- **ML Flask `:5000` (`ml/api.py`, live, v3.1.0)** — JSON endpoints: root `/` (lists available routes), `/health`, `/stations` (with district/q filtering, lat/lon per station), `/stations/<slug>` (per-station facts, no LLM), `/stations/<slug>/series` (6-hourly GWL + driver points for relation charts), `/forecast/<slug>` (trajectory v2), `/assistant/chat` (Ollama-backed LLM). CORS enabled; the Node gateway can proxy via `ML_SERVICE_URL`.
+- **ML Flask `:5000` (`ml/api.py`, live, v3.3.0)** — JSON endpoints: root `/` (lists available routes), `/health`, `/stations` (with district/q filtering, lat/lon per station), `/stations/<slug>` (per-station facts, no LLM), `/stations/<slug>/series` (6-hourly GWL + driver points for relation charts), `/stations/<slug>/alerts` (notification-ready zone + reasons + top drivers, no LLM), `/fleet/alerts` (fleet-wide zones for bell-icon/notification center), `/districts` (district list with water-scarcity status), `/districts/<name>` (district detail + station list), `/fleet/recovery` (recovery/decline ranking), `/forecast/<slug>` (trajectory v2), `/assistant/chat` (Ollama-backed LLM). CORS enabled; the Node gateway can proxy via `ML_SERVICE_URL`.
 
 ---
 

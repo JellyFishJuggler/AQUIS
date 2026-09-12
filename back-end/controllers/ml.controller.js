@@ -172,6 +172,17 @@ async function getLiveStation(req, res, next) {
   } catch (err) { next(err); }
 }
 
+async function getLiveSeries(req, res, next) {
+  try {
+    const r = await mlGateway.getSeries(req.params.slug, {
+      drivers: req.query.drivers, from: req.query.from,
+      to: req.query.to, limit: req.query.limit,
+    });
+    if (!r.success) return res.status(502).json({ error: "ML service error", detail: r.error });
+    res.status(r.data.error ? (r.data.error === "bad request" ? 400 : 404) : 200).json(r.data);
+  } catch (err) { next(err); }
+}
+
 async function getLiveDistricts(req, res, next) {
   try {
     const r = await mlGateway.getDistricts();
@@ -243,7 +254,7 @@ module.exports = {
   getRisk, getRiskSummary, getPriorityAreas,
   getModels, getModelByName, getModelMetrics, getModelComparison,
   getMLHealth,
-  getLiveStations, getLiveStation, getLiveDistricts, getLiveForecast,
+  getLiveStations, getLiveStation, getLiveSeries, getLiveDistricts, getLiveForecast,
   getLiveFleetForecasts, getLiveFleetRecovery, getLiveFleetScan,
   getLiveModels, postAssistantChat,
 };

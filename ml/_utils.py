@@ -169,3 +169,28 @@ def sidebar_station_picker(df: pd.DataFrame,
     st.sidebar.caption(f"{len(in_district)} stations in **{district}** — "
                        "most recently updated first.")
     return district, station
+
+
+def selected_from_sidebar(df: pd.DataFrame,
+                          stations: list[str]) -> tuple[str, str]:
+    """Read the global sidebar selection (rendered once by ``app.py``).
+
+    Returns ``(district, station)`` from ``sb_district`` / ``sb_station``.
+    Falls back to the recency-first defaults when the keys are absent (e.g.
+    a page executed standalone without ``app.py``).
+    """
+    sub = df[df["Station"].astype(str).isin(set(stations))]
+    dist_of = (sub.drop_duplicates("Station").set_index("Station")["District"]
+                 .astype(str).to_dict())
+    allowed = [s for s in stations if s in dist_of]
+    district = st.session_state.get("sb_district")
+    station = st.session_state.get("sb_station")
+    if district not in {dist_of[s] for s in allowed}:
+        district = dist_of.get(allowed[0]) if allowed else None
+    in_district = [s for s in allowed if dist_of.get(s) == district]
+    if station not in in_district:
+        station = in_district[0] if in_district else (allowed[0] if allowed else None)
+    if district is None or station is None:
+        st.warning("No stations available.")
+        st.stop()
+    return district, station

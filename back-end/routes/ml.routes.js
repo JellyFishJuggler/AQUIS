@@ -19,6 +19,7 @@ router.get("/risk/:unitId",      mlRiskUnit,               ctrl.getRisk);
 
 // Live endpoints — headless Python ML service (recency-sorted, slug-keyed)
 router.get("/stations",                           ctrl.getLiveStations);
+router.get("/stations/:slug/series",              ctrl.getLiveSeries);
 router.get("/stations/:slug",                     ctrl.getLiveStation);
 router.get("/districts",                          ctrl.getLiveDistricts);
 router.get("/live/models",                        ctrl.getLiveModels);

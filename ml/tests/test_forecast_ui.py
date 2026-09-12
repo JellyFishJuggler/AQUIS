@@ -299,14 +299,19 @@ class TestSnapshotPNG(unittest.TestCase):
 
 @unittest.skipUnless(os.environ.get("AQUIS_APPTEST"), "set AQUIS_APPTEST=1 to run")
 class TestForecastAppTest(unittest.TestCase):
-    """Headless Streamlit AppTest check — single session (one at.run for the
-    default station, one for a station switch) because the trajectory engine is
-    slow; every assertion shares that one AppTest instance."""
+    """Headless Streamlit AppTest check — single session (app start, switch to
+    Forecast, district switch, station switch) because the trajectory engine
+    is slow; every assertion shares that one AppTest instance."""
 
     def test_forecast_card_renders_full(self):
         from streamlit.testing.v1 import AppTest
-        at = AppTest.from_file(str(ROOT / "app_pages" / "forecast.py"),
+        # via app.py: the global sidebar picker lives there, visible on
+        # every page; pages only read sb_district / sb_station.
+        at = AppTest.from_file(str(ROOT / "app.py"),
                                default_timeout=420)
+        at.run(timeout=420)
+        self.assertEqual(len(at.exception), 0, at.exception)
+        at.switch_page(str(ROOT / "app_pages" / "forecast.py"))
         at.run(timeout=420)
         self.assertEqual(len(at.exception), 0, at.exception)
 
@@ -326,8 +331,11 @@ class TestForecastAppTest(unittest.TestCase):
                      "30 d change", "Confidence"):
             self.assertIn(want, labels)
 
-        # station switch (sidebar Station picker, same default district JAUNPUR)
+        # district + station switch via the global sidebar pickers —
         # re-renders in the same session
+        at.selectbox[0].set_value("JAUNPUR")
+        at.run(timeout=420)
+        self.assertEqual(len(at.exception), 0, at.exception)
         at.selectbox[1].set_value("Jaunpur Dobhi Kachhawan")
         at.run(timeout=420)
         self.assertEqual(len(at.exception), 0, at.exception)

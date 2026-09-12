@@ -9,7 +9,7 @@ from _assistant import (
     ollama_model,
     ollama_status,
 )
-from _utils import sidebar_station_picker
+from _utils import selected_from_sidebar
 
 st.set_page_config(page_title="AQUIS — assistant", page_icon=":material/smart_toy:", layout="wide")
 st.title("Assistant — groundwater data in plain language")
@@ -30,10 +30,10 @@ elif not up:
     st.info(f"Ollama reachable, but model **`{model_name}`** is not pulled. Run:")
     st.code(f"ollama pull {model_name}", language="bash")
 
-# --- District & station selection (shared sidebar — Forecast follows along) ---
+# --- District & station selection (global sidebar in app.py — always visible) ---
 recency = df.groupby("Station")["time"].max().sort_values(ascending=False)
 stations = [str(s) for s in recency.index]
-selected_district, station = sidebar_station_picker(df, stations)
+selected_district, station = selected_from_sidebar(df, stations)
 
 # --- Chat ---
 assistant = StationAssistant()
