@@ -58,10 +58,10 @@ ml/outputs/{predictions_2026.parquet, fleet_forecast.csv, model_metrics.csv, …
 
    ┌──────────────┬──────────────────────────────┐
    ▼              ▼                              ▼
-Streamlit app   Express API (:3000) [LIVE]    [PLANNED] Flask ML API (:5000)
-(ml/app.py,     /stations /telemetry           /stations /forecast /fleet
+Streamlit app   Express API (:3000) [LIVE]    Flask ML API (:5000) [LIVE v3.0.0]
+(ml/app.py,     /stations /telemetry           /stations /forecast
 :8501)          /assessments /trends            /assistant/chat …
-9 pages         /ml*/ml-data /data-quality      proxied by back-end/mlGateway.js
+4 pages         /ml*/ml-data /data-quality      proxied by back-end/mlGateway.js
                 /ingestion                       under /ml/live/*
    ▼
 Next.js frontend (front-end/) / mobile app
@@ -75,19 +75,20 @@ One Python module (`ml/`) that is: the **data pipeline** (00–13), the
 dashboard** (`app.py`, the current live analysis surface).
 
 ### 1.6 Streamlit app features (currently live) — `ml/app.py`
-9 pages (`st.navigation`):
+4 pages (`st.navigation`) + Verification (exists, not in nav):
 
 | Page | What it shows |
 |---|---|
-| **Overview** | KPIs: 600 stations/29 districts, 2.28M GWL records, driver records, 580 soil profiles; drivers ranked by raw \|Spearman\|; driver-station coverage bars |
-| **Correlation** | mode `raw/deseason/diff` × metric `spearman/pearson` table; recharge-lag curve (GWL vs rainfall); static features (soil/LULC) vs GWL |
-| **Drivers** | per-station daily driver overlay vs GWL (rain/temp/humidity/solar/wind/pressure/river/canal) |
-| **Stations** | district filter, per-station GWL trend (median surface), driver coverage, soil profile context |
-| **Model** | 4-way benchmark table (level/delta toggle), RMSE bars, honest validation expander (stride RMSE, spatial CV, residual ACF, Moran's I), ablation, diagnostics (VIF/permutation/OAT), feature importance & \|coef\| charts |
-| **Forecast** | 2026 backtest curve + calibrated q05/q95 band; 4 KPIs; forward-forecast table + anchor→+30d chart; soil/LULC context |
-| **Fleet** | 6 KPIs, significant movers (Δ>90% band), Δ histogram ±0.3 m, district rollup, station scan with filters |
 | **Assistant** | station-locked chat (Ollama llama3.2:3b); instant facts panel works without LLM |
+| **Correlation** | mode `raw/deseason/diff` × metric `spearman/pearson` table; recharge-lag curve (GWL vs rainfall); static features (soil/LULC) vs GWL |
+| **Forecast** | single dark-theme trajectory v2 card: 120 genuine 6-hourly points, observed tail, "Forecast starts" boundary, bright q05/q95 band, direction banner, 6 metric cards, freshness caption |
 | **Sources** | manifest quality, empty sources, static hydrogeology, LULC/soil status, association method |
+| **Verification** *(not in nav)* | realised-forecast quality from the refresh pipeline's verification summary + sign-accuracy ledger |
+
+> The legacy explorer pages (Overview, Drivers, Stations, Model, Fleet) were
+> removed from `app_pages/`; their pipeline outputs (fleet scan, benchmark,
+> honest validation, ablation, diagnostics) are still produced by the numbered
+> scripts and served via `_model.py` loaders, the Flask API and the assistant.
 
 ---
 
@@ -165,7 +166,7 @@ are simply absent → feature builder skips that window group.
 | Param | Meaning | dtype | Valid | Req | Example | Source |
 |---|---|---|---|---|---|---|
 | `station` | station identity | str | any station in `feature_config.stations` | yes (F5/F18) | "Ramchhitoni Sahawar (UP-011)" | user/DB |
-| `station_slug` | slug form (§12.2) | str | from /ml/stations | alt for chat | "ASHADHA%20PRATHMIK%20VIDYALAYA_UPGW_5f5b3671" | API |
+| `station_slug` | slug form (§12.2) | str | from /stations | alt for chat | "ashadha-prathmik-vidyalaya" | API |
 | `district` | filter | str | 29 districts | opt | "KAUSHAMBI" | user |
 | `model` (page) | model choice | str | `xgboost`\|`ridge` | opt (def xgb) | "xgboost" | user |
 | `question` | chat text | str | non-empty | yes (chat) | "Is level rising?" | user |
@@ -257,7 +258,7 @@ India → Uttar Pradesh (UP)
   `docs/ml-system-spec.md`).
 - **Model IDs:** `st_id` (sorted station names, 0..548) and `dist_id` (sorted
   districts, 0..28) — shared across train/val/test + app.
-- **API IDs (planned):** slugs `Station_Agency_shortHash`, URL-encoded.
+- **API IDs:** lowercase hyphenated slugs (`ashadha-prathmik-vidyalaya`), URL-encoded.
 - **Backend:** `stations` table holds same geo fields + `state_lgd_code`,
   `district_lgd_code` + `rl_msl`.
 - **Geo requirements:** lat/lon are **optional for ML** (drivers use spatial
@@ -308,7 +309,7 @@ India → Uttar Pradesh (UP)
 | Files | `xgb_q05.joblib`, `xgb_q50.joblib`, `xgb_q95.joblib` |
 | Algorithm | pooled XGBoost `reg:quantileerror` at α=0.05/0.50/0.95 |
 | Purpose | calibrated 90% prediction interval on level |
-| Calibration | `quantile_calibration.json`: `target_coverage_stride=0.8`, `widen_factor_k=1.0`, `coverage_stride=0.911`, `half_width_median_m=1.034`, `half_width_p90_m=2.579` |
+| Calibration | `quantile_calibration.json`: `target_coverage_stride=0.8`, `widen_factor_k=1.0`, `coverage_stride=0.908`, `half_width_median_m=1.025`, `half_width_p90_m=2.575` |
 | Anchor basis | `level = today's GWL + quantile(delta 30d)` |
 | Load | `_model.load_quantile_models()` → dict `{q05,q50,q95}` |
 
@@ -328,7 +329,7 @@ legacy endpoints (`forecast/:stationId`, `risk/:unitId`, `anomalies`) are
 
 ### 7.1 Trigger
 `[LIVE]` Streamlit: page load → `forward_forecast(station)`.
-`[PLANNED]` API: `GET /ml/live/forecast/:slug?days=30` → `mlGateway.getLiveForecast` → Flask `GET /forecast/:slug`.
+`[LIVE]` API: `GET /ml/live/forecast/:slug` → `mlGateway.getLiveForecast` → Flask `GET /forecast/:slug` → `_trajectory.trajectory_forecast(station)` (120×6h trajectory v2).
 
 ### 7.2 Required inputs
 `station` name (or slug). Everything else is **derived** from `table_6h.parquet`
@@ -361,7 +362,7 @@ All levels in **metres** (float). `anchor/pred_*` in m, `band_half` in m.
 
 ### 7.5 Categories / confidence
 No hard categories in the prediction itself. Uncertainty = calibrated 90%
-interval (`coverage_stride=0.911`). Fleet scan adds categories
+interval (`coverage_stride=0.908`). Fleet scan adds categories
 (`decline (high)/decline/stable/recovering/unknown/unreliable`) — §9.
 
 ### 7.6 Example input → output
@@ -547,8 +548,8 @@ model, created_at). Streamlit keeps `<6` turns in `st.session_state.as_messages`
 ### 11.1 `ml/` files & functions
 | File | Purpose | Key functions |
 |---|---|---|
-| `app.py` | Streamlit entry (9 pages) | `st.navigation(…)` |
-| `app_pages/*.py` | the 9 pages (§1.6) | page scripts |
+| `app.py` | Streamlit entry (4 pages + Verification, unwired) | `st.navigation(…)` |
+| `app_pages/*.py` | assistant, correlation, forecast, data_sources + verification (§1.6) | page scripts |
 | `config.py` | sources/radii/coverage/caps/paths | `SOURCES`, `FULL26_*`, `RAIN/WEATHER/RIVER/CANAL_RADIUS_KM`, `MAX_RAIN_MM_H` |
 | `00_probe.py` | probe NWIC resources | → `probe.json` |
 | `01_select.py` | full-2026 selection | → 600/1353, `selected_gwl_stations.csv` |
@@ -562,20 +563,31 @@ model, created_at). Streamlit keeps `<6` turns in `st.session_state.as_messages`
 | `07_evaluate.py` | benchmark | → `model_metrics.csv`, `predictions_2026.parquet` |
 | `07_soil.py` | SoilGrids fetch | → `data/soil/` |
 | `08_lulc.py` | Bhuvan LULC | → `data/soil/lulc_district.csv` |
-| `09_cfs_rain.py` | CFSv2 (paused) | staged |
 | `10_ablate.py` | ablation | → `ablation.csv` |
 | `11_quantile.py` | quantile models | → `xgb_q*.joblib`, `quantile_calibration.json` |
 | `11_fleet.py` | fleet scan | `category`, `main`, `_write_snapshot`, `_write_csvs` |
 | `12_diagnostics.py` | VIF/permutation/OAT | → `diagnostics.json` |
 | `13_refresh_nwic.py` | incremental refresh + retrain/deploy | `--dry-run`, `--retrain`, `--deploy-check` |
+| `14_6h_features.py` | causal 6h feature frames (feeds `30_traj_datasets`) | → `data/features_6h/` |
+| `16_future_drivers.py` | driver climatology + future-driver bridge | → `data/meta/driver_climatology.parquet` |
+| `18_cwc_river_forecast.py` | CWC 3-day river forecast fetch | → `data/cfs/river_forecast_cwc.parquet` |
+| `20_openmeteo_fetch.py` | Open-Meteo daily weather (365d history + 16d forecast) | → `data/cfs/openmeteo_weather_daily.parquet` |
+| `30_traj_datasets.py` | trajectory v2 feature frames | → `data/features_traj/` |
+| `31_train_traj.py` | trajectory multi-horizon quantile XGBoost | → `models/traj_xgb_*.json`, `traj_config.json` |
+| `32_backtest_traj.py` | honest trajectory backtest + calibration | → `traj_backtest_*.json/csv`, `traj_calibration.json` |
+| `33_traj_reliability.py` | reliability buckets + evidence weights | → `models/traj_reliability.json` |
+| `_trajectory.py` | trajectory v2 engine (Forecast page + `/forecast/<slug>`) | `trajectory_forecast` |
+| `api.py` | Flask HTTP API v3.0.0 | `/health`, `/stations`, `/forecast/<slug>`, `/assistant/chat` |
+| `app_charts.py` / `snapshot.py` | forecast chart helpers / PNG export | `trajectory_chart`, `trajectory_snapshot_png` |
+| `refresh/` | fetch → features → inference → publish daemon + retrain gate | `cli.py`, `pipeline.py`, `scheduler.py`, `sources.py`, `features.py`, `inference.py`, `model_update.py`, `publish.py`, `verification.py` |
 | `_model.py` | model loaders + forward forecast | `load_xgb_model`, `load_linear_model`, `load_quantile_models`, `load_predictions`, `forward_forecast`, `load_fleet_table`, `load_diagnostics`, … |
 | `_utils.py` | shared loaders | `load_table_6h`, `station_recency`, `load_manifest`, `load_report`, `load_lag_curves`, `DRIVER_LABELS`, `SOURCE_LABELS` |
 | `_assistant.py` | chatbot | `StationAssistant.facts/answer`, `_build_prompt`, `_forecast_summary`, `ollama_status`, `ollama_model`, `_clean_series`, `_series_stats` |
 | `_soil.py` | soil loader | `load_soil`, `SOIL_COLS` |
 | `_lulc.py` | lulc loader | `load_lulc`, `LULC_COLS` |
 | `validation/*.py` | honest suite | `spatial_cv.py`, `overlap.py`, `residual_acf.py`, `spatial_residual.py` |
-| `gate_check.py` | 8 baseline checks | `check(name, ok, detail)` |
-| `tests/` | unit tests | `test_forward_forecast.py`, `test_predictions.py`, `test_calibration_diagnostics.py` |
+| `gate_check.py` | 12-check regression gate (latest GATE PASS 10/10) | `check(name, ok, detail)` |
+| `tests/` | stdlib unittest, 151 tests (2 skipped) | `test_trajectory_v2.py`, `test_refresh_*.py`, `test_verification.py`, `test_api.py`, … |
 | `MODEL_CARD.md`, `README.md` | docs | — |
 
 ### 11.2 `back-end/` (Express) `[LIVE]`
@@ -603,18 +615,21 @@ model, created_at). Streamlit keeps `<6` turns in `st.session_state.as_messages`
 
 ## 12. Backend Integration Requirements — API contracts
 
-> **Status:** Node routes + gateway exist and are live (they proxy to `:5000`).
-> The **Flask ML service is `[PLANNED]`** — until it runs, every `/ml/live/*`
-> returns `502 {"error":"ML service error","detail":"ML service unavailable"}`.
+> **Status:** Node routes + gateway exist and are live (they proxy to `:5000`),
+> and the **Flask ML service is live** (`ml/api.py` v3.0.0: `/health`,
+> `/stations`, `/stations/<slug>`, `/forecast/<slug>`, `/assistant/chat`).
+> When Flask is down, `/ml/live/*` returns
+> `502 {"error":"ML service error","detail":"ML service unavailable"}`.
 
 ### 12.1 Node routes currently mounted `[LIVE]` (see §14 list)
 `/health`, `/stations*`, `/telemetry*`, `/assessments*`, `/trends*`, `/ml*`,
 `/ml-data*`, `/data-quality*`, `/ingestion*`, `/data`, `/analytics`, `/alerts`.
 
-### 12.2 Slug convention `[PLANNED, documented]`
-`Station_Agency_shortHash`, spaces URL-encoded: use
-`encodeURIComponent("ASHADHA PRATHMIK VIDYALAYA_UPGW_5f5b3671")`. Always fetch
-slugs from `/ml/live/stations` — never hand-type.
+### 12.2 Slug convention `[LIVE]`
+Lowercase hyphenated station name (e.g. `ashadha-prathmik-vidyalaya`): use
+`encodeURIComponent(slug)`. Always fetch
+slugs from `GET /stations` — never hand-type. The exact station name also
+resolves as a fallback.
 
 ### 12.3 Per-ML-feature contracts (target Flask `:5000`)
 
@@ -626,7 +641,7 @@ Request:  path=slug (URL-encoded), query=days (7..90, default 30)
 Response: 200 forecast dict (§7.4)     404 unknown slug     502 gateway     500 internal
 ```
 ```json
-// GET /ml/live/forecast/ASHADHA%20PRATHMIK%20VIDYALAYA_UPGW_5f5b3671?days=30
+// GET /forecast/ashadha-prathmik-vidyalaya
 {"station":"ASHADHA PRATHMIK VIDYALAYA","date_from":"2026-09-05T00:00:00",
  "date_to":"2026-10-05T00:00:00","anchor":-6.411,"pred_xgb":-0.213,
  "xgb_level":-6.624,"ridge_level":-7.896,"q05_level":-7.835,"q50_level":-6.12,
@@ -732,21 +747,22 @@ User ── select station ──► Frontend (Forecast page)
   │ GET /ml/live/forecast/:slug?days=30
   ▼
 Backend ml.controller.getLiveForecast → mlGateway.getLiveForecast(slug, days)
-  │ HTTP GET http://localhost:5000/forecast/:slug?days=30  (makeRequest, 60s timeout)
+  │ HTTP GET http://localhost:5000/forecast/:slug  (makeRequest, 60s timeout)
   ▼
-[PLANNED] Flask route → forward_forecast(station)
-  │ reads table_6h.parquet → build_full → score xgb/ridge/q05/q50/q95
+Flask route [LIVE] → trajectory_forecast(station)
+  │ anchor row from table_6h.parquet → shared direct multi-horizon quantile
+  │ models (h = 1..120) → 120 genuine q05/q50/q95 deltas; level = anchor + delta
   ▼
-Backend ← JSON (station, date_from/to, anchor, pred_*, *_level, q*_level, band_half)
+Backend ← JSON (station, slug, anchor, trajectory[120] with time/gwl/q05/q50/q95/confidence_level, …)
   ▼
-Frontend renders KPI cards + anchor→+30d segment chart + interval caption.
+Frontend renders the trajectory card + anchor→+30d segment chart + interval caption.
 ```
 
 ### 15.2 Assistant flow
 ```
 User question ─► Assistant page ─► POST /ml/assistant/chat {question, station}
   ▼ Backend postAssistantChat -> mlGateway.assistantChat
-  ▼ [PLANNED] Flask /assistant/chat
+  ▼ Flask /assistant/chat [LIVE]
 StationAssistant.facts(station) → _forecast_summary(station) → forward_forecast
 _build_prompt(question, facts, history) → ollama.Client.chat(temperature 0.2)
   ▼ {answer, facts, station} ─► Frontend chat bubble + facts panel + (optional) DB chat_logs
@@ -756,7 +772,7 @@ _build_prompt(question, facts, history) → ollama.Client.chat(temperature 0.2)
 ```
 Frontend Fleet page → GET /ml/live/fleet/forecasts (+ /fleet/recovery, /fleet/scan)
   ▼ Backend passthrough + mlGateway
-  ▼ [PLANNED] Flask reads outputs/fleet_forecast.csv (precomputed by 11_fleet.py --force)
+  ▼ [PLANNED] Flask reads outputs/fleet_forecast.csv (precomputed by 11_fleet.py --force; the offline scan exists, the HTTP endpoint does not yet)
   ▼ JSON snapshot ─► 6 KPIs, histogram, district rollup, station table
 ```
 
@@ -819,6 +835,10 @@ venv/bin/python 06_features.py
 venv/bin/python 06_train.py
 venv/bin/python 11_quantile.py
 venv/bin/python 11_fleet.py --force       # ~4-6 min
+venv/bin/python 30_traj_datasets.py      # trajectory v2 frames (~7M rows)
+venv/bin/python 31_train_traj.py         # shared multi-horizon q05/q50/q95
+venv/bin/python 32_backtest_traj.py      # honest backtest + calibration
+venv/bin/python 33_traj_reliability.py   # reliability buckets + weights
 venv/bin/python 13_refresh_nwic.py --retrain   # or run app directly on committed artifacts
 
 # run the live analysis dashboard
@@ -864,10 +884,15 @@ Main file **`ml/app.py`**, root `requirements.txt`, models force-committed
 ## 19. Testing
 
 ### 19.1 Existing ML tests `[LIVE]` — `ml/tests/`
-`test_forward_forecast.py` (returns all keys, anchor sane), `test_predictions.py`,
-`test_calibration_diagnostics.py`. Run: `python -m unittest discover -s tests -v`.
-Gate: `python gate_check.py` → 8/8 checks (stride RMSE 2.339, spatial CV
-1.973/1.819, coverage 0.911, half-width 1.034/2.579, eff-N 6611, lag1 ACF 0.858).
+151 tests (2 skipped), stdlib `unittest`, data-gated, no pytest: trajectory v2,
+refresh pipeline (core/future/training/schedule), verification, Flask API,
+assistant facts, calibration/diagnostics, forecast UI. Run:
+`venv/bin/python -m unittest discover -s tests -v` (the full Forecast-page
+AppTest is gated behind `AQUIS_APPTEST=1`).
+Gate: `venv/bin/python gate_check.py` → 12 checks, latest **GATE PASS 10/10**
+(stride RMSE 2.339, spatial CV 1.973/1.819, coverage 0.908, half-width
+1.025/2.575, eff-N 6635, lag1 ACF 0.858, trajectory 30d 2.106 promoted, +30d
+coverage 0.90; the 2 recursive-model checks skip).
 
 ### 19.2 Sample inputs → expected outputs `[PLANNED automated]`
 | Test | Input | Expected |
@@ -896,7 +921,7 @@ skipped windows.
 
 | Concern | Value (measured/expected) |
 |---|---|
-| Inference (single station) | `forward_forecast` ≈ 0.1–0.2 s (after table cached); XGBoost predict on 1 row negligible |
+| Inference (single station) | `forward_forecast` ≈ 0.1–0.2 s (after table cached); `trajectory_forecast` scores 120 horizons in one pass (XGBoost predict on 120 rows negligible) |
 | Table load | `load_table_6h` ≈ 1.7 s (cached 10 m, 2.99M rows, ~58 MB mem) |
 | Predictions read | `load_predictions` 10-col ≈ 0.07 s (18 MB parquet) after 24 h TTL |
 | Groupby recency | `station_recency()` 3M-row groupby ≈ 0.09 s (cached) |
@@ -909,7 +934,7 @@ skipped windows.
 | Caching | `@st.cache_data` TTLs: 10 m (tables/evals), 24 h (predictions), 15 m (fleet/diag); `@st.cache_resource` for joblib models |
 | Model loading | joblib once per process (`@st.cache_resource`); warm lazy |
 | Deploy | Streamlit Cloud (`app.py`, root requirements) for dashboard; Flask on app host for API; models committed; parquet dirs git-ignored |
-| Production limits | 30-day horizon is single-step (no multi-step cascade); UP telemetry coverage limited; chat needs local Ollama (2 GB) or an external host |
+| Production limits | Trajectory v2 outputs 120 genuine 6-hourly steps (direct multi-horizon, no recursion); the pooled direct model is fixed at the 30-day endpoint; UP telemetry coverage limited; chat needs local Ollama (2 GB) or an external host |
 
 ---
 
@@ -966,8 +991,8 @@ skipped windows.
 | F2 KPIs | Station Detail | `GET /ml/live/stations/:slug` | `getLiveStation`→`getStation` | none | slug | facts |
 | F3 trend | Station Detail | `GET /telemetry/:stationId` | telemetryService | none | stationId | series |
 | F4 backtest | Forecast | (parquet via `load_predictions`) | `_model.load_predictions` | xgb/ridge | station | date×target/gwl/xgb/qband |
-| F5 forward forecast | Forecast | `GET /ml/live/forecast/:slug` | `getLiveForecast`→`forward_forecast` | xgb+ridge+quantile | station | §7.4 dict |
-| F6 confidence | Forecast/Detail | same as F5 | `forward_forecast` | quantile | station | band_half |
+| F5 forward forecast | Forecast | `GET /ml/live/forecast/:slug` [LIVE] | `getLiveForecast`→`trajectory_forecast` | trajectory v2 (120×6h q05/q50/q95) | station | trajectory dict (§7.4 shape + trajectory/confidence) |
+| F6 confidence | Forecast/Detail | same as F5 | `trajectory_forecast` | evidence-weighted (interval + vs-persistence + direction + …) | station | per-point confidence_level + reason |
 | F7 fleet score | Fleet | `GET /ml/live/fleet/forecasts` | `getFleetForecasts` | pooled fwd | none | csv rows |
 | F8 movers | Fleet | `GET /ml/live/fleet/scan` | getFleetScan | pooled fwd | dist/threshold/horizon | movers |
 | F9 district rollup | Fleet | `GET /ml/live/fleet/recovery` | getFleetRecovery | pooled fwd | window/top/min | district stats |
@@ -1025,7 +1050,7 @@ dirs git-ignored; `13_refresh_nwic.py --retrain` reproducible.
 **Phase 5 — Hardening:**
 - [ ] Auth/JWT + roles; rate-limit chat; input sanitisation; CSRF not applicable
   (API practices) / proper CORS origins.
-- [ ] `gate_check.py` + `unittest` in CI; AppTest smoke for 9 pages; API tests
+- [ ] `gate_check.py` + `unittest` in CI; AppTest smoke for the 4 live pages; API tests
   (§19.2).
 - [ ] Monitoring: `setuptools` read of `model_metadata.trained_at` vs NWIC max
   ts (`13_refresh_nwic.py --deploy-check`).

@@ -90,9 +90,10 @@ Correlation (mode/metric pickers + recharge-lag curve) ·
 **Forecast (single dark-theme trajectory v2 card)** ·
 Sources (manifest quality + association method + soil/extraction status).
 
-> Older explorer pages (Overview, Drivers, Stations, Model, Fleet) still exist in
-> `app_pages/` but are **no longer in the navigation** (`app.py` uses `st.navigation`);
-> their code is covered by the Streamlit guide. The **Verification** page
+> The legacy explorer pages (Overview, Drivers, Stations, Model, Fleet) were
+> **removed** — the pipeline outputs they displayed (`fleet_forecast.csv`,
+> `model_metrics.csv`, honest/ablation/diagnostics) are still produced by the
+> numbered scripts and consumed by `_model.py` loaders. The **Verification** page
 > (`app_pages/verification.py`) reads the refresh pipeline's realised-forecast scores —
 > wire it into `app.py` when you want it in the nav.
 
@@ -181,8 +182,9 @@ full results: [`../docs/ml-trajectory-v2-spec.md`](../docs/ml-trajectory-v2-spec
   q50 + q05/q95 bright uncertainty band (no dot markers), direction banner, 6 metrics
   (anchor/+24h/+7d/+30d/change/confidence).
   The page references only the trajectory forecast.
-- **Gate:** `gate_check.py` now 12 checks — frozen round-1 baselines + trajectory promotion
-  and `+30 d` calibrated coverage = 0.90.
+- **Gate:** `gate_check.py` defines 12 checks — frozen round-1 baselines + trajectory promotion
+  and `+30 d` calibrated coverage = 0.90 (latest run: **GATE PASS 10/10**; the 2
+  recursive-model checks skip since the `backtest_6h_*` artifacts were removed).
 
 ## Refresh pipeline (`refresh/`)
 
@@ -224,7 +226,7 @@ The **Verification** page (`app_pages/verification.py`) reads
 * `models/xgb_multihorizon.joblib`, `linear_multihorizon.joblib`, `feature_config.json`
 * `models/xgb_q{05,50,95}.joblib` + `quantile_calibration.json` — `11_quantile.py`:
   pooled quantile forecasters (`reg:quantileerror`) with empirical coverage
-  calibration; raw q05–q95 stride coverage 0.911 ≥ target 0.80 → widen factor k=1.0,
+  calibration; raw q05–q95 stride coverage 0.908 ≥ target 0.80 → widen factor k=1.0,
   median half-width ≈1.03 m (old uncalibrated ±1.96σ ≈ ±4.39 m was over-wide)
 * `validation/` — P0 honesty suite: `_spatial_folds.py` (block assignment),
   `spatial_cv.py` (leave-block-out retraining → `spatial_cv_metrics.csv`,
@@ -251,7 +253,7 @@ The **Verification** page (`app_pages/verification.py`) reads
 * `MODEL_CARD.md` — lifecycle card for the pooled model (features, training, honest
   performance, limitations)
 * `tests/` — forecast-validation suite (stdlib `unittest`, data-gated, no pytest):
-  `python -m unittest discover -s tests -v` (138 tests + 2 skipped; the Forecast-page
+  `python -m unittest discover -s tests -v` (151 tests + 2 skipped; the Forecast-page
   AppTest is gated behind `AQUIS_APPTEST=1`)
 * `data/meta/` — association CSVs, manifest, probe results, per-station flags
 * `outputs/traj_backtest_metrics.csv` + `traj_backtest_summary.json` — trajectory v2
@@ -277,7 +279,7 @@ The **Verification** page (`app_pages/verification.py`) reads
    per-row terms — treat per-row RMSE deltas below ~±0.05 m as noise.
 6. **Quantile uncertainty + calibration** — **DONE** (`11_quantile.py`): pooled
    q05/q50/q95 (`reg:quantileerror`) trained and empirically calibrated on non-overlap
-   windows. Raw stride coverage 0.911 vs target 0.80 → `widen_factor_k = 1.0` (no
+    windows. Raw stride coverage 0.908 vs target 0.80 → `widen_factor_k = 1.0` (no
    widening needed), median half-width ~1.03 m. Forecast page + assistant now use the
    calibrated interval; band_half is per-station `(q95−q05)/2` (median ~1.0 m, p90
    ~2.6 m). Global band shipped; **station-aware bands** (per-station residual scale)

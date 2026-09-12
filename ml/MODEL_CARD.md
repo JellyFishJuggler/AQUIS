@@ -59,9 +59,9 @@ Source material (why most UP groundwater monitoring is manual):
 | **Non-overlap window RMSE (headline)** | **2.339 m** (3,371 independent 30-day windows) |
 | Persistence (non-overlap) | 2.382 m → margin **+1.8%** |
 | Spatial CV (leave-block-out, 5 folds) | mean 1.973 m / median 1.819 m |
-| Effective test sample | ≈6,611 rows (ACF-based; lag-1 residual ACF 0.858) |
-| Quantile coverage (q05–q95, stride) | 0.911 vs target 0.80 → widen factor k=1.0 |
-| Interval half-width | median ~1.03 m, p90 ~2.58 m (calibrated) |
+| Effective test sample | ≈6,635 rows (ACF-based; lag-1 residual ACF 0.858) |
+| Quantile coverage (q05–q95, stride) | 0.908 vs target 0.80 → widen factor k=1.0 |
+| Interval half-width | median ~1.03 m (1.025), p90 ~2.58 m (2.575, calibrated) |
 | **Trajectory v2 30-d RMSE (honest, 2026)** | **2.106 m** (73,881 non-overlap windows; < pooled direct-30d 2.132 m < persistence 2.151 m) |
 | **Trajectory v2 calibrated coverage** | **0.90 at every horizon** (`traj_calibration.json`, `s ∈ [0.80, 1.28]`) |
 

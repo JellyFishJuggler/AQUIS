@@ -1,7 +1,8 @@
-# Trajectory v2 — genuine 6-hourly groundwater forecast (ML-only spec, untracked)
+# Trajectory v2 — genuine 6-hourly groundwater forecast (ML-only spec)
 
-Status: **implemented and validated** (2026-09-10). Documentation-only file — never
-committed to git.
+Status: **implemented, validated and promoted** (2026-09-10). The production Forecast page +
+`refresh` daemon + `/forecast/<slug>` API all serve the trajectory engine (see
+`ml/MODEL_CARD.md`, `ml/README.md`).
 
 ## Objective (as commissioned)
 
@@ -26,7 +27,7 @@ Build a *genuine* 6-hourly groundwater-level forecast trajectory for the next 30
 | Recursive one-step engine | Rejected (31d-validated: RMSE 1.856 vs persistence 1.840 vs direct 1.083) |
 | Open-Meteo weather | **Past-window driver features only**; also feeds driver-source reliability (≤16d FORECAST / 17–30d CLIMATOLOGY / UNAVAILABLE) |
 | Backtest scope | 150 stations (SEED 42) first, then full fleet (549) in the background |
-| UI | Second tab in the Forecast page |
+| UI | Single dark-theme card on the Forecast page (observed tail, "Forecast starts" boundary, q50 + bright q05/q95 band) |
 | Freeze | all round-1 baselines frozen; gate extended to 12 checks |
 
 ## Pipeline (`ml/`)
@@ -37,7 +38,7 @@ Build a *genuine* 6-hourly groundwater-level forecast trajectory for the next 30
 | Models | `31_train_traj.py` | `models/traj_xgb_{q05,q50,q95}.json` + `traj_config.json` (33 features incl. h,h_sin,h_cos) |
 | Honest backtest | `32_backtest_traj.py [n_stations]` | `outputs/traj_backtest_metrics.csv`, `traj_backtest_summary.json`, `models/traj_calibration.json` |
 | Reliability tables | `33_traj_reliability.py` | `models/traj_reliability.json` (bucket rules + weights) |
-| Runtime engine | `_trajectory.py` | Forecast page tab; unit-tested causal contract |
+| Runtime engine | `_trajectory.py` | Forecast page card + `/forecast/<slug>`; unit-tested causal contract |
 | Weather | `20_openmeteo_fetch.py` | `data/cfs/openmeteo_weather_daily.parquet` (37 districts, 365d history + 16d forecast) |
 
 ## Backtest design (honest)
@@ -102,7 +103,5 @@ New checks: trajectory promoted above persistence+direct30 (`promote_trajectory`
 
 ## Outstanding
 
-- Full-fleet (549-station) backtest running in background; refresh reliability tables + gate
-  when it lands.
 - Sub-daily DIRECTIONAL reads: acceptable, documented; revisit only if a denser objective
   (e.g., pumpage) ever arrives.

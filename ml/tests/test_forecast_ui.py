@@ -314,6 +314,11 @@ class TestForecastAppTest(unittest.TestCase):
         self.assertEqual(len(at.tabs), 0)
         self.assertEqual(len(at.get("download_button")), 0)
 
+        # shared sidebar pickers: District + Station (same keys on every page)
+        self.assertEqual(len(at.selectbox), 2)
+        self.assertEqual(at.selectbox[0].label, "District")
+        self.assertEqual(at.selectbox[1].label, "Station")
+
         # exactly the 6 forecast-card metrics
         self.assertEqual(len(at.metric), 6)
         labels = [m.label for m in at.metric]
@@ -321,8 +326,9 @@ class TestForecastAppTest(unittest.TestCase):
                      "30 d change", "Confidence"):
             self.assertIn(want, labels)
 
-        # station switch re-renders in the same session
-        at.selectbox[0].set_value("BADHANI PRATHMIK VIDYALAYA")
+        # station switch (sidebar Station picker, same default district JAUNPUR)
+        # re-renders in the same session
+        at.selectbox[1].set_value("Jaunpur Dobhi Kachhawan")
         at.run(timeout=420)
         self.assertEqual(len(at.exception), 0, at.exception)
         self.assertEqual(len(at.metric), 6)

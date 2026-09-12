@@ -1,13 +1,13 @@
 # AQUIS ML Contract
 
-Contract between the **Node.js backend** and the **Python ML module** (`ml/`, pooled XGBoost).
+Contract between the **Node.js backend** and the **Python ML module** (`ml/`, trajectory v2).
 
 ## Status
 
-The current `ml/` module is a **pooled-model + Streamlit** module (no headless HTTP service). The Flask/API layer and Node gateway integration were **deferred during the merge** (`merge_later` in the merge spec). This document defines:
+The current `ml/` module includes a **trajectory-v2 model + Streamlit dashboard + headless Flask API** (`ml/api.py` on `:5000`). The Node backend proxies `/ml/*` requests to the Flask service. This document defines:
 
 1. the **data / artifact contract** the current `ml/` produces (live today), and
-2. the **planned HTTP contract** for the deferred Flask service (what the module maps to later).
+2. the **HTTP contract** for the Flask API (live).
 
 ## 1. Artifact contract (live)
 
@@ -19,6 +19,9 @@ Cleaned 6-hourly NWIC GWL archive — the read-only source of truth: **~5.3M row
 ### `models/` (trained artifacts)
 | File | Produced by | Contents |
 |---|---|---|
+| `traj_xgb_{q05,q50,q95}.json`, `traj_config.json` | `31_train_traj.py` (offline) / `refresh/model_update.py` (scheduled refit) | trajectory v2 direct multi-horizon quantile XGBoost (120×6h) |
+| `traj_calibration.json` | `32_backtest_traj.py` | per-horizon widening to 90% coverage |
+| `traj_reliability.json` | `33_traj_reliability.py` | bucket rules + evidence weights for confidence |
 | `xgb_multihorizon.joblib`, `linear_multihorizon.joblib` | `06_train.py` | pooled 30-day XGBoost + Ridge (delta target) |
 | `xgb_q{05,50,95}.joblib` | `11_quantile.py` | pooled quantile forecasters |
 | `feature_config.json` | `06_train.py` | model_type, target, horizons, num_cols, stations, districts, split rows, val RMSE, trained_at |
@@ -37,54 +40,60 @@ Cleaned 6-hourly NWIC GWL archive — the read-only source of truth: **~5.3M row
 | `correlation_report.csv`, `correlation_by_district.csv`, `lag_curves.csv` | `05_correlate.py` | driver correlation + recharge lag |
 | `ablation.csv` | `10_ablate.py` | drop-group robustness sweep |
 
-### Baseline numbers (regression gate — `gate_check.py`)
+### Baseline numbers (regression gate — `gate_check.py`, latest run GATE PASS 10/10)
 - Honest 30-day stride RMSE: **2.339 m** (persistence 2.382 m, +1.8%)
 - Spatial CV: mean **1.973 m** / median **1.819 m**
-- Effective sample size ≈ **6,611 rows** (lag-1 ACF **0.858**)
-- Calibrated q05–q95 coverage: **0.911** (target 0.80) → `k = 1.0`; median half-width **1.034 m**, p90 **2.579 m**
+- Effective sample size ≈ **6,635 rows** (lag-1 ACF **0.858**)
+- Calibrated q05–q95 coverage: **0.908** (target 0.80) → `k = 1.0`; median half-width **1.025 m**, p90 **2.575 m**
+- Trajectory v2 (honest 2026 backtest, 73,881 non-overlap windows): 30-day RMSE **trajectory 2.106 m < direct-30d 2.132 m < persistence 2.151 m** → `promote_trajectory = True`; calibrated to **0.90 coverage at every horizon**
 - Fleet scan (Sep 2026): 502 stations scored, median Δ **+0.32 m**, decline 0, recovering 259.
 
 ### Verification
 ```bash
 cd ml
-venv/bin/python -m unittest discover -s tests   # 21 data-gated tests
-venv/bin/python gate_check.py                   # 8 baseline regression checks
+venv/bin/python -m unittest discover -s tests   # 151 tests (2 skipped)
+venv/bin/python gate_check.py                   # baseline regression checks (GATE PASS 10/10)
 ```
 
-## 2. Planned HTTP contract (deferred)
+## 2. HTTP contract (live — `ml/api.py`, version 3.1.0)
 
-When the Flask/API layer is merged, it will expose:
+The Flask service runs on `:5000` and exposes:
 
 ```
-GET  /health                     status, version, trained_stations, snapshot_age_seconds, ollama, dataset
-GET  /stations                   ?district=&q=&limit=        recency-sorted station list (slugs)
-GET  /stations/:slug             latest telemetry facts for one station
-GET  /districts                  recency-sorted districts
-GET  /models                     trained artifact slugs
-GET  /forecast/:slug             ?days=7..90 (default 30)    forecast + calibrated 90% interval
-GET  /fleet/forecasts            precomputed fleet snapshot
-GET  /fleet/recovery             ?window_days=&top=&min_stations=   district recovery ranking
-GET  /fleet/scan                 ?district=&threshold=&horizon=     forecast-decline scan
-POST /assistant/chat             {question, station?, station_slug?, model?}   station-locked LLM answer
+GET  /                                 index: service, version, endpoints, usage
+GET  /health                           status, version, stations, dataset_last, ollama, forecast_model
+GET  /stations                         ?district=&q=&limit=        recency-sorted station list (slugs + lat/lon)
+GET  /stations/<slug>                  per-station facts — same rich object as chat "facts", no LLM call
+GET  /stations/<slug>/series           6-hourly gwl + driver points for relation charts (?drivers=&from=&to=&limit=)
+GET  /forecast/<slug>                  trajectory v2 — 120×6h q05/q50/q95 (slug URL-encoded)
+POST /assistant/chat                   {question, station?, model?}   station-locked LLM answer
 ```
 
 - **URL:** `http://localhost:5000`, configurable via `ML_SERVICE_URL`; gateway forwards path + query string (see `back-end/services/mlGateway.js`).
 - **Timeout:** `ML_TIMEOUT_MS` (default 60000).
 - **Errors:** JSON `{ "error", "detail" }`; 400 / 404 / 500 / 502 / 503 (see `docs/api.md`).
-- **Slugs:** URLs contain spaces — always URL-encode; resolve current slugs from `/stations`.
+- **Slugs:** lowercase hyphenated station names (e.g. `ashadha-prathmik-vidyalaya`) — always URL-encode; resolve current slugs from `/stations`. The exact station name also resolves as a fallback.
 
-### Behavior notes for the future integrator
+### Planned additions (not yet implemented)
+`/districts`, `/models`, `/fleet/forecasts`, `/fleet/recovery`, `/fleet/scan`.
+
+### Behavior notes
 - Data sources for each endpoint are already produced by the current artifact contract (table above).
-- **No on-demand training:** the Flask service will never train at request time; models are pre-trained artifacts in `ml/models/`.
-- Forecasts: `point` = best estimate; `lower`/`upper` = calibrated 90% interval (`quantile_calibration.json`); only stations in the 600-station anchor set have feature rows.
+- **No on-demand training:** the Flask service never trains at request time; models are pre-trained artifacts in `ml/models/`.
+- **Forecasts:** trajectory v2 serves 120 genuine 6h steps (`/forecast/<slug>`);
+  the pooled direct-30d dict (`_model.forward_forecast`) stays the +30d benchmark.
+  `point` = best estimate; `lower`/`upper` = calibrated 90% interval
+  (`quantile_calibration.json`); only stations in the 600-station anchor set have feature rows.
+- **Series:** `/stations/<slug>/series` serves observed history (gwl + drivers)
+  from the aligned 6h table — the chart source for per-feature relation views;
+  never a prediction.
 - Assistant requires Ollama (`ollama serve`, `llama3.2:3b`); the instant-facts panel (no LLM) always works.
 
 ## Service not running?
 
-`GET /ml/health` returns `{ "available": false, "error": "ML service unavailable" }`, and `/ml/*` proxy routes error out — because the Python service is **not yet merged**. Run the current analysis surface with:
-
 ```bash
-cd ml && venv/bin/streamlit run app.py    # http://localhost:8501
+cd ml && venv/bin/streamlit run app.py    # Streamlit dashboard: http://localhost:8501
+cd ml && venv/bin/python -m api           # Flask API: http://localhost:5000
 ```
 
 ## Legacy (deprecated)

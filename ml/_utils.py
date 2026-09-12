@@ -126,3 +126,46 @@ def nice(name: str) -> str:
 
 def source_nice(name: str) -> str:
     return SOURCE_LABELS.get(name, name.replace("_", " "))
+
+
+def sidebar_station_picker(df: pd.DataFrame,
+                           stations: list[str]) -> tuple[str, str]:
+    """Shared sidebar District + Station pickers (keys ``sb_district`` /
+    ``sb_station``).
+
+    Rendered identically on every page that calls it; the selection persists
+    across pages via session_state, so Forecast and Assistant always talk
+    about the same station. ``stations`` is the allowed list in preferred
+    (recency-first) order; districts are derived from it. Returns
+    ``(district, station)``.
+    """
+    df = df[df["Station"].astype(str).isin(set(stations))]
+    dist_of = (df.drop_duplicates("Station").set_index("Station")["District"]
+                 .astype(str).to_dict())
+    allowed = [s for s in stations if s in dist_of]
+    districts = sorted({dist_of[s] for s in allowed})
+    if not districts or not allowed:
+        st.sidebar.warning("No stations available.")
+        st.stop()
+    saved_d = st.session_state.get("sb_district")
+    district = (saved_d if saved_d in districts
+                else dist_of.get(allowed[0], districts[0]))
+    if district not in districts:
+        district = districts[0]
+    in_district = [s for s in allowed if dist_of[s] == district]
+    saved_s = st.session_state.get("sb_station")
+    station = saved_s if saved_s in in_district else in_district[0]
+
+    st.sidebar.markdown("### Station selection")
+    district = st.sidebar.selectbox("District", districts,
+                                    index=districts.index(district),
+                                    key="sb_district")
+    in_district = [s for s in allowed if dist_of[s] == district]
+    if station not in in_district:
+        station = in_district[0]
+    station = st.sidebar.selectbox("Station", in_district,
+                                   index=in_district.index(station),
+                                   key="sb_station")
+    st.sidebar.caption(f"{len(in_district)} stations in **{district}** — "
+                       "most recently updated first.")
+    return district, station

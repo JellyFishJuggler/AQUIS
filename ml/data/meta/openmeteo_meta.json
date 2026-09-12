@@ -2,8 +2,8 @@
   "source": "open-meteo",
   "forecast_days": 16,
   "districts": 37,
-  "rows": 15244,
-  "fetched_at": "2026-09-11T10:13:15+00:00",
+  "rows": 15318,
+  "fetched_at": "2026-09-12T07:42:53+00:00",
   "district_failures": {
     "SONBHADRA": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
     "VARANASI": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429"

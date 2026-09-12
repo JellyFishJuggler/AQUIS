@@ -88,10 +88,10 @@ npm run dev                 # Start Next.js at http://localhost:3000
 ```
 ml/
 ├─ app.py                        # Streamlit dashboard (4 pages: Assistant, Correlation,
-│                                #   Forecast, Sources; older pages exist but are not wired)
+│                                #   Forecast, Sources; Verification page exists, unwired)
 ├─ app_pages/                    # page scripts (assistant, correlation, forecast,
-│                                #   data_sources, verification + deactivated: overview,
-│                                #   drivers, stations, model, fleet)
+│                                #   data_sources + verification; legacy Overview/Drivers/
+│                                #   Stations/Model/Fleet pages removed)
 ├─ app_charts.py                 # dark-theme Altair helpers for the forecast chart
 ├─ config.py                     # sources, resource IDs, radii, coverage rules, paths
 ├─ 00_probe.py … 13_refresh_nwic.py   # classic pooled pipeline
@@ -165,7 +165,7 @@ One **pooled** model, not one per station:
 - **Grid + horizon:** 6-hourly track, single **30-day** horizon (`GWL(t+120) − GWL(t)`, delta target). Today's level is the anchor feature — never predicted.
 - **XGBoost:** `reg:squarederror`, early stopping on the Oct–Dec 2025 validation split; train sampled 1 slot/day for memory.
 - **Ridge** (linear baseline), **persistence** (0-change), and per-station **day-of-year climatology** are benchmarked in `07_evaluate.py`.
-- **Quantile uncertainty** (`11_quantile.py`): native `reg:quantileerror` q05/q50/q95 pooled forecasters, empirically calibrated on non-overlapping windows → `quantile_calibration.json` (stride coverage 0.911 ≥ 0.80 target, so `k = 1.0`; median band ±~1.03 m).
+- **Quantile uncertainty** (`11_quantile.py`): native `reg:quantileerror` q05/q50/q95 pooled forecasters, empirically calibrated on non-overlapping windows → `quantile_calibration.json` (stride coverage 0.908 ≥ 0.80 target, so `k = 1.0`; median band ±~1.03 m).
 
 ### Trajectory v2 (`_trajectory.py`) — the Forecast page model
 A separate **direct multi-horizon shared XGBoost** on the 6 h grid: horizon `h ∈ 1..120` is an input feature, each step is a genuine model output (no recursion, no interpolation). Full spec + results: **[`docs/ml-trajectory-v2-spec.md`](docs/ml-trajectory-v2-spec.md)**.
@@ -188,14 +188,14 @@ A separate **direct multi-horizon shared XGBoost** on the 6 h grid: horizon `h �
 ### Verify after editing
 ```bash
 cd ml
-venv/bin/python -m unittest discover -s tests    # 138-unit test suite (AppTest gated via AQUIS_APPTEST=1)
-venv/bin/python gate_check.py                    # baseline checks (frozen RMSE/CV/coverage/eff-N/ACF + trajectory)
+venv/bin/python -m unittest discover -s tests    # 151-unit test suite (AppTest gated via AQUIS_APPTEST=1)
+venv/bin/python gate_check.py                    # baseline checks (frozen RMSE/CV/coverage/eff-N/ACF + trajectory; latest: GATE PASS 10/10)
 ```
 
 ### Dashboard (`app.py`, Streamlit, 4 active pages)
 **Assistant** (station-pinned LLM, default page) · Correlation (mode/metric pickers + recharge-lag curve) ·
 **Forecast (single dark-theme trajectory v2 card: 120 genuine 6-hourly points, bright q05/q95 band, confidence, direction)** ·
-Sources (manifest quality, association method, soil/LULC status). Older pages (Overview, Drivers, Stations, Model, Fleet) exist in `app_pages/` but are not wired into the nav; Verification (`app_pages/verification.py`) can be wired in when wanted.
+Sources (manifest quality, association method, soil/LULC status). Legacy pages (Overview, Drivers, Stations, Model, Fleet) were removed from `app_pages/`; Verification (`app_pages/verification.py`) can be wired in when wanted.
 
 ---
 
@@ -219,7 +219,7 @@ Sources (manifest quality, association method, soil/LULC status). Older pages (O
 Full backend/ML endpoint reference lives in **[`docs/api.md`](docs/api.md)**. Summary:
 
 - **Node `:3000`** endpoints: stations, telemetry, assessments (CGWB), trends (Mann-Kendall + Sen's slope), ml-data, data-quality, ingestion.
-- **ML Flask `:5000` (`ml/api.py`, live)** — JSON endpoints: root `/` (lists available routes), `/health`, `/stations` (with district/q filtering), `/forecast/<slug>` (trajectory v2), `/assistant/chat` (Ollama-backed LLM). CORS enabled; the Node gateway can proxy via `ML_SERVICE_URL`.
+- **ML Flask `:5000` (`ml/api.py`, live, v3.1.0)** — JSON endpoints: root `/` (lists available routes), `/health`, `/stations` (with district/q filtering, lat/lon per station), `/stations/<slug>` (per-station facts, no LLM), `/stations/<slug>/series` (6-hourly GWL + driver points for relation charts), `/forecast/<slug>` (trajectory v2), `/assistant/chat` (Ollama-backed LLM). CORS enabled; the Node gateway can proxy via `ML_SERVICE_URL`.
 
 ---
 
@@ -230,7 +230,7 @@ npm test
 ```
 Backend tests cover classification, statistics, telemetry utilities, ML gateway, and app configuration.
 
-ML validation: stdlib `unittest` suite in `ml/tests/` (138 data-gated tests, no pytest; the full Forecast-page AppTest is gated behind `AQUIS_APPTEST=1` because the trajectory engine is slow) + `ml/gate_check.py` regression gate.
+ML validation: stdlib `unittest` suite in `ml/tests/` (151 data-gated tests, no pytest; the full Forecast-page AppTest is gated behind `AQUIS_APPTEST=1` because the trajectory engine is slow) + `ml/gate_check.py` regression gate.
 
 ---
 

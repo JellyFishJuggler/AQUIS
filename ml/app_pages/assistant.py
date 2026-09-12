@@ -9,6 +9,7 @@ from _assistant import (
     ollama_model,
     ollama_status,
 )
+from _utils import sidebar_station_picker
 
 st.set_page_config(page_title="AQUIS — assistant", page_icon=":material/smart_toy:", layout="wide")
 st.title("Assistant — groundwater data in plain language")
@@ -29,27 +30,10 @@ elif not up:
     st.info(f"Ollama reachable, but model **`{model_name}`** is not pulled. Run:")
     st.code(f"ollama pull {model_name}", language="bash")
 
-# --- District & station selection ---
+# --- District & station selection (shared sidebar — Forecast follows along) ---
 recency = df.groupby("Station")["time"].max().sort_values(ascending=False)
-recency = {s: t for s, t in recency.items()}
-df["District_upper"] = df["District"].astype(str).str.upper().str.strip()
-districts = sorted(df["District_upper"].unique())
-
-c1, c2 = st.columns(2)
-with c1:
-    selected_district = st.selectbox("District", districts, key="as_district")
-with c2:
-    stations_in_district = sorted(
-        df[df["District_upper"] == selected_district]["Station"].astype(str).unique(),
-        key=lambda s: recency.get(s, pd.Timestamp.min),
-        reverse=True,
-    )
-    station = st.selectbox("Station", stations_in_district, key="as_station")
-
-st.caption(
-    f"{len(stations_in_district)} stations in **{selected_district}** — "
-    f"most recently updated first."
-)
+stations = [str(s) for s in recency.index]
+selected_district, station = sidebar_station_picker(df, stations)
 
 # --- Chat ---
 assistant = StationAssistant()

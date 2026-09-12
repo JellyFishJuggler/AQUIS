@@ -10,12 +10,10 @@ actual implemented code and produced artifacts — not a generic design.
 station-locked LLM assistant.
 
 **Live today:**
-- Streamlit dashboard — `ml/app.py` (port 8501)
-- Node.js Express API — `back-end/` (port 3000)
-- Headless Flask ML API on `:5000` — **planned / deferred** (endpoints are
-  specified in §8 and mapped to existing `ml/` functions, but no Flask server
-  is merged yet — `/ml/*` gateway routes currently return
-  `{"available": false, "error": "ML service unavailable"}`).
+- Streamlit dashboard — `ml/app.py` (port 8501) — 4 pages in nav: Assistant (default) · Correlation · Forecast · Sources
+- Headless Flask ML API — `ml/api.py` (port 5000) — `/`, `/health`, `/stations`, `/forecast/<slug>`, `/assistant/chat`
+- Node.js Express API — `back-end/` (port 3000), proxying `/ml/*` to the Flask service via `mlGateway.js`
+- Refresh daemon — `ml/refresh/` — 6-hourly fetch→inference→publish grid on `{01,07,13,19}:00 IST` (see `ml/README.md` "Refresh pipeline")
 
 ---
 ---
@@ -49,10 +47,12 @@ station-locked LLM assistant.
      ┌─────────┴───────────────────────────────────────────────────────────────┐
      ▼                                                                          ▼
 Streamlit app (ml/app.py, :8501)                                        Express API (:3000)
-9 pages: Overview · Correlation · Drivers · Stations · Model ·          /stations /telemetry /assessments
-Forecast · Fleet · Assistant · Sources                                  /trends /ml-data /data-quality
+4 pages: Assistant (default) · Correlation · Forecast · Sources          /stations /telemetry /assessments
+(Overview/Drivers/Stations/Model/Fleet deactivated;                    /trends /ml-data /data-quality
+ Verification page exists but unwired)                                      
      │                                                                  │
      └────────── ML client (React/Next or mobile) ◄──────────────────────┘
+                   ↵ ml/api.py (:5000) Flask: /health /stations /forecast/<slug> /assistant/chat
 ```
 
 **Production data flow** (repo README): NWDP Telemetry API + CGWB Assessment
@@ -182,7 +182,7 @@ Full feature list = `ml/models/feature_config.json` → `num_cols` (30) +
 | `question` | free-text for chatbot | str | non-empty | yes (chat) |
 | `history` | prior chat turns | list[dict] | `[{"role":"user","content":…}]` | optional |
 | `model` (chat) | LLM model override | str | `"llama3.2:3b"` | optional |
-| `days` (planned API) | forecast horizon | int | 7–90, default 30 | optional |
+| `days` | forecast horizon (API, fixed at 30) | int | 7–90, default 30 | optional |
 
 ---
 
@@ -300,7 +300,8 @@ pressure 110,949/4 · river_level 295,302/6/2 · canal_level 88,089/17/1.
    per-sample 6h bins, cyclic calendar encodings.
 7. Static ISRIC soil per-station texture (`07_soil`) and Bhuvan LULC district
    stats (`08_lulc`) are fetched/app-visible but **gated out** of the model.
-   CFSv2 seasonal rain (`09_cfs_rain`) is staged (NCEI 6h-FLX), currently paused.
+   CFSv2 seasonal rain (`09_cfs_rain.py`) was **removed** (NCEI gridded services
+   returned S3-403; Open-Meteo replaced the driver feed).
 
 ---
 
@@ -355,7 +356,7 @@ target.
 **Honest (overlap-aware) re-score — `outputs/honest_metrics.csv` & `overlap.json`:**
 378,554 raw test rows are ~99% overlapping (120-step windows on a 6h grid →
 `effective_N_ratio = 0.0089` → **3,371 independent stride windows**; effective
-sample ≈ 6,611 from lag-1 ACF 0.858).
+sample ≈ 6,635 from lag-1 ACF 0.858).
 
 | Model | raw RMSE | **stride RMSE** | window med RMSE |
 |---|---|---|---|
@@ -374,13 +375,15 @@ not spatial leakage, is the binding constraint. Residual: Moran's I = 0.042
 (p=0.051), Geary's C = 1.083 (ns) — no strong spatial clustering.
 
 **Quantile calibration — `quantile_calibration.json`:**
-`target_coverage_stride 0.8`, `widen_factor_k 1.0`, `coverage_stride 0.911`
-(raw 0.9039), `half_width_median_m 1.034`, `half_width_p90_m 2.579`,
-`half_width_mean_m 1.385`. Anchor basis: `level = today's GWL + quantile(delta 30d)`.
+`target_coverage_stride 0.8`, `widen_factor_k 1.0`, `coverage_stride 0.908`
+(raw 0.9003), `half_width_median_m 1.025`, `half_width_p90_m 2.575`,
+`half_width_mean_m 1.376`. Anchor basis: `level = today's GWL + quantile(delta 30d)`.
 
-**Regression gate (`ml/gate_check.py`, 8/8 baseline checks):**
+**Regression gate (`ml/gate_check.py`, 12 checks; latest run GATE PASS 10/10):**
 honest stride RMSE 2.339 · spatial CV mean 1.973 / median 1.819 ·
-coverage 0.911 · half-width median 1.034 / p90 2.579 · eff-N 6,611 · lag1 ACF 0.858.
+coverage 0.908 · half-width median 1.025 / p90 2.575 · eff-N 6,635 · lag1 ACF 0.858 ·
+trajectory 30d 2.106 (promoted) · +30d calibrated coverage 0.90.
+(The 2 recursive-model checks skip — the `backtest_6h_*` artifacts were removed.)
 
 ---
 
@@ -449,28 +452,28 @@ spatial_cv, spatial_cv_summary}`.
 Two services:
 - **Node `:3000`** (live): `/stations`, `/telemetry`, `/assessments`,
   `/trends`, `/ml-data`, `/data-quality`, `/ingestion` — full list in §14.
-- **Python `:5000` (planned)** — the consumed-by-app surface below. The Node
-  gateway (`back-end/services/mlGateway.js`) already forwards path+query to
-  `ML_SERVICE_URL`. Status codes: 200 / 400 / 404 / 500 / 502 / 503
+- **Python `:5000` Flask** (`ml/api.py`, live) — surface below. The Node
+  gateway (`back-end/services/mlGateway.js`) forwards path+query to
+  `ML_SERVICE_URL`. Status codes: 200 / 400 / 404 / 422 / 500 / 502 / 503
   (`{ "error": …, "detail": … }`).
 
-| Endpoint (planned) | Method | Input | Response (shape) | Backed by (exists today) |
+| Endpoint | Method | Input | Response (shape) | Backed by |
 |---|---|---|---|---|
-| `/health` | GET | — | `{available, model, trained_at, n_stations, coverage_stride, snapshot_age_seconds, ollama:{server,models,model}}` | `model_metadata.json`, `quantile_calibration.json`, `residual_acf.json`, `_assistant.ollama_status()` |
-| `/stations` | GET | `?district=&q=&limit=` | `[{station, district, slug, latitude, longitude, last_ts, n_2026_records, full26}]` | `selected_gwl_stations.csv`, `station_recency()` |
-| `/stations/:slug` | GET | slug | station facts (see §13 facts dict) | `selected_gwl_stations.csv`, `_assistant.facts()` |
-| `/districts` | GET | — | `[{district, n_stations, median_gwl, last_ts}]` | `selected_districts.json`, table_6h |
-| `/models` | GET | — | artifact list + val metrics | `feature_config.json`, `model_metadata.json` |
-| `/forecast/:slug` | GET | `?days=` (7–90, default 30) | see §7.1 JSON | `_model.forward_forecast()` |
-| `/fleet/forecasts` | GET | — | `{horizon_days, generated_at, stations:[…]}` | `outputs/fleet_forecast.csv` / `fleet_forecast_snapshot.json` |
-| `/fleet/recovery` | GET | `?window_days=&top=&min_stations=` | district recovery ranking | `outputs/fleet_district.csv` |
-| `/fleet/scan` | GET | `?district=&threshold=&horizon=` | decline scan (quality-gated) | `11_fleet.py` movers logic |
-| `/assistant/chat` | POST | `{question, station?, station_slug?, model?}` | `{answer, facts, station}` | `_assistant.StationAssistant.answer()` |
+| `/` | GET | — | `{service, version, status, endpoints, usage}` | hardcoded index |
+| `/health` | GET | — | `{status, service, version, stations, dataset_last, ollama:{server,models,model}, forecast_model}` | `_data()`, `_index()`, `_assistant.ollama_status()` |
+| `/stations` | GET | `?district=&q=&limit=` | `{count, stations:[{station, district, slug, latitude, longitude, last_ts,…}]}` | `selected_gwl_stations.csv`, `_index()` |
+| `/forecast/<slug>` | GET | slug (URL-encoded) | 120×6h trajectory `time/q05/q50/q95` + confidence + drivers | `_trajectory.trajectory_forecast()` |
+| `/assistant/chat` | POST | `{question, station?, model?}` | `{answer, facts, station}` | `_assistant.StationAssistant.answer()` |
 
-**Slugs vs names:** planned API uses slugs `Station_Agency_shortHash`
-(e.g. `ASHADHA%20PRATHMIK%20VIDYALAYA_UPGW_5f5b3671`); always fetch the slug
-from `/ml/stations`, URL-encode it. Internally the model uses the raw station
-name string (e.g. `"Ramchhitoni Sahawar (UP-011)"`).
+**Planned additions (not yet implemented):** `/stations/:slug` (per-station
+facts), `/districts`, `/models`, `/fleet/forecasts`, `/fleet/recovery`,
+`/fleet/scan`.
+
+**Slugs vs names:** API uses lowercase hyphenated slugs
+(e.g. `ashadha-prathmik-vidyalaya`); always fetch the slug
+from `GET /stations` — never hand-type it. The exact station name also
+resolves as a fallback when URL-encoded. Internally the model uses the raw
+station name string (e.g. `"Ramchhitoni Sahawar (UP-011)"`).
 
 **Errors:**
 - 400 — e.g. chat without `question`, or `days` out of 7–90
@@ -572,19 +575,21 @@ Available in `ml/outputs/`:
 
 ## 12. Streamlit app — live features & purpose
 
-`ml/app.py` (port 8501), 9 pages via `st.navigation`:
+`ml/app.py` (port 8501), 4 pages via `st.navigation` (+ Verification, unwired):
 
 | Page | File | Purpose / content |
 |---|---|---|
-| **Overview** | `app_pages/overview.py` | KPIs (600 stations, 2.28M GWL records, driver records, 580 soil profiles) + drivers ranked by raw \|Spearman\| + driver station-coverage bars |
+| **Assistant** | `app_pages/assistant.py` | Station-pinned chat (default page); instant-facts panel works even if Ollama is down; Ollama status probe |
 | **Correlation** | `app_pages/correlation.py` | Driver×metric×mode pickers, recharge-lag curve (GWL vs rainfall), static-feature (soil/LULC) vs GWL summary |
-| **Drivers** | `app_pages/drivers.py` | Per-station overlay chart of a driver (rain/temp/humidity/…) vs GWL on the daily aligned table |
-| **Stations** | `app_pages/station_explorer.py` | District filter, per-station GWL trend (median surface) + driver coverage, soil profile context |
-| **Model** | `app_pages/model.py` | Benchmark table + RMSE bars (level/delta toggle), honest validation expander (stride RMSE, robust spatial CV, residual ACF, Moran's I), ablation, diagnostics (VIF/permutation/sensitivity), feature importance / \|coef\| charts, pipeline config |
-| **Forecast** | `app_pages/forecast.py` | 2026 backtest curve + calibrated q05/q95 error-band, 4 KPIs (anchor, anchored reads, RMSE, interval ±), forward outlook table + anchor→+30d line chart, station soil/LULC context expander |
-| **Fleet** | `app_pages/fleet.py` | 6 KPIs (scored, districts, median Δ, declining, recovering, quality-gated), significant movers (Δ > 90% band), Δ histogram ±0.3 m rules, district rollup, station-level scan with 3 filters, method/caveats |
-| **Assistant** | `app_pages/assistant.py` | Station-pinned chat; instant-facts panel works even if Ollama is down; Ollama status probe |
+| **Forecast** | `app_pages/forecast.py` | Single dark-theme trajectory v2 card: 120 genuine 6-hourly points, observed tail, "Forecast starts" boundary, bright q05/q95 band (no dot markers), direction banner, 6 metric cards, freshness caption |
 | **Sources** | `app_pages/data_sources.py` | Per-source manifest quality (rows/stations/districts/dropped), empty-source table, static hydrogeology (soil/LULC status), association method + radius |
+| **Verification** *(not in nav)* | `app_pages/verification.py` | Realised-forecast quality from `data/refresh/verification_summary.json` + sign-accuracy ledger; wire into `app.py` to enable |
+
+> The legacy explorer pages (Overview, Drivers, Stations, Model, Fleet) were
+> **removed** from `app_pages/`; their pipeline outputs (`fleet_forecast.csv`,
+> `model_metrics.csv`, honest/ablation/diagnostics) are still produced by the
+> numbered scripts and served through `_model.py` loaders, the Flask API and
+> the assistant facts.
 
 ---
 
@@ -682,9 +687,9 @@ Ollama status warning.
 
 ```
 ml/
-├─ app.py                        Streamlit entry — st.navigation of 9 pages, :8501
-├─ app_pages/{overview,correlation,drivers,station_explorer,model,forecast,
-│             fleet,assistant,data_sources}.py   individual Streamlit pages (§12)
+├─ app.py                        Streamlit entry — st.navigation of 4 pages, :8501
+├─ app_pages/{assistant,correlation,forecast,data_sources}.py   live pages (§12)
+│             + verification.py (refresh verification UI, not in nav)
 ├─ config.py                     SOURCES (archive/live resource ids), radii, coverage
 │                                rules (FULL26_*), caps (MAX_RAIN_MM_H), field names, paths
 ├─ 00_probe.py                   probe every NWIC resource (archive + live) → meta/probe.json
@@ -699,7 +704,6 @@ ml/
 ├─ 07_evaluate.py                4-way benchmark (XGB/Ridge/persistence/climatology) + honest re-score
 ├─ 07_soil.py                    ISRIC SoilGrids v2 per-station texture fetch
 ├─ 08_lulc.py                    ISRO Bhuvan LULC 50K district stats
-├─ 09_cfs_rain.py                CFSv2 seasonal-rain fetch (staged/paused)
 ├─ 10_ablate.py                  drop-group ablation sweep → outputs/ablation.csv
 ├─ 11_quantile.py                pooled q05/q50/q95 + empirical coverage calibration
 ├─ 11_fleet.py                   whole-fleet 30-day scan + recovery ranking
@@ -712,7 +716,7 @@ ml/
 ├─ _soil.py / _lulc.py           static soil / LULC loaders
 ├─ validation/                   P0 honesty suite: spatial_cv.py, overlap.py,
 │                                residual_acf.py, spatial_residual.py, _spatial_folds.py
-├─ gate_check.py                 8-baseline regression gate (run after edits)
+├─ gate_check.py                 12-check regression gate (run after edits; latest GATE PASS 10/10)
 ├─ tests/                        stdlib unittest (data-gated, no pytest)
 ├─ MODEL_CARD.md                 model lifecycle card
 ├─ README.md                     module doc + decisions log
@@ -760,7 +764,8 @@ Env file pattern: plain `KEY=VALUE` lines in repo `.env`, parsed by
 - **Ollama (local)** — `llama3.2:3b` ~2 GB, `ollama serve`; not an external SaaS.
 - **CGWB assessments** — Excel files (imported via backend), manual/quarterly
   UPGW dataset documented in `MODEL_CARD.md` (not ingested into ML).
-- NCEI CFSv2 (6h-FLX) staged in `09_cfs_rain.py` — currently paused (S3-403).
+- NCEI CFSv2 seasonal rain was **removed** (`09_cfs_rain.py` deleted — NCEI
+  gridded services returned S3-403); Open-Meteo is the driver feed.
 
 ---
 
@@ -794,7 +799,7 @@ Env file pattern: plain `KEY=VALUE` lines in repo `.env`, parsed by
 ### 17.3 Honest-validation rules (don't overclaim)
 - Never quote per-row RMSE deltas < ~±0.05 m as signal (overlap noise).
 - Use stride (non-overlap) metrics for claims: XGBoost 2.339 vs persistence
-  2.382 m, coverage 0.911 on 3,371 windows, eff-N 6,611.
+  2.382 m, coverage 0.908 on 3,371 windows, eff-N 6,635.
 - Significance of a fleet move: |Δ| must exceed the 90% band half-width.
 
 ---
@@ -850,7 +855,7 @@ Env file pattern: plain `KEY=VALUE` lines in repo `.env`, parsed by
   "validated": {
     "honest_metrics": [{"model": "xgb", "basis_stride_rmse": 2.3389, "n_windows": 3371}],
     "spatial_cv_summary": {"fold_rmse_mean": 1.9733, "fold_rmse_median": 1.8191},
-    "quantile_calibration": {"coverage_stride": 0.911, "half_width_median_m": 1.034}
+    "quantile_calibration": {"coverage_stride": 0.908, "half_width_median_m": 1.025}
   }
 }
 ```
