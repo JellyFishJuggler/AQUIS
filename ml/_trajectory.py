@@ -11,7 +11,7 @@ anchor out-of-training-range OOD, and trajectory stability. The numerical +30d
 endpoint and its uncertainty continue to come from the production direct-30d
 model (benchmark); the trajectory still reports its own genuine +30d point.
 
-Used by the Forecast page; unit-tested for the causal contract.
+Used by the API forecast endpoint; unit-tested for the causal contract.
 """
 from __future__ import annotations
 
@@ -159,28 +159,30 @@ def trajectory_forecast(station: str) -> dict:
     models, fnames, cal, rel = c["models"], c["fnames"], c["cal"], c["rel"]
     ffwd = c["forward_forecast"]
     if rel is None:
-        return {"error": "trajectory reliability tables not built (run 33)"}
+        return {"error": "trajectory reliability tables not built (run 33)",
+                "reason": "artifacts_missing"}
     if cal is None:
-        return {"error": "trajectory calibration not built (run 32)"}
+        return {"error": "trajectory calibration not built (run 32)",
+                "reason": "artifacts_missing"}
 
     tbl = c["tbl"]
     sta = tbl[tbl["Station"].astype(str) == station].sort_values("time")
     if sta.empty:
-        return {"error": f"no data for station {station}"}
+        return {"error": f"no data for station {station}", "reason": "no_data"}
     hist = sta.dropna(subset=["gwl"])
     if hist.empty:
-        return {"error": "no observed GWL"}
+        return {"error": "no observed GWL", "reason": "no_observed_gwl"}
     anchor_t = hist["time"].iloc[-1]
     hist_d = sta[sta["time"] <= anchor_t].copy()
     hist_d["date"] = hist_d["time"].dt.normalize()
     feats, _ = F.build_full(hist_d, keep_na=True, horizon_steps=120, horizon_label=30)
     feats = feats.sort_values("time")
     if feats.empty:
-        return {"error": "no feature frame"}
+        return {"error": "no feature frame", "reason": "no_feature_frame"}
     last = feats.iloc[-1:].copy()
     anc = float(last["gwl"].iloc[0])
     if not np.isfinite(anc):
-        return {"error": "anchor GWL invalid"}
+        return {"error": "anchor GWL invalid", "reason": "anchor_invalid"}
 
     base_cols = [x for x in fnames if x not in ("h", "h_sin", "h_cos")]
     hs = np.arange(1, MAX_H + 1, dtype=np.float32)

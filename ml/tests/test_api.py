@@ -299,6 +299,33 @@ class TestFleetRecovery(unittest.TestCase):
 
 @unittest.skipUnless(has("api.py") and has("data/aligned/table_6h.parquet"),
                      "api module / aligned table missing")
+class TestForecastErrors(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        import api
+        cls.client = api.app.test_client()
+
+    def test_forecast_ok(self):
+        r = self.client.get("/forecast/ramchhitoni-sahawar-up-011")
+        self.assertEqual(r.status_code, 200, r.get_data(as_text=True)[:300])
+        self.assertIn("trajectory", r.get_json())
+
+    def test_forecast_422_has_reason(self):
+        # amlour: telemetry exists but no usable feature frame
+        r = self.client.get("/forecast/amlour")
+        self.assertEqual(r.status_code, 422)
+        body = r.get_json()
+        self.assertEqual(body["error"], "forecast unavailable")
+        self.assertEqual(body["reason"], "no_feature_frame")
+        self.assertTrue(body["hint"])
+
+    def test_forecast_unknown_slug_404(self):
+        r = self.client.get("/forecast/no-such-xyz")
+        self.assertEqual(r.status_code, 404)
+
+
+@unittest.skipUnless(has("api.py") and has("data/aligned/table_6h.parquet"),
+                     "api module / aligned table missing")
 class TestAssistantChatGet(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

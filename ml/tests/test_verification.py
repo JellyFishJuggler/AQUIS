@@ -222,16 +222,6 @@ class TestSchedulerDrift(unittest.TestCase):
         self.assertEqual(self.st.get("drift_streak"), 0)
 
 
-@unittest.skipUnless(os.environ.get("AQUIS_APPTEST"), "set AQUIS_APPTEST=1 to run")
-class TestVerificationAppTest(unittest.TestCase):
-    def test_verification_page_renders(self):
-        from streamlit.testing.v1 import AppTest
-        at = AppTest.from_file(str(ROOT / "app_pages" / "verification.py"),
-                               default_timeout=60)
-        at.run(timeout=60)
-        self.assertEqual(len(at.exception), 0, at.exception)
-
-
 @unittest.skipUnless(has("03_merge_normalize.py"), "merge/normalize missing")
 class TestTrimHighSide(unittest.TestCase):
     """High-side apex-relax: monsoon-recharge readings survive the trim.

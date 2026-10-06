@@ -77,25 +77,14 @@ Physically consistent with monsoon recharge delay.
 * River (no coords): **district-level proxy** (mean across that district's gauges).
   Flagged in README and `data/meta/assoc_*.csv`.
 
-## Visualisation app
+## Serving
 
-Streamlit explorer in `app.py` (4 pages). Run:
-
-```bash
-venv/bin/streamlit run app.py
-```
-
-Pages: **Assistant (station-locked NL chat, llama3.2:3b via local Ollama — default)** ·
-Correlation (mode/metric pickers + recharge-lag curve) ·
-**Forecast (single dark-theme trajectory v2 card)** ·
-Sources (manifest quality + association method + soil/extraction status).
-
-> The legacy explorer pages (Overview, Drivers, Stations, Model, Fleet) were
-> **removed** — the pipeline outputs they displayed (`fleet_forecast.csv`,
-> `model_metrics.csv`, honest/ablation/diagnostics) are still produced by the
-> numbered scripts and consumed by `_model.py` loaders. The **Verification** page
-> (`app_pages/verification.py`) reads the refresh pipeline's realised-forecast scores —
-> wire it into `app.py` when you want it in the nav.
+The Streamlit explorer (`app.py`, `app_pages/`, `app_charts.py`) was removed.
+Serving paths are now the Flask API in this directory (`api.py`, used by the
+Node back-end gateway) and the refresh pipeline (`refresh/`, `python -m
+refresh.cli status`). The pipeline outputs (`fleet_forecast.csv`,
+`model_metrics.csv`, honest/ablation/diagnostics) are still produced by the
+numbered scripts and read via `_model.py` loaders.
 
 ### Assistant page (Ollama, local)
 
@@ -111,7 +100,15 @@ ollama pull llama3.2:3b # ~2 GB, one-time
 ```
 
 Model override: `AQUIS_OLLAMA_MODEL` in the repo `.env` (same read pattern as
-`LULC_STATISTICS_API_KEY`). `_assistant.py` = logic, `app_pages/assistant.py` = UI.
+`LULC_STATISTICS_API_KEY`). `_assistant.py` = logic (served via the
+`/assistant/chat` endpoint).
+
+Voice input lives on the mobile client only:
+the app transcribes on-device (Android SpeechRecognizer / iOS
+SFSpeechRecognizer, Hindi/English) and POSTs the resulting text to the
+existing `/assistant/chat` endpoint (`POST /ml/assistant/chat` via the
+backend) — the same station-locked pipeline as typed questions. No server
+STT model or audio upload involved.
 
 ## Model pipeline (06–07)
 
@@ -186,6 +183,55 @@ full results: [`../docs/ml-trajectory-v2-spec.md`](../docs/ml-trajectory-v2-spec
   and `+30 d` calibrated coverage = 0.90 (latest run: **GATE PASS 10/10**; the 2
   recursive-model checks skip since the `backtest_6h_*` artifacts were removed).
 
+## Alternative algorithms evaluated (SARIMA + GPR)
+
+Beyond the in-pipeline baselines (ridge / persistence / climatology in
+`07_evaluate.py`), two external algorithm families were benchmarked against the
+production XGBoost stack. Both were **rejected**; results kept for provenance.
+
+Protocol note: both comparisons use **daily means, 10 stations, 5 rolling 2026
+origins, 30-day horizon** — matched pairs where possible, and **not** comparable
+to the 6-hourly level RMSE tables above.
+
+### SARIMA — `baselines/arima_compare.py` → `outputs/arima_vs_xgb.{csv,md}`
+
+* `SARIMAX(1,1,1)×(1,0,1,7)` refit **per origin** on univariate daily history
+  (≥180 clean days, gaps ≤3 d interpolated), forecast 30 d with 90% intervals;
+  matched against the frozen trajectory XGB on the same origins
+  (10 stations × 5 origins = 150 forecasts/model).
+* **Overall: XGB wins** — RMSE 0.885 vs 1.947, MAE 0.493 vs 0.502,
+  PICP90 0.964 vs 0.697 (ARIMA intervals under-cover).
+* Per-station: ARIMA wins on stable low-variance stations (Tindwara RMSE 0.028
+  vs XGB 0.056) but collapses on volatile ones (Banda 5.91 vs 1.97); XGB's
+  advantage is coverage + robustness, not every station.
+
+### GPR — commit `cd07868`, harness in repo-root `ml-gpr/`
+
+* Per-station **Gaussian Process Regression** with a single `time_hours`
+  feature (periodic×RBF kernel), trained batch over all stations
+  (`ml/training/train_gpr.py` in that commit).
+* In-sample fit is fine (train R² ≈ 0.95), but as a frozen forecaster it
+  **extrapolates catastrophically** — pre-2026 train → 2026 daily means on 2
+  comparison stations:
+
+  | Station | GPR RMSE / R² | SARIMA RMSE | XGB RMSE |
+  |---|---:|---:|---:|
+  | Inter college, Tindwara | 7.82 / −401 | 0.028 | 0.056 |
+  | Banda Badokhar Khurd | 2.13 / −7.6 | 5.91 | 1.97 |
+
+* Why it fails: a time-only GP reverts to its training mean outside the
+  training span; predictive variance inflates instead (PICP90 = 1.00 — bands
+  cover everything, uninformative). Fit is **O(n³)** — ~85 s at 1.6k rows,
+  ~6 min at 3k rows/station (`n_restarts=0`), so no path to 600 pooled
+  stations either.
+* Numbers: `ml-gpr/artifacts/gpr_vs_arima_xgb.json`,
+  `ml-gpr/artifacts/gpr_metrics.json`.
+
+**Verdict:** pooled XGBoost (trajectory v2) stays the production model — it wins
+the matched daily-mean protocol overall and is the only candidate that scales;
+SARIMA is a respectable univariate baseline on stable stations; GPR as designed
+in `cd07868` is unsuitable for forecasting (interpolation only).
+
 ## Refresh pipeline (`refresh/`)
 
 The production-facing near-real-time loop. A systemd daemon
@@ -253,7 +299,7 @@ The **Verification** page (`app_pages/verification.py`) reads
 * `MODEL_CARD.md` — lifecycle card for the pooled model (features, training, honest
   performance, limitations)
 * `tests/` — forecast-validation suite (stdlib `unittest`, data-gated, no pytest):
-  `python -m unittest discover -s tests -v` (151 tests + 2 skipped; the Forecast-page
+  `python -m unittest discover -s tests -v` (177 tests + 2 skipped; the Forecast-page
   AppTest is gated behind `AQUIS_APPTEST=1`)
 * `data/meta/` — association CSVs, manifest, probe results, per-station flags
 * `outputs/traj_backtest_metrics.csv` + `traj_backtest_summary.json` — trajectory v2

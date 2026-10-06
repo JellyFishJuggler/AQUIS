@@ -112,6 +112,7 @@ ml/
 │  ├─ meta/         associations, manifest, probe, station flags, climatology
 │  ├─ features_6h/  train/val/test parquet (causal 6h feature frames; built by 14_6h_features)
 │  └─ soil/         ISRIC SoilGrids + ISRO LULC (one-off fetch)
+├─ baselines/                   # SARIMA-vs-XGB matched-origin comparison (arima_compare.py)
 ├─ models/                      # joblib (pooled) + traj_*.json (trajectory v2)
 ├─ outputs/                     # correlation, benchmark, honest metrics, fleet, diagnostics
 ├─ tests/                       # stdlib unittest suite (no pytest dependency)
@@ -185,10 +186,38 @@ A separate **direct multi-horizon shared XGBoost** on the 6 h grid: horizon `h �
 
 **Honest scale of evidence** (overlap-aware, non-trivial): because 6-hourly 30-day windows overlap ~99%, the trustworthy campaign is the **stride** set — **2.339 m vs persistence 2.382 m (+1.8%)** on 3,371 independent windows; effective sample ≈ 6,600 rows (lag-1 ACF 0.86). **Spatial CV** (leave-block-out station retraining) = 1.97 m mean / 1.82 m median — the 2026 temporal holdout, not spatial leakage, is the binding constraint. Feature ablation: rain/weather/calendar add ~+0.03–0.05 m when dropped; river/canal and GWL lags are neutral at 30 d given the anchor.
 
+### Alternatives evaluated (SARIMA, GPR)
+
+Beyond the ridge/persistence/climatology benchmarks above, two more algorithm
+families were tested head-to-head against the frozen XGBoost stack before it was
+promoted — both rejected, results kept for provenance. Numbers use the
+**daily-mean, 10-station, 5-rolling-2026-origin protocol**
+(`ml/outputs/arima_vs_xgb.csv`) — a different protocol from the 6-hourly table
+above, so the two tables are not comparable to each other.
+
+| Algorithm | RMSE (m) | MAE (m) | PICP 90% | Verdict |
+|---|---:|---:|---:|---|
+| **XGBoost (trajectory v2)** | **0.885** | **0.493** | 0.964 | **winner** |
+| SARIMA (1,1,1)×(1,0,1,7) | 1.947 | 0.502 | 0.697 | 90% intervals under-cover (0.70); perfect on stable stations (Tindwara RMSE 0.028) but collapses on volatile ones (Banda RMSE 5.91) |
+| GPR (per-station, time-only features) | 2.13 – 7.82 | 1.60 – 7.34 | 1.00 | rejected — see below |
+
+- **SARIMA** (`ml/baselines/arima_compare.py`): refit per rolling origin on
+  univariate daily history, matched origins against the frozen trajectory XGB.
+  Loses to XGB on both error metrics and coverage overall.
+- **GPR** (Gaussian Process Regression, commit `cd07868`, harness in repo-root
+  `ml-gpr/`): per-station GP with a single `time_hours` feature. Fits the
+  training span well (train R² ≈ 0.95) but extrapolates catastrophically —
+  frozen pre-2026 → 2026 daily means: Tindwara **RMSE 7.82 / R² −401**,
+  Banda **RMSE 2.13 / R² −7.6** — because a time-only GP reverts to its
+  training mean outside the training span, with uncertainty inflating until
+  the 90% band covers everything (PICP 1.00, uninformative). Fit is also
+  O(n³): ~6 min/station at 3k rows, no path to 600 pooled stations.
+  Full numbers: `ml-gpr/artifacts/gpr_vs_arima_xgb.json`.
+
 ### Verify after editing
 ```bash
 cd ml
-venv/bin/python -m unittest discover -s tests    # 151-unit test suite (AppTest gated via AQUIS_APPTEST=1)
+venv/bin/python -m unittest discover -s tests    # 177-unit test suite (AppTest gated via AQUIS_APPTEST=1)
 venv/bin/python gate_check.py                    # baseline checks (frozen RMSE/CV/coverage/eff-N/ACF + trajectory; latest: GATE PASS 10/10)
 ```
 
@@ -219,7 +248,7 @@ Sources (manifest quality, association method, soil/LULC status). Legacy pages (
 Full backend/ML endpoint reference lives in **[`docs/api.md`](docs/api.md)**. Summary:
 
 - **Node `:3000`** endpoints: stations, telemetry, assessments (CGWB), trends (Mann-Kendall + Sen's slope), ml-data, data-quality, ingestion.
-- **ML Flask `:5000` (`ml/api.py`, live, v3.3.0)** — JSON endpoints: root `/` (lists available routes), `/health`, `/stations` (with district/q filtering, lat/lon per station), `/stations/<slug>` (per-station facts, no LLM), `/stations/<slug>/series` (6-hourly GWL + driver points for relation charts), `/stations/<slug>/alerts` (notification-ready zone + reasons + top drivers, no LLM), `/fleet/alerts` (fleet-wide zones for bell-icon/notification center), `/districts` (district list with water-scarcity status), `/districts/<name>` (district detail + station list), `/fleet/recovery` (recovery/decline ranking), `/forecast/<slug>` (trajectory v2), `/assistant/chat` (Ollama-backed LLM). CORS enabled; the Node gateway can proxy via `ML_SERVICE_URL`.
+- **ML Flask `:5000` (`ml/api.py`, live, v3.4.0)** — JSON endpoints: root `/` (lists available routes), `/health`, `/stations` (with district/q filtering, lat/lon per station), `/stations/<slug>` (per-station facts, no LLM), `/stations/<slug>/series` (6-hourly GWL + driver points for relation charts), `/stations/<slug>/alerts` (notification-ready zone + reasons + top drivers, no LLM), `/fleet/alerts` (fleet-wide zones for bell-icon/notification center), `/districts` (district list with water-scarcity status), `/districts/<name>` (district detail + station list), `/fleet/recovery` (recovery/decline ranking), `/forecast/<slug>` (trajectory v2), `/assistant/chat` (Ollama-backed LLM). CORS enabled; the Node gateway can proxy via `ML_SERVICE_URL`.
 
 ---
 
@@ -230,7 +259,7 @@ npm test
 ```
 Backend tests cover classification, statistics, telemetry utilities, ML gateway, and app configuration.
 
-ML validation: stdlib `unittest` suite in `ml/tests/` (151 data-gated tests, no pytest; the full Forecast-page AppTest is gated behind `AQUIS_APPTEST=1` because the trajectory engine is slow) + `ml/gate_check.py` regression gate.
+ML validation: stdlib `unittest` suite in `ml/tests/` (177 data-gated tests, no pytest; the full Forecast-page AppTest is gated behind `AQUIS_APPTEST=1` because the trajectory engine is slow) + `ml/gate_check.py` regression gate.
 
 ---
 

@@ -51,11 +51,11 @@ Cleaned 6-hourly NWIC GWL archive — the read-only source of truth: **~5.3M row
 ### Verification
 ```bash
 cd ml
-venv/bin/python -m unittest discover -s tests   # 151 tests (2 skipped)
+venv/bin/python -m unittest discover -s tests   # 177 tests (2 skipped)
 venv/bin/python gate_check.py                   # baseline regression checks (GATE PASS 10/10)
 ```
 
-## 2. HTTP contract (live — `ml/api.py`, version 3.3.0)
+## 2. HTTP contract (live — `ml/api.py`, version 3.4.0)
 
 The Flask service runs on `:5000` and exposes:
 
@@ -71,7 +71,8 @@ GET  /districts                        district list with water-scarcity status 
 GET  /districts/<name>                 district detail + station list
 GET  /fleet/recovery                   recovery/decline ranking (?district=&sort=&limit=)
 GET  /forecast/<slug>                  trajectory v2 — 120×6h q05/q50/q95 (slug URL-encoded)
-POST /assistant/chat                   {question, station?, model?}   station-locked LLM answer
+GET|POST /assistant/chat              station-locked LLM answer: JSON {question, station?, model?} or GET ?question=&station=&model?
+Voice input is client-side (browser Web Speech API / on-device mobile STT) → text goes to `/assistant/chat` above; no audio endpoint.
 ```
 
 - **URL:** `http://localhost:5000`, configurable via `ML_SERVICE_URL`; gateway forwards path + query string (see `back-end/services/mlGateway.js`).

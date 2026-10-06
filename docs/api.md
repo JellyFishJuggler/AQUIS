@@ -37,6 +37,7 @@ The remainder of this page documents the **live Flask contract** plus the Node e
 | 200 | OK |
 | 400 | Missing/invalid request (e.g. no `question` on chat) |
 | 404 | Unknown slug / no model trained / snapshot missing |
+| 422 | Forecast not computable — machine-readable `reason`: `no_data`, `no_observed_gwl`, `no_feature_frame`, `anchor_invalid`, `artifacts_missing` (+ human `hint`) |
 | 500 | Internal Python error |
 | 502 | ML service down or unreachable |
 | 503 | Assistant unavailable (Ollama not running) |
@@ -115,7 +116,12 @@ GET  /districts                        district list with water-scarcity status 
 GET  /districts/<name>                 district detail: levels, most-stressed stations, top driver, model accuracy + station list
 GET  /fleet/recovery                   recovery/decline ranking (?district=&sort=&limit=)
 GET  /forecast/<slug>                  trajectory v2 — 120×6h q05/q50/q95 (slug URL-encoded)
-POST /assistant/chat                   {question, station?, model?}   station-locked LLM answer
+GET|POST /assistant/chat              station-locked LLM answer: JSON {question, station?, model?}
+                                       or browser-friendly GET ?question=&station=&model=
+Voice input needs no server endpoint: the Streamlit Assistant page has a mic
+button using the browser's free Web Speech API (Hindi/English), and mobile
+apps transcribe on-device (Android SpeechRecognizer / iOS SFSpeechRecognizer)
+— both POST the resulting text to `/assistant/chat` above.
 ```
 
 > **Planned (not yet implemented):** `/models`, `/fleet/forecasts`, `/fleet/scan`.

@@ -1,9 +1,9 @@
 """AQUIS station-locked data assistant (LLM-phrased, local Ollama).
 
-Ported from ``ml/agent/data_assistant.py``, adapted to the ml explorer app:
+Ported from ``ml/agent/data_assistant.py``, adapted to the ml service:
   * data      -> ``data/aligned/table_6h.parquet`` (Station / time / gwl / District)
-  * forecast  -> the app's pooled XGBoost 30-day change model (same as the
-                 Forecast page, via ``_model.forward_forecast``)
+  * forecast  -> the pooled XGBoost 30-day change model (same engine served
+                 by the API, via ``_model.forward_forecast``)
   * scope     -> one station, pinned (no district / fleet intent routing)
   * model     -> ``llama3.2:3b`` via Ollama (local); overridable with
                  ``AQUIS_OLLAMA_MODEL`` in the repo ``.env`` (same read pattern as
@@ -11,7 +11,7 @@ Ported from ``ml/agent/data_assistant.py``, adapted to the ml explorer app:
 
 The LLM only phrases answers from pre-computed, deterministic facts — it never
 invents numbers. If Ollama is down, callers can still use ``StationAssistant.facts``
-directly (the page shows an instant data panel regardless of LLM availability).
+directly.
 """
 
 from __future__ import annotations

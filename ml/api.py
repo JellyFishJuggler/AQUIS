@@ -25,8 +25,12 @@ Endpoints (all JSON):
                                (default 30, max 30; 4 points/day)
     GET  /forecast/<slug>      120-point 6-hourly trajectory (q05/q50/q95,
                                confidence_level, direction, evidence)
-    POST /assistant/chat       station-locked LLM answer (Ollama llama3.2:3b)
-                               (also GET with ?question=&station=&model= for browsers)
+     POST /assistant/chat       station-locked LLM answer (Ollama llama3.2:3b)
+                                (also GET with ?question=&station=&model= for browsers)
+
+    Voice input needs no server endpoint: browsers transcribe in-page via the
+    free Web Speech API and
+    mobile apps via on-device STT — both POST the resulting text here.
 
 Run:  python ml/api.py            (default port 5000, override with PORT)
 
@@ -145,6 +149,17 @@ SERIES_LABELS = {
 }
 SERIES_LIMIT_DEFAULT = 2000
 SERIES_LIMIT_MAX = 6000
+
+# Machine-readable 422 reasons for /forecast/<slug> (frontend can switch on
+# ``reason`` instead of parsing ``detail`` text).
+_FORECAST_422_HINTS = {
+    "no_data": "station has no rows in the aligned 6h table",
+    "no_observed_gwl": "station rows exist but every GWL reading is NaN (sensor gap)",
+    "no_feature_frame": "not enough usable history to build model features (needs recent GWL lags/rolling windows)",
+    "anchor_invalid": "latest reading failed spike/validity checks (NaN anchor)",
+    "artifacts_missing": "server-side model artifacts incomplete — redeploy or rerun the training pipeline",
+    "unknown": "",
+}
 
 app = Flask(__name__)
 CORS(app)
@@ -433,7 +448,7 @@ def index():
             "fleet_scan": "GET /fleet/scan — scan metadata + tallies",
             "models": "GET /models — trained-model index (specs, no weights)",
             "forecast": "GET /forecast/<slug> — 120x6h q05/q50/q95 trajectory",
-            "assistant_chat": "GET|POST /assistant/chat — ?question=&station=&model= or JSON body",
+            "assistant_chat": "GET|POST /assistant/chat — ?question=&station=&model= or JSON body (voice clients send STT text here)",
         },
     })
 
@@ -455,6 +470,7 @@ def health():
         "stations": int(df["Station"].nunique()),
         "dataset_last": last.isoformat() if last is not None else None,
         "ollama": ollama,
+        "voice": {"mode": "client-side STT (Web Speech / on-device) → POST text to /assistant/chat"},
         "forecast_model": "trajectory (120x6h q05/q50/q95)",
     })
 
@@ -579,6 +595,8 @@ def station_series(slug: str):
         "count": len(points),
         "points": points,
     })
+
+
 
 
 @app.get("/stations/<slug>/alerts")
@@ -1095,8 +1113,12 @@ def forecast(slug: str):
         return jsonify({"error": "forecast failed",
                         "detail": f"{type(e).__name__}: {e}"}), 500
     if not isinstance(out, dict) or "error" in out:
+        reason = (out.get("reason", "unknown") if isinstance(out, dict)
+                  else "unknown")
         return jsonify({"error": "forecast unavailable",
-                        "detail": out.get("error", "unknown"),
+                        "reason": reason,
+                        "detail": out.get("error", "unknown") if isinstance(out, dict) else "unknown",
+                        "hint": _FORECAST_422_HINTS.get(reason, ""),
                         "slug": slug, "station": info["station"]}), 422
     traj = out.get("trajectory") or []
     out["trajectory"] = traj[:days * 4]

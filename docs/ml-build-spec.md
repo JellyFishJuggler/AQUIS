@@ -58,7 +58,7 @@ ml/outputs/{predictions_2026.parquet, fleet_forecast.csv, model_metrics.csv, …
 
    ┌──────────────┬──────────────────────────────┐
    ▼              ▼                              ▼
-Streamlit app   Express API (:3000) [LIVE]    Flask ML API (:5000) [LIVE v3.3.0]
+Streamlit app   Express API (:3000) [LIVE]    Flask ML API (:5000) [LIVE v3.4.0]
 (ml/app.py,     /stations /telemetry           /stations /forecast
 :8501)          /assessments /trends            /assistant/chat …
 4 pages         /ml*/ml-data /data-quality      proxied by back-end/mlGateway.js
@@ -577,7 +577,7 @@ model, created_at). Streamlit keeps `<6` turns in `st.session_state.as_messages`
 | `32_backtest_traj.py` | honest trajectory backtest + calibration | → `traj_backtest_*.json/csv`, `traj_calibration.json` |
 | `33_traj_reliability.py` | reliability buckets + evidence weights | → `models/traj_reliability.json` |
 | `_trajectory.py` | trajectory v2 engine (Forecast page + `/forecast/<slug>`) | `trajectory_forecast` |
-| `api.py` | Flask HTTP API v3.3.0 | `/health`, `/stations`, `/series`, `/forecast/<slug>`, `/assistant/chat`, `/districts`, `/fleet/*`, `/alerts` |
+| `api.py` | Flask HTTP API v3.4.0 | `/health`, `/stations`, `/series`, `/forecast/<slug>`, `/assistant/chat`, `/districts`, `/fleet/*`, `/alerts` |
 | `app_charts.py` / `snapshot.py` | forecast chart helpers / PNG export | `trajectory_chart`, `trajectory_snapshot_png` |
 | `refresh/` | fetch → features → inference → publish daemon + retrain gate | `cli.py`, `pipeline.py`, `scheduler.py`, `sources.py`, `features.py`, `inference.py`, `model_update.py`, `publish.py`, `verification.py` |
 | `_model.py` | model loaders + forward forecast | `load_xgb_model`, `load_linear_model`, `load_quantile_models`, `load_predictions`, `forward_forecast`, `load_fleet_table`, `load_diagnostics`, … |
@@ -587,7 +587,7 @@ model, created_at). Streamlit keeps `<6` turns in `st.session_state.as_messages`
 | `_lulc.py` | lulc loader | `load_lulc`, `LULC_COLS` |
 | `validation/*.py` | honest suite | `spatial_cv.py`, `overlap.py`, `residual_acf.py`, `spatial_residual.py` |
 | `gate_check.py` | 12-check regression gate (latest GATE PASS 10/10) | `check(name, ok, detail)` |
-| `tests/` | stdlib unittest, 151 tests (2 skipped) | `test_trajectory_v2.py`, `test_refresh_*.py`, `test_verification.py`, `test_api.py`, … |
+| `tests/` | stdlib unittest, 177 tests (2 skipped) | `test_trajectory_v2.py`, `test_refresh_*.py`, `test_verification.py`, `test_api.py`, … |
 | `MODEL_CARD.md`, `README.md` | docs | — |
 
 ### 11.2 `back-end/` (Express) `[LIVE]`
@@ -616,7 +616,7 @@ model, created_at). Streamlit keeps `<6` turns in `st.session_state.as_messages`
 ## 12. Backend Integration Requirements — API contracts
 
 > **Status:** Node routes + gateway exist and are live (they proxy to `:5000`),
-> and the **Flask ML service is live** (`ml/api.py` v3.3.0: `/health`,
+> and the **Flask ML service is live** (`ml/api.py` v3.4.0: `/health`,
 > `/stations`, `/stations/<slug>`, `/stations/<slug>/series`, `/forecast/<slug>`,
 > `/assistant/chat`, `/districts`, `/fleet/*`, `/alerts`).
 > When Flask is down, `/ml/live/*` returns
@@ -885,7 +885,7 @@ Main file **`ml/app.py`**, root `requirements.txt`, models force-committed
 ## 19. Testing
 
 ### 19.1 Existing ML tests `[LIVE]` — `ml/tests/`
-151 tests (2 skipped), stdlib `unittest`, data-gated, no pytest: trajectory v2,
+177 tests (2 skipped), stdlib `unittest`, data-gated, no pytest: trajectory v2,
 refresh pipeline (core/future/training/schedule), verification, Flask API,
 assistant facts, calibration/diagnostics, forecast UI. Run:
 `venv/bin/python -m unittest discover -s tests -v` (the full Forecast-page
