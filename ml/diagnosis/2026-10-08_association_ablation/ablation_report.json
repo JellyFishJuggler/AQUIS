@@ -1,0 +1,138 @@
+{
+  "arms": {
+    "A": {
+      "label": "A",
+      "n_stride": 3766,
+      "stations": 511,
+      "rmse_model": 2.4607119606977736,
+      "rmse_persist": 2.47981575448197,
+      "per_seed_rmse": {
+        "42": 2.4401,
+        "840": 2.4744,
+        "2056": 2.4722
+      },
+      "seed_spread_rmse": 0.0343,
+      "ratio_all": {
+        "mean": 0.991898255291743,
+        "ci": [
+          0.9864855123377023,
+          0.9941821338874616
+        ]
+      },
+      "ratio_junsep": {
+        "mean": 0.9935642804200376,
+        "ci": [
+          0.989637737319251,
+          0.9955472947918812
+        ]
+      },
+      "n_junsep": 1226,
+      "ratio_other": {
+        "mean": 0.9899803137022206,
+        "ci": [
+          0.9743783848728164,
+          0.9939825152471095
+        ]
+      },
+      "n_other": 2540
+    },
+    "B": {
+      "label": "B",
+      "n_stride": 3766,
+      "stations": 511,
+      "rmse_model": 2.4607119606977736,
+      "rmse_persist": 2.47981575448197,
+      "per_seed_rmse": {
+        "42": 2.4401,
+        "840": 2.4744,
+        "2056": 2.4722
+      },
+      "seed_spread_rmse": 0.0343,
+      "ratio_all": {
+        "mean": 0.991898255291743,
+        "ci": [
+          0.9864855123377023,
+          0.9941821338874616
+        ]
+      },
+      "ratio_junsep": {
+        "mean": 0.9935642804200376,
+        "ci": [
+          0.989637737319251,
+          0.9955472947918812
+        ]
+      },
+      "n_junsep": 1226,
+      "ratio_other": {
+        "mean": 0.9899803137022206,
+        "ci": [
+          0.9743783848728164,
+          0.9939825152471095
+        ]
+      },
+      "n_other": 2540
+    },
+    "C": {
+      "label": "C",
+      "n_stride": 3766,
+      "stations": 511,
+      "rmse_model": 2.477116411652749,
+      "rmse_persist": 2.47981575448197,
+      "per_seed_rmse": {
+        "42": 2.4756,
+        "840": 2.4856,
+        "2056": 2.4707
+      },
+      "seed_spread_rmse": 0.0149,
+      "ratio_all": {
+        "mean": 0.9988672577806935,
+        "ci": [
+          0.9976570054262678,
+          0.9997317698539664
+        ]
+      },
+      "ratio_junsep": {
+        "mean": 1.0092386901360269,
+        "ci": [
+          1.0064967747159492,
+          1.0152096173938998
+        ]
+      },
+      "n_junsep": 1226,
+      "ratio_other": {
+        "mean": 0.9921064260003177,
+        "ci": [
+          0.9757828679577983,
+          0.9960200934165915
+        ]
+      },
+      "n_other": 2540
+    }
+  },
+  "spatial_cv": {
+    "rmse_b_heldout": 2.4048076666712834,
+    "rmse_c_heldout": 2.388605355776154,
+    "n_heldout_stride": 3766,
+    "ratio_C_over_B": {
+      "mean": 0.9924609154143201,
+      "ci": [
+        0.9756784373433935,
+        1.0042700608970314
+      ]
+    },
+    "p_C_better": 0.869
+  },
+  "decision": {
+    "ci_excludes_1": false,
+    "seed_spread_rel": 0.0139,
+    "gain_rel": 0.0075,
+    "c_beats_b_on_holdout": false
+  },
+  "seeds": [
+    42,
+    840,
+    2056
+  ],
+  "note": "stride b) 30-day honest protocol; Jun-Sep = months 6..9 of the anchor date. ratio = RMSE(model)/RMSE(persistence), station bootstrap B=2000.",
+  "elapsed_sec": 1090
+}

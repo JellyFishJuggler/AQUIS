@@ -1,0 +1,458 @@
+{
+  "diagnostic": "4b follow-up \u2014 six dashboard groups by STATION ID (sha1(station)[:16], dashboard archive key)",
+  "matching": "groups seeded from data/meta/selected_gwl_stations.csv canonical spellings; rows joined/selected by station_id, never by name prefix",
+  "group_seeds": {
+    "Azamgarh": [
+      "Azamgarh"
+    ],
+    "Deoria": [
+      "Deoria"
+    ],
+    "Banda": [
+      "Banda"
+    ],
+    "Meerut": [
+      "Meerut"
+    ],
+    "Varansi (Harahua)": [
+      "Varansi"
+    ],
+    "ASHADHA": [
+      "ASHADHA"
+    ]
+  },
+  "n_members_per_group_by_id": {
+    "Azamgarh": 10,
+    "Deoria": 5,
+    "Banda": 6,
+    "Meerut": 3,
+    "Varansi (Harahua)": 12,
+    "ASHADHA": 1
+  },
+  "group_member_count_in_aligned_eligible_bestlag": {
+    "Azamgarh": 10,
+    "Deoria": 5,
+    "Banda": 6,
+    "Meerut": 3,
+    "Varansi (Harahua)": 12,
+    "ASHADHA": 1
+  },
+  "eligible_group_stations": [
+    {
+      "station_id": "29bd98b3d1bf483f",
+      "station": "ASHADHA PRATHMIK VIDYALAYA",
+      "n_stride_rows": 7,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.3107760354901426,
+      "rmse_at_lag30": 0.6262210376853241,
+      "rmse_xgb_30d": 0.6262210376853241,
+      "rmse_persist_30d": 0.5556342920908606,
+      "group": "ASHADHA"
+    },
+    {
+      "station_id": "09b6a33dda7da31d",
+      "station": "Azamgarh Ahiraula Bahera",
+      "n_stride_rows": 8,
+      "best_lag_days": 30,
+      "rmse_at_best_lag": 0.1741364519007153,
+      "rmse_at_lag30": 0.1741364519007153,
+      "rmse_xgb_30d": 0.1741364519007153,
+      "rmse_persist_30d": 0.1550926897181282,
+      "group": "Azamgarh"
+    },
+    {
+      "station_id": "412c41741cd61129",
+      "station": "Azamgarh Ahiraula Kandara",
+      "n_stride_rows": 8,
+      "best_lag_days": 15,
+      "rmse_at_best_lag": 0.24088990670164045,
+      "rmse_at_lag30": 0.4084004117113847,
+      "rmse_xgb_30d": 0.4084004117113847,
+      "rmse_persist_30d": 0.28334627567511655,
+      "group": "Azamgarh"
+    },
+    {
+      "station_id": "b7d64c431b137ca2",
+      "station": "Azamgarh Atrauliya Atrauliya",
+      "n_stride_rows": 7,
+      "best_lag_days": 19,
+      "rmse_at_best_lag": 0.16280132729043822,
+      "rmse_at_lag30": 0.3387259370642571,
+      "rmse_xgb_30d": 0.3387259370642571,
+      "rmse_persist_30d": 0.34789079150643687,
+      "group": "Azamgarh"
+    },
+    {
+      "station_id": "64a352b701c308ad",
+      "station": "Azamgarh Jahanganj Godhaura",
+      "n_stride_rows": 9,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.3140753830332035,
+      "rmse_at_lag30": 0.6023933963911864,
+      "rmse_xgb_30d": 0.6023933963911864,
+      "rmse_persist_30d": 0.4518901704438128,
+      "group": "Azamgarh"
+    },
+    {
+      "station_id": "ef9aa6232625311f",
+      "station": "Azamgarh Lalganj Lalganj",
+      "n_stride_rows": 8,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.29080087866394205,
+      "rmse_at_lag30": 0.6748204414730223,
+      "rmse_xgb_30d": 0.6748204414730223,
+      "rmse_persist_30d": 0.5120026356607872,
+      "group": "Azamgarh"
+    },
+    {
+      "station_id": "389090107f1e8005",
+      "station": "Azamgarh Palhana Balahi Lahucha",
+      "n_stride_rows": 7,
+      "best_lag_days": 38,
+      "rmse_at_best_lag": 0.2320337842081234,
+      "rmse_at_lag30": 0.2661838105355768,
+      "rmse_xgb_30d": 0.2661838105355768,
+      "rmse_persist_30d": 0.023847744662944047,
+      "group": "Azamgarh"
+    },
+    {
+      "station_id": "506f267813443a86",
+      "station": "Azamgarh Palhana Jamui Bhatauli",
+      "n_stride_rows": 7,
+      "best_lag_days": 19,
+      "rmse_at_best_lag": 0.176818159706121,
+      "rmse_at_lag30": 0.2731696251386552,
+      "rmse_xgb_30d": 0.27316962513865517,
+      "rmse_persist_30d": 0.3478741224215386,
+      "group": "Azamgarh"
+    },
+    {
+      "station_id": "646e776975b57f20",
+      "station": "Azamgarh Pavai Velasiya",
+      "n_stride_rows": 9,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.31396777312249324,
+      "rmse_at_lag30": 0.8947372702355539,
+      "rmse_xgb_30d": 0.8947372702355539,
+      "rmse_persist_30d": 0.9276734745444293,
+      "group": "Azamgarh"
+    },
+    {
+      "station_id": "bb81b996f8d48005",
+      "station": "Azamgarh Sathiyavn Gajahada",
+      "n_stride_rows": 7,
+      "best_lag_days": 34,
+      "rmse_at_best_lag": 0.04906703902917058,
+      "rmse_at_lag30": 0.09739243727795396,
+      "rmse_xgb_30d": 0.09739243727795398,
+      "rmse_persist_30d": 0.2030559399012328,
+      "group": "Azamgarh"
+    },
+    {
+      "station_id": "2d180c6acf0163d2",
+      "station": "Azamgarh Thekama Bardah",
+      "n_stride_rows": 9,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.19668567693094144,
+      "rmse_at_lag30": 0.5126282219757318,
+      "rmse_xgb_30d": 0.5126282219757318,
+      "rmse_persist_30d": 0.4801176748319764,
+      "group": "Azamgarh"
+    },
+    {
+      "station_id": "4e4efa2f20bf2abb",
+      "station": "Banda Baberu Anvan",
+      "n_stride_rows": 7,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.24265116033419237,
+      "rmse_at_lag30": 1.0021995408544249,
+      "rmse_xgb_30d": 1.0021995408544249,
+      "rmse_persist_30d": 1.1570222517778286,
+      "group": "Banda"
+    },
+    {
+      "station_id": "5563087d606d8f45",
+      "station": "Banda Baberu Umrehani",
+      "n_stride_rows": 7,
+      "best_lag_days": 2,
+      "rmse_at_best_lag": 0.18245655990512621,
+      "rmse_at_lag30": 1.419140133528924,
+      "rmse_xgb_30d": 1.419140133528924,
+      "rmse_persist_30d": 1.571174953182743,
+      "group": "Banda"
+    },
+    {
+      "station_id": "0731a15432e1acbb",
+      "station": "Banda Badokhar Khurd Chatgan",
+      "n_stride_rows": 8,
+      "best_lag_days": 6,
+      "rmse_at_best_lag": 0.23869756220859797,
+      "rmse_at_lag30": 0.3151316965629078,
+      "rmse_xgb_30d": 0.3151316965629078,
+      "rmse_persist_30d": 0.3527007084046912,
+      "group": "Banda"
+    },
+    {
+      "station_id": "42f4a7ea822550da",
+      "station": "Banda Bisndha Mrooli",
+      "n_stride_rows": 8,
+      "best_lag_days": 1,
+      "rmse_at_best_lag": 0.24347220243184284,
+      "rmse_at_lag30": 1.4078272026310115,
+      "rmse_xgb_30d": 1.4078272026310115,
+      "rmse_persist_30d": 1.6156601464855347,
+      "group": "Banda"
+    },
+    {
+      "station_id": "cd01fc9b9a22fdb8",
+      "station": "Banda Kamasin Tilowsa",
+      "n_stride_rows": 7,
+      "best_lag_days": 1,
+      "rmse_at_best_lag": 0.26198239560804587,
+      "rmse_at_lag30": 0.9066263126259226,
+      "rmse_xgb_30d": 0.9066263126259226,
+      "rmse_persist_30d": 1.0055368806338083,
+      "group": "Banda"
+    },
+    {
+      "station_id": "7618b33ea18ff81b",
+      "station": "Banda Tindwari Bhindowra",
+      "n_stride_rows": 7,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.3333040542459245,
+      "rmse_at_lag30": 7.780954460605817,
+      "rmse_xgb_30d": 7.780954460605816,
+      "rmse_persist_30d": 7.859044187187806,
+      "group": "Banda"
+    },
+    {
+      "station_id": "b4bc190a2e3e5764",
+      "station": "Deoria Bhaluwani Markna",
+      "n_stride_rows": 8,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.2695627196123743,
+      "rmse_at_lag30": 0.6499911855777817,
+      "rmse_xgb_30d": 0.6499911855777817,
+      "rmse_persist_30d": 0.7524897897547297,
+      "group": "Deoria"
+    },
+    {
+      "station_id": "5508394155b0a4fa",
+      "station": "Deoria Bhatani Mishrauli Dichit",
+      "n_stride_rows": 5,
+      "best_lag_days": 7,
+      "rmse_at_best_lag": 0.1307513391767302,
+      "rmse_at_lag30": 0.4132123975374448,
+      "rmse_xgb_30d": 0.4132123975374448,
+      "rmse_persist_30d": 0.583578949064074,
+      "group": "Deoria"
+    },
+    {
+      "station_id": "3dd3db5d9b77ba7f",
+      "station": "Deoria Bhatpar Rani Dharkwan",
+      "n_stride_rows": 7,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.2744923879686676,
+      "rmse_at_lag30": 0.8226172416345996,
+      "rmse_xgb_30d": 0.8226172416345996,
+      "rmse_persist_30d": 0.9029614068222421,
+      "group": "Deoria"
+    },
+    {
+      "station_id": "c262900cb27cba65",
+      "station": "Deoria Salempur Manihari",
+      "n_stride_rows": 6,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.29122112739695843,
+      "rmse_at_lag30": 0.6655840369966102,
+      "rmse_xgb_30d": 0.6655840369966102,
+      "rmse_persist_30d": 0.6349031652602432,
+      "group": "Deoria"
+    },
+    {
+      "station_id": "9be05fff51c2c994",
+      "station": "Deoria Tarkulwa Tarkulwa",
+      "n_stride_rows": 7,
+      "best_lag_days": 1,
+      "rmse_at_best_lag": 0.28810378323239094,
+      "rmse_at_lag30": 0.6511453579554923,
+      "rmse_xgb_30d": 0.6511453579554923,
+      "rmse_persist_30d": 0.714602252662346,
+      "group": "Deoria"
+    },
+    {
+      "station_id": "82c0a318246aec5e",
+      "station": "Meerut Janikhurd Afjalpur Pavati",
+      "n_stride_rows": 7,
+      "best_lag_days": 1,
+      "rmse_at_best_lag": 0.2999221722403749,
+      "rmse_at_lag30": 1.001964780730233,
+      "rmse_xgb_30d": 1.001964780730233,
+      "rmse_persist_30d": 1.248315809281468,
+      "group": "Meerut"
+    },
+    {
+      "station_id": "d10e05eb04bef999",
+      "station": "Meerut Janikhurd Satvai",
+      "n_stride_rows": 7,
+      "best_lag_days": 2,
+      "rmse_at_best_lag": 0.25509060115159865,
+      "rmse_at_lag30": 0.6960666082452912,
+      "rmse_xgb_30d": 0.6960666082452912,
+      "rmse_persist_30d": 0.8977139747877068,
+      "group": "Meerut"
+    },
+    {
+      "station_id": "d9350d718930b719",
+      "station": "Meerut Sardhana Chhabariya",
+      "n_stride_rows": 6,
+      "best_lag_days": 14,
+      "rmse_at_best_lag": 0.3082260615892679,
+      "rmse_at_lag30": 0.3781988070390721,
+      "rmse_xgb_30d": 0.3781988070390721,
+      "rmse_persist_30d": 0.3192670416809503,
+      "group": "Meerut"
+    },
+    {
+      "station_id": "ece2421c85be9313",
+      "station": "Varansi Badagaon Gajapur",
+      "n_stride_rows": 7,
+      "best_lag_days": 42,
+      "rmse_at_best_lag": 0.12692227992673957,
+      "rmse_at_lag30": 0.2588007573053396,
+      "rmse_xgb_30d": 0.2588007573053396,
+      "rmse_persist_30d": 0.04507486656482704,
+      "group": "Varansi (Harahua)"
+    },
+    {
+      "station_id": "685a88b97b823320",
+      "station": "Varansi Chirai Gaon  Gathiya Jairampur",
+      "n_stride_rows": 8,
+      "best_lag_days": 6,
+      "rmse_at_best_lag": 0.3148024023144528,
+      "rmse_at_lag30": 1.2765674066872152,
+      "rmse_xgb_30d": 1.2765674066872152,
+      "rmse_persist_30d": 1.4494306603960831,
+      "group": "Varansi (Harahua)"
+    },
+    {
+      "station_id": "9b4078c73a67d650",
+      "station": "Varansi Chirai Gaon Chhahi",
+      "n_stride_rows": 6,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.3510256070822278,
+      "rmse_at_lag30": 3.170343336957646,
+      "rmse_xgb_30d": 3.1703433369576457,
+      "rmse_persist_30d": 2.9534775451328654,
+      "group": "Varansi (Harahua)"
+    },
+    {
+      "station_id": "3da357a95a076924",
+      "station": "Varansi Cholapur Chaubepur",
+      "n_stride_rows": 7,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.3678820373985453,
+      "rmse_at_lag30": 4.971672774699092,
+      "rmse_xgb_30d": 4.971672774699092,
+      "rmse_persist_30d": 4.946364775493753,
+      "group": "Varansi (Harahua)"
+    },
+    {
+      "station_id": "cecaa02cbf08f72b",
+      "station": "Varansi Cholapur Munari",
+      "n_stride_rows": 7,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.3896998981060674,
+      "rmse_at_lag30": 2.5723769697185883,
+      "rmse_xgb_30d": 2.5723769697185883,
+      "rmse_persist_30d": 2.6547059580333325,
+      "group": "Varansi (Harahua)"
+    },
+    {
+      "station_id": "d0f14173e9cc623d",
+      "station": "Varansi Harahua Bhaithauli",
+      "n_stride_rows": 7,
+      "best_lag_days": 4,
+      "rmse_at_best_lag": 0.2547293181832831,
+      "rmse_at_lag30": 0.7937449777539934,
+      "rmse_xgb_30d": 0.7937449777539934,
+      "rmse_persist_30d": 0.9020775539672594,
+      "group": "Varansi (Harahua)"
+    },
+    {
+      "station_id": "7c4efdf2c2ecbb95",
+      "station": "Varansi Harahua Gurwat",
+      "n_stride_rows": 7,
+      "best_lag_days": 9,
+      "rmse_at_best_lag": 0.33156115389829643,
+      "rmse_at_lag30": 0.8318444723325167,
+      "rmse_xgb_30d": 0.8318444723325167,
+      "rmse_persist_30d": 0.854941813119247,
+      "group": "Varansi (Harahua)"
+    },
+    {
+      "station_id": "e685fa317f25218a",
+      "station": "Varansi Harahua Kakalpur",
+      "n_stride_rows": 6,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.3447836743957291,
+      "rmse_at_lag30": 1.7988117939690556,
+      "rmse_xgb_30d": 1.7988117939690556,
+      "rmse_persist_30d": 2.0429695463857147,
+      "group": "Varansi (Harahua)"
+    },
+    {
+      "station_id": "77e80abcbbf0b05d",
+      "station": "Varansi Harahua Shivrampur",
+      "n_stride_rows": 7,
+      "best_lag_days": 0,
+      "rmse_at_best_lag": 0.35689956608439505,
+      "rmse_at_lag30": 2.4154883865834074,
+      "rmse_xgb_30d": 2.4154883865834074,
+      "rmse_persist_30d": 2.587188471862187,
+      "group": "Varansi (Harahua)"
+    },
+    {
+      "station_id": "bab12debbcbf1b86",
+      "station": "Varansi Harahua Sulemapur",
+      "n_stride_rows": 7,
+      "best_lag_days": 1,
+      "rmse_at_best_lag": 0.2697283975381821,
+      "rmse_at_lag30": 0.32697152464316637,
+      "rmse_xgb_30d": 0.32697152464316637,
+      "rmse_persist_30d": 0.2859430438786737,
+      "group": "Varansi (Harahua)"
+    },
+    {
+      "station_id": "8f2e277641b07e38",
+      "station": "Varansi Pindara Gajendra",
+      "n_stride_rows": 8,
+      "best_lag_days": 1,
+      "rmse_at_best_lag": 0.3362206595532495,
+      "rmse_at_lag30": 0.8520968765083928,
+      "rmse_xgb_30d": 0.8520968765083928,
+      "rmse_persist_30d": 0.8784948535610563,
+      "group": "Varansi (Harahua)"
+    },
+    {
+      "station_id": "0dd219ef8e4ecd7d",
+      "station": "Varansi Pindara Molanapur",
+      "n_stride_rows": 6,
+      "best_lag_days": 9,
+      "rmse_at_best_lag": 0.18461804873834853,
+      "rmse_at_lag30": 1.0198886810917525,
+      "rmse_xgb_30d": 1.0198886810917525,
+      "rmse_persist_30d": 1.3195453048557084,
+      "group": "Varansi (Harahua)"
+    }
+  ],
+  "note_on_any_group_absent": {
+    "Azamgarh": [],
+    "Deoria": [],
+    "Banda": [],
+    "Meerut": [],
+    "Varansi (Harahua)": [],
+    "ASHADHA": []
+  },
+  "generated_utc": "2026-10-07T22:58:34+00:00"
+}

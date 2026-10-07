@@ -1,0 +1,283 @@
+{
+  "total_stations_tested": 511,
+  "stride_rows_used": 3764,
+  "lag_distribution": {
+    "mean_best_lag_days": 10.618,
+    "median_best_lag_days": 4.0,
+    "min_best_lag_days": 0,
+    "max_best_lag_days": 45,
+    "histogram_0_to_45": {
+      "0": 134,
+      "1": 34,
+      "2": 41,
+      "3": 34,
+      "4": 19,
+      "5": 16,
+      "6": 19,
+      "7": 12,
+      "8": 7,
+      "9": 6,
+      "10": 9,
+      "11": 5,
+      "12": 9,
+      "13": 10,
+      "14": 10,
+      "15": 12,
+      "16": 13,
+      "17": 12,
+      "18": 8,
+      "19": 6,
+      "20": 3,
+      "21": 3,
+      "22": 1,
+      "23": 1,
+      "24": 4,
+      "26": 5,
+      "27": 2,
+      "28": 4,
+      "29": 2,
+      "30": 3,
+      "31": 1,
+      "32": 5,
+      "33": 2,
+      "34": 4,
+      "35": 4,
+      "36": 4,
+      "37": 1,
+      "38": 3,
+      "39": 1,
+      "40": 9,
+      "41": 4,
+      "42": 7,
+      "43": 3,
+      "44": 6,
+      "45": 13
+    }
+  },
+  "pct_stations_best_lag_25_to_35_days": 6.262,
+  "n_stations_best_lag_25_to_35_days": 32,
+  "dashboard_stations": {
+    "Azamgarh": {
+      "n_stations": 10,
+      "stations": [
+        {
+          "station": "Azamgarh Ahiraula Bahera",
+          "best_lag_days": 30,
+          "rmse_xgb_30d": 0.1741,
+          "rmse_persist_30d": 0.1551,
+          "xgb_beats_persist": false
+        },
+        {
+          "station": "Azamgarh Ahiraula Kandara",
+          "best_lag_days": 15,
+          "rmse_xgb_30d": 0.4084,
+          "rmse_persist_30d": 0.2833,
+          "xgb_beats_persist": false
+        },
+        {
+          "station": "Azamgarh Atrauliya Atrauliya",
+          "best_lag_days": 19,
+          "rmse_xgb_30d": 0.3387,
+          "rmse_persist_30d": 0.3479,
+          "xgb_beats_persist": true
+        },
+        {
+          "station": "Azamgarh Jahanganj Godhaura",
+          "best_lag_days": 0,
+          "rmse_xgb_30d": 0.6024,
+          "rmse_persist_30d": 0.4519,
+          "xgb_beats_persist": false
+        },
+        {
+          "station": "Azamgarh Lalganj Lalganj",
+          "best_lag_days": 0,
+          "rmse_xgb_30d": 0.6748,
+          "rmse_persist_30d": 0.512,
+          "xgb_beats_persist": false
+        },
+        {
+          "station": "Azamgarh Palhana Balahi Lahucha",
+          "best_lag_days": 38,
+          "rmse_xgb_30d": 0.2662,
+          "rmse_persist_30d": 0.0238,
+          "xgb_beats_persist": false
+        },
+        {
+          "station": "Azamgarh Palhana Jamui Bhatauli",
+          "best_lag_days": 19,
+          "rmse_xgb_30d": 0.2732,
+          "rmse_persist_30d": 0.3479,
+          "xgb_beats_persist": true
+        },
+        {
+          "station": "Azamgarh Pavai Velasiya",
+          "best_lag_days": 0,
+          "rmse_xgb_30d": 0.8947,
+          "rmse_persist_30d": 0.9277,
+          "xgb_beats_persist": true
+        },
+        {
+          "station": "Azamgarh Sathiyavn Gajahada",
+          "best_lag_days": 34,
+          "rmse_xgb_30d": 0.0974,
+          "rmse_persist_30d": 0.2031,
+          "xgb_beats_persist": true
+        },
+        {
+          "station": "Azamgarh Thekama Bardah",
+          "best_lag_days": 0,
+          "rmse_xgb_30d": 0.5126,
+          "rmse_persist_30d": 0.4801,
+          "xgb_beats_persist": false
+        }
+      ],
+      "mean_best_lag_days": 15.5,
+      "all_xgb_beats_persist": false,
+      "n_xgb_beats_persist": 4
+    },
+    "Deoria": {
+      "n_stations": 5,
+      "stations": [
+        {
+          "station": "Deoria Bhaluwani Markna",
+          "best_lag_days": 0,
+          "rmse_xgb_30d": 0.65,
+          "rmse_persist_30d": 0.7525,
+          "xgb_beats_persist": true
+        },
+        {
+          "station": "Deoria Bhatani Mishrauli Dichit",
+          "best_lag_days": 7,
+          "rmse_xgb_30d": 0.4132,
+          "rmse_persist_30d": 0.5836,
+          "xgb_beats_persist": true
+        },
+        {
+          "station": "Deoria Bhatpar Rani Dharkwan",
+          "best_lag_days": 0,
+          "rmse_xgb_30d": 0.8226,
+          "rmse_persist_30d": 0.903,
+          "xgb_beats_persist": true
+        },
+        {
+          "station": "Deoria Salempur Manihari",
+          "best_lag_days": 0,
+          "rmse_xgb_30d": 0.6656,
+          "rmse_persist_30d": 0.6349,
+          "xgb_beats_persist": false
+        },
+        {
+          "station": "Deoria Tarkulwa Tarkulwa",
+          "best_lag_days": 1,
+          "rmse_xgb_30d": 0.6511,
+          "rmse_persist_30d": 0.7146,
+          "xgb_beats_persist": true
+        }
+      ],
+      "mean_best_lag_days": 1.6,
+      "all_xgb_beats_persist": false,
+      "n_xgb_beats_persist": 4
+    },
+    "Banda": {
+      "n_stations": 6,
+      "stations": [
+        {
+          "station": "Banda Baberu Anvan",
+          "best_lag_days": 0,
+          "rmse_xgb_30d": 1.0022,
+          "rmse_persist_30d": 1.157,
+          "xgb_beats_persist": true
+        },
+        {
+          "station": "Banda Baberu Umrehani",
+          "best_lag_days": 2,
+          "rmse_xgb_30d": 1.4191,
+          "rmse_persist_30d": 1.5712,
+          "xgb_beats_persist": true
+        },
+        {
+          "station": "Banda Badokhar Khurd Chatgan",
+          "best_lag_days": 6,
+          "rmse_xgb_30d": 0.3151,
+          "rmse_persist_30d": 0.3527,
+          "xgb_beats_persist": true
+        },
+        {
+          "station": "Banda Bisndha Mrooli",
+          "best_lag_days": 1,
+          "rmse_xgb_30d": 1.4078,
+          "rmse_persist_30d": 1.6157,
+          "xgb_beats_persist": true
+        },
+        {
+          "station": "Banda Kamasin Tilowsa",
+          "best_lag_days": 1,
+          "rmse_xgb_30d": 0.9066,
+          "rmse_persist_30d": 1.0055,
+          "xgb_beats_persist": true
+        },
+        {
+          "station": "Banda Tindwari Bhindowra",
+          "best_lag_days": 0,
+          "rmse_xgb_30d": 7.781,
+          "rmse_persist_30d": 7.859,
+          "xgb_beats_persist": true
+        }
+      ],
+      "mean_best_lag_days": 1.67,
+      "all_xgb_beats_persist": true,
+      "n_xgb_beats_persist": 6
+    },
+    "Meerut": {
+      "n_stations": 3,
+      "stations": [
+        {
+          "station": "Meerut Janikhurd Afjalpur Pavati",
+          "best_lag_days": 1,
+          "rmse_xgb_30d": 1.002,
+          "rmse_persist_30d": 1.2483,
+          "xgb_beats_persist": true
+        },
+        {
+          "station": "Meerut Janikhurd Satvai",
+          "best_lag_days": 2,
+          "rmse_xgb_30d": 0.6961,
+          "rmse_persist_30d": 0.8977,
+          "xgb_beats_persist": true
+        },
+        {
+          "station": "Meerut Sardhana Chhabariya",
+          "best_lag_days": 14,
+          "rmse_xgb_30d": 0.3782,
+          "rmse_persist_30d": 0.3193,
+          "xgb_beats_persist": false
+        }
+      ],
+      "mean_best_lag_days": 5.67,
+      "all_xgb_beats_persist": false,
+      "n_xgb_beats_persist": 2
+    },
+    "Varanasi": null,
+    "ASHADHA": {
+      "n_stations": 1,
+      "stations": [
+        {
+          "station": "ASHADHA PRATHMIK VIDYALAYA",
+          "best_lag_days": 0,
+          "rmse_xgb_30d": 0.6262,
+          "rmse_persist_30d": 0.5556,
+          "xgb_beats_persist": false
+        }
+      ],
+      "mean_best_lag_days": 0.0,
+      "all_xgb_beats_persist": false,
+      "n_xgb_beats_persist": 0
+    }
+  },
+  "dashboard_prefixes_with_no_station": [
+    "Varanasi"
+  ],
+  "xgb_beats_persist_pct_fleet": 70.254,
+  "png_written": true,
+  "notes": []
+}

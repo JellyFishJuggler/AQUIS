@@ -1,0 +1,258 @@
+anchors: 600
+arm A track: 3,055,916 rows / 600 st
+arm B track: 3,055,916 rows / 600 st
+arm C track: 3,055,916 rows / 600 st
+xcols A: 32  B: 32  C: 44
+prep A ...
+gwl spikes -> NaN: 77,274 rows
+  train=1,627,743 val=1,777 te stride=3,766 / 511 st
+prep B ...
+gwl spikes -> NaN: 77,274 rows
+  train=1,627,743 val=1,777 te stride=3,766 / 511 st
+prep C ...
+gwl spikes -> NaN: 77,274 rows
+  train=1,627,743 val=1,777 te stride=3,766 / 511 st
+fit arm A (3 seeds) ...
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:29:32] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:29:36] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:29:40] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+  A: rmse=2.4607 persist=2.4798 seeds={'42': 2.4401, '840': 2.4744, '2056': 2.4722} spread=0.0343
+fit arm B (3 seeds) ...
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:32:33] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:32:37] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:32:41] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+  B: rmse=2.4607 persist=2.4798 seeds={'42': 2.4401, '840': 2.4744, '2056': 2.4722} spread=0.0343
+fit arm C (3 seeds) ...
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:35:36] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:35:41] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:35:45] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+  C: rmse=2.4771 persist=2.4798 seeds={'42': 2.4756, '840': 2.4856, '2056': 2.4707} spread=0.0149
+spatial CV (2-fold, B vs C on held-out stations) ...
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:38:43] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:38:46] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:38:47] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:39:36] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:39:39] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:39:41] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+  fold 0: held-out stride B=2.8275 C=2.8235 (n=1925)
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:40:30] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:40:32] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:40:34] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:41:18] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:41:22] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv/lib64/python3.14/site-packages/xgboost/callback.py:385: UserWarning: [00:41:24] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+  fold 1: held-out stride B=1.8629 C=1.8262 (n=1841)
+
+=== ABLATION REPORT ===
+{
+  "arms": {
+    "A": {
+      "label": "A",
+      "n_stride": 3766,
+      "stations": 511,
+      "rmse_model": 2.4607119606977736,
+      "rmse_persist": 2.47981575448197,
+      "per_seed_rmse": {
+        "42": 2.4401,
+        "840": 2.4744,
+        "2056": 2.4722
+      },
+      "seed_spread_rmse": 0.0343,
+      "ratio_all": {
+        "mean": 0.991898255291743,
+        "ci": [
+          0.9864855123377023,
+          0.9941821338874616
+        ]
+      },
+      "ratio_junsep": {
+        "mean": 0.9935642804200376,
+        "ci": [
+          0.989637737319251,
+          0.9955472947918812
+        ]
+      },
+      "n_junsep": 1226,
+      "ratio_other": {
+        "mean": 0.9899803137022206,
+        "ci": [
+          0.9743783848728164,
+          0.9939825152471095
+        ]
+      },
+      "n_other": 2540
+    },
+    "B": {
+      "label": "B",
+      "n_stride": 3766,
+      "stations": 511,
+      "rmse_model": 2.4607119606977736,
+      "rmse_persist": 2.47981575448197,
+      "per_seed_rmse": {
+        "42": 2.4401,
+        "840": 2.4744,
+        "2056": 2.4722
+      },
+      "seed_spread_rmse": 0.0343,
+      "ratio_all": {
+        "mean": 0.991898255291743,
+        "ci": [
+          0.9864855123377023,
+          0.9941821338874616
+        ]
+      },
+      "ratio_junsep": {
+        "mean": 0.9935642804200376,
+        "ci": [
+          0.989637737319251,
+          0.9955472947918812
+        ]
+      },
+      "n_junsep": 1226,
+      "ratio_other": {
+        "mean": 0.9899803137022206,
+        "ci": [
+          0.9743783848728164,
+          0.9939825152471095
+        ]
+      },
+      "n_other": 2540
+    },
+    "C": {
+      "label": "C",
+      "n_stride": 3766,
+      "stations": 511,
+      "rmse_model": 2.477116411652749,
+      "rmse_persist": 2.47981575448197,
+      "per_seed_rmse": {
+        "42": 2.4756,
+        "840": 2.4856,
+        "2056": 2.4707
+      },
+      "seed_spread_rmse": 0.0149,
+      "ratio_all": {
+        "mean": 0.9988672577806935,
+        "ci": [
+          0.9976570054262678,
+          0.9997317698539664
+        ]
+      },
+      "ratio_junsep": {
+        "mean": 1.0092386901360269,
+        "ci": [
+          1.0064967747159492,
+          1.0152096173938998
+        ]
+      },
+      "n_junsep": 1226,
+      "ratio_other": {
+        "mean": 0.9921064260003177,
+        "ci": [
+          0.9757828679577983,
+          0.9960200934165915
+        ]
+      },
+      "n_other": 2540
+    }
+  },
+  "spatial_cv": {
+    "rmse_b_heldout": 2.4048076666712834,
+    "rmse_c_heldout": 2.388605355776154,
+    "n_heldout_stride": 3766,
+    "ratio_C_over_B": {
+      "mean": 0.9924609154143201,
+      "ci": [
+        0.9756784373433935,
+        1.0042700608970314
+      ]
+    },
+    "p_C_better": 0.869
+  },
+  "decision": {
+    "ci_excludes_1": false,
+    "seed_spread_rel": 0.0139,
+    "gain_rel": 0.0075,
+    "c_beats_b_on_holdout": false
+  },
+  "seeds": [
+    42,
+    840,
+    2056
+  ],
+  "elapsed_sec": 1090
+}
+
+A: model=2.4607 persist=2.4798 ratio=0.9919 CI(0.9865, 0.9942))
+   Jun-Sep n=1226 ratio=0.9936 CI(0.9896, 0.9955)
+   other   n=2540 ratio=0.9900 CI(0.9744, 0.994)
+
+B: model=2.4607 persist=2.4798 ratio=0.9919 CI(0.9865, 0.9942))
+   Jun-Sep n=1226 ratio=0.9936 CI(0.9896, 0.9955)
+   other   n=2540 ratio=0.9900 CI(0.9744, 0.994)
+
+C: model=2.4771 persist=2.4798 ratio=0.9989 CI(0.9977, 0.9997))
+   Jun-Sep n=1226 ratio=1.0092 CI(1.0065, 1.0152)
+   other   n=2540 ratio=0.9921 CI(0.9758, 0.996)

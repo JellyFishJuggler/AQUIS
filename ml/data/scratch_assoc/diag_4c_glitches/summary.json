@@ -1,0 +1,155 @@
+{
+  "diagnostic": "4c fleet-wide jump/glitch scan (6-hourly GWL)",
+  "fixed_rule": "Flag a 6-hourly GWL point at time t for station s if |gwl_t - gwl_{t-6h}| > max(2.5 * MAD_s, 2.0 m), where MAD_s is the station's median absolute deviation of the FULL series (median of |gwl - median(gwl)|). Only flag points where both gwl_t and gwl_{t-6h} are finite.",
+  "generated_utc": "2026-10-07T18:41:03+00:00",
+  "inputs": {
+    "aligned": "data/aligned/table_6h.parquet",
+    "predictions": "outputs/predictions_2026.parquet"
+  },
+  "event_definition": "consecutive flagged points within 2 steps (12 h) form one event",
+  "fleet": {
+    "n_stations_total": 600,
+    "n_rows_total": 3055916,
+    "n_flagged_points": 5587,
+    "n_stations_with_ge1_event": 320,
+    "n_events": 3111,
+    "events_bucket_i_spike_reverts": 1965,
+    "events_bucket_ii_permanent_shift": 730,
+    "events_bucket_iii_fast_rise": 416,
+    "events_bucket_iii_with_rain_gt_20mm": 31,
+    "events_bucket_iii_without_rain_evidence": 385,
+    "events_bucket_iii_rain_unavailable": 323,
+    "events_peak_jump_ge_5m": 1943
+  },
+  "mad_mask_analysis": {
+    "flagged_points_total": 5587,
+    "flagged_points_masked_by_30mad": 1962,
+    "flagged_points_masked_by_pipeline_30x1p4826mad": 1789,
+    "events_any_flagged_point_masked_30mad": 1015,
+    "events_all_flagged_points_masked_30mad": 596,
+    "events_any_flagged_point_masked_pipeline": 875,
+    "events_all_flagged_points_masked_pipeline": 504,
+    "note": "task-spec mask = |gwl-median| > 30*MAD (MAD unscaled); actual 06_features.drop_gwl_spikes uses 30*(1.4826*MAD) with floor 1e-6, so the pipeline-masked counts are a subset of the 30*MAD counts"
+  },
+  "forecast_impact": {
+    "anchor_definition": "stride row `time` (forecast issue time); target_time = anchor + 30 d",
+    "exclusion": "row removed if anchor OR anchor+30d is within +/-1 d of any flagged event of the same station",
+    "case_all_stride_rows": {
+      "n_rows": 3764,
+      "n_stations": 511,
+      "rmse_xgb": 2.4182060834259325,
+      "rmse_persist": 2.4758636480636316,
+      "ratio_xgb_over_persist": 0.9767121405563699,
+      "ratio_ci95": [
+        0.952153448773552,
+        0.9865940035888384
+      ],
+      "bootstrap": {
+        "B": 2000,
+        "seed": 42,
+        "resample": "stations_with_replacement"
+      }
+    },
+    "case_excluding_flagged_event_rows": {
+      "n_rows": 3706,
+      "n_stations": 511,
+      "rmse_xgb": 1.957736006881317,
+      "rmse_persist": 2.020913052176037,
+      "ratio_xgb_over_persist": 0.9687383654498676,
+      "ratio_ci95": [
+        0.9448119180906164,
+        0.982491617446171
+      ],
+      "bootstrap": {
+        "B": 2000,
+        "seed": 42,
+        "resample": "stations_with_replacement"
+      }
+    },
+    "n_rows_excluded": 58,
+    "n_stations_affected_by_exclusion": 25
+  },
+  "dashboard_stations": {
+    "Azamgarh": {
+      "n_stations": 10,
+      "stations": [
+        "Azamgarh Ahiraula Bahera",
+        "Azamgarh Ahiraula Kandara",
+        "Azamgarh Atrauliya Atrauliya",
+        "Azamgarh Jahanganj Godhaura",
+        "Azamgarh Lalganj Lalganj",
+        "Azamgarh Palhana Balahi Lahucha",
+        "Azamgarh Palhana Jamui Bhatauli",
+        "Azamgarh Pavai Velasiya",
+        "Azamgarh Sathiyavn Gajahada",
+        "Azamgarh Thekama Bardah"
+      ],
+      "n_events": 1,
+      "events_by_bucket": {
+        "ii_permanent_level_shift": 1
+      },
+      "n_stations_with_events": 1
+    },
+    "Deoria": {
+      "n_stations": 5,
+      "stations": [
+        "Deoria Bhaluwani Markna",
+        "Deoria Bhatani Mishrauli Dichit",
+        "Deoria Bhatpar Rani Dharkwan",
+        "Deoria Salempur Manihari",
+        "Deoria Tarkulwa Tarkulwa"
+      ],
+      "n_events": 0,
+      "events_by_bucket": {},
+      "n_stations_with_events": 0
+    },
+    "Banda": {
+      "n_stations": 6,
+      "stations": [
+        "Banda Baberu Anvan",
+        "Banda Baberu Umrehani",
+        "Banda Badokhar Khurd Chatgan",
+        "Banda Bisndha Mrooli",
+        "Banda Kamasin Tilowsa",
+        "Banda Tindwari Bhindowra"
+      ],
+      "n_events": 54,
+      "events_by_bucket": {
+        "i_single_point_spike_reverts": 41,
+        "iii_fast_rise": 7,
+        "ii_permanent_level_shift": 6
+      },
+      "n_stations_with_events": 4
+    },
+    "Meerut": {
+      "n_stations": 3,
+      "stations": [
+        "Meerut Janikhurd Afjalpur Pavati",
+        "Meerut Janikhurd Satvai",
+        "Meerut Sardhana Chhabariya"
+      ],
+      "n_events": 0,
+      "events_by_bucket": {},
+      "n_stations_with_events": 0
+    },
+    "Varanasi": {
+      "n_stations": 0,
+      "stations": [],
+      "n_events": 0,
+      "events_by_bucket": {},
+      "n_stations_with_events": 0
+    },
+    "ASHADHA": {
+      "n_stations": 1,
+      "stations": [
+        "ASHADHA PRATHMIK VIDYALAYA"
+      ],
+      "n_events": 0,
+      "events_by_bucket": {},
+      "n_stations_with_events": 0
+    },
+    "varanasi_note": "No station whose name starts with 'Varanasi' exists in data/aligned/table_6h.parquet - explicitly skipped.",
+    "n_stations_plotted": 25,
+    "plot": "data/scratch_assoc/diag_4c_glitches/dashboard_stations.png"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "station": "Varansi Harahua Gurwat",
+  "figures": {
+    "01_paired_backtest": {
+      "traces": [
+        {
+          "name": "actual",
+          "showlegend": true
+        },
+        {
+          "name": "30-day forecast \u2014 honest backtest (stride grid)",
+          "showlegend": true
+        },
+        {
+          "name": "forecast \u2212 actual",
+          "showlegend": true
+        }
+      ],
+      "legend_title": null
+    },
+    "02_paired_live": {
+      "traces": [],
+      "legend_title": null
+    },
+    "03_station_card": {
+      "traces": [],
+      "legend_title": null
+    },
+    "04_archive_validation": {
+      "traces": [],
+      "legend_title": null
+    }
+  }
+}
