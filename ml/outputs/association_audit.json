@@ -1,0 +1,104 @@
+[
+  {
+    "parameter": "rainfall",
+    "gauges": 50,
+    "old_linked": 550,
+    "new_linked": 600,
+    "new_linked_pct": 100.0,
+    "no_gauge_in_radius_now": 50,
+    "median_wsum": 1.4516,
+    "median_dmin_km": 32.5,
+    "method": "idw"
+  },
+  {
+    "parameter": "temperature",
+    "gauges": 3,
+    "old_linked": 127,
+    "new_linked": 600,
+    "new_linked_pct": 100.0,
+    "no_gauge_in_radius_now": 412,
+    "median_wsum": 0.0034,
+    "median_dmin_km": 296.1,
+    "method": "idw"
+  },
+  {
+    "parameter": "humidity",
+    "gauges": 4,
+    "old_linked": 144,
+    "new_linked": 600,
+    "new_linked_pct": 100.0,
+    "no_gauge_in_radius_now": 384,
+    "median_wsum": 0.0141,
+    "median_dmin_km": 259.4,
+    "method": "idw"
+  },
+  {
+    "parameter": "solar",
+    "gauges": 4,
+    "old_linked": 144,
+    "new_linked": 600,
+    "new_linked_pct": 100.0,
+    "no_gauge_in_radius_now": 384,
+    "median_wsum": 0.0883,
+    "median_dmin_km": 259.4,
+    "method": "idw"
+  },
+  {
+    "parameter": "wind_speed",
+    "gauges": 4,
+    "old_linked": 144,
+    "new_linked": 600,
+    "new_linked_pct": 100.0,
+    "no_gauge_in_radius_now": 384,
+    "median_wsum": 0.0141,
+    "median_dmin_km": 259.4,
+    "method": "idw"
+  },
+  {
+    "parameter": "pressure",
+    "gauges": 2,
+    "old_linked": 127,
+    "new_linked": 600,
+    "new_linked_pct": 100.0,
+    "no_gauge_in_radius_now": 350,
+    "median_wsum": 0.1848,
+    "median_dmin_km": 296.1,
+    "method": "idw"
+  },
+  {
+    "parameter": "eto",
+    "gauges": 0,
+    "old_linked": 0,
+    "new_linked": null,
+    "reason": "no *_norm.parquet"
+  },
+  {
+    "parameter": "river_level",
+    "gauges": 0,
+    "old_linked": 50,
+    "new_linked": null,
+    "reason": "gauge table has no usable coordinates"
+  },
+  {
+    "parameter": "canal_level",
+    "gauges": 17,
+    "old_linked": 111,
+    "new_linked": 600,
+    "new_linked_pct": 100.0,
+    "no_gauge_in_radius_now": 450,
+    "median_wsum": 0.0037,
+    "median_dmin_km": 256.3,
+    "method": "weighted_delta"
+  },
+  {
+    "parameter": "wind_direction",
+    "gauges": 3,
+    "old_linked": 127,
+    "new_linked": 600,
+    "new_linked_pct": 100.0,
+    "no_gauge_in_radius_now": 412,
+    "median_wsum": 0.0034,
+    "median_dmin_km": 296.1,
+    "method": "idw"
+  }
+]
