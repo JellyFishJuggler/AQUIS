@@ -151,6 +151,20 @@ def _run_anchor(args):
 
     hist_d = hist.copy()
     hist_d["date"] = hist_d["time"].dt.normalize()
+    # Only the LAST row's features are used, and nothing downstream looks further
+    # back than the longest trailing window (120 steps for the 30-day GWL roll,
+    # 128 for the driver tail, 90 days for the slope block) — so the anchor row's
+    # feature values are unchanged by this cap. Building features for the whole
+    # station history and then keeping one row was the main memory cost of this
+    # backtest (~5k rows x ~45 cols per anchor, times the pool size).
+    #
+    # Side effect to be aware of: with a short frame `flag_regime_shift` never
+    # fires (it needs 2021-2024 medians), so a regime-shifted station is no longer
+    # silently dropped here. That is the correct behaviour — the anchor is scored
+    # as-is — and the same rule already ran on the full table in `_worker_init`.
+    TAIL_STEPS = 450
+    if len(hist_d) > TAIL_STEPS:
+        hist_d = hist_d.iloc[-TAIL_STEPS:].copy()
     feats, _ = F.build_full(hist_d, keep_na=True, horizon_steps=120, horizon_label=30)
     feats = feats.sort_values("time")
     if feats.empty:
@@ -284,37 +298,83 @@ def main():
     else:
         direct_rmse = traj_rmse_directset = np.nan
 
+    # ---- calibration, fitted and REPORTED on disjoint anchors -------------
+    # Fitting the widening on the same anchors whose coverage it reports makes
+    # `coverage_calibrated` a description of the fit, not a validation. Split the
+    # anchor set deterministically (alternating anchors in station/time order) so
+    # one half fits `s` and the other half is held out for the headline number.
+    def _fit_s(med, half, obs, avail, lo_s=0.2, hi_s=12.0):
+        cov_of = lambda s: np.mean((med[avail] - s * half[avail] <= obs[avail])
+                                   & (obs[avail] <= med[avail] + s * half[avail]))
+        if not avail.any():
+            return float("nan")
+        if cov_of(lo_s) >= COVERAGE_TARGET:
+            return lo_s
+        a, b = lo_s, hi_s
+        for _ in range(40):
+            mid = 0.5 * (a + b)
+            if cov_of(mid) < COVERAGE_TARGET:
+                a = mid
+            else:
+                b = mid
+        return b
+
+    def _cov(med, half, obs, s):
+        if s != s:                     # NaN fit -> no usable interval
+            return float("nan")
+        return float(np.mean((med - s * half <= obs) & (obs <= med + s * half)))
+
+    # Deterministic, RAM-cheap split: hash the (station, anchor) pair to assign it
+    # to the calibration-fit half or the held-out half. Deliberately NOT a stored
+    # set of pairs — at ~74k anchors that is tens of MB per worker on a box already
+    # holding the aligned table and the quantile boosters.
+    keys = df[["station", "anchor_t"]].drop_duplicates()
+    df = df.assign(_half=(pd.util.hash_pandas_object(
+        df["station"].astype(str) + "|" + df["anchor_t"].astype(str),
+        index=False).to_numpy() & 1).astype(np.int8))
+    n_fit = int((df["_half"] == 0).sum())
+    print(f"calibration split: {n_fit:,} fit / {int((df['_half'] == 1).sum()):,} "
+          f"held-out scores (hash-split of {len(keys):,} anchors)", flush=True)
+
     calib = {"horizons_h": [], "widening_s": [], "coverage_raw": [],
-             "coverage_calibrated": [], "n": []}
+             "coverage_calibrated": [], "coverage_calibrated_fit": [],
+             "coverage_raw_heldout": [], "n": [], "n_fit": [], "n_heldout": []}
     for hh in HORIZONS_H:
         g = df[df["horizon_h"] == hh]
         if g.empty:
             continue
-        med = g["traj_q50"].to_numpy()
-        lo = g["traj_q05"].to_numpy()
-        hi = g["traj_q95"].to_numpy()
-        obs = g["obs"].to_numpy()
-        half = (hi - lo) / 2.0
-        avail = half > 1e-9
-        cov_of = lambda s: np.mean((med[avail] - s * half[avail] <= obs[avail])
-                                   & (obs[avail] <= med[avail] + s * half[avail]))
-        s_lo, s_hi = 0.2, 12.0
-        if cov_of(s_lo) >= COVERAGE_TARGET:
-            s = s_lo
-        else:
-            for _ in range(40):
-                s_mid = 0.5 * (s_lo + s_hi)
-                if cov_of(s_mid) < COVERAGE_TARGET:
-                    s_lo = s_mid
-                else:
-                    s_hi = s_mid
-            s = s_hi
+        gf = g[g["_half"] == 0]
+        gh = g[g["_half"] == 1]
+        if gf.empty or gh.empty:       # too few anchors to split at this horizon
+            gf = gh = g
+        f_med = gf["traj_q50"].to_numpy(); f_lo = gf["traj_q05"].to_numpy()
+        f_hi = gf["traj_q95"].to_numpy(); f_obs = gf["obs"].to_numpy()
+        f_half = (f_hi - f_lo) / 2.0
+        f_avail = f_half > 1e-9
+        s = _fit_s(f_med, f_half, f_obs, f_avail)
+
+        h_med = gh["traj_q50"].to_numpy(); h_lo = gh["traj_q05"].to_numpy()
+        h_hi = gh["traj_q95"].to_numpy(); h_obs = gh["obs"].to_numpy()
+        h_half = (h_hi - h_lo) / 2.0
+
         calib["horizons_h"].append(hh)
-        calib["widening_s"].append(round(float(s), 3))
-        calib["coverage_raw"].append(round(float(cov_of(1.0)), 3))
-        calib["coverage_calibrated"].append(round(float(cov_of(s)), 3))
-        calib["n"].append(int(len(g)))
+        calib["widening_s"].append(round(float(s), 3) if s == s else None)
+        calib["coverage_raw"].append(round(float(np.mean((h_lo <= h_obs)
+                                                          & (h_obs <= h_hi))), 3))
+        calib["coverage_raw_heldout"].append(round(float(np.mean((h_lo <= h_obs)
+                                                                  & (h_obs <= h_hi))), 3))
+        calib["coverage_calibrated_fit"].append(round(_cov(f_med, f_half, f_obs, s), 3))
+        # HEADLINE: widening fitted on the fit half, coverage measured on the rest
+        calib["coverage_calibrated"].append(round(_cov(h_med, h_half, h_obs, s), 3))
+        calib["n"].append(int(len(gh)))
+        calib["n_fit"].append(int(len(gf)))
+        calib["n_heldout"].append(int(len(gh)))
+    df = df.drop(columns=["_k"], errors="ignore")
     CALIB.write_text(json.dumps(calib, indent=2))
+
+    def _last(key: str):
+        vals = calib.get(key) or []
+        return vals[-1] if vals else None
 
     r30 = metric_df[metric_df.horizon_h == 720].iloc[0]
     short = metric_df[metric_df.horizon_h <= 24]
@@ -333,7 +393,7 @@ def main():
         "stations_sampled": len(stations),
         "period": [str(BACKTEST_START.date()), str(LATEST_FRAME.date())],
         "anchor_spacing_days": ANCHOR_SPACING_DAYS,
-        "no_overlap_windows": True,
+        "no_overlap_windows": bool(HORIZONS_H[-1] <= 24 * ANCHOR_SPACING_DAYS),
         "no_future_observed_values": True,
         "30d_rmse_traj": float(r30["rmse"]),
         "30d_rmse_persistence": float(r30["rmse_persist"]),
@@ -344,7 +404,11 @@ def main():
         "30d_rmse_prev_recursive": (round(prev_rec, 4) if prev_rec is not None else None),
         "30d_dir_acc": (round(float(r30["sign_acc"]), 4) if np.isfinite(r30["sign_acc"])
                         else None),
-        "30d_coverage_calibrated": calib["coverage_calibrated"][-1],
+        "30d_coverage_calibrated": _last("coverage_calibrated"),
+        "30d_coverage_calibrated_fit_half": _last("coverage_calibrated_fit"),
+        "30d_coverage_raw_heldout": _last("coverage_raw_heldout"),
+        "calibration_split": ("widening fitted on alternating anchors; coverage "
+                              "reported on the disjoint complement"),
         "success_short_horizons": success_short,
         "success_vs_persist_30d": success_persist_30,
         "success_vs_direct30_30d": success_direct_30,
