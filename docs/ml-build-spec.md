@@ -123,7 +123,8 @@ dashboard** (`app.py`, the current live analysis surface).
 
 ### 3.1 Model feature inputs (per 6h row — produced by `06_features.build`)
 Columns in `KEEP` in `06_features.py`:
-`Station, District, time, date, horizon, target, target_d, st_id, dist_id` + 30 floats.
+`Station, District, time, date, horizon, target, target_d, target_time, st_id, dist_id`
++ 30 floats (`NUM_COLS`) + 15 floats (`HYDRO_COLS`, carried — see 3.1.1).
 
 | Param | Meaning | dtype | Unit | Range | Req | Example | Source |
 |---|---|---|---|---|---|---|---|
@@ -158,9 +159,74 @@ Columns in `KEEP` in `06_features.py`:
 | `dist_id` | district ordinal | int32 | — | 0…28 | yes (XGB only) | 6 | ordinal encode |
 | `Station` | station name | str | — | feature_config.stations | yes (Ridge) | "Agra City (UP-017)" | meta |
 | `District` | district name | str | — | feature_config.districts | yes (Ridge) | "KAUSHAMBI" | meta |
+| `target_time` | observed timestamp of the label row | datetime64 | — | — | yes (split only) | 2026-01-15 00:00 | calc (same shift as `target`) |
 
 `*` = may be NaN (XGBoost handles; Ridge median-imputes). Missing driver columns
 are simply absent → feature builder skips that window group.
+
+#### 3.1.1 Hydrology-informed columns (`HYDRO_COLS` — carried, **not yet trained**)
+
+Built in `_hydrology.py`, shared verbatim by `06_features.build` and
+`refresh.future_drivers.build_step_features`. **These are present in the feature
+frames and in the serving row dicts but are deliberately excluded from the frozen
+models' `num_cols`**, so the shipped artifacts are unaffected; wiring them in
+requires a deliberate retrain (the refresh gate refuses a candidate whose
+`feature_cols` differ from production). Every column is causal (trailing windows
+only) and every windowed value has an explicit coverage companion.
+
+| Param | Meaning | dtype | Unit | Range | Req | Example | Source |
+|---|---|---|---|---|---|---|---|
+| `gwl_dev7` | `gwl − gwl_roll7_mean` | float32 | m | auto | no (carried) | 0.12 | calc |
+| `gwl_dev30` | `gwl − gwl_roll30_mean` | float32 | m | auto | no (carried) | −0.30 | calc |
+| `gwl_slope7` | Theil-Sen slope, trailing 7 d | float32 | m/day | auto | no (carried) | −0.01 | calc |
+| `gwl_slope30` | Theil-Sen slope, trailing 30 d | float32 | m/day | auto | no (carried) | −0.03 | calc |
+| `gwl_slope90` | Theil-Sen slope, trailing 90 d | float32 | m/day | auto | no (carried) | −0.02 | calc |
+| `gwl_obs7` | observed-day coverage of the 7 d slope window | float32 | 0…1 | 0…1 | no (carried) | 0.86 | calc |
+| `gwl_obs30` | same, 30 d | float32 | 0…1 | 0…1 | no (carried) | 0.91 | calc |
+| `gwl_obs90` | same, 90 d | float32 | 0…1 | 0…1 | no (carried) | 0.88 | calc |
+| `gwl_imputed` | 1 = forwarded reading, 0 = observed, NaN = no reading | float32 | flag | {0,1,NaN} | no (carried) | 0.0 | `04b_align_6h.gwl_obs` |
+| `rain_api7` | API, τ = 7 d | float32 | mm | ≥0 | no (carried) | 4.2 | IDW rain |
+| `rain_api22` | API, τ = 22 d (corpus-measured recharge lag) | float32 | mm | ≥0 | no (carried) | 9.8 | IDW rain |
+| `rain_api60` | API, τ = 60 d | float32 | mm | ≥0 | no (carried) | 21.5 | IDW rain |
+| `rain_obs7` | fraction of the τ = 7 d window backed by an **actual raingauge observation** (fixed denominator; future forecast/climatology and missing slots are unobserved) | float32 | 0…1 | 0…1 | no (carried) | 0.94 | calc |
+| `rain_obs22` | same, τ = 22 d | float32 | 0…1 | 0…1 | no (carried) | 0.90 | calc |
+| `rain_obs60` | same, τ = 60 d | float32 | 0…1 | 0…1 | no (carried) | 0.83 | calc |
+
+Causality contract and formulas: `_hydrology.py` module docstring. In the serving
+path the `gwl_dev*`/`gwl_slope*`/`gwl_obs*`/`gwl_imputed` values are **pinned at
+the anchor** (constant across all 120 steps) while `rain_api*`/`rain_obs*`
+**advance per step** using the observed history plus forecast/climatology rain;
+the rain recursion runs over the full observed history so a τ = 60 d kernel is
+warmed up.
+
+`rain_api*` and `rain_obs*` deliberately mean different things and must not be
+conflated:
+
+* `rain_api*` — the numeric memory term. Built from the rainfall **forcing**
+  available at the step, including Open-Meteo forecast and climatology values for
+  future steps, because that is the best rainfall knowledge at that step.
+* `rain_obs*` — a **coverage** column. Counts only slots backed by an actual
+  raingauge observation; a missing historical slot and every future
+  forecast/climatology slot are unobserved. It therefore **decays** across the
+  forecast horizon rather than reading ~1.0 on rain that has not been observed.
+  Coverage uses the fixed denominator τ·4 slots (28 / 88 / 240).
+
+Rainfall has no forward-fill or interpolation anywhere in the pipeline
+(`03_merge_normalize` drops NaN rows; `04_align`/`04b_align_6h` sum-or-mean over
+gauges and left-join, leaving unobserved slots as NaN), so in a batch frame a
+finite value *is* an observation — `06_features.build` constructs that mask
+explicitly rather than inferring it, so the meaning survives an imputation step
+added upstream later. `build_step_features` computes these unconditionally but
+returns only the columns named in `fnames`, so a caller that omits them (including
+the frozen production model) sees an unchanged matrix.
+
+> **Before training on `rain_api*`, read
+> [`ml-hydro-train-serve.md`](ml-hydro-train-serve.md).** The batch definition uses
+> rainfall known at the anchor (horizon-invariant); the serving definition advances
+> the recursion with future forecast/climatology rainfall (varies with `h`).
+> Reproducing serving in training needs point-in-time forecast rainfall, which is
+> not archived. The block therefore stays **experimental/untrained**.
+> `rain_obs*` semantics are correct in both paths.
 
 ### 3.2 Runtime / API input params
 | Param | Meaning | dtype | Valid | Req | Example | Source |
@@ -237,7 +303,7 @@ where spatial association applied).
 | Outliers | sentinel `|GWL|>500` dropped; per-station 0.5–99.5% quantile trim; `drop_gwl_spikes` robust MAD z=30; rainfall cap 150 mm/h |
 | Regime shifts | `flag_regime_shift`: per-year median jump >15 m from 2021-24 → station dropped wholesale |
 | Cleaning | daily + 6h medians; water table amsl = RL_MSL + gwl for sanity (corr 0.965) |
-| Split | train <2025-10-01, val Oct–Dec 2025, test ≥2026-01-01; train 1,629,574 / val 11,647 / test 378,554 |
+| Split | train <2025-10-01, val Oct–Dec 2025, test ≥2026-01-01 **by anchor time, then purged by target time** — a train row survives only if `target_time < 2025-10-01` and a val row only if `target_time < 2026-01-01`, so no 30-day label is observed inside a later split. Counts shown (train 1,629,574 / val 11,647 / test 378,554) are pre-purge; the purge removes ≈120 anchors × n_stations from train and val. |
 | Sample rows | see §19 |
 
 ---

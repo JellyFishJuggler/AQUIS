@@ -226,36 +226,77 @@ def _metrics(g: pd.DataFrame) -> dict:
 
 
 def _calibrate(df: pd.DataFrame) -> dict:
+    """Per-horizon widening, FITTED and REPORTED on disjoint anchors.
+
+    Fitting the widening on the same anchors whose coverage it reports would make
+    `coverage_calibrated` a description of the fit rather than a validation. The
+    anchors are split deterministically (alternating in station/time order): the
+    fit half chooses `s`, and the held-out half produces the headline coverage.
+    """
     out = {"horizons_h": [], "widening_s": [], "coverage_raw": [],
-           "coverage_calibrated": [], "n": []}
+           "coverage_calibrated": [], "coverage_calibrated_fit": [],
+           "coverage_raw_heldout": [], "n": [], "n_fit": [], "n_heldout": []}
+    if df.empty:
+        return out
+
+    # Deterministic, RAM-cheap split: hash the (station, anchor) pair to assign it
+    # to the fit half or the held-out half. Not a stored set of pairs, which would
+    # grow with the anchor count on an already memory-tight box.
+    df = df.assign(_half=(pd.util.hash_pandas_object(
+        df["station"].astype(str) + "|" + df["anchor_t"].astype(str),
+        index=False).to_numpy() & 1).astype(np.int8))
+
+    target = COVERAGE_TARGET + 0.02
+
+    def _fit_s(med, half, obs, avail, lo_s=0.2, hi_s=12.0):
+        if not avail.any():
+            return float("nan")
+        cov = lambda s: float(np.mean((med[avail] - s * half[avail] <= obs[avail])
+                                      & (obs[avail] <= med[avail] + s * half[avail])))
+        if cov(lo_s) >= target:
+            return lo_s
+        a, b = lo_s, hi_s
+        for _ in range(40):
+            m = 0.5 * (a + b)
+            if cov(m) < target:
+                a = m
+            else:
+                b = m
+        return b
+
+    def _cov(med, half, obs, s):
+        if s != s:                     # NaN fit -> no usable interval
+            return float("nan")
+        return float(np.mean((med - s * half <= obs) & (obs <= med + s * half)))
+
     for hh in HORIZONS_H:
         g = df[df["horizon_h"] == hh]
         if g.empty:
             continue
-        med, lo, hi = (g["traj_q50"].to_numpy(), g["traj_q05"].to_numpy(),
-                       g["traj_q95"].to_numpy())
-        obs = g["obs"].to_numpy()
-        half = (hi - lo) / 2.0
-        avail = half > 1e-9
-        cov = lambda s: float(np.mean((med[avail] - s * half[avail] <= obs[avail])
-                                      & (obs[avail] <= med[avail] + s * half[avail])))
-        s_lo, s_hi = 0.2, 12.0
-        target = COVERAGE_TARGET + 0.02
-        if cov(s_lo) >= target:
-            s = s_lo
-        else:
-            for _ in range(40):
-                s_mid = 0.5 * (s_lo + s_hi)
-                if cov(s_mid) < target:
-                    s_lo = s_mid
-                else:
-                    s_hi = s_mid
-            s = s_hi
+        gf, gh = g[g["_half"] == 0], g[g["_half"] == 1]
+        if gf.empty or gh.empty:       # too few anchors to split at this horizon
+            gf = gh = g
+        f_med, f_lo, f_hi, f_obs = (gf["traj_q50"].to_numpy(), gf["traj_q05"].to_numpy(),
+                                    gf["traj_q95"].to_numpy(), gf["obs"].to_numpy())
+        f_half = (f_hi - f_lo) / 2.0
+        s = _fit_s(f_med, f_half, f_obs, f_half > 1e-9)
+
+        h_med, h_lo, h_hi, h_obs = (gh["traj_q50"].to_numpy(), gh["traj_q05"].to_numpy(),
+                                    gh["traj_q95"].to_numpy(), gh["obs"].to_numpy())
+        h_half = (h_hi - h_lo) / 2.0
+
         out["horizons_h"].append(float(hh))
-        out["widening_s"].append(round(float(s), 3))
-        out["coverage_raw"].append(round(cov(1.0), 3))
-        out["coverage_calibrated"].append(round(cov(s), 3))
-        out["n"].append(int(len(g)))
+        out["widening_s"].append(round(float(s), 3) if s == s else None)
+        out["coverage_raw"].append(round(float(np.mean((h_lo <= h_obs)
+                                                        & (h_obs <= h_hi))), 3))
+        out["coverage_raw_heldout"].append(round(float(np.mean((h_lo <= h_obs)
+                                                               & (h_obs <= h_hi))), 3))
+        out["coverage_calibrated_fit"].append(round(_cov(f_med, f_half, f_obs, s), 3))
+        # HEADLINE (held out): widening fitted on the other half
+        out["coverage_calibrated"].append(round(_cov(h_med, h_half, h_obs, s), 3))
+        out["n"].append(int(len(gh)))
+        out["n_fit"].append(int(len(gf)))
+        out["n_heldout"].append(int(len(gh)))
     return out
 
 

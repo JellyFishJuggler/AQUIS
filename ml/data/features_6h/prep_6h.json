@@ -96,7 +96,6 @@
     "Block office, Gursarai",
     "Chakara  P_1",
     "Chandi Kalan",
-    "Chhibaw_1",
     "Chirautha",
     "Chitrakoot Karvi Khoha",
     "Chitrakoot Karvi Shivrampur",
@@ -626,9 +625,9 @@
     "SONBHADRA",
     "VARANASI"
   ],
-  "split": "Time-based split: train < 2025-10-01, val = fall/winter 2025, test = 2026.",
-  "train_rows": 1743594,
-  "val_rows": 13693,
-  "test_rows": 464032,
-  "built_at": "2026-09-10 09:31:25"
+  "split": "Purged time split: train < 2025-10-01, val = fall/winter 2025, test = 2026.",
+  "train_rows": 1741515,
+  "val_rows": 14046,
+  "test_rows": 506819,
+  "built_at": "2026-10-07 21:20:08"
 }

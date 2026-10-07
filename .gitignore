@@ -81,3 +81,6 @@ Thumbs.db
 .agents
 .paper
 ml/data/features_traj/
+
+# local safety snapshots (pre-ablation backups kept on disk; not versioned)
+ml/backups/

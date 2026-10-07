@@ -10,7 +10,8 @@ Uses the SAME gauge->well associations as 04 (data/meta/assoc_*.csv):
   * river/canal: district-proxy / nearest links -> 6h mean
 
 Outputs:
-  ml/data/aligned/table_6h.parquet   (Station, District, time, gwl, drivers)
+  ml/data/aligned/table_6h.parquet   (Station, District, time, gwl, gwl_obs,
+                                      drivers)
 """
 from __future__ import annotations
 
@@ -72,7 +73,13 @@ def nearest_join_bin(assoc: pd.DataFrame, binned: pd.DataFrame, value_col: str) 
 
 def gwl_track(gwl: pd.DataFrame) -> pd.DataFrame:
     """Regular 6h grid per station; sentinels dropped; median per slot; a missing
-    slot is carried from the last reading only for gaps <= MAX_FFILL_STEPS."""
+    slot is carried from the last reading only for gaps <= MAX_FFILL_STEPS.
+
+    ``gwl_obs`` records provenance per slot: 1.0 = actual reading, 0.0 =
+    carried forward (ffill), NaN = no reading (gap beyond the carry limit).
+    Feature builders use it for the GWL-imputed indicator and for coverage
+    counts, so trends never silently sit on a plateau of filled values.
+    """
     gwl = gwl[gwl["value"].abs() <= 500]
     frames = []
     for st, sub in gwl.groupby("Station"):
@@ -83,8 +90,12 @@ def gwl_track(gwl: pd.DataFrame) -> pd.DataFrame:
         slot = (pd.Series(sub["value"].values, index=pd.to_datetime(sub["time"]).values)
                 .groupby(lambda t: pd.Timestamp(t).floor(STEP)).median())
         s = slot.reindex(idx)
+        obs = s.notna()
         s = s.ffill(limit=MAX_FFILL_STEPS)
-        frames.append(pd.DataFrame({"Station": st, "time": idx, "gwl": s.values}))
+        frames.append(pd.DataFrame({
+            "Station": st, "time": idx, "gwl": s.values,
+            "gwl_obs": np.where(s.notna(), obs.astype(float), np.nan),
+        }))
     return pd.concat(frames, ignore_index=True)
 
 

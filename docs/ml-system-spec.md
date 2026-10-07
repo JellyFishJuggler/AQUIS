@@ -75,6 +75,101 @@ build the 30-day change but never predicted. Target = `GWL(t+120) − GWL(t)`
 Full feature list = `ml/models/feature_config.json` → `num_cols` (30) +
 2 ordinal columns (`st_id`, `dist_id`) = **32 model inputs** for XGBoost.
 
+> The frames also carry a **causal hydrology-informed block** (`HYDRO_COLS` in
+> `06_features.py`, built by `_hydrology.py`) and `target_time`. Both are
+> **carried, not yet trained**: they are present in
+> `data/features/{train,val,test}.parquet` and in the serving row dicts, but the
+> frozen artifacts' `num_cols` deliberately exclude them, so the shipped models
+> are unchanged. Wiring them in requires a deliberate retrain (the refresh gate
+> refuses any candidate whose `feature_cols` differ from production). See §2.1.
+
+### 2.1 Hydrology-informed block (`HYDRO_COLS` — carried, not yet trained)
+
+Built once in `_hydrology.py` and shared verbatim by the batch builder
+(`06_features.build`) and the serving path
+(`refresh.future_drivers.build_step_features`), so training and inference cannot
+drift. Every column is **causal** (trailing windows only, per-row station
+history) and every windowed value is paired with an explicit coverage column —
+never a silently shortened window.
+
+| # | Feature | Group | Meaning / formula |
+|---|---|---|---|
+| H1 | `gwl_dev7` | GWL state | `gwl − gwl_roll7_mean` (m) |
+| H2 | `gwl_dev30` | GWL state | `gwl − gwl_roll30_mean` (m) |
+| H3 | `gwl_slope7` | GWL trend | Theil-Sen slope of the per-day median observed GWL over a trailing 7 d window (m/day) |
+| H4 | `gwl_slope30` | GWL trend | Same, trailing 30 d |
+| H5 | `gwl_slope90` | GWL trend | Same, trailing 90 d |
+| H6 | `gwl_obs7` | GWL coverage | Fraction of the 7 d window whose days held ≥1 **observed** (not carried-forward) reading |
+| H7 | `gwl_obs30` | GWL coverage | Same, 30 d |
+| H8 | `gwl_obs90` | GWL coverage | Same, 90 d |
+| H9 | `gwl_imputed` | GWL provenance | 1 = the row's GWL is a forwarded value, 0 = observed, NaN = no reading |
+| H10 | `rain_api7` | rain memory | Exponential antecedent precipitation index, τ = 7 d (mm) |
+| H11 | `rain_api22` | rain memory | API, τ = 22 d — the corpus-measured recharge lag |
+| H12 | `rain_api60` | rain memory | API, τ = 60 d |
+| H13 | `rain_obs7` | rain coverage | Fraction of the τ = 7 d window **backed by an actual rain observation** (fixed denominator; missing slots and all future forecast/climatology slots count as unobserved) |
+| H14 | `rain_obs22` | rain coverage | Same, τ = 22 d |
+| H15 | `rain_obs60` | rain coverage | Same, τ = 60 d |
+
+Definitions and the causality contract are in the `_hydrology.py` module
+docstring. Key points:
+
+- **API recursion**: `API_t = λ·API_{t−1} + rain_t` on the 6-hour grid with
+  `λ = exp(−(6/24)/τ)`; zero state before the station's first observed rain, NaN
+  before it (no fabricated warm-up). A missing rain slot contributes zero
+  accumulation while the decay continues.
+- **Rain provenance — `rain_api*` and `rain_obs*` mean different things.**
+  `rain_api*` is built from the **numeric rainfall forcing** available at the
+  step: observations where they exist, and forecast/climatology values for future
+  steps, because that is the best rainfall knowledge at that step. `rain_obs*` is
+  a **coverage** column and counts only slots backed by an **actual observation**
+  — a missing historical slot and every future forecast/climatology slot count as
+  unobserved. The two are therefore deliberately decoupled: masking changes
+  coverage only, never the API value. Coverage uses the fixed denominator `τ·4`
+  slots (7 d = 28, 22 d = 88, 60 d = 240), so a short or sparse history reads < 1
+  rather than pretending to be complete. In the serving path this means
+  `rain_obs*` *decays* across the forecast horizon instead of reading ~1.0 on
+  rain that has not been observed. Rainfall has **no** forward-fill or
+  interpolation anywhere in the pipeline (`03_merge_normalize` drops NaN rows;
+  `04_align`/`04b_align_6h` sum-or-mean over gauges and left-join, leaving
+  unobserved slots as NaN), so in batch frames a finite value *is* an observation
+  — `06_features.build` builds this mask explicitly rather than inferring it, so
+  the meaning survives any imputation step added upstream later.
+- **Slopes** are computed on per-day medians of *observed* readings first, then
+  as the median of all pairwise day-to-day slopes, so one telemetry spike cannot
+  tilt the trend. A slope needs ≥3 observed days and ≥50% window coverage, else
+  NaN.
+- **GWL provenance** comes from the aligned table's `gwl_obs` column
+  (`04b_align_6h.gwl_track` records 1 = reading, 0 = forward-filled, NaN = gap
+  beyond the 3-day carry limit). On legacy aligned tables without that column,
+  every present reading is treated as observed and `gwl_imputed` is 0.
+- Nothing here fits a parameter on validation/test data — the only
+  station-specific reference is the observed history at or before the row.
+
+**Serving parity.** `build_step_features` computes all 15 columns for every
+horizon step. The `gwl_dev*` / `gwl_slope*` / `gwl_obs*` / `gwl_imputed` values
+are **pinned at the anchor** (constant across the 120 steps) because they
+describe information available at time *t*; the `rain_api*` / `rain_obs*` values
+**vary per step**, because the API recursion is advanced across the forecast
+window (observed history + Open-Meteo/climatology rain) while `rain_obs*` coverage
+falls as unobserved forecast slots enter its window. The rain recursion runs
+over the **full observed history**, not the 128-step driver tail, so a τ = 60 d
+kernel is warmed up before the anchor. A caller whose `fnames` omit these columns
+— including the frozen production model — is unaffected: the final
+`df[base_cols + h_cols]` selection keeps unrequested keys invisible.
+
+> **`rain_api*` has a train/serve definition mismatch — read
+> [`ml-hydro-train-serve.md`](ml-hydro-train-serve.md) before training on it.**
+> In batch, `rain_api*` is built from rainfall known **at the anchor** and is
+> horizon-invariant. In serving, the recursion is **advanced with future
+> forecast/climatology rainfall**, so the value varies with *h*. A model fitted on
+> one definition would be served the other. Reproducing the serving definition in
+> training would require point-in-time forecast rainfall, which **is not
+> archived** (the archived forecast JSONs keep GWL quantiles and a `driver_source`
+> label, not the numeric driver matrix), and substituting the Open-Meteo *archive*
+> (ERA5) would train on realized future rainfall — disallowed. The mismatch is
+> **latent today** because `feature_mode = "flat"` never calls the future path.
+> `rain_obs*` is unaffected: its semantics are correct in both paths.
+
 | # | Feature | Group | Meaning / formula |
 |---|---|---|---|
 | 1 | `gwl` | anchor | Current reading (day-0 anchor, never target) |
@@ -338,7 +433,22 @@ target.
 
 ### 6.3 Split & sizes (`feature_config.json` / `model_metadata.json`)
 - Train: `< 2025-10-01` — val: `2025-10-01 .. 2025-12-31` — test: `>= 2026-01-01`
+- **Target-time purge.** These boundaries apply to the **anchor** timestamp, and
+  `split()` additionally removes any row whose **target** is observed inside a
+  later split: a train row is kept only if `target_time < 2025-10-01`, and a val
+  row only if `target_time < 2026-01-01`. Without this, a 30-day label attached
+  to a late-September anchor would be observed inside the validation window (and
+  a late-December val label inside the test window), so early stopping would be
+  selecting on test-period labels. `06_features.build` writes `target_time` as
+  the **actual observed** timestamp of the label row (the same shift position as
+  `target`), not `anchor + horizon`, so the purge is correct on a gappy axis.
+  The same rule is applied to the trajectory long-frame
+  (`30_traj_datasets.main`: train `< VAL_START`, val `< TEST_START`) and to the
+  refresh candidate build (`refresh/model_update.build_candidate_longframe`:
+  train `< train_cut`, val `< val_end`).
 - `train_rows` 1,629,574 · `val_rows` 11,647 · `test_rows` 378,554
+  (pre-purge values; the purge removes roughly the last 30 days of anchors from
+  train and val, so counts drop by ≈120 rows × n_stations)
   (model_metadata: train_val_rows 1,641,221, n_stations 549, n_districts 29)
 - `trained_at: 2026-09-09 17:03:49`
 

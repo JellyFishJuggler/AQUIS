@@ -12,10 +12,13 @@ Targets are taken at the EXACT time t + h*6h on each station's observed axis
 readings). Rows/horizons with no observed target are dropped.
 
 Splits: reuse the pipeline time split (train < 2025-10-01, val = fall/winter
-2025). The train frame is row-subsampled (stride) x horizon-subsampled (dense
-short horizons -> sparse long) to keep the long-form frame ~7M rows within the
-8 GB box; the validation frame keeps ALL rows x ALL 120 horizons for a clean
-per-horizon curve.
+2025) AND purge every expanded row whose OBSERVED target timestamp reaches a
+later split — no training label may be observed inside the validation window,
+no validation label inside the test window (same rule as 06_features.split,
+applied here per anchor and horizon).  The train frame is row-subsampled
+(stride) x horizon-subsampled (dense short horizons -> sparse long) to keep
+the long-form frame ~7M rows within the 8 GB box; the validation frame keeps
+ALL rows x ALL 120 horizons for a clean per-horizon curve.
 
 Outputs -> data/features_traj/{train,val}.parquet + prep_traj.json
 """
@@ -65,6 +68,8 @@ def _expand(rows: pd.DataFrame, times_st: np.ndarray, gwl_st: np.ndarray,
 
     target_delta = gwl(t+h*6h) - gwl(t) when gwl(t+h*6h) is observed at the
     exact time; rows/horizons without an exact observation are skipped.
+    ``target_time`` records the ACTUAL observed target timestamp (the matched
+    grid time), so callers can purge every label that reaches a later split.
     """
     t0s = rows["time"].to_numpy(dtype="datetime64[ns]")
     g0 = rows["gwl"].to_numpy(dtype=np.float64)
@@ -84,10 +89,12 @@ def _expand(rows: pd.DataFrame, times_st: np.ndarray, gwl_st: np.ndarray,
         hf = _horizon_feats(h)
         chunk = rows.iloc[idx].assign(
             h=h, h_sin=hf["h_sin"], h_cos=hf["h_cos"],
-            target_delta=np.asarray(delta[keep], dtype=np.float32))
+            target_delta=np.asarray(delta[keep], dtype=np.float32),
+            target_time=tt[idx])
         out.append(chunk)
     if not out:
-        return pd.DataFrame(columns=list(rows.columns) + HCOL + ["target_delta"])
+        return pd.DataFrame(columns=list(rows.columns) + HCOL + ["target_delta",
+                                                                 "target_time"])
     return pd.concat(out, ignore_index=True)
 
 
@@ -123,6 +130,21 @@ def main() -> None:
     trb = pd.concat(train_rows, ignore_index=True) if train_rows else pd.DataFrame()
     vab = pd.concat(val_rows, ignore_index=True) if val_rows else pd.DataFrame()
 
+    # --- target-time purge (A): no label may be observed inside a later split
+    #     — per anchor AND horizon, using the exact observed target timestamp. ---
+    if not trb.empty:
+        n_pre = len(trb)
+        trb = trb[trb["target_time"] < F.VAL_START]
+        n_purge = n_pre - len(trb)
+        if n_purge:
+            print(f"purge train: {n_purge:,} rows with target >= {F.VAL_START.date()}", flush=True)
+    if not vab.empty:
+        n_pre = len(vab)
+        vab = vab[vab["target_time"] < F.TEST_START]
+        n_purge = n_pre - len(vab)
+        if n_purge:
+            print(f"purge val:   {n_purge:,} rows with target >= {F.TEST_START.date()}", flush=True)
+
     for df in (trb, vab):
         if not df.empty:
             df["h"] = df["h"].astype(np.int16)
@@ -146,7 +168,8 @@ def main() -> None:
         "train_rows": int(len(trb)),
         "val_rows": int(len(vab)),
         "stations": int(len(stations)),
-        "split": "train < 2025-10-01 (row-subsampled x horizon-subsampled), val = all",
+        "split": "train < 2025-10-01 (row-subsampled x horizon-subsampled), "
+                 "val = all, purged by target_time",
         "built_at": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
     (OUT / "prep_traj.json").write_text(json.dumps(prep, indent=2))

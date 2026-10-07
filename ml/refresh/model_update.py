@@ -10,6 +10,11 @@ crossings), so an update is a FULL refit on the moving window:
     val     = [now - (holdout + backtest), now - backtest)   (early stopping)
     backtest= [now - backtest_days, now)                     (honest anchors)
 
+Every long-form row is additionally purged by its OBSERVED target timestamp:
+training labels must be observed before the validation window starts and
+validation labels before the backtest window starts — no label scored against
+a later period (same rule as 06_features.split, applied per anchor+horizon).
+
 The CANDIDATE is trained to data/refresh/candidate, backtested against the
 INCUMBENT (current production models) on the SAME anchors (identical feature
 matrices), and promoted ONLY if it passes the quality gates:
@@ -129,6 +134,10 @@ def build_candidate_longframe(cfg, *, tbl: pd.DataFrame | None = None,
         rows_tr = sub[(sub["time"] < train_cut) & sub["gwl"].notna()].iloc[::TRAIN_STRIDE]
         if not rows_tr.empty:
             chunk = T._expand(rows_tr, times_st, gwl_st, HORIZONS_TRAIN)
+            # purge (A): no training label may be observed inside the validation
+            # window [train_cut, val_end) — same rule as 06_features.split,
+            # applied per anchor AND horizon on the observed target timestamp.
+            chunk = chunk[chunk["target_time"] < train_cut]
             if not chunk.empty:
                 if len(chunk) > tr_budget:
                     k = int(np.ceil(len(chunk) / tr_budget))
@@ -146,6 +155,10 @@ def build_candidate_longframe(cfg, *, tbl: pd.DataFrame | None = None,
                 del chunk, tbl_arrow
         if not rows_va.empty:
             chunk = T._expand(rows_va, times_st, gwl_st, HORIZONS_VAL)
+            # purge (A): no validation label may be observed inside the backtest
+            # window [val_end, now) — validation rows score/early-stop against
+            # observations strictly before the test boundary.
+            chunk = chunk[chunk["target_time"] < val_end]
             if not chunk.empty:
                 if len(chunk) > va_budget:
                     k = int(np.ceil(len(chunk) / va_budget))
@@ -304,8 +317,25 @@ def _gate(cfg, result) -> dict:
         raise RetrainError("backtest produced no metrics for candidate/incumbent")
     r30c = _row(ph["candidate"], 720)
     r30i = _row(ph["incumbent"], 720)
-    cal30 = next((c for h, c in zip(result["calib"]["horizons_h"],
-                                   result["calib"]["coverage_calibrated"]) if int(h) == 720), None)
+    # Held-out coverage: the widening `s` is fitted on one half of the anchors and
+    # this is measured on the other, so `coverage_ok` cannot be satisfied by
+    # widening the band on the very anchors being scored. `widening_s` is None (not
+    # a number) at a horizon whose intervals are degenerate, and the coverage lists
+    # can be shorter than `horizons_h` when a horizon had no rows — so index by
+    # position within each list rather than zipping them against `horizons_h`.
+    cal = result["calib"]
+    hs = list(cal["horizons_h"])
+
+    def _at(key: str, hh: float = 720.0):
+        vals = list(cal.get(key) or [])
+        for i, h in enumerate(hs):
+            if int(h) == int(hh) and i < len(vals):
+                return vals[i]
+        return None
+
+    cal30 = _at("coverage_calibrated")
+    cal30_fit = _at("coverage_calibrated_fit")
+    cal30_raw = _at("coverage_raw_heldout")
     short = ph["candidate"]
     short = short[short["horizon_h"] <= 24] if not short.empty else short
     cand_rmse = float(r30c["rmse"]) if r30c is not None else float("nan")
@@ -337,6 +367,10 @@ def _gate(cfg, result) -> dict:
         "persistence_30d_rmse": round(persist, 4),
         "candidate_30d_coverage_raw": round(float(r30c["coverage_raw"]), 4) if r30c is not None else None,
         "candidate_30d_coverage_calibrated": cal30,
+        "candidate_30d_coverage_calibrated_fit_half": cal30_fit,
+        "candidate_30d_coverage_raw_heldout": cal30_raw,
+        "coverage_basis": ("widening fitted on the fit half of the anchors; "
+                           "coverage_ok reads the DISJOINT held-out half"),
         "anchors_scores": n,
         "promote_tolerance": cfg.promote_tolerance,
         "coverage_target": cfg.coverage_target,

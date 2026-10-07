@@ -2,7 +2,7 @@
   "source": "open-meteo",
   "forecast_days": 16,
   "districts": 37,
-  "rows": 24676,
-  "fetched_at": "2026-10-06T09:45:52+00:00",
+  "rows": 24713,
+  "fetched_at": "2026-10-07T16:25:20+00:00",
   "district_failures": {}
 }

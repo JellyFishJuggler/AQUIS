@@ -31,6 +31,40 @@ Source precedence for each step (never fabricates):
         (canals are regulated; there is no public level forecast anywhere).
     calendar/diurnal          -> computed from the step's own timestamp.
 
+Hydrology-informed block (``_hydrology``, shared verbatim with the batch builder
+``06_features.build`` so training and serving cannot drift):
+
+    GWL state/trend (PINNED at the anchor — information available at time t only)
+        gwl_dev7, gwl_dev30     anchor_gwl - gwl_roll{7,30}_mean (m)
+        gwl_slope7/30/90        Theil-Sen trailing slope of the per-day median
+                                observed GWL (m/day), from the full history <= t
+        gwl_obs7/30/90          observed-day coverage of the slope window (0..1)
+        gwl_imputed             1 = the anchor reading is carried-forward, not
+                                observed; 0 = observed reading
+    Rainfall memory (per step)
+        rain_api7/22/60         exponential API, decayed by the step's own 6h
+                                offset past the anchor (mm). Uses the numeric
+                                rainfall forcing for the step — observations
+                                where available, forecast/climatology values
+                                for future steps.
+        rain_obs7/22/60         fraction of the tau window backed by an ACTUAL
+                                rainfall observation (0..1, fixed denominator).
+                                Counts finite HISTORY slots only: forecast and
+                                climatology slots are never observed, so this
+                                column decays across the horizon instead of
+                                reading 1.0 on forecast rain.
+
+    ``gwl_dev*``/``gwl_slope*``/``gwl_obs*``/``gwl_imputed`` are constant across
+    the 120 steps by construction; the rain-memory columns vary per step. The
+    rain recursion runs over the FULL observed history (not the 128-step driver
+    tail) so a tau = 60 d kernel is warmed up before the anchor.
+
+These columns are *carried* in each row dict and surfaced whenever a caller's
+``fnames`` requests them (training frames will, once a deliberate retrain moves
+HYDRO_COLS into the trained num_cols). A caller whose ``fnames`` omit them —
+including the frozen production model — is unaffected: the final selection
+``df[base_cols + h_cols]`` keeps unrequested keys invisible.
+
 Everything is float32 and column-ordered to match ``traj_config.feature_cols``,
 so the matrix can be fed straight to the same DMatrix.
 """
@@ -43,6 +77,9 @@ import numpy as np
 import pandas as pd
 
 from pathlib import Path
+
+from _hydrology import (API_TAUS, DEV_WINS, SLOPE_WINS, gwl_imputed_flag,
+                        gwl_observed, gwl_trend_block, rain_memory_block)
 
 ROOT = Path(__file__).resolve().parent.parent
 CLIM_PATH = ROOT / "data" / "meta" / "driver_climatology.parquet"
@@ -259,6 +296,86 @@ def _series_get(cw, key: str) -> float:
     return float(v) if v is not None and np.isfinite(v) else float("nan")
 
 
+def _gwl_hydro_pinned(hist: pd.DataFrame, anchor_gwl: float,
+                      memory: dict) -> dict:
+    """Anchor-pinned GWL state/trend block (constant over every horizon step).
+
+    ``hist`` is the station slice restricted to rows <= anchor_t, so every value
+    here depends only on information available at the anchor. ``memory`` holds
+    the already-computed gwl_roll{7,30}_mean values. Mirrors the batch builder
+    ``06_features.build`` exactly.
+
+    Tolerates fixtures/slices without a ``Station`` column (single-station
+    history) and legacy aligned tables without ``gwl_obs`` provenance.
+    """
+    gwl = hist["gwl"]
+    obs_flags = hist["gwl_obs"] if "gwl_obs" in hist.columns else None
+    station = (hist["Station"].astype(str) if "Station" in hist.columns
+               else pd.Series("_single", index=hist.index))
+
+    block: dict = {}
+    block["gwl_imputed"] = float(gwl_imputed_flag(gwl, obs_flags).iloc[-1])
+    for w in DEV_WINS:
+        block[f"gwl_dev{w}"] = anchor_gwl - float(memory[f"gwl_roll{w}_mean"])
+
+    trend = gwl_trend_block(hist["time"], gwl, gwl_observed(gwl, obs_flags), station)
+    last = trend.iloc[-1]
+    for w in SLOPE_WINS:
+        block[f"gwl_slope{w}"] = float(last[f"gwl_slope{w}"])
+        block[f"gwl_obs{w}"] = float(last[f"gwl_obs{w}"])
+    return block
+
+
+def _rain_memory_steps(hist: pd.DataFrame, fw: pd.DataFrame,
+                       anchor_t: pd.Timestamp, steps: int) -> tuple[dict, int, int]:
+    """Per-step rainfall-memory block over the full observed history + forecast.
+
+    Returns ``(columns, n_hist, n_hist_observed)`` where ``columns`` maps every
+    rain_api*/rain_obs* name to a length-``steps`` array (index k = the feature
+    for step k+1), ``n_hist`` is the observed HISTORY LENGTH — NOT the 128-step
+    driver tail — so a tau = 60 d kernel is warmed up before the anchor, and
+    ``n_hist_observed`` is how many of those history slots carry an actual rain
+    observation (used by the parity test, not by the features).
+
+    Provenance: rainfall has no forward-fill/interpolation anywhere in the
+    pipeline (see ``06_features.build``), so a finite history value is a real
+    observation. Every FUTURE slot — Open-Meteo forecast or climatology fill —
+    is marked UNOBSERVED. Forecast/climatology rain still drives the numeric
+    ``rain_api*`` memory (that is the best rainfall knowledge at the step) but
+    can never inflate ``rain_obs*``.
+
+    Falls back to all-NaN columns when the history carries no rain column.
+    """
+    names = ([f"rain_api{int(t)}" for t in API_TAUS]
+             + [f"rain_obs{int(t)}" for t in API_TAUS])
+    if "rain" not in hist.columns:
+        return {c: np.full(steps, np.nan) for c in names}, 0, 0
+
+    hist_rain = hist["rain"].to_numpy(dtype=np.float64)
+    n_hist = int(hist_rain.size)
+    fwd_rain = fw["rain"].to_numpy(dtype=np.float64)
+    series = np.concatenate([hist_rain, fwd_rain])
+
+    # Observed mask: finite HISTORY only. Future forecast/climatology slots are
+    # forcing, not observations, and a missing history slot stays unobserved.
+    mask = np.concatenate([np.isfinite(hist_rain), np.zeros(fwd_rain.size, dtype=bool)])
+    n_hist_obs = int(np.isfinite(hist_rain).sum())
+
+    blk = rain_memory_block(series, mask)
+
+    # Step k predicts anchor + (k+1) * 6h, and its trailing window ends at
+    # anchor + k * 6h — the SAME convention as the `rain_1d/7d/30d` windows built
+    # above from `rain_ser` at index `i0 + (k + 1)`. Reading at `n_hist - 1 + k`
+    # keeps the two consistent, so the forecast slot for the step itself is
+    # excluded (exactly like the batch row at that timestamp) and the window is
+    # entirely observed history at step k=0. Reading at `n_hist + k` would be off
+    # by one and would report a fully observed window at step k=0.
+    start = n_hist - 1
+    cols = {c: np.asarray(blk[c][start: start + steps], dtype=np.float64)
+            for c in names}
+    return cols, n_hist, n_hist_obs
+
+
 def _rc_values(cw, rfi: RiverForecastIndex | None, district: str, t,
                river_last: float | None, canal_last: float | None) -> tuple[float, float, str, str]:
     """Per-step river/canal values + source labels.
@@ -411,11 +528,20 @@ def build_step_features(*, station: str, district: str, anchor_t: pd.Timestamp,
     for c, win in GWL_STD_ROLLS:
         memory[c] = float(pd.Series(g).rolling(win, min_periods=1).std().iloc[-1])
 
+    # --- hydrology-informed block (anchor-pinned state/trend + per-step rain
+    #     memory). Shared verbatim with 06_features.build via _hydrology.
+    hydro_pin = _gwl_hydro_pinned(_lc, anchor_gwl, memory)
+    # Rain-memory matrix: length-`steps` arrays already offset for the horizon.
+    # These are per-step, so they cannot go through `hydro_pin` (which is pinned);
+    # they are merged into each row below, once.
+    rain_cols, _, _ = _rain_memory_steps(_lc, fw, anchor_t, steps)
+
     rows = []
     for k in range(steps):
         t = ts[k]
         p = i0 + (k + 1)   # index inside concatenated series for step k+1
         row = dict(memory)
+        row.update(hydro_pin)
         # raw point drivers at step k (river/canal from forecast/clim/persistence)
         for c in ("temp", "humidity", "solar", "wind_speed", "pressure"):
             row[c] = float(fw[c].iloc[k])
@@ -430,10 +556,16 @@ def build_step_features(*, station: str, district: str, anchor_t: pd.Timestamp,
             lo = max(0, p - win + 1)
             w = ser[lo:p + 1]
             row[out] = float(np.nanmean(w)) if np.isfinite(w).sum() > 0 else np.nan
+        # Rain memory for THIS step. `rain_cols` is already length-`steps` and
+        # correctly offset inside `_rain_memory_steps`, so index k is the step's
+        # value — the offset must NOT be re-applied here. This is the single
+        # merge point for the rain-memory columns.
+        for c in rain_cols:
+            row[c] = float(rain_cols[c][k])
         row.update(_doy_hour_features(t))
         row.update(_horizon_feats(hs[k], max_h=max_h))
         rows.append(row)
 
     df = pd.DataFrame(rows)
-    X = df[base_cols + h_cols].to_numpy(dtype=np.float32)
+    X = df[list(fnames)].to_numpy(dtype=np.float32)
     return X, srcs

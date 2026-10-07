@@ -5,6 +5,11 @@ One feature row per (station, 6h-slot); the ONLY forecast horizon is 30 days =
 'gwl' (the current reading) is the anchor feature — it is NEVER predicted; the
 predicted quantity is the 30-day change GWL(t+120) - GWL(t).
 
+The frame carries the causal hydrology-informed block (HYDRO_COLS, built by
+_hydrology and shared with the refresh/serving path) plus ``target_time`` —
+the timestamp of the row that supplies the label — so split() can purge any
+row whose target is observed inside a later split (see split()).
+
 Outputs -> ml/data/features/{train,val,test}.parquet + prep.json
 """
 
@@ -17,6 +22,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from _hydrology import (API_TAUS, DEV_WINS, gwl_imputed_flag, gwl_observed,
+                        gwl_trend_block, rain_memory_block)
 from _soil import SOIL_COLS, EXTRACTION_COLS, load_soil, load_extraction, extraction_year_grid
 from _lulc import LULC_COLS, load_lulc
 
@@ -27,6 +34,10 @@ FEATS = ROOT / "data" / "features"
 HORIZONS = (30,)            # days
 STEPS_PER_DAY = 4           # 6-hourly grid
 HORIZON_STEPS = 30 * STEPS_PER_DAY
+
+# time-split boundaries (anchor time); split() additionally purges by target time
+VAL_START = pd.Timestamp("2025-10-01")    # validation begins
+TEST_START = pd.Timestamp("2026-01-01")   # test begins
 
 NUM_COLS = [
     # day-0 anchor (feature only, never a target)
@@ -41,6 +52,28 @@ NUM_COLS = [
     # calendar / diurnal on a 6h grid
     "year", "month_sin", "month_cos", "doy_sin", "doy_cos",
     "hour_sin", "hour_cos", "monsoon",
+]
+
+# hydrology-informed block (causal; built by _hydrology, carried in every
+# feature frame — batch training, backtesting and serving alike).
+# NOT part of the trained model schema yet: wiring them into NUM_COLS requires
+# a full retrain of the frozen artifacts (out of scope by design), and the
+# refresh gate refuses any candidate whose feature_cols differ from production.
+# When that retrain happens, append HYDRO_COLS to the trained num_cols.
+HYDRO_COLS = [
+    # groundwater state / trend
+    "gwl_dev7", "gwl_dev30",                      # deviation from trailing mean (m)
+    "gwl_slope7", "gwl_slope30", "gwl_slope90",   # Theil-Sen slope (m/day)
+    "gwl_obs7", "gwl_obs30", "gwl_obs90",         # observed-day coverage (0..1)
+    "gwl_imputed",                                # 1 = forward-filled reading
+    # rainfall memory (exponential API, 6h decay per tau)
+    "rain_api7", "rain_api22", "rain_api60",      # mm — numeric forcing (incl.
+                                                  # future forecast/climatology
+                                                  # in the serving path)
+    "rain_obs7", "rain_obs22", "rain_obs60",      # fraction of the tau window
+                                                  # backed by an ACTUAL rain
+                                                  # observation (0..1); forecast/
+                                                  # climatology never counts
 ]
 
 # static per-station soil texture (added in build_full when available)
@@ -59,7 +92,7 @@ ENABLE_RAIN_EXP = False
 RAIN_EXP_COL = "rain_exp_30d"
 
 KEEP = ["Station", "District", "time", "date", "horizon", "target", "target_d",
-        "st_id", "dist_id"] + NUM_COLS
+        "target_time", "st_id", "dist_id"] + NUM_COLS + HYDRO_COLS
 
 
 def drop_gwl_spikes(tbl: pd.DataFrame, z: float = 30.0) -> pd.DataFrame:
@@ -118,6 +151,37 @@ def build(tbl: pd.DataFrame, keep_na: bool = False,
             df[f"{col}_7d"] = df.groupby("Station", sort=False)[col].transform(
                 lambda s: s.rolling(win, min_periods=1).mean())
 
+    # --- hydrology-informed block (causal; shared with refresh/future_drivers
+    #     via _hydrology so batch training and serving stay identical) ---
+    obs_flags = df["gwl_obs"] if "gwl_obs" in df.columns else None
+    observed = gwl_observed(df["gwl"], obs_flags)
+    df["gwl_imputed"] = gwl_imputed_flag(df["gwl"], obs_flags)
+    for w in DEV_WINS:
+        df[f"gwl_dev{w}"] = df["gwl"] - df[f"gwl_roll{w}_mean"]
+    trend = gwl_trend_block(df["time"], df["gwl"], observed, df["Station"])
+    for c in trend.columns:
+        df[c] = trend[c]
+    rain_cols = [f"rain_api{int(t)}" for t in API_TAUS] + \
+                [f"rain_obs{int(t)}" for t in API_TAUS]
+    if "rain" in df.columns:
+        for _, idx in df.groupby("Station", sort=False).groups.items():
+            # Rainfall provenance: unlike GWL there is NO forward-fill or
+            # interpolation anywhere in the rainfall path (03_merge_normalize
+            # drops NaN rows; 04_align/04b_align_6h sum-or-mean over the gauges
+            # and left-join, so a slot with no gauge report stays NaN). A finite
+            # value is therefore a real observation, and a missing slot must not
+            # count as observed. Build the mask explicitly instead of inferring
+            # it, so the meaning stays correct if an imputation step is ever
+            # added upstream (then thread that step's flag in here).
+            rain_vals = df.loc[idx, "rain"].to_numpy(dtype=np.float64)
+            rain_seen = np.isfinite(rain_vals)
+            blk = rain_memory_block(rain_vals, rain_seen)
+            for c, a in blk.items():
+                df.loc[idx, c] = a
+    else:
+        for c in rain_cols:
+            df[c] = np.nan
+
     # --- calendar / diurnal ---
     t = df["time"]
     mo = t.dt.month
@@ -135,6 +199,10 @@ def build(tbl: pd.DataFrame, keep_na: bool = False,
     # --- the target horizon (space-separated so the same builder serves the
     #     30-day endpoint model and the recursive +6h one-step model) ---
     df["target"] = g.shift(-horizon_steps)
+    # actual timestamp of the row that supplies the label (same shift positions
+    # as `target`), so split() can purge by the OBSERVED target time rather
+    # than assuming anchor + horizon on a possibly gappy axis.
+    df["target_time"] = df.groupby("Station", sort=False)["time"].shift(-horizon_steps)
     df["horizon"] = horizon_label
     df["target_d"] = df["target"] - df["gwl"]
 
@@ -147,11 +215,19 @@ def build(tbl: pd.DataFrame, keep_na: bool = False,
     df["st_id"] = df["Station"].astype(str).map({s: i for i, s in enumerate(stations)}).astype(np.int32)
     df["dist_id"] = df["District"].astype(str).map({d: i for i, d in enumerate(districts)}).astype(np.int32)
 
-    for c in NUM_COLS:
+    for c in NUM_COLS + HYDRO_COLS:
         if c in df.columns:
             df[c] = df[c].astype(np.float32)
 
-    return df[KEEP]
+    # Column contract: return EVERY column the builder produced, in `KEEP` order
+    # first and any extras after it. Selecting `df[KEEP]` here would silently drop
+    # the columns that are computed rather than stored in the input table — the
+    # rain-memory block (`rain_api*`/`rain_obs*`), `gwl_imputed`, and the driver
+    # columns when a caller passes a partial frame — and callers that legitimately
+    # need them (`tests/test_hydro_rain_obs.py`, bare-fixture use) then fail.
+    ordered = [c for c in KEEP if c in df.columns]
+    extras = [c for c in df.columns if c not in set(ordered)]
+    return df[ordered + extras]
 
 
 def rain_exp_30d(tbl: pd.DataFrame, feats: pd.DataFrame) -> pd.DataFrame:
@@ -256,11 +332,21 @@ def build_full(tbl: pd.DataFrame, keep_na: bool = False,
 
 
 def split(df: pd.DataFrame) -> dict[str, pd.DataFrame]:
-    """Time-based split: train < 2025-10-01, val = fall/winter 2025, test = 2026."""
+    """Purged time split: train < 2025-10-01, val = fall/winter 2025, test = 2026.
+
+    Partitioning is by ANCHOR date AND target time: a train row is kept only
+    while its label is observed before 2025-10-01 (the validation boundary)
+    and a val row only while its label is observed before 2026-01-01 (the
+    test boundary).  Rows whose target timestamp reaches the next boundary
+    are purged, so no validation label ever comes from inside the test period
+    (and no training label from inside validation) — early stopping cannot
+    see observations that belong to a later split.  Test rows are unbounded.
+    """
     d = df["date"]
-    train = df[d < pd.Timestamp("2025-10-01")]
-    val = df[(d >= pd.Timestamp("2025-10-01")) & (d < pd.Timestamp("2026-01-01"))]
-    test = df[d >= pd.Timestamp("2026-01-01")]
+    tt = df["target_time"]
+    train = df[(d < VAL_START) & (tt < VAL_START)]
+    val = df[(d >= VAL_START) & (d < TEST_START) & (tt < TEST_START)]
+    test = df[d >= TEST_START]
     return {"train": train, "val": val, "test": test}
 
 
@@ -288,12 +374,17 @@ def main() -> None:
         "steps_per_day": STEPS_PER_DAY,
         "horizon_steps": HORIZON_STEPS,
         "num_cols": num_cols,
+        "hydro_num_cols": HYDRO_COLS,   # computed/carried in every frame; not in
+                                        # num_cols (trained schema is frozen —
+                                        # enabling requires a deliberate retrain)
+        "split": split.__doc__.strip().split("\n")[0],
         "stations": sorted(feats["Station"].astype(str).unique(), key=str),
         "districts": sorted(feats["District"].astype(str).unique(), key=str),
         "extra_features": {
             "soil": STATIC_SOIL_COLS if "sand_0_30" in feats.columns else [],
             "extraction": STATIC_EXTRACTION_COLS if "ann_gw_draft_mcm" in feats.columns else [],
             "lulc": STATIC_LULC_COLS if "lulc_cropland_pct" in feats.columns else [],
+            "hydrology": HYDRO_COLS,
         },
         "train_rows": int(len(parts["train"])),
         "val_rows": int(len(parts["val"])),

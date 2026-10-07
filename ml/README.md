@@ -79,12 +79,39 @@ Physically consistent with monsoon recharge delay.
 
 ## Serving
 
-The Streamlit explorer (`app.py`, `app_pages/`, `app_charts.py`) was removed.
-Serving paths are now the Flask API in this directory (`api.py`, used by the
-Node back-end gateway) and the refresh pipeline (`refresh/`, `python -m
-refresh.cli status`). The pipeline outputs (`fleet_forecast.csv`,
-`model_metrics.csv`, honest/ablation/diagnostics) are still produced by the
-numbered scripts and read via `_model.py` loaders.
+### Read-only ML showcase
+
+The multi-page Streamlit showcase (`streamlit_app.py`, `app_pages/`) explains the
+ML pipeline, existing forecasts, feature groups, model evaluation protocols, and
+data coverage/limitations. It reads existing artifacts and may call the frozen
+trajectory inference path when explicitly enabled on the Forecast explorer page.
+It does not train models, fetch data, or write outputs. Candidate `HYDRO_COLS`
+are clearly marked as carried/experimental and untrained. The evaluation page
+includes a paired 2026 actual-versus-forecast view from
+`outputs/predictions_2026.parquet`; each displayed metric uses only rows with
+both the actual target and selected model prediction. That saved artifact
+predates the target-time purge and is labelled historical until regenerated. It
+also reads `data/refresh/verification.parquet` to inspect published trajectory
+forecasts against the later GWL observation at the exact station/target time,
+filterable by model version, horizon, and station.
+
+Run it from this directory in an environment that has the repository's existing
+Streamlit dependencies:
+
+```bash
+python -m streamlit run streamlit_app.py
+```
+
+Pages: Overview · Forecast explorer · Feature explorer · Model evaluation · Data
+and limitations.
+
+Production serving remains the Flask API in this directory (`api.py`, used by
+the Node back-end gateway) and the refresh pipeline (`refresh/`,
+`python -m refresh.cli status`). Pipeline outputs (`fleet_forecast.csv`,
+`model_metrics.csv`, honest/ablation/diagnostics) are produced by the numbered
+scripts and read via `_model.py` loaders. The Streamlit showcase is for ML
+inspection and demonstration; it does not replace the mobile APK or production
+serving paths.
 
 ### Assistant page (Ollama, local)
 
@@ -126,7 +153,61 @@ STT model or audio upload involved.
   sampled 1/4 (one slot/day) to keep Ridge's dense solve in memory — features are
   grid-derived so values are identical.
 * **Split**: train < 2025-10-01, val Oct–Dec 2025, test 2026 (378k rows, 30-day
-  targets at 6h cadence).
+  targets at 6h cadence). Boundaries apply to the **anchor**, and every row is
+  additionally **purged by its observed target time** (`target_time`): a train
+  row survives only if `target_time < 2025-10-01`, a val row only if
+  `target_time < 2026-01-01`. Before this, a late-September label was observed
+  inside the validation window and a late-December label inside the test window,
+  so early stopping selected on later-split labels. The same purge is applied to
+  the trajectory long-frame (`30_traj_datasets`) and the refresh candidate build
+  (`refresh/model_update`); row counts fall by ≈120 anchors × n_stations.
+* **Hydrology block (carried, not yet trained)**: `HYDRO_COLS` in `06_features.py`
+  — `gwl_dev{7,30}`, `gwl_slope{7,30,90}` (trailing Theil-Sen on daily medians),
+  `gwl_obs{7,30,90}`, `gwl_imputed`, and the exponential antecedent-precipitation
+  indices `rain_api{7,22,60}` with `rain_obs{7,22,60}`. Built once in
+  `_hydrology.py` and shared verbatim with the serving path so training and
+  inference cannot drift. Present in the feature frames and serving row dicts but
+  deliberately **excluded from the frozen models' `num_cols`** — enabling them
+  requires a deliberate retrain. In serving they are pinned at the anchor
+  (state/trend) or advanced per step (rain memory). **`rain_api*` and `rain_obs*`
+  mean different things**: `rain_api*` is the numeric memory term and uses the
+  rainfall *forcing* available at the step (observations, then Open-Meteo
+  forecast / climatology for future steps), whereas `rain_obs*` is a *coverage*
+  column counting only slots backed by a real raingauge observation over a fixed
+  τ·4-slot denominator — so forecast/climatology rain never counts as observed
+  and coverage decays across the horizon. Rainfall is never forward-filled or
+  interpolated anywhere in the pipeline, so in batch frames a finite value is a
+  genuine observation (the mask is built explicitly in `06_features.build`).
+  See `docs/ml-system-spec.md` §2.1 and `docs/ml-build-spec.md` §3.1.1.
+* **Hydrology block is UNTRAINED, and `rain_api*` has a train/serve definition
+  mismatch**: batch builds it from rainfall known at the anchor (horizon-invariant),
+  while serving advances the recursion with future forecast/climatology rainfall
+  (varies with `h`). Reproducing serving in training would need point-in-time
+  forecast rainfall, which is **not archived** — the archived forecast JSONs keep
+  GWL quantiles and a `driver_source` label, not numeric drivers. Latent today
+  because `feature_mode = "flat"`. Full analysis and the two repair options:
+  [`../docs/ml-hydro-train-serve.md`](../docs/ml-hydro-train-serve.md).
+* **ML showcase app**: `streamlit_app.py` + `app_pages/` — read-only demonstration
+  of the pipeline, features, forecasts and evaluation. Run with
+  `cd ml && ./venv/bin/python -m streamlit run streamlit_app.py`.
+* **Out-of-sample baseline diagnostic** (`31_honest_baseline.py`): recomputes the
+  pooled margin over persistence **and** the interval coverage on a held-out half of
+  the stations from the existing `outputs/predictions_2026.parquet`, so the headline
+  numbers can be read on a fair split without rerunning the pipeline. Reads and
+  recomputes only. Caveat: the feature frames are still pre-purge, so its output is
+  an upper bound on honest performance.
+* **Calibration is fitted out-of-sample**: `32_backtest_traj.py` and
+  `refresh/backtest._calibrate` now split the anchors, fit the widening on one half
+  and report coverage on the other (`coverage_calibrated_fit` = fit half, held-out
+  `coverage_calibrated` = headline). The refresh promotion gate reads the held-out
+  value, so coverage can no longer be satisfied by widening the band on the anchors
+  being scored.
+* **ARIMA + pooled-XGB combination**: `baselines/arima_compare.py` is a matched-pair
+  *comparison* only — **no ensemble exists anywhere in the pipeline**. It now also
+  persists per-origin predictions to `outputs/arima_vs_xgb_predictions.csv`, which
+  `baselines/arima_xgb_combine.py` consumes to quantify what a blend would add,
+  including a leave-one-origin-out test so fitted weights are not trusted merely
+  because they help in sample.
 * **Data hygiene**: |gwl|>500 sentinels dropped (`04`); daily-median GWL (`04`,
   kept for correlation/overview) + 6h-median per slot (`04b`); per-station 30×MAD
   spike mask (`06`); **regime-shift flag** drops stations whose annual median jumps
@@ -136,15 +217,21 @@ STT model or audio upload involved.
   2.290 m, +2.1%)** · ridge 2.456 (−7.3%) · climatology 3.572. The 6h grid tightens
   persistence itself from 2.395 → 2.290 m. Driver value at 30 d stays marginal —
   consistent with "drivers add ~0 at h≤7".
-* **Honest re-score** (`validation/*` + `10_ablate.py`, run automatically by
-  `07_evaluate`): the 6h grid makes 378k test rows ~99% overlapping, so the valid
-  scale of evidence is far smaller. **Non-overlapping 30-day-window ("stride")
-  RMSE = 2.339 m** (vs persistence 2.382 m → +1.8%) on 3,371 independent windows;
-  effective sample size ≈ 6,600 rows (ACF lag-1 = 0.86) vs 378k raw. **Spatial CV**
-  (leave-block-out station retraining, 5 folds) gives 1.97 m mean / 1.82 m median —
-  *below* the temporal 2.242, i.e. the 2026 temporal holdout, not spatial leakage,
-  is the binding constraint. Residual Moran's I = 0.042 (p=0.051), Geary's C = 1.083
-  (ns) — no strong spatial clustering of residual error. **Feature ablation**
+* **Stride evaluation** (`validation/*` + `10_ablate.py`, run automatically by
+  `07_evaluate`): the dense 6h test anchors produce temporally correlated endpoint
+  errors, not independent 30-day trajectory windows. The saved stride artifact
+  reports **RMSE = 2.339 m** (vs persistence 2.382 m → +1.8%) for one 30-day endpoint
+  per station every 120 six-hour steps. These points can still be serially
+  correlated and clustered by station; the saved `n_windows` count is not an
+  independent-replicate count. **All figures in this paragraph predate the
+  target-time purge now present in source and have not been regenerated.** Treat
+  them as historical artifact results, not a score for the corrected pipeline.
+  **Spatial CV** (leave-block-out station retraining, 5 folds) reports 1.97 m mean /
+  1.82 m median. This is provisional spatial evidence: held-out stations are absent
+  from training, but the global numeric station ordinals are arbitrary values for
+  held-out stations, not physical spatial features. Residual Moran's I = 0.042
+  (p=0.051), Geary's C = 1.083 (ns) — no strong spatial clustering in that saved
+  residual artifact. **Feature ablation**
   (drop-one-group retrain): rain (+0.03), weather (+0.05) and calendar (+0.05) add
   marginal value; river/canal (−0.005) and GWL lags (≈0) are neutral at 30 d given
   the anchor + calendar — all deltas are within overlap-adjusted noise (~±0.05 m).
@@ -164,10 +251,15 @@ full results: [`../docs/ml-trajectory-v2-spec.md`](../docs/ml-trajectory-v2-spec
 | Weather | `20_openmeteo_fetch.py` | `data/cfs/openmeteo_weather_daily.parquet` (37 districts, 365 d history + 16 d forecast) |
 | River | `18_cwc_river_forecast.py` | `data/cfs/river_forecast_cwc.parquet` (CWC 3-day forecasts, per district) |
 
-- **Backtest (2026, honest):** anchors every 14 d → non-overlap windows only; full fleet
-  73,881 scored windows. 30-d RMSE **trajectory 2.106 < direct-30d 2.132 < persistence 2.151**,
-  `promote_trajectory = True`. Calibrated to **0.90 coverage at every horizon**
-  (`traj_calibration.json`, widening `s ∈ [0.80, 1.28]`).
+- **Backtest artifact (2026):** anchors are every 14 d and metrics score point
+  targets at each horizon; the 30-day forecasts from adjacent anchors are not
+  non-overlapping trajectory windows. The saved artifact reports 73,881 anchors
+  and 30-d RMSE **trajectory 2.106 < direct-30d 2.132 < persistence 2.151**,
+  `promote_trajectory = True`. These are historical artifact values: training-target
+  purging has since changed in source, but this backtest has not been regenerated.
+  The saved calibration reaches **0.90 coverage at every horizon** by fitting its
+  widening on the same anchors it reports (`traj_calibration.json`, `s ∈ [0.80, 1.28]`),
+  so that coverage is in-sample, not independent validation.
 - **Confidence:** per-point HIGH / DIRECTIONAL / LOW from **weighted evidence**
   (0.15 interval quality + 0.20 vs-persistence + 0.20 direction + 0.10 width +
   0.15 station integrity + 0.10 driver availability + 0.05 anchor OOD + 0.05 stability),
@@ -256,8 +348,8 @@ re-arming ~24 h model updates:
 Runtime state lives in `data/refresh/` (git-ignored): `state.json`,
 `journal.jsonl`, `forecasts/`, `forecast_archive/`, `refresh_config.json`.
 
-The **Verification** page (`app_pages/verification.py`) reads
-`data/refresh/verification_summary.json` + the sign-accuracy ledger.
+The refresh verification ledger remains an ML runtime artifact; the Streamlit
+showcase pages documented above do not expose a separate Verification page.
 
 ## Outputs
 
@@ -283,8 +375,9 @@ The **Verification** page (`app_pages/verification.py`) reads
   positive; river/canal + GWL lags neutral at 30 d)
 * `outputs/diagnostics.json` + `diagnostics_permutation.csv` — `12_diagnostics.py`
   (VIF on a mean-imputed sample, permutation importance on the stride subset, OAT
-  driver sensitivity). Verdict: no VIF>10; every feature ≈0 Δ-RMSE on independent
-  windows; season/level/monsoon carry the largest single-driver swing (~0.39 m).
+  driver sensitivity). The saved stride points are temporally correlated, not
+  independent windows; season/level/monsoon carry the largest single-driver swing
+  (~0.39 m) in that artifact.
 * `outputs/fleet_forecast.csv` + `fleet_district.csv` — `11_fleet.py` whole-fleet 30-day
   scan (q50-median headline per station, quality-gated): 502 stations scored (43
   rejected: NaN anchor / stale / implausible), median Δ +0.32 m, decline 0, recovering
@@ -298,12 +391,11 @@ The **Verification** page (`app_pages/verification.py`) reads
 * `data/soil/soil_stations.csv` — ISRIC SoilGrids 2.0 per-station texture (background fetch)
 * `MODEL_CARD.md` — lifecycle card for the pooled model (features, training, honest
   performance, limitations)
-* `tests/` — forecast-validation suite (stdlib `unittest`, data-gated, no pytest):
-  `python -m unittest discover -s tests -v` (177 tests + 2 skipped; the Forecast-page
-  AppTest is gated behind `AQUIS_APPTEST=1`)
+* `tests/` — forecast-validation suite (stdlib `unittest`, data-gated, no pytest).
 * `data/meta/` — association CSVs, manifest, probe results, per-station flags
-* `outputs/traj_backtest_metrics.csv` + `traj_backtest_summary.json` — trajectory v2
-  honest 2026 backtest (full-fleet, non-overlap) + per-horizon calibration
+* `outputs/traj_backtest_metrics.csv` + `traj_backtest_summary.json` — saved trajectory v2
+  2026 anchor backtest + per-horizon calibration (see the protocol and provenance
+  caveats above; artifacts have not been regenerated after the target-time purge)
 * `data/cfs/` — Open-Meteo daily weather + CWC river-forecast snapshots (trajectory drivers)
 
 ## Residual / next steps
@@ -320,12 +412,13 @@ The **Verification** page (`app_pages/verification.py`) reads
    `data/soil/cgwb_extraction_district.csv` (columns: `district, year,
    net_annual_gw_draft_mcm, stage_of_development_pct`) joins via carry-forward.
 5. Beating persistence at the 30-day horizon by more than ~2% (driver features are
-   currently additive at 30 d but marginal). The honest re-score (2.339 m stride
-   vs persistence 2.382 m, +1.8%) shows the real margin is ~2%, not ~20x larger on
-   per-row terms — treat per-row RMSE deltas below ~±0.05 m as noise.
+   currently additive at 30 d but marginal). The saved historical stride result
+   (2.339 m vs persistence 2.382 m, +1.8%) is provisional and predates the
+   target-time purge; it is not a re-score of the corrected code. Treat per-row
+   RMSE deltas below ~±0.05 m as noise until a clean evaluation is run.
 6. **Quantile uncertainty + calibration** — **DONE** (`11_quantile.py`): pooled
-   q05/q50/q95 (`reg:quantileerror`) trained and empirically calibrated on non-overlap
-    windows. Raw stride coverage 0.908 vs target 0.80 → `widen_factor_k = 1.0` (no
+   q05/q50/q95 (`reg:quantileerror`) trained and calibrated on the saved stride
+    sample (not an independent calibration holdout). Raw stride coverage 0.908 vs target 0.80 → `widen_factor_k = 1.0` (no
    widening needed), median half-width ~1.03 m. Forecast page + assistant now use the
    calibrated interval; band_half is per-station `(q95−q05)/2` (median ~1.0 m, p90
    ~2.6 m). Global band shipped; **station-aware bands** (per-station residual scale)
