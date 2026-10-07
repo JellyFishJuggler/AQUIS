@@ -306,6 +306,12 @@ def main():
     result = pd.DataFrame(rows)
     OUT.mkdir(exist_ok=True)
     result.to_csv(OUT / "arima_vs_xgb.csv", index=False)
+    # Persist the per-(station, origin, day) predictions so a COMBINATION can be
+    # fitted later without re-running SARIMAX. `arima_xgb_combine.py` consumes this;
+    # from the aggregate CSV alone the ensemble weights cannot be derived.
+    pred_path = OUT / "arima_vs_xgb_predictions.csv"
+    pred.to_csv(pred_path, index=False)
+    print(f"Wrote per-origin predictions -> {pred_path} ({len(pred):,} rows)")
     overall = result[(result.station == "OVERALL") & (result.scope == "all_days")].set_index("model")
     origin_counts = pred.groupby("station").origin.nunique()
     with (OUT / "arima_vs_xgb.md").open("w") as f:

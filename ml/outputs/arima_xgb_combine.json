@@ -1,0 +1,35 @@
+{
+  "what_exists_today": "a matched-pair COMPARISON on shared (station, origin) pairs \u2014 no blend, no ensemble, no stacking anywhere in the pipeline",
+  "protocol": {
+    "basis": "daily means, rolling 2026 origins, 30-day horizon",
+    "stations": 10,
+    "origins_per_station": [
+      5,
+      5
+    ],
+    "rows": 1500,
+    "comparable_with": "nothing else in the pipeline \u2014 not the 6-hourly level-RMSE tables"
+  },
+  "single_model_rmse": {
+    "arima": 0.7348,
+    "xgb": 0.6573
+  },
+  "weights": {
+    "ls_fit_w_arima": 0.318,
+    "inverse_rmse_w_arima": 0.472
+  },
+  "in_sample_best_blend_rmse": 0.6341,
+  "in_sample_gain_vs_best_single_pct": 3.53,
+  "leave_one_origin_out": {
+    "folds": 27,
+    "blend_rmse_mean": 0.5006,
+    "best_single_rmse_mean": 0.4007,
+    "gain_pct": -24.92,
+    "folds_beating_best_single": 0,
+    "w_arima_range": [
+      0.245,
+      0.653
+    ]
+  },
+  "verdict": "no reliable blend gain out of sample; keep the better single model rather than fitting weights"
+}

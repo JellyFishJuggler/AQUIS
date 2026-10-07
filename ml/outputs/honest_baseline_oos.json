@@ -1,0 +1,81 @@
+{
+  "source": "outputs/predictions_2026.parquet",
+  "caveat": "recomputed from PRE-PURGE feature frames; target leakage that the split purge is meant to remove is still present, so these are an upper bound on honest performance",
+  "split": {
+    "by": "Station parity (alternating in sorted order)",
+    "n_fit_stations": 283,
+    "n_heldout_stations": 228
+  },
+  "bases": [
+    {
+      "basis": "all_rows",
+      "rows": 419682,
+      "stations": 511,
+      "xgb_rmse": 2.2594,
+      "ridge_rmse": 2.5354,
+      "persist_rmse": 2.3209,
+      "clim_rmse": 3.6082,
+      "xgb_vs_persist_pct": 2.65
+    },
+    {
+      "basis": "stride_rows",
+      "rows": 3764,
+      "stations": 511,
+      "xgb_rmse": 2.4182,
+      "ridge_rmse": 2.6699,
+      "persist_rmse": 2.4759,
+      "clim_rmse": 3.7499,
+      "xgb_vs_persist_pct": 2.33
+    },
+    {
+      "basis": "oos_fit_stations",
+      "rows": 234252,
+      "stations": 283,
+      "xgb_rmse": 1.7618,
+      "ridge_rmse": 2.1746,
+      "persist_rmse": 1.8295,
+      "clim_rmse": 3.1525,
+      "xgb_vs_persist_pct": 3.7
+    },
+    {
+      "basis": "oos_heldout_stations",
+      "rows": 185430,
+      "stations": 228,
+      "xgb_rmse": 2.7627,
+      "ridge_rmse": 2.9284,
+      "persist_rmse": 2.8218,
+      "clim_rmse": 4.1123,
+      "xgb_vs_persist_pct": 2.09
+    },
+    {
+      "basis": "oos_heldout_stride",
+      "rows": 1665,
+      "stations": 228,
+      "xgb_rmse": 3.0358,
+      "ridge_rmse": 3.1092,
+      "persist_rmse": 3.0926,
+      "clim_rmse": 4.2733,
+      "xgb_vs_persist_pct": 1.84
+    }
+  ],
+  "quantile": {
+    "fit_half": {
+      "s_fitted_on_fit_half": 0.563,
+      "coverage_fit_half_at_s": 0.8004,
+      "coverage_heldout_at_s": 0.773,
+      "coverage_heldout_raw_band": 0.8907,
+      "n_fit": 2099,
+      "n_heldout": 1665
+    },
+    "all_stride": {
+      "s_fitted_on_fit_half": 0.591,
+      "coverage_fit_half_at_s": 0.8002,
+      "coverage_heldout_at_s": 0.8002,
+      "coverage_heldout_raw_band": 0.8972,
+      "n_fit": 3764,
+      "n_heldout": 3764
+    },
+    "shipped_widen_factor_k": 1.0,
+    "note": "`coverage_heldout_at_s` is the honest number: s is fitted on the disjoint station half. The shipped `coverage_stride` in quantile_calibration.json is fitted and reported on the same rows, so it is in-sample."
+  }
+}

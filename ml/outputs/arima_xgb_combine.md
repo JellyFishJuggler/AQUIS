@@ -1,0 +1,59 @@
+# ARIMA + pooled-XGB combination analysis
+
+## What exists today
+
+`baselines/arima_compare.py` performs a **matched-pair comparison** on shared (station, origin) pairs. There is no ensemble, blend, or stacking anywhere in the pipeline; this document quantifies what a blend would add.
+
+Stations: 10 · origins per station: 5–5 · scored rows: 1,500
+
+> **Protocol:** daily means, rolling 2026 origins, 30-day horizon. **Not comparable** with the 6-hourly level-RMSE tables.
+
+## All days
+
+| Method | n | RMSE | MAE | bias | PICP90 | mean width | interval score |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| arima | 1500 | 0.735 | 0.335 | -0.115 | 0.726 | 0.888 | 3.389 |
+| xgb | 1500 | 0.657 | 0.402 | +0.017 | 0.968 | 2.503 | 2.929 |
+| mean_50_50 | 1500 | 0.642 | 0.343 | -0.049 | — | — | — |
+| ls_fit_w0.32 | 1500 | 0.634 | 0.361 | -0.025 | — | — | — |
+| inv_rmse_w0.47 | 1500 | 0.640 | 0.346 | -0.045 | — | — | — |
+
+Interval columns are shown only for the single models; a blended band would need its own calibration and is deliberately not invented here.
+
+Least-squares blend weight on ARIMA: **0.318** · inverse-RMSE weight: **0.472**
+
+## Leave-one-origin-out (the honest test)
+
+| Held-out origin | w_arima | blend RMSE | ARIMA RMSE | XGB RMSE |
+|---|---:|---:|---:|---:|
+| 2026-06-24 | 0.32 | 0.323 | 0.343 | 0.322 |
+| 2026-06-27 | 0.28 | 0.619 | 0.189 | 0.859 |
+| 2026-06-29 | 0.24 | 1.060 | 0.965 | 1.115 |
+| 2026-07-03 | 0.32 | 0.202 | 0.154 | 0.243 |
+| 2026-07-04 | 0.32 | 0.565 | 0.642 | 0.528 |
+| 2026-07-06 | 0.31 | 0.230 | 0.163 | 0.281 |
+| 2026-07-07 | 0.38 | 1.384 | 1.772 | 1.154 |
+| 2026-07-08 | 0.28 | 0.453 | 0.172 | 0.618 |
+| 2026-07-09 | 0.32 | 0.064 | 0.033 | 0.079 |
+| 2026-07-12 | 0.30 | 0.356 | 0.223 | 0.445 |
+| 2026-07-13 | 0.31 | 0.307 | 0.136 | 0.463 |
+| 2026-07-14 | 0.32 | 0.234 | 0.166 | 0.268 |
+| 2026-07-15 | 0.32 | 0.242 | 0.257 | 0.235 |
+| 2026-07-16 | 0.32 | 0.297 | 0.377 | 0.293 |
+| 2026-07-17 | 0.30 | 0.316 | 0.174 | 0.428 |
+| 2026-07-20 | 0.31 | 0.296 | 0.164 | 0.382 |
+| 2026-07-21 | 0.32 | 0.034 | 0.021 | 0.043 |
+| 2026-07-24 | 0.31 | 0.283 | 0.178 | 0.346 |
+| 2026-07-25 | 0.32 | 0.248 | 0.180 | 0.308 |
+| 2026-07-26 | 0.31 | 0.336 | 0.150 | 0.479 |
+| 2026-07-27 | 0.31 | 0.180 | 0.148 | 0.245 |
+| 2026-07-29 | 0.34 | 1.992 | 2.094 | 1.945 |
+| 2026-07-30 | 0.32 | 0.237 | 0.295 | 0.210 |
+| 2026-08-01 | 0.32 | 0.867 | 0.887 | 0.858 |
+| 2026-08-17 | 0.32 | 0.157 | 0.234 | 0.124 |
+| 2026-08-18 | 0.33 | 1.275 | 1.374 | 1.230 |
+| 2026-09-04 | 0.65 | 0.960 | 1.297 | 0.705 |
+
+Mean blend RMSE 0.501 vs best single 0.401 (**-24.92%**); the blend beat the better single model in **0** of 27 folds.
+
+**Verdict:** no reliable blend gain out of sample; keep the better single model rather than fitting weights.

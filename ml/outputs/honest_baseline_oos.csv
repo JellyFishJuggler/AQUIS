@@ -1,0 +1,6 @@
+basis,rows,stations,xgb_rmse,ridge_rmse,persist_rmse,clim_rmse,xgb_vs_persist_pct
+all_rows,419682,511,2.2594,2.5354,2.3209,3.6082,2.65
+stride_rows,3764,511,2.4182,2.6699,2.4759,3.7499,2.33
+oos_fit_stations,234252,283,1.7618,2.1746,1.8295,3.1525,3.7
+oos_heldout_stations,185430,228,2.7627,2.9284,2.8218,4.1123,2.09
+oos_heldout_stride,1665,228,3.0358,3.1092,3.0926,4.2733,1.84
