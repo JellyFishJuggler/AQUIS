@@ -1,0 +1,46 @@
+{
+ "test_window": "2026-01-01",
+ "E0": {
+  "rmse_persist": 2.4798,
+  "rmse_seedmean": 2.4673,
+  "ratio": 0.995,
+  "ci": [
+   0.9902,
+   0.997
+  ],
+  "ratio_junssep": 0.995,
+  "per_seed_rmse": {
+   "42": 2.4707,
+   "840": 2.4609,
+   "2056": 2.4712
+  },
+  "n_scores": 3766,
+  "n_stations": 511,
+  "ratio_prod511": 0.995,
+  "n_prod511": 3766
+ },
+ "E_best": {
+  "rmse_persist": 2.4798,
+  "rmse_seedmean": 2.4743,
+  "ratio": 0.9978,
+  "ci": [
+   0.9956,
+   0.9987
+  ],
+  "ratio_junssep": 0.9978,
+  "per_seed_rmse": {
+   "42": 2.471,
+   "840": 2.4762,
+   "2056": 2.4762
+  },
+  "n_scores": 3766,
+  "n_stations": 511,
+  "ratio_prod511": 0.9978,
+  "n_prod511": 3766,
+  "interval": {
+   "coverage": 0.898,
+   "width_mean": 3.1267,
+   "method": "q05/q95 quantile companions (E_best features), 3-seed mean; level = anchor + delta; coverage on delta interval"
+  }
+ }
+}
