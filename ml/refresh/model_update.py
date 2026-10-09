@@ -44,6 +44,8 @@ import pandas as pd
 
 import importlib
 
+from refresh.config import models_frozen
+
 F = importlib.import_module("06_features")
 T = importlib.import_module("30_traj_datasets")
 
@@ -423,6 +425,9 @@ def rebuild_reliability(per_h_candidate: pd.DataFrame) -> None:
 
 def promote(cfg, state, gate: dict, cand_dir: Path = CAND_DIR) -> dict:
     """Atomically promote the candidate; returns the promotion record."""
+    if models_frozen(cfg):
+        raise RetrainError(
+            f"models frozen until {cfg.models_frozen_until}: promotion blocked")
     cand_cfg = json.loads((cand_dir / "traj_config.json").read_text())
     cand_cfg["version"] = cand_cfg.get("trained_at", time.strftime("%Y-%m-%d %H:%M:%S"))
     cand_cfg["promoted_at"] = time.strftime("%Y-%m-%d %H:%M:%S")

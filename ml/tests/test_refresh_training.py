@@ -13,11 +13,12 @@ from __future__ import annotations
 
 import unittest
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 import pandas as pd
 
-from refresh import model_update, scheduler
-from refresh.config import RefreshConfig
+from refresh import model_update, pipeline, scheduler
+from refresh.config import RefreshConfig, models_frozen
 from refresh.state import RefreshState
 from tests._helpers import has
 
@@ -131,6 +132,69 @@ class TestSchedulerDecisions(unittest.TestCase):
         self.state._data["next_retrain_due"] = (NOW + timedelta(hours=2)).isoformat()
         self.assertFalse(scheduler.retrain_due(self.cfg, self.state,
                                                NOW.replace(hour=2)))
+
+
+@unittest.skipUnless(has("refresh/scheduler.py"), "refresh missing")
+class TestModelFreeze(unittest.TestCase):
+    """models_frozen_until must block retrain + promotion until the instant."""
+
+    FUTURE = "2030-01-01T00:00:00+00:00"
+    NOW = datetime(2026, 10, 9, 9, 0, tzinfo=timezone.utc)
+
+    def test_models_frozen_truth_table(self):
+        self.assertFalse(models_frozen(RefreshConfig(), self.NOW))  # empty = off
+        frozen = RefreshConfig(models_frozen_until=self.FUTURE)
+        self.assertTrue(models_frozen(frozen, self.NOW))
+        past = RefreshConfig(models_frozen_until="2026-01-01T00:00:00+00:00")
+        self.assertFalse(models_frozen(past, self.NOW))
+        # fail safe: a malformed instant keeps the freeze ON
+        self.assertTrue(models_frozen(RefreshConfig(models_frozen_until="not-a-date"),
+                                      self.NOW))
+
+    def test_validate_rejects_malformed_freeze(self):
+        from refresh.config import ConfigError
+        with self.assertRaises(ConfigError):
+            RefreshConfig(models_frozen_until="not-a-date").validate()
+
+    def test_promote_refuses_while_frozen(self):
+        cfg = RefreshConfig(models_frozen_until=self.FUTURE)
+        with self.assertRaises(model_update.RetrainError):
+            model_update.promote(cfg, object(), {"reasons": {}},
+                                 cand_dir=Path("/nonexistent"))
+
+    def test_scheduler_skips_retrain_while_frozen(self):
+        import contextlib
+        calls = []
+        orig = scheduler.pipeline.run_retrain_cycle
+        orig_lock = scheduler.refresh_lock
+        def _rec(**kw):
+            calls.append(kw)
+            return {"gate": {}}
+        scheduler.pipeline.run_retrain_cycle = _rec
+        scheduler.refresh_lock = contextlib.nullcontext
+        try:
+            state = RefreshState.__new__(RefreshState)
+            state._data = {}
+            sched = {  # force the retrain branch to be "wanted"
+                "refresh_due": lambda *a, **k: False,
+                "retrain_due": lambda *a, **k: True,
+                "drift_retrain_due": lambda *a, **k: False,
+            }
+            saved = {n: getattr(scheduler, n) for n in sched}
+            for n, fn in sched.items():
+                setattr(scheduler, n, fn)
+            try:
+                frozen = RefreshConfig(models_frozen_until=self.FUTURE)
+                scheduler.scheduler_loop(cfg=frozen, state=state, once=True)
+                self.assertEqual(calls, [])
+                scheduler.scheduler_loop(cfg=RefreshConfig(), state=state, once=True)
+                self.assertEqual(len(calls), 1)
+            finally:
+                for n, fn in saved.items():
+                    setattr(scheduler, n, fn)
+        finally:
+            scheduler.pipeline.run_retrain_cycle = orig
+            scheduler.refresh_lock = orig_lock
 
 
 if __name__ == "__main__":

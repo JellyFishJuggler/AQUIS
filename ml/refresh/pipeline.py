@@ -19,7 +19,7 @@ from datetime import datetime, timedelta, timezone
 import pandas as pd
 
 from refresh import features, inference, model_update, sources, verification
-from refresh.config import load_config
+from refresh.config import load_config, models_frozen
 from refresh.schedule import next_grid_due
 from refresh.state import RefreshState, refresh_lock
 
@@ -82,6 +82,12 @@ def run_retrain_cycle(*, cfg=None, state=None, smoke: bool = False,
     cfg = cfg or load_config()
     if feature_mode not in ("flat", "future"):
         raise ValueError(f"feature_mode must be flat|future, got {feature_mode!r}")
+    if models_frozen(cfg):
+        state = state or RefreshState()
+        state.record("retrain.skip", ok=True,
+                     msg=f"models frozen until {cfg.models_frozen_until}")
+        return {"skipped": True, "reason": "models_frozen",
+                "frozen_until": cfg.models_frozen_until, "promoted": False}
     ctx = refresh_lock() if lock else _nullctx()
     with ctx:
         state = state or RefreshState()

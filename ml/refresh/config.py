@@ -39,6 +39,13 @@ class RefreshConfig:
     openmeteo_forecast_days: int = 16        # preserves forecast->climatology cap
     # ---- model update / promotion ------------------------------------------
     promote_tolerance: float = 0.0           # candidate must beat incumbent on same window
+    # ---- operational model freeze ------------------------------------------
+    # ISO-8601 instant. While now < models_frozen_until the scheduler skips the
+    # retrain step entirely and promote() refuses, so ml/models/ cannot change.
+    # Empty string = no freeze. Set to e.g. "2026-11-01T00:00:00+00:00" to hold
+    # the incumbent model through 31 Oct; after that instant retraining resumes
+    # automatically (no code edit needed).
+    models_frozen_until: str = ""
     candidate_holdout_days: int = 90         # early-stopping val = [now-(h+w), now-w)
     candidate_backtest_window_days: int = 90  # backtest anchors in [now-w, now)
     backtest_stations: int = 60              # candidate/incumbent backtest sample (0 = all)
@@ -69,6 +76,11 @@ class RefreshConfig:
             raise ConfigError("coverage_target must be in (0, 1]")
         if self.candidate_holdout_days <= 0 or self.candidate_backtest_window_days <= 0:
             raise ConfigError("holdout / backtest windows must be > 0 days")
+        if self.models_frozen_until:
+            try:
+                _parse_instant(self.models_frozen_until)
+            except ValueError as exc:
+                raise ConfigError(f"models_frozen_until not ISO-8601: {exc}") from exc
 
     def ensure_dirs(self) -> None:
         REFRESH_DIR.mkdir(parents=True, exist_ok=True)
@@ -100,6 +112,35 @@ def load_config(path: Path | None = None, write_if_missing: bool = True) -> Refr
     if write_if_missing and not p.exists():
         p.write_text(json.dumps(asdict(cfg), indent=2))
     return cfg
+
+
+def _parse_instant(raw: str):
+    """Parse an ISO-8601 instant, tolerating a trailing 'Z' and naive strings."""
+    from datetime import datetime, timezone
+    dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt
+
+
+def models_frozen(cfg: RefreshConfig, now=None) -> bool:
+    """True while ``models_frozen_until`` is set and still in the future.
+
+    Used by the scheduler (skip the retrain cycle), pipeline (short-circuit a
+    manual ``refresh.cli retrain``) and ``model_update.promote`` (hard guard on
+    the only function that writes ``ml/models/``). A malformed value keeps the
+    freeze *on* (fail safe) even though ``validate()`` would normally reject it.
+    """
+    raw = getattr(cfg, "models_frozen_until", "") or ""
+    if not raw:
+        return False
+    from datetime import datetime, timezone
+    now = now or datetime.now(timezone.utc)
+    try:
+        until = _parse_instant(raw)
+    except ValueError:
+        return True
+    return now < until
 
 
 def _apply_env(cfg: RefreshConfig) -> None:

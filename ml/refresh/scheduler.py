@@ -17,7 +17,7 @@ import time
 from datetime import datetime, timedelta, timezone
 
 from refresh import pipeline, verification
-from refresh.config import load_config
+from refresh.config import load_config, models_frozen
 from refresh.state import RefreshState, refresh_lock
 
 
@@ -88,8 +88,8 @@ def scheduler_loop(*, cfg=None, state=None, poll_s: float = 60.0, once: bool = F
     cfg = cfg or load_config()
     state = state or RefreshState()
     print(f"[refresh] scheduler started cwd={__file__} poll={poll_s}s "
-          f"refresh_every={cfg.refresh_interval_hours}h retrain_every={cfg.retrain_cadence_hours}h",
-          flush=True)
+          f"refresh_every={cfg.refresh_interval_hours}h retrain_every={cfg.retrain_cadence_hours}h "
+          f"models_frozen_until={cfg.models_frozen_until or '-'}", flush=True)
     while True:
         now = _utcnow()
         if refresh_due(cfg, state, now):
@@ -106,7 +106,7 @@ def scheduler_loop(*, cfg=None, state=None, poll_s: float = 60.0, once: bool = F
                 print(f"[refresh] forecast cycle failed: {exc}", flush=True)
 
         retrain_forced = drift_retrain_due(cfg, state, _utcnow())
-        if retrain_due(cfg, state, _utcnow()) or retrain_forced:
+        if not models_frozen(cfg) and (retrain_due(cfg, state, _utcnow()) or retrain_forced):
             try:
                 with refresh_lock():
                     if retrain_due(cfg, state, _utcnow()) or retrain_forced:
@@ -139,4 +139,6 @@ def next_due_human(cfg, state: RefreshState) -> dict:
         "next_retrain_due": state.get("next_retrain_due"),
         "refresh_due_now": refresh_due(cfg, state, now),
         "retrain_due_now": retrain_due(cfg, state, now),
+        "models_frozen": models_frozen(cfg, now) if cfg is not None else False,
+        "models_frozen_until": getattr(cfg, "models_frozen_until", "") if cfg is not None else "",
     }
