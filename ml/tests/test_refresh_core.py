@@ -71,6 +71,13 @@ class TestStateAndLock(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
+        # journal_path() is a module global that record() reads at call time;
+        # redirect it so these tests never append to the production journal.
+        self._journal_path = state.journal_path
+        state.journal_path = lambda: self.tmp / "journal.jsonl"
+
+    def tearDown(self):
+        state.journal_path = self._journal_path
 
     def test_state_atomic_roundtrip(self):
         s = state.RefreshState(self.tmp / "state.json")
@@ -92,10 +99,11 @@ class TestStateAndLock(unittest.TestCase):
 
     def test_journal_append(self):
         s = state.RefreshState(self.tmp / "state.json")
-        before = len(state.journal_path().read_text().splitlines() or [""])
+        jp = state.journal_path()
+        before = len(jp.read_text().splitlines()) if jp.exists() else 0
         s.record("fetch", ok=True, districts=5)
         s.record("forecast", ok=True, forecasted=100)
-        lines = state.journal_path().read_text().splitlines()
+        lines = jp.read_text().splitlines()
         self.assertEqual(len(lines), before + 2)
         self.assertEqual(json.loads(lines[-1])["kind"], "forecast")
         self.assertEqual(json.loads(lines[-2])["kind"], "fetch")
