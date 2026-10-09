@@ -1,0 +1,110 @@
+{
+ "verdict": "KEEP",
+ "reason": "MLP beats E0 on fold-2024 (1.0245 < 1.2446); fold-2025 1.0141 vs 1.2936",
+ "2024": {
+  "n_stride": 326,
+  "n_stations": 50,
+  "persist_rmse": 0.7777,
+  "xgb_ratio": 1.2446,
+  "xgb_ci": [
+   1.0733407351128479,
+   1.4618469169296489
+  ],
+  "mlp_ratio": 1.0245,
+  "mlp_ci": [
+   0.9565391203682797,
+   1.1108409161625932
+  ],
+  "mlp_loss_trace": [
+   {
+    "seed": 42,
+    "epochs": 120,
+    "train_first": 0.21999,
+    "train_last": 0.08421,
+    "train_min": 0.07976,
+    "val_best": 0.33117
+   },
+   {
+    "seed": 840,
+    "epochs": 120,
+    "train_first": 0.20538,
+    "train_last": 0.08457,
+    "train_min": 0.08183,
+    "val_best": 0.35014
+   },
+   {
+    "seed": 2056,
+    "epochs": 120,
+    "train_first": 0.19401,
+    "train_last": 0.08767,
+    "train_min": 0.08727,
+    "val_best": 0.37413
+   }
+  ]
+ },
+ "2025": {
+  "n_stride": 35,
+  "n_stations": 24,
+  "persist_rmse": 1.9315,
+  "xgb_ratio": 1.2936,
+  "xgb_ci": [
+   0.8386313404123197,
+   1.3408896271091706
+  ],
+  "mlp_ratio": 1.0141,
+  "mlp_ci": [
+   0.982913528249339,
+   1.2973862296135847
+  ],
+  "mlp_loss_trace": [
+   {
+    "seed": 42,
+    "epochs": 44,
+    "train_first": 0.22541,
+    "train_last": 0.1533,
+    "train_min": 0.14924,
+    "val_best": 0.61203
+   },
+   {
+    "seed": 840,
+    "epochs": 50,
+    "train_first": 0.22816,
+    "train_last": 0.12384,
+    "train_min": 0.12384,
+    "val_best": 0.5862
+   },
+   {
+    "seed": 2056,
+    "epochs": 76,
+    "train_first": 0.21854,
+    "train_last": 0.14198,
+    "train_min": 0.14001,
+    "val_best": 0.60211
+   }
+  ]
+ },
+ "nan_diag": {
+  "2024": {
+   "all_nan_cols": [
+    "river_level"
+   ],
+   "n_all_nan": 1
+  },
+  "2025": {
+   "all_nan_cols": [
+    "river_level"
+   ],
+   "n_all_nan": 1
+  }
+ },
+ "config": {
+  "loss": "huber(delta=1.0)",
+  "clip": 1.0,
+  "lr": 0.001,
+  "sched": "ReduceLROnPlateau(0.5,patience2)",
+  "norm": "LayerNorm",
+  "target_std": true,
+  "max_epochs": 120,
+  "patience": 10
+ }
+}

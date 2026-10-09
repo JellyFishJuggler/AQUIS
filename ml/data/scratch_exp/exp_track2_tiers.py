@@ -92,9 +92,11 @@ def boot(em, ep, st_tier, b=B, seed=7):
 def tier_table(pred_df: pd.DataFrame, label: str) -> dict:
     out = {}
     for tier, sub in pred_df.groupby(label):
+        mjs = sub["month"].isin([6, 7, 8, 9]).to_numpy()
         rec = {
             "n_stations": int(sub["st"].nunique()),
             "n_rows": int(len(sub)),
+            "n_junsep": int(mjs.sum()),
             "completeness_mean": round(float(sub["comp"].mean()), 4)
             if "comp" in sub else None,
         }
@@ -104,6 +106,10 @@ def tier_table(pred_df: pd.DataFrame, label: str) -> dict:
             rec[cfg] = round(float(np.sqrt(np.mean(em ** 2))) /
                              float(np.sqrt(np.mean(ep ** 2))), 4)
             rec[f"{cfg}_ci"] = boot(em, ep, sub["st"].to_numpy(np.int32))
+            rec[f"{cfg}_junsep"] = (
+                round(float(np.sqrt(np.mean(em[mjs] ** 2))) /
+                      float(np.sqrt(np.mean(ep[mjs] ** 2))), 4)
+                if mjs.any() else None)
         cov = sub["in_int"].to_numpy(bool)
         rec["interval_coverage"] = round(float(cov.mean()), 4)
         rec["interval_width_mean"] = round(float(
@@ -215,20 +221,32 @@ def main() -> None:
             "axis_b": p_df.drop_duplicates("Station").groupby("axis_b")
                           .size().astype(int).to_dict(),
         },
+        "unassigned_bucket": {
+            "rows_axis_a": int((p_df["axis_a"] == "unassigned").sum()),
+            "rows_axis_b": int((p_df["axis_b"] == "unassigned").sum()),
+            "stations_axis_a": int(p_df.loc[p_df["axis_a"] == "unassigned",
+                                            "Station"].nunique()),
+            "stations_axis_b": int(p_df.loc[p_df["axis_b"] == "unassigned",
+                                            "Station"].nunique()),
+            "note": "a station lands here only if it has no fold-2024 stride "
+                    "rows (axis A) / no training-window rows (axis B); 0 means "
+                    "every 2026 test station was labelled from training data",
+        },
         "elapsed_sec": round(time.time() - t0),
     }
     OUT_JSON.write_text(json.dumps(report, indent=1))
     p_df.to_parquet(OUT_PRED, index=False)
 
-    print("\n=== TIER TABLES (E0 / E_best ratio, interval coverage) ===")
+    print("\n=== TIER TABLES (E0 / E_best ratio, Jun-Sep ratio, coverage, width) ===")
     for axis in ("axis_a_volatility", "axis_b_completeness"):
         print(f"\n{axis}")
         for t, r in report[axis].items():
             print(f"  {t:12s} nst={r['n_stations']:3d} rows={r['n_rows']:4d} "
-                  f"E0={r['E0']} {r['E0_ci']} E_best={r['E_best']} "
-                  f"{r['E_best_ci']} cov={r['interval_coverage']} "
-                  f"w={r['interval_width_mean']}")
+                  f"njs={r['n_junsep']:4d} E0={r['E0']} js={r['E0_junsep']} "
+                  f"E_best={r['E_best']} js={r['E_best_junsep']} "
+                  f"cov={r['interval_coverage']} w={r['interval_width_mean']}")
     print(f"\nsizes: {report['tier_sizes_stations']}")
+    print(f"unassigned: {report['unassigned_bucket']}")
     print(f"TOTAL {(time.time()-t0)/60:.1f} min")
 
 

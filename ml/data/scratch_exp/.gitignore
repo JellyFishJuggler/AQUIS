@@ -2,3 +2,4 @@ __pycache__/
 logs/
 frozen/*.parquet
 tracks/*.parquet
+ledger_copy.parquet
