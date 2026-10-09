@@ -264,5 +264,72 @@ class TestTrimHighSide(unittest.TestCase):
         self.assertLess(df["value"].min(), -10.0)
 
 
+@unittest.skipUnless(has("refresh/verification.py"), "refresh package missing")
+class TestDedupEquivalence(unittest.TestCase):
+    """The key-set de-dup must keep/skip exactly what the old ledger scan did.
+
+    Regression for the O(new_rows * ledger_rows) ``_dup_exists`` scan that held
+    the refresh lock for hours after a daemon outage: the replacement builds one
+    set of ledger keys per cycle and does O(1) membership tests.
+    """
+
+    @staticmethod
+    def _old_dup_exists(ledger: pd.DataFrame, row: dict) -> bool:
+        if ledger.empty:
+            return False
+        d = ledger[(ledger["station"] == row["station"])
+                   & (ledger["anchor_time"] == row["anchor_time"])
+                   & (ledger["horizon_h"] == row["horizon_h"])
+                   & (ledger["target_time"] == row["target_time"])]
+        return not d.empty
+
+    def test_keyset_matches_boolean_scan(self):
+        stations = ["A", "B", "C"]
+        anchors = [pd.Timestamp("2026-09-01T00:00:00") + pd.Timedelta(hours=6 * i)
+                   for i in range(6)]
+        ledger_rows = []
+        for s in stations:
+            for h in (6, 12, 24):
+                for a in anchors[:4]:
+                    ledger_rows.append({
+                        "station": s, "anchor_time": a, "horizon_h": h,
+                        "target_time": a + pd.Timedelta(hours=h),
+                        "actual": 1.0, "abs_err": 0.0, "sq_err": 0.0})
+        ledger = pd.DataFrame(ledger_rows)
+
+        candidates = [dict(r) for r in ledger_rows[:20]]          # existing dups
+        for s in stations:
+            for h in (6, 12, 24, 48):                             # brand-new keys
+                a = anchors[-1]
+                candidates.append({
+                    "station": s, "anchor_time": a, "horizon_h": h,
+                    "target_time": a + pd.Timedelta(hours=h),
+                    "actual": 1.0, "abs_err": 0.0, "sq_err": 0.0})
+        import random
+        random.Random(7).shuffle(candidates)
+
+        keyset = verification._ledger_key_set(ledger)
+        self.assertEqual(keyset,
+                         {verification._row_key(r) for r in ledger_rows})
+
+        old_kept, new_kept = [], []
+        for r in candidates:
+            key = verification._row_key(r)
+            old_skip = self._old_dup_exists(ledger, r)
+            new_skip = key in keyset
+            self.assertEqual(old_skip, new_skip,
+                             f"skip decision diverged for {key}")
+            if not old_skip:
+                old_kept.append(key)
+                new_kept.append(key)
+        self.assertEqual(old_kept, new_kept)
+        self.assertGreater(len(new_kept), 0)                      # some pass
+        self.assertGreater(len(candidates) - len(new_kept), 0)    # some skipped
+
+    def test_empty_ledger(self):
+        empty = pd.DataFrame(columns=list(verification._LEDGER_KEY_COLS))
+        self.assertEqual(verification._ledger_key_set(empty), set())
+
+
 if __name__ == "__main__":
     unittest.main()

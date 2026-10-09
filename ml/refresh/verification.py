@@ -29,6 +29,9 @@ from refresh.publish import atomic_write_json
 VERIF_LEDGER = REFRESH_DIR / "verification.parquet"
 VERIF_SUMMARY = REFRESH_DIR / "verification_summary.json"
 
+# uniqueness key for a ledger row (used by the per-cycle de-dup set)
+_LEDGER_KEY_COLS = ("station", "anchor_time", "horizon_h", "target_time")
+
 # drift rule (config defaults are overridable via refresh_config.json later)
 KNOWN_HORIZONS_H = [6, 12, 24, 36, 48, 72, 120, 240, 360, 480, 720]
 DRIFT_RMSE_TOL = 1.10          # realised 30d RMSE may exceed backtest baseline by 10%
@@ -96,7 +99,24 @@ def _iter_published_forecasts(only_newer_than: pd.Timestamp | None = None):
         yield station, pod, anchor_ts
 
 
-def _score_pod(pod: dict, seen: pd.DataFrame) -> list[dict]:
+def _index_actuals(actuals: pd.DataFrame | None) -> dict:
+    """Group realised readings by station once per verify run.
+
+    ``_score_pod`` used to filter the full ~3M-row actuals frame per pod
+    (``seen[seen["Station"].astype(str) == station]``), i.e. O(pods * rows) —
+    ~an hour for the 8k-pod backlog. Indexing once makes each pod's lookup
+    O(rows-for-that-station).
+    """
+    if actuals is None or actuals.empty:
+        return {}
+    a = actuals
+    if "Station" not in a.columns or "time" not in a.columns:
+        return {}
+    keys = a["Station"].astype(str)
+    return {str(k): g for k, g in a.groupby(keys, sort=False)}
+
+
+def _score_pod(pod: dict, by_station: dict) -> list[dict]:
     """Score one published forecast against realised values.
 
     Returns ledger rows (station, anchor_time, horizon_h, target_time,
@@ -115,9 +135,9 @@ def _score_pod(pod: dict, seen: pd.DataFrame) -> list[dict]:
 
     # realised readings strictly after the anchor (the anchor itself is
     # historical, already known when the forecast was made)
-    if seen is None or seen.empty:
+    sub = (by_station or {}).get(str(station))
+    if sub is None or sub.empty:
         return []
-    sub = seen[seen["Station"].astype(str) == station]
     sub = sub[sub["time"] > anchor_ts]
     if sub.empty:
         return []
@@ -172,10 +192,12 @@ def verify_forecasts(*, min_generation_age_s: int = 300, dry_run: bool = False) 
     generated_cutoff = now - min_generation_age_s
 
     ledger = _load_ledger()
+    existing_keys = _ledger_key_set(ledger)
     new_rows: list[dict] = []
 
     # load realised readings once per run (fresh aligned table, not a stale cache)
     actuals = _read_aligned_actuals()
+    by_station = _index_actuals(actuals)
 
     for station, pod, anchor_ts in _iter_published_forecasts():
         gen = _pod_generated_epoch(pod)
@@ -183,11 +205,14 @@ def verify_forecasts(*, min_generation_age_s: int = 300, dry_run: bool = False) 
             continue
         if gen is not None and gen >= generated_cutoff:
             continue
-        rows = _score_pod(pod, actuals)
+        rows = _score_pod(pod, by_station)
         for r in rows:
             # de-dup: skip if an identical (station, anchor, horizon, target)
-            # row already exists in the ledger from a prior cycle
-            if _dup_exists(ledger, r):
+            # row already exists in the ledger from a prior cycle. The key set is
+            # built ONCE above — the previous per-row boolean scan of the whole
+            # ledger made this O(new_rows * ledger_rows) and could hold the
+            # refresh lock for hours after a daemon outage.
+            if _row_key(r) in existing_keys:
                 continue
             new_rows.append(r)
 
@@ -235,14 +260,22 @@ def _load_ledger() -> pd.DataFrame:
     return pd.read_parquet(VERIF_LEDGER)
 
 
-def _dup_exists(ledger: pd.DataFrame, row: dict) -> bool:
-    if ledger.empty:
-        return False
-    d = ledger[(ledger["station"] == row["station"])
-               & (ledger["anchor_time"] == row["anchor_time"])
-               & (ledger["horizon_h"] == row["horizon_h"])
-               & (ledger["target_time"] == row["target_time"])]
-    return not d.empty
+def _ledger_key_set(ledger: pd.DataFrame) -> set:
+    """Set of (station, anchor_time, horizon_h, target_time) keys already scored.
+
+    Built once per verify run so the per-row de-dup is an O(1) membership test
+    instead of a full-ledger boolean scan (which is O(N * ledger_rows)).
+    """
+    if ledger is None or ledger.empty:
+        return set()
+    if any(c not in ledger.columns for c in _LEDGER_KEY_COLS):
+        return set()
+    return set(map(tuple, ledger[list(_LEDGER_KEY_COLS)]
+                   .itertuples(index=False, name=None)))
+
+
+def _row_key(row: dict) -> tuple:
+    return tuple(row[c] for c in _LEDGER_KEY_COLS)
 
 
 def write_ledger(df: pd.DataFrame) -> None:
