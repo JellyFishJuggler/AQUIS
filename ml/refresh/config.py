@@ -37,6 +37,13 @@ class RefreshConfig:
     retry_backoff_s: float = 10.0
     fetch_workers: int = 8
     openmeteo_forecast_days: int = 16        # preserves forecast->climatology cap
+    # When the GWL source fetched cleanly but had zero new rows, nothing can be
+    # re-published; the cycle is a benign no-op. Re-arm the schedule to at least
+    # ``now + no_new_data_backoff_min`` so an empty source can never hot-loop the
+    # daemon (the fixed grid slots alone are too close together right after a
+    # long cycle). Only "fetch ok + 0 new rows" is treated this way — any real
+    # failure (network/parse/schema/inference) still raises and is journaled.
+    no_new_data_backoff_min: float = 90.0
     # ---- model update / promotion ------------------------------------------
     promote_tolerance: float = 0.0           # candidate must beat incumbent on same window
     # ---- operational model freeze ------------------------------------------
@@ -70,6 +77,8 @@ class RefreshConfig:
             raise ConfigError("retrain_cadence_hours must be > 0")
         if self.stale_after_hours <= 0:
             raise ConfigError("stale_after_hours must be > 0")
+        if self.no_new_data_backoff_min <= 0:
+            raise ConfigError("no_new_data_backoff_min must be > 0")
         if self.feature_mode not in FEATURE_MODES:
             raise ConfigError(f"feature_mode must be one of {FEATURE_MODES}")
         if not (0.0 < self.coverage_target <= 1.0):

@@ -54,8 +54,16 @@ def previous_anchors() -> pd.Series:
 def refresh_forecasts(*, cfg, state: RefreshState, stations=None, max_stations: int = 0,
                       skip_unchanged: bool = True, publish: bool = True,
                       dry_run: bool = False, source_report: dict | None = None,
+                      allow_empty: bool = False,
                       engine_extra: dict | None = None) -> dict:
-    """Compute + publish the per-station trajectory forecasts for one cycle."""
+    """Compute + publish the per-station trajectory forecasts for one cycle.
+
+    ``allow_empty`` is set by the pipeline only when the GWL fetch succeeded but
+    returned zero new rows: in that case every anchor is unchanged, *zero* fresh
+    forecasts is the expected result, and it is reported as a benign
+    ``no_new_source`` no-op instead of raising. Any other reason for too few
+    fresh forecasts (a real fetch/inference failure) still raises.
+    """
     c = _load_engine()
     fnames_model = c["fnames"]
     tbl = c["tbl"]
@@ -86,33 +94,43 @@ def refresh_forecasts(*, cfg, state: RefreshState, stations=None, max_stations: 
             out["model_features"] = fnames_model
             forecasts.append(out)
 
+    no_new_source = False
     if not dry_run and publish:
         if len(forecasts) < cfg.min_fresh_stations:
-            raise RuntimeError(
-                f"publish aborted: only {len(forecasts)} fresh forecasts "
-                f"(< min_fresh_stations={cfg.min_fresh_stations})")
-        tcfg = traj.TRAJ_CFG
-        import json
-        cfgj = json.loads(tcfg.read_text()) if tcfg.exists() else {}
-        model_version = cfgj.get("version") or str(cfgj.get("trained_at", ""))
-        meta = pubmod.publish_forecasts(
-            forecasts, engine="trajectory-v2", model_version=model_version,
-            model_trained_at=cfgj.get("trained_at"), source_report=source_report,
-            keep_staging=True)
-        pubmod.update_freshness(meta, cfg.stale_after_hours,
-                                state.get("last_forecast_refresh_ts"))
-        # persist per-station anchor map (for skip-unchanged next cycle)
-        anchors_df = pd.DataFrame({"Station": list(cur.index), "anchor_time": list(cur.values)})
-        pubmod.atomic_write_parquet(LAST_ANCHORS, anchors_df)
+            # only an *empty* result gated on a clean zero-row fetch is the
+            # expected no-op; anything else (a few fresh, or an error path) is a
+            # real anomaly and must still abort the publish.
+            if allow_empty and not forecasts:
+                no_new_source = True
+            else:
+                raise RuntimeError(
+                    f"publish aborted: only {len(forecasts)} fresh forecasts "
+                    f"(< min_fresh_stations={cfg.min_fresh_stations})")
+        if not no_new_source:
+            tcfg = traj.TRAJ_CFG
+            import json
+            cfgj = json.loads(tcfg.read_text()) if tcfg.exists() else {}
+            model_version = cfgj.get("version") or str(cfgj.get("trained_at", ""))
+            meta = pubmod.publish_forecasts(
+                forecasts, engine="trajectory-v2", model_version=model_version,
+                model_trained_at=cfgj.get("trained_at"), source_report=source_report,
+                keep_staging=True)
+            pubmod.update_freshness(meta, cfg.stale_after_hours,
+                                    state.get("last_forecast_refresh_ts"))
+            # persist per-station anchor map (for skip-unchanged next cycle)
+            anchors_df = pd.DataFrame({"Station": list(cur.index), "anchor_time": list(cur.values)})
+            pubmod.atomic_write_parquet(LAST_ANCHORS, anchors_df)
 
     state.update(last_forecast_refresh_ts=_now_iso() if not state.get("last_forecast_refresh_ts") or state.get("last_forecast_refresh_ts") == "now" else state.get("last_forecast_refresh_ts"))
 
     return {
         "dry_run": dry_run,
-        "published": bool(publish and not dry_run),
+        "published": bool(publish and not dry_run and not no_new_source),
+        "no_new_source": bool(not dry_run and publish and no_new_source),
         "stations": len(stations),
         "forecasted": len(forecasts),
         "unchanged_skipped": unchanged,
+        "table_latest": (str(cur.max()) if len(cur) else None),
         "failed": errors,
         "model_features": fnames_model,
         "engine_extra": engine_extra,

@@ -32,6 +32,24 @@ def _iso(dt: datetime) -> str:
     return dt.isoformat(timespec="seconds")
 
 
+def _is_no_new_source(fetch_report: dict | None) -> bool:
+    """True only when the GWL source fetched cleanly AND returned zero new rows.
+
+    This is the *only* condition under which an otherwise-empty forecast cycle is
+    a benign no-op. A failed/partial fetch (``ok`` falsy), a malformed report, or
+    any positive row count returns False, so those paths still raise and are
+    journaled as errors.
+    """
+    gwl = ((fetch_report or {}).get("gwl") or {})
+    if not gwl.get("ok"):
+        return False
+    try:
+        new_rows = int(gwl.get("new_rows", 1))
+    except (TypeError, ValueError):
+        return False
+    return new_rows == 0
+
+
 def run_forecast_cycle(*, cfg=None, state=None, dry_run: bool = False,
                        do_fetch: bool = True, do_features: bool = True,
                        do_inference: bool = True, stations=None,
@@ -56,23 +74,44 @@ def run_forecast_cycle(*, cfg=None, state=None, dry_run: bool = False,
         elif do_features:
             report["features"] = {"ok": True, "dry_run": True}
 
+        no_new_source = _is_no_new_source(report.get("fetch"))
+        inf = None
         if do_inference:
             inf = inference.refresh_forecasts(
                 cfg=cfg, state=state, stations=stations, max_stations=max_stations,
                 skip_unchanged=skip_unchanged, publish=not dry_run, dry_run=dry_run,
                 source_report=(report.get("fetch") if do_fetch else source_report),
+                allow_empty=no_new_source,
                 engine_extra={"features": report.get("features", {}).get("validate")})
             report["inference"] = inf
-            state.record("forecast", ok=(not dry_run and inf["published"]),
-                         msg=f"{inf.get('forecasted', 0)} stations forecast",
-                         forecasted=inf.get("forecasted"), skipped=inf.get("unchanged_skipped"))
+            if inf.get("no_new_source"):
+                gwl = ((report.get("fetch") or {}).get("gwl") or {})
+                state.record(
+                    "no_new_source", ok=True,
+                    msg="no new source data (fetch ok, 0 new rows); forecasts unchanged",
+                    source_latest=gwl.get("source_latest"),
+                    table_latest=inf.get("table_latest"),
+                    unchanged_skipped=inf.get("unchanged_skipped"))
+            else:
+                state.record("forecast", ok=(not dry_run and inf["published"]),
+                             msg=f"{inf.get('forecasted', 0)} stations forecast",
+                             forecasted=inf.get("forecasted"), skipped=inf.get("unchanged_skipped"))
 
+        noop = bool(inf and inf.get("no_new_source"))
         if not dry_run and do_inference and inf.get("published"):
             report["verification"] = verification.verify_forecasts()
 
         if not dry_run:
-            state.update(next_refresh_due=_iso(next_grid_due(cfg, now)),
-                         last_forecast_refresh_ts=_iso(now))
+            if noop:
+                # nothing changed to publish: re-arm with a minimum interval so
+                # an empty source can never hot-loop the daemon.
+                floor = now + timedelta(minutes=cfg.no_new_data_backoff_min)
+                due = max(next_grid_due(cfg, now), floor)
+                report["rearmed_next_refresh_due"] = _iso(due)
+                state.update(next_refresh_due=_iso(due))
+            else:
+                state.update(next_refresh_due=_iso(next_grid_due(cfg, now)),
+                             last_forecast_refresh_ts=_iso(now))
         return report
 
 

@@ -89,7 +89,7 @@ def _fetch_gwl_impl(*, parquet: Path, districts: list[str] | None,
     if not parquet.exists():
         raise FileNotFoundError(parquet)
     dists = districts or nwic.get_aquis_districts(parquet)
-    new_frames, total_new = refresh_src.refresh(
+    new_frames, total_new, source_max = refresh_src.refresh(
         dists, parquet, dry_run=dry_run, sleep=sleep)
     per = {}
     for d, frame in zip(dists, new_frames):
@@ -98,6 +98,7 @@ def _fetch_gwl_impl(*, parquet: Path, districts: list[str] | None,
     report = {
         "districts": len(dists), "new_rows": int(total_new),
         "per_district": per, "per_district_failures": failures,
+        "source_latest": (str(source_max) if source_max is not None else None),
     }
     return report
 

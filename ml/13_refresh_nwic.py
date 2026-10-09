@@ -133,11 +133,15 @@ def _district_min_station_max(df: pd.DataFrame) -> dict:
 
 
 def refresh(districts: list[str], parquet_path: Path, dry_run: bool = False,
-            sleep: float = 0.2, lookback_days: int = 45) -> tuple[list[pd.DataFrame], int]:
+            sleep: float = 0.2, lookback_days: int = 45) -> tuple[list[pd.DataFrame], int, object]:
     """Fetch + merge the latest per-district 2026 rows.
 
-    Returns (new_frames, total_new_rows). If dry_run, returns frames but does
-    not write to disk.
+    Returns ``(new_frames, total_new_rows, source_max)``. ``source_max`` is the
+    newest observation timestamp *the live source returned* this run (even when
+    every returned row was filtered out as already-known), so callers can report
+    "the source's latest 2026 reading" without a second query; ``None`` if the
+    source returned nothing at all. If dry_run, returns frames but does not write
+    to disk.
 
     The scan window starts from the district's *slowest* station (its oldest
     station-max, minus one day) so that stations reporting less often than the
@@ -152,6 +156,7 @@ def refresh(districts: list[str], parquet_path: Path, dry_run: bool = False,
     cur_min_st = _district_min_station_max(cur)
     new_frames: list[pd.DataFrame] = []
     total_new = 0
+    source_max = None
 
     for d in districts:
         dist_max = cur_max_dist.get(d)
@@ -175,6 +180,13 @@ def refresh(districts: list[str], parquet_path: Path, dry_run: bool = False,
         if frame.empty:
             print(f"  [ok]  {d}: no rows")
             continue
+        # track the newest instant the live source returned (before the
+        # per-station "already known" filter) so a zero-new-rows cycle can report
+        # how fresh the source actually is.
+        if nwic.TIME_FIELD in frame.columns:
+            _smax = pd.to_datetime(frame[nwic.TIME_FIELD], errors="coerce").max()
+            if pd.notna(_smax):
+                source_max = _smax if source_max is None else max(source_max, _smax)
         # per-station incremental: keep only rows newer than that station's max
         if nwic.TIME_FIELD in frame.columns and nwic.STATION_FIELD in frame.columns:
             frame[nwic.TIME_FIELD] = pd.to_datetime(frame[nwic.TIME_FIELD], errors="coerce")
@@ -189,7 +201,7 @@ def refresh(districts: list[str], parquet_path: Path, dry_run: bool = False,
         time.sleep(sleep)
 
     if dry_run:
-        return new_frames, total_new
+        return new_frames, total_new, source_max
 
     if new_frames:
         new = pd.concat(new_frames, ignore_index=True)
@@ -212,7 +224,7 @@ def refresh(districts: list[str], parquet_path: Path, dry_run: bool = False,
         print(f"\n  Merged {total_new} new rows -> {parquet_path} ({len(merged)} total)")
     else:
         print("\n  No new rows to merge; dataset is current.")
-    return new_frames, total_new
+    return new_frames, total_new, source_max
 
 
 def deploy_check(parquet_path: Path) -> dict:
@@ -280,7 +292,7 @@ def main() -> None:
     districts = nwic.get_aquis_districts(args.parquet)
     print(f"Districts to refresh ({len(districts)}): {', '.join(districts[:8])} ...")
 
-    new_frames, total_new = refresh(districts, args.parquet, dry_run=args.dry_run)
+    new_frames, total_new, _ = refresh(districts, args.parquet, dry_run=args.dry_run)
 
     if args.dry_run:
         print(f"\nDRY RUN: {total_new} new rows would be added.")

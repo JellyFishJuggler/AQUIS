@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from refresh import model_update, pipeline, scheduler
+from refresh import inference, model_update, pipeline, scheduler
 from refresh.config import RefreshConfig, models_frozen
 from refresh.state import RefreshState
 from tests._helpers import has
@@ -195,6 +195,124 @@ class TestModelFreeze(unittest.TestCase):
         finally:
             scheduler.pipeline.run_retrain_cycle = orig
             scheduler.refresh_lock = orig_lock
+
+
+class _FakeState:
+    """Minimal RefreshState stand-in: no file I/O, records every event."""
+
+    def __init__(self):
+        self._data = {}
+        self.events = []
+
+    def get(self, key, default=None):
+        return self._data.get(key, default)
+
+    def update(self, **fields):
+        for k, v in fields.items():
+            if v is not None:
+                self._data[k] = v
+
+    def record(self, kind, *, ok, msg="", **extra):
+        self.events.append({"kind": kind, "ok": ok, "msg": msg, **extra})
+
+
+@unittest.skipUnless(has("refresh/pipeline.py"), "refresh missing")
+class TestNoNewSourceData(unittest.TestCase):
+    """A clean zero-new-row fetch is a benign no-op; everything else raises."""
+
+    def test_is_no_new_source_truth_table(self):
+        f = pipeline._is_no_new_source
+        self.assertTrue(f({"gwl": {"ok": True, "new_rows": 0}}))
+        self.assertFalse(f({"gwl": {"ok": True, "new_rows": 5}}))
+        self.assertFalse(f({"gwl": {"ok": False, "new_rows": 0}}))
+        self.assertFalse(f({"gwl": {"ok": True}}))       # missing count -> not benign
+        self.assertFalse(f({"gwl": {"ok": True, "new_rows": None}}))
+        self.assertFalse(f({"gwl": {}}))
+        self.assertFalse(f({}))
+        self.assertFalse(f(None))
+
+    def test_inference_empty_is_noop_only_when_allowed(self):
+        tbl = pd.DataFrame({"Station": ["ST1", "ST2"],
+                            "time": pd.to_datetime(["2026-09-01", "2026-09-01"]),
+                            "gwl": [-5.0, -6.0]})
+        eng = {"tbl": tbl, "fnames": []}
+        prev = pd.Series(pd.to_datetime(["2026-09-01", "2026-09-01"]),
+                         index=["ST1", "ST2"])
+        saved_engine, saved_prev = inference._load_engine, inference.previous_anchors
+        inference._load_engine = lambda: eng
+        inference.previous_anchors = lambda: prev
+        try:
+            cfg = RefreshConfig(min_fresh_stations=20)
+            st = _FakeState()
+            r = inference.refresh_forecasts(cfg=cfg, state=st, allow_empty=True)
+            self.assertTrue(r["no_new_source"])
+            self.assertFalse(r["published"])
+            self.assertEqual(r["forecasted"], 0)
+            self.assertEqual(r["unchanged_skipped"], 2)
+            self.assertTrue(r["table_latest"])
+            with self.assertRaises(RuntimeError):
+                inference.refresh_forecasts(cfg=cfg, state=st, allow_empty=False)
+        finally:
+            inference._load_engine = saved_engine
+            inference.previous_anchors = saved_prev
+
+    def _patch(self, **attrs):
+        saved = {}
+        for n, fn in attrs.items():
+            saved[n] = getattr(pipeline, n)
+            setattr(pipeline, n, fn)
+        self.addCleanup(lambda: [setattr(pipeline, n, fn) for n, fn in saved.items()])
+
+    def test_pipeline_noop_journals_and_rearms_with_floor(self):
+        self._patch(
+            sources=type("S", (), {"fetch_all": staticmethod(
+                lambda cfg, dry_run=False: {"all_ok": True,
+                                            "gwl": {"ok": True, "new_rows": 0,
+                                                    "source_latest": "2026-09-01T00:00:00"}})})(),
+            inference=type("I", (), {"refresh_forecasts": staticmethod(
+                lambda **kw: {"no_new_source": True, "published": False,
+                              "forecasted": 0, "unchanged_skipped": 3,
+                              "table_latest": "2026-09-01 00:00:00"})})(),
+            # force the grid slot to be *sooner* than the backoff floor
+            next_grid_due=lambda cfg, now: now + timedelta(minutes=10),
+        )
+        cfg = RefreshConfig(no_new_data_backoff_min=90)
+        st = _FakeState()
+        rep = pipeline.run_forecast_cycle(cfg=cfg, state=st, do_fetch=True,
+                                          do_features=False, do_inference=True,
+                                          lock=False)
+        self.assertEqual([e["kind"] for e in st.events],
+                         ["fetch", "no_new_source"])
+        ev = st.events[1]
+        self.assertEqual(ev["source_latest"], "2026-09-01T00:00:00")
+        self.assertEqual(ev["table_latest"], "2026-09-01 00:00:00")
+        cycle = datetime.fromisoformat(rep["cycle_ts"])
+        due = datetime.fromisoformat(st._data["next_refresh_due"])
+        self.assertAlmostEqual((due - cycle).total_seconds(), 90 * 60, delta=5)
+        self.assertNotIn("verification", rep)
+
+    def test_pipeline_fetch_failure_still_raises(self):
+        def _boom(cfg, dry_run=False):
+            raise RuntimeError("network down")
+        self._patch(sources=type("S", (), {"fetch_all": staticmethod(_boom)})())
+        st = _FakeState()
+        with self.assertRaises(RuntimeError):
+            pipeline.run_forecast_cycle(cfg=RefreshConfig(), state=st, do_fetch=True,
+                                        do_features=False, do_inference=True, lock=False)
+
+    def test_pipeline_inference_error_raises_even_with_zero_rows(self):
+        def _boom(**kw):
+            raise RuntimeError("engine exploded")
+        self._patch(
+            sources=type("S", (), {"fetch_all": staticmethod(
+                lambda cfg, dry_run=False: {"all_ok": True,
+                                            "gwl": {"ok": True, "new_rows": 0}})})(),
+            inference=type("I", (), {"refresh_forecasts": staticmethod(_boom)})(),
+        )
+        st = _FakeState()
+        with self.assertRaises(RuntimeError):
+            pipeline.run_forecast_cycle(cfg=RefreshConfig(), state=st, do_fetch=True,
+                                        do_features=False, do_inference=True, lock=False)
 
 
 if __name__ == "__main__":
