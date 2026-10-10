@@ -3,3 +3,5 @@ logs/
 frozen/*.parquet
 tracks/*.parquet
 ledger_copy.parquet
+dl_rebuild/cache/
+dl_rebuild/__pycache__/

@@ -1,0 +1,28 @@
+device=cuda torch=2.14.1+cu130
+data ready n=2,776,330 st=548 ftr=82
+stationcv holdout stations=96 train=593,058 val=11,209 scored=764
+/home/srijan/Downloads/Developement/AQUIS/ml/venv312/lib64/python3.12/site-packages/xgboost/callback.py:385: UserWarning: [22:16:09] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv312/lib64/python3.12/site-packages/xgboost/core.py:569: UserWarning: [22:16:12] WARNING: /__w/xgboost/xgboost/src/common/error_msg.cc:62: Falling back to prediction using DMatrix due to mismatched devices. This might lead to higher memory usage and slower performance. XGBoost is running on: cuda:0, while the input data is on: cpu.
+Potential solutions:
+- Use a data structure that matches the device ordinal in the booster.
+- Set the device for booster before call to inplace_predict.
+
+This warning will only be shown once.
+
+  return func(**kwargs)
+/home/srijan/Downloads/Developement/AQUIS/ml/venv312/lib64/python3.12/site-packages/xgboost/callback.py:385: UserWarning: [22:16:13] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+/home/srijan/Downloads/Developement/AQUIS/ml/venv312/lib64/python3.12/site-packages/xgboost/callback.py:385: UserWarning: [22:16:15] WARNING: /__w/xgboost/xgboost/src/learner.cc:794: 
+Parameters: { "verbose" } are not used.
+
+  self.starting_round = model.num_boosted_rounds()
+stationcv xgb-e0 ratio=1.0414 ci=[0.989,1.118]
+stationcv mlp ratio=1.0152 ci=[0.972,1.059]
+stationcv gru ratio=0.9480 ci=[0.902,0.986]
+stationcv done 523s
+TOTAL 8.7 min

@@ -1,0 +1,6 @@
+device=cuda torch=2.14.1+cu130
+data ready n=2,776,330 st=548 ftr=82
+fold 2024: mlp=1.0075 gru=1.2288 (persist 1.757)
+fold 2025: mlp=1.1400 gru=1.0330 (persist 1.745)
+folds done 3086s
+TOTAL 51.4 min

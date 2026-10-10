@@ -1,0 +1,6 @@
+device=cuda torch=2.14.1+cu130
+data ready n=2,776,330 st=548 ftr=82
+y2026 train=1,627,743 val=1,777 stride=3,766
+y2026 mlp ratio=0.9043 cov=0.974 | gru ratio=0.9485 cov=0.973
+y2026 done 578s
+TOTAL 9.6 min
