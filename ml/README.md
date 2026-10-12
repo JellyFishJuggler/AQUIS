@@ -178,7 +178,7 @@ STT model or audio upload involved.
   and coverage decays across the horizon. Rainfall is never forward-filled or
   interpolated anywhere in the pipeline, so in batch frames a finite value is a
   genuine observation (the mask is built explicitly in `06_features.build`).
-  See `docs/ml-system-spec.md` §2.1 and `docs/ml-build-spec.md` §3.1.1.
+  See `../docs/ml.md` §2.1 and `../docs/ml.md` §3.1.1.
 * **Hydrology block is UNTRAINED, and `rain_api*` has a train/serve definition
   mismatch**: batch builds it from rainfall known at the anchor (horizon-invariant),
   while serving advances the recursion with future forecast/climatology rainfall
@@ -186,7 +186,7 @@ STT model or audio upload involved.
   forecast rainfall, which is **not archived** — the archived forecast JSONs keep
   GWL quantiles and a `driver_source` label, not numeric drivers. Latent today
   because `feature_mode = "flat"`. Full analysis and the two repair options:
-  [`../docs/ml-hydro-train-serve.md`](../docs/ml-hydro-train-serve.md).
+  [`../docs/ml.md`](../docs/ml.md).
 * **ML showcase app**: `streamlit_app.py` + `app_pages/` — read-only demonstration
   of the pipeline, features, forecasts and evaluation. Run with
   `cd ml && ./venv/bin/python -m streamlit run streamlit_app.py`.
@@ -240,7 +240,7 @@ STT model or audio upload involved.
 The Forecast page's model (`_trajectory.py`). A **direct multi-horizon shared XGBoost**
 on the 6 h grid: horizon `h ∈ 1..120` is an input feature, every step is a real model
 output (no recursion, no interpolation), `q05 ≤ q50 ≤ q95` at every horizon. Spec +
-full results: [`../docs/ml-trajectory-v2-spec.md`](../docs/ml-trajectory-v2-spec.md).
+full results: [`../docs/ml.md`](../docs/ml.md).
 
 | Step | Script | Output |
 |---|---|---|

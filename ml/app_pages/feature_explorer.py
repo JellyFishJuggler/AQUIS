@@ -127,7 +127,7 @@ st.error(
     "leakage and is explicitly disallowed, so **the hydrology block stays "
     "experimental/untrained** until either a point-in-time archive of numeric "
     "driver values exists, or the serving definition is pinned to anchor-only "
-    "information. See `docs/ml-hydro-train-serve.md`."
+    "information. See `docs/ml.md`."
 )
 
 # ---- what the fitted models actually used ------------------------------

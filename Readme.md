@@ -169,7 +169,7 @@ One **pooled** model, not one per station:
 - **Quantile uncertainty** (`11_quantile.py`): native `reg:quantileerror` q05/q50/q95 pooled forecasters, empirically calibrated on non-overlapping windows → `quantile_calibration.json` (stride coverage 0.908 ≥ 0.80 target, so `k = 1.0`; median band ±~1.03 m).
 
 ### Trajectory v2 (`_trajectory.py`) — the Forecast page model
-A separate **direct multi-horizon shared XGBoost** on the 6 h grid: horizon `h ∈ 1..120` is an input feature, each step is a genuine model output (no recursion, no interpolation). Full spec + results: **[`docs/ml-trajectory-v2-spec.md`](docs/ml-trajectory-v2-spec.md)**.
+A separate **direct multi-horizon shared XGBoost** on the 6 h grid: horizon `h ∈ 1..120` is an input feature, each step is a genuine model output (no recursion, no interpolation). Full spec + results: **[`docs/ml.md`](docs/ml.md)**.
 
 - **Forward drivers (forecasts, never future observations):** Open-Meteo weather → days 1–16 (past-window features only); beyond 16 d the backend falls back to climatology; CWC 3-day river forecasts bridge the near horizon where the district is covered. A missing driver **downgrades** confidence at those horizons.
 - **Honest 2026 backtest (full fleet, 73,881 non-overlap windows):** 30-day RMSE **trajectory 2.106 m < production direct-30d 2.132 m < persistence 2.151 m** → trajectory **promoted** (`promote_trajectory = True`). Calibrated to **90% coverage at every horizon** (widening `s ∈ [0.80, 1.28]`).

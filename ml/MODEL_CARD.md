@@ -12,7 +12,7 @@
 > pooled-model internals, honest performance and diagnostics below remain the
 > authority for **both** models' inputs; trajectory v2 specifics (training frames,
 > backtest, calibration, confidence framework) are in `ml/README.md`
-> ("Trajectory v2") and `../docs/ml-trajectory-v2-spec.md`.
+> ("Trajectory v2") and `../docs/ml.md`.
 
 ## Data coverage & sources
 
