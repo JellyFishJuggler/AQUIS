@@ -1,0 +1,29 @@
+{
+  "engine": "sequence GRU + horizon-conditioned quantile heads (34_train_traj_dl)",
+  "anchors_scored": 19406,
+  "stations_sampled": 150,
+  "period": [
+    "2025-10-01",
+    "2026-08-20"
+  ],
+  "anchor_spacing_days": 14,
+  "no_overlap_windows": false,
+  "no_future_observed_values": true,
+  "30d_rmse_traj": 1.8021087808316953,
+  "30d_rmse_persistence": 1.9070520650796565,
+  "30d_rmse_climatology": 36.7042445510346,
+  "30d_rmse_direct30_production": 1.1982,
+  "30d_rmse_prev_recursive": null,
+  "30d_dir_acc": 0.7252,
+  "30d_coverage_calibrated": 0.894,
+  "30d_coverage_calibrated_fit_half": 0.901,
+  "30d_coverage_raw_heldout": 0.912,
+  "calibration_split": "widening fitted on alternating anchors; coverage reported on the disjoint complement",
+  "success_short_horizons": false,
+  "success_vs_persist_30d": true,
+  "success_vs_direct30_30d": true,
+  "promote_trajectory": false,
+  "trajectory_validated": "trajectory not yet validated above baselines",
+  "calibration_file": "/home/srijan/Downloads/Developement/AQUIS/ml/models/traj_dl_calibration.json",
+  "elapsed_sec": 153
+}

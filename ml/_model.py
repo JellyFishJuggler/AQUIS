@@ -8,6 +8,7 @@ pipeline scripts in this same directory (06/07) regenerate them.
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import joblib
@@ -139,7 +140,7 @@ def load_station_summary() -> pd.DataFrame:
 
 
 @st.cache_data(ttl="15m", max_entries=48)
-def forward_forecast(station: str) -> dict:
+def _forward_forecast_xgb(station: str) -> dict:
     """Deterministic 30-day forward outlook for one station (same path as training).
 
     Rebuilds the feature frame from the 6-hourly aligned table via
@@ -205,3 +206,29 @@ def forward_forecast(station: str) -> dict:
         "band_half": band_half,
         "station_stride_rmse": station_stride_rmse,
     }
+
+
+def forward_backend() -> str:
+    """Runtime-selected surface-(b) backend: "xgb" (default) or "dl"."""
+    f = BASE / "data" / "refresh" / "runtime.json"
+    try:
+        v = json.loads(f.read_text()).get("forward_backend", "xgb")
+    except (OSError, ValueError):
+        return "xgb"
+    return str(v or "xgb").lower()
+
+
+@st.cache_data(ttl="15m", max_entries=48)
+def forward_forecast(station: str) -> dict:
+    """Dispatch to the runtime-selected backend, falling back to the incumbent
+    XGB/Ridge path if the DL backend is unavailable or unloadable."""
+    if forward_backend() == "dl":
+        try:
+            import _dl
+
+            out = _dl.forward_forecast(station)
+            if out:
+                return out
+        except Exception as e:  # pragma: no cover - defensive fallback
+            print(f"forward DL backend failed, using xgb: {e}", file=sys.stderr)
+    return _forward_forecast_xgb(station)

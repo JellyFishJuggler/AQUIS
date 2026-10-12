@@ -64,7 +64,7 @@ if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
 from _assistant import StationAssistant, get_df, ollama_status  # noqa: E402
-from _trajectory import trajectory_forecast  # noqa: E402
+from _traj_dispatch import active_trajectory_forecast  # noqa: E402
 
 VERSION = "3.4.0"
 
@@ -1108,7 +1108,7 @@ def forecast(slug: str):
                         "detail": "`days` must be an integer"}), 400
     days = max(1, min(days, 30))
     try:
-        out = trajectory_forecast(info["station"])
+        out = active_trajectory_forecast(info["station"])
     except Exception as e:  # noqa: BLE001 - JSON-safe for the API client
         return jsonify({"error": "forecast failed",
                         "detail": f"{type(e).__name__}: {e}"}), 500

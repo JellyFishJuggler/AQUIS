@@ -40,7 +40,12 @@ ROOT = Path(__file__).resolve().parent
 ALIGNED = ROOT / "data" / "aligned" / "table_6h.parquet"
 OUT = ROOT / "outputs"
 TRAJ_CFG = ROOT / "models" / "traj_config.json"
-CALIB = ROOT / "models" / "traj_calibration.json"
+
+# Model backend: "xgb" (incumbent, default) or "dl" (sequence GRU, 34_train_traj_dl).
+# DL writes to *_dl.* paths only — the incumbent's outputs/artifacts are never touched.
+MODEL_KIND = os.environ.get("TRAJ_MODEL", "xgb").lower()
+SUFFIX = "" if MODEL_KIND == "xgb" else "_dl"
+CALIB = ROOT / "models" / f"traj{SUFFIX}_calibration.json"
 
 BACKTEST_START = pd.Timestamp("2025-10-01")
 LATEST_FRAME = pd.Timestamp("2026-08-20")
@@ -60,6 +65,10 @@ _FN = []
 _ORD30 = None
 _GWL_CLIM = {}
 _STA_CACHE = {}
+_MODEL_KIND = "xgb"
+_DL = None
+_DL_CFG = {}
+_NUM_COLS = []
 
 
 def _joblib_load(name):
@@ -67,18 +76,32 @@ def _joblib_load(name):
     return joblib.load(ROOT / "models" / name)
 
 
-def _worker_init(aligned, traj_cfg):
-    global _TBL, _MODELS, _FN, _GWL_CLIM, _ORD30
+def _worker_init(aligned, traj_cfg, model_kind="xgb"):
+    global _TBL, _MODELS, _FN, _GWL_CLIM, _ORD30, _MODEL_KIND, _DL, _DL_CFG, _NUM_COLS
+    _MODEL_KIND = model_kind
     _TBL = pd.read_parquet(aligned)
     _TBL["time"] = pd.to_datetime(_TBL["time"], errors="coerce")
     _TBL = F.drop_gwl_spikes(_TBL)
 
-    import xgboost as xgb
-    for name in ("q05", "q50", "q95"):
-        _MODELS[name] = xgb.Booster(
-            model_file=str(ROOT / "models" / f"traj_xgb_{name}.json"))
     cfg = json.loads(Path(traj_cfg).read_text())
     _FN = list(cfg["feature_cols"])
+    _NUM_COLS = list(F.NUM_COLS)
+
+    if model_kind == "dl":
+        import torch
+        torch.set_num_threads(1)
+        dlmod = importlib.import_module("34_train_traj_dl")
+        dcfg = json.loads((ROOT / "models" / "traj_dl_config.json").read_text())
+        net = dlmod.TrajGRU(len(_NUM_COLS), hidden=int(dcfg["hidden"]))
+        net.load_state_dict(torch.load(ROOT / "models" / "traj_dl.pt",
+                                       map_location="cpu", weights_only=True))
+        net.eval()
+        _DL, _DL_CFG = net, dcfg
+    else:
+        import xgboost as xgb
+        for name in ("q05", "q50", "q95"):
+            _MODELS[name] = xgb.Booster(
+                model_file=str(ROOT / "models" / f"traj_xgb_{name}.json"))
 
     cfg30 = json.loads((ROOT / "models" / "feature_config.json").read_text())
     _ORD30 = {
@@ -175,19 +198,40 @@ def _run_anchor(args):
         return None
     base_cols = [c for c in _FN if c not in ("h", "h_sin", "h_cos")]
     base = np.asarray(last[base_cols].values[0], dtype=np.float32)
+    base = np.where(np.isfinite(base), base, 0.0).astype(np.float32)
     hs = np.arange(1, MAX_H + 1, dtype=np.float32)
-    X = np.hstack([
-        np.repeat(base[None, :], MAX_H, axis=0),
-        hs[:, None],
-        np.sin(2 * np.pi * hs / MAX_H)[:, None],
-        np.cos(2 * np.pi * hs / MAX_H)[:, None],
-    ])
 
-    import xgboost as xgb
-    dm = xgb.DMatrix(X, feature_names=_FN)
-    q05 = _MODELS["q05"].predict(dm) + anchor_gwl
-    q50 = _MODELS["q50"].predict(dm) + anchor_gwl
-    q95 = _MODELS["q95"].predict(dm) + anchor_gwl
+    if _MODEL_KIND == "dl":
+        import torch
+        W = int(_DL_CFG.get("window_w", 120))
+        Xseq = feats[_NUM_COLS].to_numpy(np.float32)
+        Xseq = np.where(np.isfinite(Xseq), Xseq, 0.0).astype(np.float32)
+        n = len(Xseq); w = min(W, n)
+        seq = np.zeros((1, W, len(_NUM_COLS)), np.float32)
+        seqm = np.zeros((1, W, 1), np.float32)
+        seq[0, W - w:] = Xseq[-w:]
+        seqm[0, W - w:, 0] = 1.0
+        hf = np.stack([hs / MAX_H, np.sin(2 * np.pi * hs / MAX_H),
+                       np.cos(2 * np.pi * hs / MAX_H)], axis=-1)[None].astype(np.float32)
+        with torch.no_grad():
+            pred = _DL(torch.from_numpy(seq), torch.from_numpy(seqm),
+                       torch.from_numpy(base[None, :]), torch.from_numpy(hf))[0].numpy()
+        pred = np.sort(pred, axis=1)
+        q05 = pred[:, 0] + anchor_gwl
+        q50 = pred[:, 1] + anchor_gwl
+        q95 = pred[:, 2] + anchor_gwl
+    else:
+        X = np.hstack([
+            np.repeat(base[None, :], MAX_H, axis=0),
+            hs[:, None],
+            np.sin(2 * np.pi * hs / MAX_H)[:, None],
+            np.cos(2 * np.pi * hs / MAX_H)[:, None],
+        ])
+        import xgboost as xgb
+        dm = xgb.DMatrix(X, feature_names=_FN)
+        q05 = _MODELS["q05"].predict(dm) + anchor_gwl
+        q50 = _MODELS["q50"].predict(dm) + anchor_gwl
+        q95 = _MODELS["q95"].predict(dm) + anchor_gwl
     q05 = np.minimum(q05, q50)
     q95 = np.maximum(q95, q50)
 
@@ -267,11 +311,12 @@ def main():
 
     n_cpu = max(1, min((mp.cpu_count() or 4) // 2, 6))
     with mp.Pool(processes=n_cpu, initializer=_worker_init,
-                 initargs=(str(ALIGNED), str(TRAJ_CFG))) as pool:
+                 initargs=(str(ALIGNED), str(TRAJ_CFG), MODEL_KIND)) as pool:
         results = pool.map(_run_anchor, tasks, chunksize=8)
     recs = [r for batch in results if batch for r in batch]
     print(f"valid scores: {len(recs):,}", flush=True)
     df = pd.DataFrame(recs)
+    df.to_parquet(OUT / f"traj_backtest_rows{SUFFIX}.parquet", index=False)
 
     rows = []
     for h, hh in zip(HORIZONS_STEPS, HORIZONS_H):
@@ -285,7 +330,7 @@ def main():
         rows.append({"horizon_h": hh, "steps": h, **m, "rmse_clim": rmse_clim})
     metric_df = pd.DataFrame(rows)
     OUT.mkdir(parents=True, exist_ok=True)
-    metric_df.to_csv(OUT / "traj_backtest_metrics.csv", index=False)
+    metric_df.to_csv(OUT / f"traj_backtest_metrics{SUFFIX}.csv", index=False)
 
     g30 = df[df["horizon_h"] == 720].dropna(subset=["direct30"])
     if len(g30):
@@ -388,7 +433,9 @@ def main():
         prev_rec = json.loads(prev_path.read_text()).get("best_30d_rmse_rec")
 
     summary = {
-        "engine": "direct multi-horizon shared XGBoost, h feature (30_traj/31_traj)",
+        "engine": ("direct multi-horizon shared XGBoost, h feature (30_traj/31_traj)"
+                   if MODEL_KIND == "xgb" else
+                   "sequence GRU + horizon-conditioned quantile heads (34_train_traj_dl)"),
         "anchors_scored": int(len(df)),
         "stations_sampled": len(stations),
         "period": [str(BACKTEST_START.date()), str(LATEST_FRAME.date())],
@@ -419,7 +466,7 @@ def main():
         "calibration_file": str(CALIB),
         "elapsed_sec": round(time.time() - t0),
     }
-    (OUT / "traj_backtest_summary.json").write_text(json.dumps(summary, indent=2))
+    (OUT / f"traj_backtest_summary{SUFFIX}.json").write_text(json.dumps(summary, indent=2))
 
     print("\n=== direct trajectory vs baselines (RMSE m) ===")
     print(metric_df.round(4).to_string(index=False))

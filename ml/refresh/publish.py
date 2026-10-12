@@ -79,11 +79,13 @@ def read_runtime() -> dict:
 
 def set_runtime(feature_mode: str, validated: bool,
                 model_version: str | None = None) -> None:
-    atomic_write_json(RUNTIME_PATH, {
+    cur = read_runtime()  # preserve keys owned elsewhere (traj_backend, forward_backend, …)
+    cur.update({
         "feature_mode": feature_mode, "validated": validated,
         "model_version": model_version,
         "written_at": _utcnow_iso(),
     })
+    atomic_write_json(RUNTIME_PATH, cur)
 
 
 def publish_forecasts(forecasts: list[dict], *, engine: str, model_version: str | None,

@@ -1,0 +1,48 @@
+{
+  "model": "pooled daily GRU + 3 pinball quantile heads (3-seed ensemble)",
+  "incumbent": "pooled XGBoost (xgb_multihorizon.joblib)",
+  "period_start": "2026-01-01",
+  "widen_k": 1.1,
+  "persistence": {
+    "n": 4355,
+    "n_stations": 511,
+    "rmse": 2.1872163345288573,
+    "mae": 0.8393467278989666,
+    "bias": -0.0965345579793341,
+    "dir_acc": 0.0018369690011481056
+  },
+  "E0": {
+    "n": 4355,
+    "n_stations": 511,
+    "rmse": 2.206208066551708,
+    "mae": 0.8260234533438789,
+    "bias": -0.18133348719248793,
+    "dir_acc": 0.7106773823191733
+  },
+  "DL": {
+    "n": 4355,
+    "n_stations": 511,
+    "rmse": 2.0822530691686736,
+    "mae": 0.7507460232963382,
+    "bias": -0.029889258189906644,
+    "dir_acc": 0.7322617680826636,
+    "paired_vs_E0": {
+      "ratio": 0.9438153638986665,
+      "ci": [
+        0.8788733989010766,
+        0.971792657961395
+      ],
+      "beats": true
+    },
+    "paired_vs_persist": {
+      "ratio": 0.952010569917953,
+      "ci": [
+        0.9061918496212563,
+        0.9716631062285743
+      ],
+      "beats": true
+    }
+  },
+  "DL_coverage_90": 0.9249138920780712,
+  "DL_coverage_raw": 0.9081515499425947
+}

@@ -202,10 +202,10 @@ STT model or audio upload involved.
   `coverage_calibrated` = headline). The refresh promotion gate reads the held-out
   value, so coverage can no longer be satisfied by widening the band on the anchors
   being scored.
-* **ARIMA + pooled-XGB combination**: `baselines/arima_compare.py` is a matched-pair
+* **ARIMA + pooled-XGB combination**: `experiments/baselines/arima_compare.py` is a matched-pair
   *comparison* only — **no ensemble exists anywhere in the pipeline**. It now also
   persists per-origin predictions to `outputs/arima_vs_xgb_predictions.csv`, which
-  `baselines/arima_xgb_combine.py` consumes to quantify what a blend would add,
+  `experiments/baselines/arima_xgb_combine.py` consumes to quantify what a blend would add,
   including a leave-one-origin-out test so fitted weights are not trusted merely
   because they help in sample.
 * **Data hygiene**: |gwl|>500 sentinels dropped (`04`); daily-median GWL (`04`,
@@ -217,7 +217,7 @@ STT model or audio upload involved.
   2.290 m, +2.1%)** · ridge 2.456 (−7.3%) · climatology 3.572. The 6h grid tightens
   persistence itself from 2.395 → 2.290 m. Driver value at 30 d stays marginal —
   consistent with "drivers add ~0 at h≤7".
-* **Stride evaluation** (`validation/*` + `10_ablate.py`, run automatically by
+* **Stride evaluation** (`experiments/validation/*` + `10_ablate.py`, run automatically by
   `07_evaluate`): the dense 6h test anchors produce temporally correlated endpoint
   errors, not independent 30-day trajectory windows. The saved stride artifact
   reports **RMSE = 2.339 m** (vs persistence 2.382 m → +1.8%) for one 30-day endpoint
@@ -285,7 +285,7 @@ Protocol note: both comparisons use **daily means, 10 stations, 5 rolling 2026
 origins, 30-day horizon** — matched pairs where possible, and **not** comparable
 to the 6-hourly level RMSE tables above.
 
-### SARIMA — `baselines/arima_compare.py` → `outputs/arima_vs_xgb.{csv,md}`
+### SARIMA — `experiments/baselines/arima_compare.py` → `outputs/arima_vs_xgb.csv`, `outputs/arima.md`
 
 * `SARIMAX(1,1,1)×(1,0,1,7)` refit **per origin** on univariate daily history
   (≥180 clean days, gaps ≤3 d interpolated), forecast 30 d with 90% intervals;
@@ -366,7 +366,7 @@ showcase pages documented above do not expose a separate Verification page.
   pooled quantile forecasters (`reg:quantileerror`) with empirical coverage
   calibration; raw q05–q95 stride coverage 0.908 ≥ target 0.80 → widen factor k=1.0,
   median half-width ≈1.03 m (old uncalibrated ±1.96σ ≈ ±4.39 m was over-wide)
-* `validation/` — P0 honesty suite: `_spatial_folds.py` (block assignment),
+* `experiments/validation/` — P0 honesty suite: `_spatial_folds.py` (block assignment),
   `spatial_cv.py` (leave-block-out retraining → `spatial_cv_metrics.csv`,
   `spatial_cv_summary.json`, `spatial_folds.csv`), `overlap.py`
   (`honest_metrics.csv`, `station_summary.csv`, `overlap.json`), `residual_acf.py`

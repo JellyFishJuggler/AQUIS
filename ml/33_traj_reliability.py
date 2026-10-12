@@ -16,15 +16,18 @@ Output -> models/traj_reliability.json
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent
-METRICS = ROOT / "outputs" / "traj_backtest_metrics.csv"
-CALIB = ROOT / "models" / "traj_calibration.json"
-OUT = ROOT / "models" / "traj_reliability.json"
+MODEL_KIND = os.environ.get("TRAJ_MODEL", "xgb").lower()
+SUFFIX = "" if MODEL_KIND == "xgb" else "_dl"
+METRICS = ROOT / "outputs" / f"traj_backtest_metrics{SUFFIX}.csv"
+CALIB = ROOT / "models" / f"traj{SUFFIX}_calibration.json"
+OUT = ROOT / "models" / f"traj{SUFFIX}_reliability.json"
 
 COVERAGE_MIN = 0.80
 DIR_GOOD = 0.62

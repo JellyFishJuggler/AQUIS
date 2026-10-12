@@ -1,0 +1,137 @@
+{
+  "paradigm": "sequence GRU encoder + horizon-conditioned quantile heads (pinball)",
+  "target": "GWL(t+h*6h) - GWL(t); level = anchor + delta (anchor observed only)",
+  "feature_cols": [
+    "gwl",
+    "lag1",
+    "lag4",
+    "lag8",
+    "lag28",
+    "lag120",
+    "gwl_roll7_mean",
+    "gwl_roll7_std",
+    "gwl_roll30_mean",
+    "gwl_roll30_std",
+    "rain_1d",
+    "rain_7d",
+    "rain_30d",
+    "temp",
+    "temp_7d",
+    "humidity",
+    "humidity_7d",
+    "solar",
+    "wind_speed",
+    "pressure",
+    "river_level",
+    "canal_level",
+    "year",
+    "month_sin",
+    "month_cos",
+    "doy_sin",
+    "doy_cos",
+    "hour_sin",
+    "hour_cos",
+    "monsoon"
+  ],
+  "horizon_cols": [
+    "h",
+    "h_sin",
+    "h_cos"
+  ],
+  "quantiles": {
+    "q05": 0.05,
+    "q50": 0.5,
+    "q95": 0.95
+  },
+  "max_h": 120,
+  "window_w": 120,
+  "hidden": 64,
+  "train_anchors": 217853,
+  "val_anchors": 13743,
+  "best_val_rmse30": 0.9511452317237854,
+  "val_per_h_metrics": [
+    {
+      "h": 1,
+      "n": 13257,
+      "rmse": 0.18801593780517578,
+      "mae": 0.06968943029642105,
+      "bias": -0.01945955492556095,
+      "coverage": 0.9262276533152297,
+      "halfwidth_median": 0.15221324563026428
+    },
+    {
+      "h": 2,
+      "n": 12468,
+      "rmse": 0.20378141105175018,
+      "mae": 0.08103173226118088,
+      "bias": -0.019415829330682755,
+      "coverage": 0.9108918832210459,
+      "halfwidth_median": 0.15807923674583435
+    },
+    {
+      "h": 3,
+      "n": 11703,
+      "rmse": 0.2109326869249344,
+      "mae": 0.08734997361898422,
+      "bias": -0.020961793139576912,
+      "coverage": 0.9034435614799624,
+      "halfwidth_median": 0.1648365557193756
+    },
+    {
+      "h": 4,
+      "n": 10943,
+      "rmse": 0.21186889708042145,
+      "mae": 0.08752799779176712,
+      "bias": -0.022505294531583786,
+      "coverage": 0.9080690852599835,
+      "halfwidth_median": 0.1727040708065033
+    },
+    {
+      "h": 8,
+      "n": 8203,
+      "rmse": 0.2598345875740051,
+      "mae": 0.11954887211322784,
+      "bias": -0.0267543476074934,
+      "coverage": 0.8813848591978545,
+      "halfwidth_median": 0.20481431484222412
+    },
+    {
+      "h": 12,
+      "n": 5789,
+      "rmse": 0.32776495814323425,
+      "mae": 0.16614271700382233,
+      "bias": -0.030844172462821007,
+      "coverage": 0.8433235446536534,
+      "halfwidth_median": 0.23747855424880981
+    },
+    {
+      "h": 28,
+      "n": 3185,
+      "rmse": 0.35164931416511536,
+      "mae": 0.20369268953800201,
+      "bias": -0.018137766048312187,
+      "coverage": 0.8913657770800628,
+      "halfwidth_median": 0.38643479347229004
+    },
+    {
+      "h": 60,
+      "n": 1915,
+      "rmse": 0.5422642230987549,
+      "mae": 0.3197227120399475,
+      "bias": 0.09313540160655975,
+      "coverage": 0.8689295039164491,
+      "halfwidth_median": 0.5203232765197754
+    },
+    {
+      "h": 120,
+      "n": 1608,
+      "rmse": 0.9511452317237854,
+      "mae": 0.46198222041130066,
+      "bias": 0.1036464050412178,
+      "coverage": 0.9427860696517413,
+      "halfwidth_median": 1.0049898624420166
+    }
+  ],
+  "smoke": false,
+  "trained_at": "2026-10-11 19:26:09"
+}

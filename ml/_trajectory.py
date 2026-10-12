@@ -42,13 +42,34 @@ FORECAST_STEPS = 64          # Open-Meteo 16 forecast days on the 6h grid
 STEP_H = 6
 
 _CACHE: dict = {}
+_SIG = None
+
+
+def _signature():
+    """Mtime signature of every artifact this engine caches. A reloaded model,
+    rebuilt calibration/reliability or refreshed aligned table invalidates the
+    cache instead of serving the process-lifetime copy."""
+    paths = [TRAJ_CFG, CALIB, RELI, ALIGNED, OM, OM_META, RUNTIME]
+    paths += [ROOT / "models" / f"traj_xgb_{n}.json" for n in ("q05", "q50", "q95")]
+    parts = []
+    for p in paths:
+        try:
+            parts.append((p.name, p.stat().st_mtime_ns))
+        except OSError:
+            parts.append((p.name, None))
+    return tuple(parts)
 
 
 def _load():
-    if _CACHE:
+    global _SIG
+    sig = _signature()
+    if _CACHE and sig == _SIG:
         return _CACHE
     import xgboost as xgb
-    from _model import forward_forecast
+    try:
+        from _model import forward_forecast
+    except Exception:  # noqa: BLE001 - _model imports streamlit; optional here
+        forward_forecast = None
     cfg = json.loads(TRAJ_CFG.read_text())
     fnames = list(cfg["feature_cols"])
     models = {n: xgb.Booster(model_file=str(ROOT / "models" / f"traj_xgb_{n}.json"))
@@ -82,11 +103,13 @@ def _load():
         clim_frame = pd.read_parquet(CLIM) if CLIM.exists() else None
         rain_clim_frame = pd.read_parquet(RAIN_CLIM) if RAIN_CLIM.exists() else None
 
+    _CACHE.clear()
     _CACHE.update(models=models, fnames=fnames, cal=cal, rel=rel,
                   districts_om=districts_om, clim_stations=clim_stations,
                   feature_mode=feature_mode, om_frame=om_frame,
                   clim_frame=clim_frame, rain_clim_frame=rain_clim_frame,
                   tbl=tbl, forward_forecast=forward_forecast)
+    _SIG = sig
     return _CACHE
 
 
@@ -261,7 +284,7 @@ def trajectory_forecast(station: str) -> dict:
             "driver_source": dsrc,
         })
 
-    ff = ffwd(station)
+    ff = ffwd(station) if ffwd else None
     endpoint = None
     if ff:
         endpoint = {"level": ff.get("q50_level"), "q05": ff.get("q05_level"),

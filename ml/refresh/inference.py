@@ -11,17 +11,20 @@ bucket / fleet-global anchor), then publishes:
 
 from __future__ import annotations
 
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
 
 import _trajectory as traj
+from _traj_dispatch import active_trajectory_forecast, traj_backend
 from refresh import publish as pubmod
 from refresh.config import REFRESH_DIR
 from refresh.state import RefreshState, refresh_lock
 
 LAST_ANCHORS = REFRESH_DIR / "last_anchors.parquet"
+DL_CFG = Path(__file__).resolve().parents[1] / "models" / "traj_dl_config.json"
 
 
 def _now_iso() -> str:
@@ -30,6 +33,11 @@ def _now_iso() -> str:
 
 def _load_engine():
     traj._CACHE.clear()   # the scheduler is long-running: never reuse stale tables/models
+    try:                  # the DL engine caches its torch model + table the same way
+        import _dl
+        _dl.clear_caches()
+    except Exception:     # noqa: BLE001 - DL optional / not installed
+        pass
     return traj._load()
 
 
@@ -81,13 +89,19 @@ def refresh_forecasts(*, cfg, state: RefreshState, stations=None, max_stations: 
 
     forecasts, errors = [], {}
     unchanged = 0
+    backend = traj_backend()
+    if backend == "dl" and DL_CFG.exists():
+        try:
+            fnames_model = json.loads(DL_CFG.read_text()).get("feature_cols", fnames_model)
+        except Exception:  # noqa: BLE001
+            pass
     for station in stations:
         anchor = cur.get(station)
         if skip_unchanged and publish and not dry_run:
             if station in prev.index and prev.loc[station] == anchor:
                 unchanged += 1
                 continue
-        out = traj.trajectory_forecast(station)
+        out = active_trajectory_forecast(station)
         if "error" in out:
             errors[station] = out["error"]
         else:
@@ -107,12 +121,16 @@ def refresh_forecasts(*, cfg, state: RefreshState, stations=None, max_stations: 
                     f"publish aborted: only {len(forecasts)} fresh forecasts "
                     f"(< min_fresh_stations={cfg.min_fresh_stations})")
         if not no_new_source:
-            tcfg = traj.TRAJ_CFG
-            import json
-            cfgj = json.loads(tcfg.read_text()) if tcfg.exists() else {}
+            if backend == "dl":
+                cfgj = json.loads(DL_CFG.read_text()) if DL_CFG.exists() else {}
+                engine = "trajectory-v2-dl"
+            else:
+                tcfg = traj.TRAJ_CFG
+                cfgj = json.loads(tcfg.read_text()) if tcfg.exists() else {}
+                engine = "trajectory-v2"
             model_version = cfgj.get("version") or str(cfgj.get("trained_at", ""))
             meta = pubmod.publish_forecasts(
-                forecasts, engine="trajectory-v2", model_version=model_version,
+                forecasts, engine=engine, model_version=model_version,
                 model_trained_at=cfgj.get("trained_at"), source_report=source_report,
                 keep_staging=True)
             pubmod.update_freshness(meta, cfg.stale_after_hours,
