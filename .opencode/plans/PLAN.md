@@ -3,7 +3,7 @@
 > **SUPERSEDED (2026-09):** this plan describes the deleted per-station forecasting
 > architecture. The current `ml/` is the merged **pooled** module (600 stations,
 > single 30-day horizon, delta target, empirical quantile calibration) — see
-> `ml/README.md`, `ml/MODEL_CARD.md`, and the bold "Key findings" in `Readme.md`.
+> `ml/README.md`, `docs/ml.md` (incl. the model card in §5.1.1/§6.5), and the bold "Key findings" in `Readme.md`.
 > References to `ml.training.*`, `ml.scripts.*`, `ml/models/xgboost_quantile.py`
 > below are historical only.
 

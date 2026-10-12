@@ -1,14 +1,18 @@
-# ml — pooled GWL forecasting + trajectory v2
+# ml — pooled GWL forecasting + trajectory v2 (XGBoost + quantile GRU)
 
 > This is the **single** ML module (post-merge 2026-09). Big data dirs
 > (`data/processed`, `data/features*`, `outputs/*.parquet`, `venv/`) are git-ignored
 > and regenerable from `data/processed/common.parquet` + the numbered pipeline.
-> Models are committed as weights (`models/*.joblib`, `models/traj_*.json`).
+> Models are committed as weights (`models/*.joblib`, `models/traj_*.json`) plus
+> git-ignored DL checkpoints (`models/*_dl.pt`) copied out-of-band.
 > The old per-station `ml/` (Flask API, `agent/`, `artifacts/`, `xgboost_quantile.py`)
 > was merged into this module and deleted — see `merge_later` items in the merge spec.
-> The forecast surface is the **trajectory v2** engine (`_trajectory.py`) — see
-> [Trajectory v2](#trajectory-v2) below; the pooled direct-30d model remains the
-> backend +30 d benchmark used by the assistant, the fleet scan and the ML SDK.
+> Both forecast surfaces — the **trajectory v2** engine (`_trajectory.py`, XGBoost;
+> `_dl.py`, GRU) and the pooled direct-30d model — are now **served by quantile GRU**
+> models with XGBoost as an automatic fallback/benchmark. See
+> [Trajectory v2](#trajectory-v2) and
+> [Algorithms evaluated (XGBoost / GRU / SARIMA / GPR)](#algorithms-evaluated-xgboost--gru--sarima--gpr) below.
+
 
 ## Setup & selection rule
 
@@ -236,30 +240,64 @@ STT model or audio upload involved.
   marginal value; river/canal (−0.005) and GWL lags (≈0) are neutral at 30 d given
   the anchor + calendar — all deltas are within overlap-adjusted noise (~±0.05 m).
 
+### Deep-learning models (quantile GRU) — now the served engines
+
+Two pooled PyTorch models (sequence GRU encoder + pinball quantile heads) replace
+the XGBoost incumbents **on the served path** (`_dl.py`; dispatched by
+`_model.forward_forecast` / `_traj_dispatch`; backend flags in
+`data/refresh/runtime.json`). XGBoost is retained as an automatic fallback.
+
+* **Surface (a) — trajectory DL** (`34_train_traj_dl.py` → `models/traj_dl.pt`
+  + `traj_dl_config.json`): anchor-centric sequence GRU (hidden 64, AdamW lr 2e-3,
+  up to 40 epochs, plateau schedule) over the last 120 observed 6-h rows on the
+  station's own axis (left-zero-padded + masked), horizon-conditioned heads for
+  q05/q50/q95 and horizon `h ∈ 1..120`. Same frames/target/split as
+  `31_train_traj.py`, so the backtest is apples-to-apples. 30 features (`NUM_COLS`).
+* **Surface (b) — pooled 30-day DL** (`36_train_pooled_dl.py` → `models/pooled_dl.pt`
+  + `pooled_dl_config.json`): daily GRU (hidden 32, window 60, up to 60 epochs,
+  3-seed ensemble {42,840,2056}) over a 39-column dense+seasonal frame (incl.
+  hydrology slopes/devs, `rain_api*`, `*_obs*`), three pinball heads, z-scored
+  inputs, `widen_k = 1.1` calibration. Target = the same `GWL(t+30d) − GWL(t)`
+  delta as `06_train`'s pooled XGB.
+* **Evidence** — see [Algorithms evaluated](#algorithms-evaluated-xgboost--gru--sarima--gpr).
+  `35_traj_paired_ci.py` (DL-vs-XGB per-horizon station bootstrap) and
+  `37_backtest_pooled_dl.py` (`outputs/pooled_dl_eval.json`) produce the honest
+  numbers; `test_model_dl_parity.py`, `test_trajectory_backend_parity.py`,
+  `test_trajectory_dispatch.py` guard serving parity.
+
 ## Trajectory v2 — genuine 6-hourly global forecast
-The Forecast page's model (`_trajectory.py`). A **direct multi-horizon shared XGBoost**
-on the 6 h grid: horizon `h ∈ 1..120` is an input feature, every step is a real model
-output (no recursion, no interpolation), `q05 ≤ q50 ≤ q95` at every horizon. Spec +
-full results: [`../docs/ml.md`](../docs/ml.md).
+The Forecast page's model. Two interchangeable engines on the same frame/target/split:
+a **direct multi-horizon shared XGBoost** (`_trajectory.py`) and a **sequence GRU
+with horizon-conditioned quantile heads** (`_dl.py` → `34_train_traj_dl.py`). In both,
+horizon `h ∈ 1..120` is modelled explicitly, every step is a real model output (no
+recursion, no interpolation), `q05 ≤ q50 ≤ q95` at every horizon. **The GRU is the
+served engine**, with XGBoost as the automatic fallback/benchmark. Spec + full
+results: [`../docs/ml.md`](../docs/ml.md).
 
 | Step | Script | Output |
 |---|---|---|
 | Datasets | `30_traj_datasets.py` | `data/features_traj/{train,val}.parquet` + `prep_traj.json` (6.53M rows; targets by exact-time lookup, never positional shift across grid gaps) |
-| Models | `31_train_traj.py` | `models/traj_xgb_{q05,q50,q95}.json` + `traj_config.json` (33 features incl. `h,h_sin,h_cos`) |
-| Honest backtest | `32_backtest_traj.py [n_stations]` | `outputs/traj_backtest_metrics.csv`, `traj_backtest_summary.json`, `models/traj_calibration.json` |
+| Models (XGBoost) | `31_train_traj.py` | `models/traj_xgb_{q05,q50,q95}.json` + `traj_config.json` (33 features incl. `h,h_sin,h_cos`) |
+| Models (GRU) | `34_train_traj_dl.py` | `models/traj_dl.pt` + `traj_dl_config.json` (30 `NUM_COLS`, hidden 64, horizon-cond. quantile heads) |
+| Paired CI | `35_traj_paired_ci.py` | `outputs/traj_paired_ci_dl_vs_xgb.json` (per-horizon DL-vs-XGB station bootstrap) |
+| Honest backtest | `32_backtest_traj.py [n_stations]` (`TRAJ_MODEL=xgb\|dl`) | `outputs/traj_backtest_metrics{,_dl}.csv`, `traj_backtest_summary{,_dl}.json`, `models/traj{,_dl}_calibration.json` |
 | Reliability tables | `33_traj_reliability.py` | `models/traj_reliability.json` (bucket rules + evidence weights) |
 | Weather | `20_openmeteo_fetch.py` | `data/cfs/openmeteo_weather_daily.parquet` (37 districts, 365 d history + 16 d forecast) |
 | River | `18_cwc_river_forecast.py` | `data/cfs/river_forecast_cwc.parquet` (CWC 3-day forecasts, per district) |
 
 - **Backtest artifact (2026):** anchors are every 14 d and metrics score point
   targets at each horizon; the 30-day forecasts from adjacent anchors are not
-  non-overlapping trajectory windows. The saved artifact reports 73,881 anchors
-  and 30-d RMSE **trajectory 2.106 < direct-30d 2.132 < persistence 2.151**,
-  `promote_trajectory = True`. These are historical artifact values: training-target
-  purging has since changed in source, but this backtest has not been regenerated.
-  The saved calibration reaches **0.90 coverage at every horizon** by fitting its
-  widening on the same anchors it reports (`traj_calibration.json`, `s ∈ [0.80, 1.28]`),
-  so that coverage is in-sample, not independent validation.
+  non-overlapping trajectory windows. The saved **XGB** artifact reports 73,881
+  anchors and 30-d RMSE **trajectory 2.106 < direct-30d 2.132 < persistence 2.151**,
+  `promote_trajectory = True` (historical values; training-target purging has since
+  changed in source, not regenerated). The saved **DL** artifact
+  (`traj_backtest_summary_dl.json`, 19,406 anchors / 150 stations, 2025-10 → 2026-08)
+  reports 30-d RMSE **1.802 vs persistence 1.907**, dir-acc 0.725,
+  coverage_calibrated 0.894 (fit-half 0.901, disjoint held-out split), but
+  `promote_trajectory = false` because the short-horizon gates do not clear and the
+  win is 2026-only. The paired bootstrap (`traj_paired_ci_dl_vs_xgb.json`, 2000
+  resamples) shows DL **beats XGB at h48/h360/h720** and ties or slightly loses at
+  h6/h12 (`dl_beats_xgb_30d = true`, `all_horizons = false`).
 - **Confidence:** per-point HIGH / DIRECTIONAL / LOW from **weighted evidence**
   (0.15 interval quality + 0.20 vs-persistence + 0.20 direction + 0.10 width +
   0.15 station integrity + 0.10 driver availability + 0.05 anchor OOD + 0.05 stability),
@@ -271,40 +309,76 @@ full results: [`../docs/ml.md`](../docs/ml.md).
   q50 + q05/q95 bright uncertainty band (no dot markers), direction banner, 6 metrics
   (anchor/+24h/+7d/+30d/change/confidence).
   The page references only the trajectory forecast.
-- **Gate:** `gate_check.py` defines 12 checks — frozen round-1 baselines + trajectory promotion
-  and `+30 d` calibrated coverage = 0.90 (latest run: **GATE PASS 10/10**; the 2
-  recursive-model checks skip since the `backtest_6h_*` artifacts were removed).
+- **Gate:** `gate_check.py` defines 13 checks — frozen round-1 baselines + trajectory promotion
+  and `+30 d` calibrated coverage (latest run: **GATE PASS 13/13**; the recursive-model
+  checks skip since the `backtest_6h_*` artifacts were removed).
 
-## Alternative algorithms evaluated (SARIMA + GPR)
+## Algorithms evaluated (XGBoost / GRU / SARIMA / GPR)
 
-Beyond the in-pipeline baselines (ridge / persistence / climatology in
-`07_evaluate.py`), two external algorithm families were benchmarked against the
-production XGBoost stack. Both were **rejected**; results kept for provenance.
+Four families were benchmarked head-to-head. Two are in production — **XGBoost**
+(incumbent/fallback) and **quantile GRU** (now served on both surfaces) — and two
+were rejected (**SARIMA**, **GPR**). Results kept for provenance.
 
-Protocol note: both comparisons use **daily means, 10 stations, 5 rolling 2026
-origins, 30-day horizon** — matched pairs where possible, and **not** comparable
-to the 6-hourly level RMSE tables above.
+| Family | Where tested | Result | Verdict |
+|---|---|---|---|
+| **XGBoost** | surfaces (a)+(b) | trajectory v2 30-d RMSE **2.106 m** (< direct-30d 2.132 < persistence 2.151); pooled 2026 test **2.242 m** (+2.1% vs persistence) | incumbent / fallback |
+| **Quantile GRU** | surfaces (a)+(b) | (b) 2026 RMSE **2.082 m**, beats E0-XGB ratio **0.944 [0.879, 0.972]** / persistence 0.952; (a) beats XGB at h360 0.985, **h720 0.990** [0.972, 0.996], ties/loses at h≤12 | **served on both surfaces** |
+| **SARIMA** | daily matched-pair (10 st × 5 origins) | RMSE 0.637 vs XGB 0.617, MAE 0.335 vs 0.402, PICP90 **0.726 vs 0.968**; blend beat better single in 0/27 folds | rejected / dropped |
+| **GPR** | per-station, time-only feature | pre-2026 → 2026: Tindwara RMSE **7.82 / R² −401**, Banda 2.13 / −7.6; PICP 1.00; O(n³) | rejected (interpolation only) |
+
+### Quantile GRU — the production engine (`34_train_traj_dl.py`, `36_train_pooled_dl.py`)
+
+* **Surface (b) pooled 30-day** — honest non-overlapping 2026 stride
+  (`37_backtest_pooled_dl.py` → `outputs/pooled_dl_eval.json`; n=4,355, 511
+  stations): persistence RMSE 2.187 · E0-XGB 2.206 · **DL 2.082**. Paired
+  station-bootstrap: DL vs E0 ratio **0.944 [0.879, 0.972]** and DL vs persistence
+  **0.952 [0.906, 0.972]** — both beat. DL bias −0.030, direction-acc 0.732,
+  coverage_90 0.925 (raw 0.908). This is the cleanest DL win.
+* **Surface (a) trajectory** — 2026 anchor backtest (`TRAJ_MODEL=dl 32_backtest_traj.py`
+  → `traj_backtest_summary_dl.json`; 19,406 anchors, 150 stations, 2025-10 → 2026-08):
+  30-d RMSE **1.802 vs persistence 1.907** (direct-30d 1.198 in this artifact), dir
+  0.725, coverage_calibrated 0.894 (disjoint fit-half 0.901). `promote_trajectory = false`.
+* **Per-horizon DL-vs-XGB** (`35_traj_paired_ci.py` → `traj_paired_ci_dl_vs_xgb.json`,
+  2,000 station-bootstrap resamples): DL is **not** better at h6 (ratio 1.012) or
+  h12 (1.003); it wins from ~h48 (0.962 [0.957, 0.998]), h360 (0.985), and the
+  30-day endpoint h720 (**0.990 [0.972, 0.996]**). `dl_beats_xgb_30d = true`,
+  `dl_beats_xgb_all_horizons = false`.
+* **Training config:** (a) `models/traj_dl_config.json` — sequence GRU hidden 64,
+  30 `NUM_COLS`, 120-step 6-h window, horizon-conditioned quantile heads.
+  (b) `models/pooled_dl_config.json` — daily GRU hidden 32, window 60, 39-col
+  dense+seasonal frame, 3-seed ensemble, `widen_k = 1.1`.
+* **Serving/parity:** `_dl.py` (`forward_forecast`, `trajectory_forecast`,
+  `preview`, `clear_caches`); guarded by `test_model_dl_parity.py`,
+  `test_trajectory_backend_parity.py`, `test_trajectory_dispatch.py`.
+* **Caveat:** the 30-day DL win is a 2026-only signal and short horizons remain
+  XGB's edge, so the promotion gate stays conservative.
 
 ### SARIMA — `experiments/baselines/arima_compare.py` → `outputs/arima_vs_xgb.csv`, `outputs/arima.md`
 
+* Protocol: **daily means, 10 stations, 5 rolling 2026 origins, 30-day horizon**
+  — matched pairs where possible, and **not** comparable to the 6-hourly level
+  RMSE tables above.
 * `SARIMAX(1,1,1)×(1,0,1,7)` refit **per origin** on univariate daily history
   (≥180 clean days, gaps ≤3 d interpolated), forecast 30 d with 90% intervals;
-  matched against the frozen trajectory XGB on the same origins
-  (10 stations × 5 origins = 150 forecasts/model).
-* **Overall: XGB wins** — RMSE 0.885 vs 1.947, MAE 0.493 vs 0.502,
-  PICP90 0.964 vs 0.697 (ARIMA intervals under-cover).
-* Per-station: ARIMA wins on stable low-variance stations (Tindwara RMSE 0.028
-  vs XGB 0.056) but collapses on volatile ones (Banda 5.91 vs 1.97); XGB's
-  advantage is coverage + robustness, not every station.
+  matched against the frozen trajectory XGB on the same origins.
+* Row-weighted all-days aggregate: ARIMA RMSE **0.637**, MAE **0.335**, PICP90
+  **0.726**, width 0.888 · XGB RMSE 0.617, MAE 0.402, PICP90 0.968, width 2.503.
+  XGB wins on RMSE + coverage; SARIMA on MAE only.
+* Per-station: ARIMA wins on stable low-variance stations (Tindwara RMSE 0.028)
+  but collapses on volatile ones (Banda 5.91); XGB's advantage is coverage +
+  robustness, not every station.
+* **Blend gives nothing out of sample:** `arima_xgb_combine.py`
+  leave-one-origin-out — mean blend RMSE 0.501 vs best single 0.401, and the blend
+  beat the better single in **0/27 folds**. **No ensemble exists in the pipeline**;
+  the module was removed (kept only as `outputs/arima.md` + CSVs).
 
-### GPR — commit `cd07868`, harness in repo-root `ml-gpr/`
+### GPR — commit `cd07868`, harness once in repo-root `ml-gpr/`
 
 * Per-station **Gaussian Process Regression** with a single `time_hours`
   feature (periodic×RBF kernel), trained batch over all stations
   (`ml/training/train_gpr.py` in that commit).
 * In-sample fit is fine (train R² ≈ 0.95), but as a frozen forecaster it
-  **extrapolates catastrophically** — pre-2026 train → 2026 daily means on 2
-  comparison stations:
+  **extrapolates catastrophically** — pre-2026 train → 2026 daily means:
 
   | Station | GPR RMSE / R² | SARIMA RMSE | XGB RMSE |
   |---|---:|---:|---:|
@@ -315,14 +389,9 @@ to the 6-hourly level RMSE tables above.
   training span; predictive variance inflates instead (PICP90 = 1.00 — bands
   cover everything, uninformative). Fit is **O(n³)** — ~85 s at 1.6k rows,
   ~6 min at 3k rows/station (`n_restarts=0`), so no path to 600 pooled
-  stations either.
+  stations either. Rejected.
 * Numbers: `ml-gpr/artifacts/gpr_vs_arima_xgb.json`,
-  `ml-gpr/artifacts/gpr_metrics.json`.
-
-**Verdict:** pooled XGBoost (trajectory v2) stays the production model — it wins
-the matched daily-mean protocol overall and is the only candidate that scales;
-SARIMA is a respectable univariate baseline on stable stations; GPR as designed
-in `cd07868` is unsuitable for forecasting (interpolation only).
+  `ml-gpr/artifacts/gpr_metrics.json` (harness removed with `ml-gpr/`).
 
 ## Refresh pipeline (`refresh/`)
 
@@ -339,7 +408,7 @@ re-arming ~24 h model updates:
 | `refresh/schedule.py` | `next_grid_due()` — next fixed local-time slot (with rolling-interval fallback) |
 | `refresh/sources.py` | NWIC incremental fetch (`13_refresh_nwic`, per-station max), Open-Meteo, CWC |
 | `refresh/features.py` | align chain + climatology rebuild, backup/restore guarded |
-| `refresh/inference.py` | per-station `_trajectory.trajectory_forecast` for changed anchors, publish-or-abort gate |
+| `refresh/inference.py` | per-station active trajectory forecast for changed anchors (GRU via `_dl`, XGB fallback), publish-or-abort gate |
 | `refresh/publish.py` | staged per-station JSON + `forecasts.parquet` + `meta.json` last (commit point), freshness verdict (`data_status` fresh/stale/unknown) |
 | `refresh/model_update.py` | drift-gated retrain (trajectory v2 + reliability) — 24 h cadence, memory-bounded |
 | `refresh/verification.py` | score archived anchors against realised readings, sign-accuracy ledger + drift detection |
@@ -362,6 +431,13 @@ showcase pages documented above do not expose a separate Verification page.
 * `outputs/predictions_2026.parquet` — test predictions for the app (incl. `window_id`
   + `stride` for overlap-aware evaluation, and calibrated `q05_lvl`/`q95_lvl` test bands)
 * `models/xgb_multihorizon.joblib`, `linear_multihorizon.joblib`, `feature_config.json`
+* `models/pooled_dl.pt` + `pooled_dl_config.json`, `models/traj_dl.pt` +
+  `traj_dl_config.json` + `traj_dl_calibration.json` + `traj_dl_reliability.json` —
+  the DL (quantile GRU) engines now served on both surfaces (`*.pt` are git-ignored;
+  configs are committed)
+* `outputs/pooled_dl_eval.json` — surface (b) honest 2026-stride DL-vs-E0-XGB-vs-persistence
+* `outputs/traj_paired_ci_dl_vs_xgb.json` — surface (a) per-horizon DL-vs-XGB paired bootstrap CI
+* `outputs/traj_backtest_metrics_dl.csv` + `traj_backtest_summary_dl.json` + `traj_backtest_rows_dl.parquet` — surface (a) DL backtest artifacts
 * `models/xgb_q{05,50,95}.joblib` + `quantile_calibration.json` — `11_quantile.py`:
   pooled quantile forecasters (`reg:quantileerror`) with empirical coverage
   calibration; raw q05–q95 stride coverage 0.908 ≥ target 0.80 → widen factor k=1.0,
@@ -389,8 +465,6 @@ showcase pages documented above do not expose a separate Verification page.
 * `data/aligned/table_6h.parquet` — **6h station×slot table (2.99M rows / 600 stations)**,
   consumed by `06_features`
 * `data/soil/soil_stations.csv` — ISRIC SoilGrids 2.0 per-station texture (background fetch)
-* `MODEL_CARD.md` — lifecycle card for the pooled model (features, training, honest
-  performance, limitations)
 * `tests/` — forecast-validation suite (stdlib `unittest`, data-gated, no pytest).
 * `data/meta/` — association CSVs, manifest, probe results, per-station flags
 * `outputs/traj_backtest_metrics.csv` + `traj_backtest_summary.json` — saved trajectory v2

@@ -169,7 +169,7 @@ kernel is warmed up before the anchor. A caller whose `fnames` omit these column
 `df[base_cols + h_cols]` selection keeps unrequested keys invisible.
 
 > **`rain_api*` has a train/serve definition mismatch — read
-> [`ml-hydro-train-serve.md`](ml-hydro-train-serve.md) before training on it.**
+> Part 5 (rain_api train/serve mismatch) before training on it.**
 > In batch, `rain_api*` is built from rainfall known **at the anchor** and is
 > horizon-invariant. In serving, the recursion is **advanced with future
 > forecast/climatology rainfall**, so the value varies with *h*. A model fitted on
@@ -379,6 +379,40 @@ gwl 2,279,048 rows/600 st · rainfall 42,745/50 st/8 dist · temperature
 107,950/5 · humidity 118,947/6 · solar 109,555/6 · wind_speed 122,527/6 ·
 pressure 110,949/4 · river_level 295,302/6/2 · canal_level 88,089/17/1.
 
+### 5.1.1 Coverage scope & authoritative sources (model card)
+
+**Scope is determined by the telemetry archive, not by choice.** The model consumes
+*only* the NWIC/NWDP real-time feed — `GWL Telemetry (Six Hourly), Uttar Pradesh
+Ground Water Department` (UPGW). That feed wires **1,353 stations across 34 of UP's
+~75 districts**. UP's remaining groundwater monitoring is **manual/quarterly** and
+surfaces as *separate* datasets this pipeline cannot forecast from in near-real-time.
+
+Coverage facts (all verified against the local archive):
+
+- **1,353 stations / 34 districts** = the full extent of the 6-hourly telemetry
+  network (2021-01-01 → 2026-09-05, ~5.3M raw records in
+  `data/processed/common.parquet`).
+- **600 stations / 29 districts** = the subset still "live" in 2026 (`01_select.py`:
+  ≥8 of 9 months Jan–Sep 2026 with a reading, first 2026 record ≤ Jan 15, last record
+  ≥ Aug 1). 5 districts' stations all went stale.
+- **34 ≠ scope target**: districts absent from the archive were probed and return
+  `total=0` — e.g. Allahabad/Prayagraj, Amethi, Amroha, Sambhal, G.B. Nagar — even
+  under rename aliases (`ml/data/raw/nwic.py`).
+
+Source material (why most UP groundwater monitoring is manual):
+
+| Topic | Link |
+|---|---|
+| UPGW datasets on NWDP portal (Manual-Quarterly vs Telemetry-Hourly vs Telemetry-Six-Hourly) | https://www.nwdp.nwic.gov.in/organization/upgw |
+| UPGW "Ground Water Level (Manual - Quarterly)" dataset page (1991–2020) | https://nwdp.nwic.gov.in/dataset/ground-water-level-manual-quarterly-upgw |
+| CGWB monitoring-network page (4×/year manual nationwide; DWLR telemetry is the exception) | https://cgwb.gov.in/en/ground-water-level-monitoring |
+| CGWB Guidelines on High-Frequency GW Data (2026): ~84k wells nation-wide, ~26k CGWB (62% dug wells, manual mode), ~39k state manual stations | https://cgwb.gov.in/sites/default/files/2026-02/final_guidelines_on_high_frequency_gw_data.pdf |
+| CGWB UP Ground Water Year Book 2022–23 (1,007 UP monitoring wells, 4×/yr) | https://cgwb.gov.in/cgwbpnm/public/uploads/documents/17032384351875462524file.pdf |
+
+**Implication:** a station without a live 2026 telemetry stream is not forecast-able
+here; forecasting scope is UP-GWL *telemetry* only, while the backend's ingestion
+scope is NWDP-telemetry countrywide + CGWB assessment Excels.
+
 ### 5.2 Spatial association
 - **Rainfall:** IDW (`1/d²`) over 3 nearest gauges within `RAIN_RADIUS_KM=150`.
 - **Weather/river/canal:** nearest gauge within radius (`WEATHER_RADIUS_KM=150`,
@@ -500,11 +534,65 @@ not spatial leakage, is the binding constraint. Residual: Moran's I = 0.042
 (raw 0.9003), `half_width_median_m 1.025`, `half_width_p90_m 2.575`,
 `half_width_mean_m 1.376`. Anchor basis: `level = today's GWL + quantile(delta 30d)`.
 
-**Regression gate (`ml/gate_check.py`, 12 checks; latest run GATE PASS 10/10):**
+**Regression gate (`ml/gate_check.py`, 13 checks; latest run GATE PASS 13/13):**
 honest stride RMSE 2.339 · spatial CV mean 1.973 / median 1.819 ·
 coverage 0.908 · half-width median 1.025 / p90 2.575 · eff-N 6,635 · lag1 ACF 0.858 ·
 trajectory 30d 2.106 (promoted) · +30d calibrated coverage 0.90.
-(The 2 recursive-model checks skip — the `backtest_6h_*` artifacts were removed.)
+(the recursive-model checks skip — the `backtest_6h_*` artifacts were removed.)
+
+### 6.5 Deep-learning models (quantile GRU) — the served engines
+
+Both surfaces are now **served by pooled PyTorch quantile-GRU models** (`_dl.py`,
+dispatched via `_model.forward_forecast` / `_traj_dispatch.active_trajectory_forecast`;
+backend flags in `data/refresh/runtime.json`). XGBoost stays as an automatic
+fallback/benchmark. Architecture = sequence GRU encoder + N pinball quantile heads
+(q05/q50/q95), inputs z-scored, outputs sorted so `q05 ≤ q50 ≤ q95`.
+
+**Surface (a) — trajectory DL** (`34_train_traj_dl.py` → `models/traj_dl.pt`,
+`traj_dl_config.json`):
+- Anchor-centric: one history window per `(station, t)` anchor is encoded **once**,
+  then each observed `(h, delta)` pair is scored by horizon-conditioned heads (no
+  `5.9M × 120` sequence matrix materialised).
+- Sequence = last **120** observed 6-h rows on the station's own axis, left-zero-padded
+  + masked when history < 120. Features = the 30 `NUM_COLS`.
+- `nn.GRU(hidden=64)` + LayerNorm + horizon-conditioned MLP heads; AdamW lr 2e-3,
+  weight-decay 1e-4, ReduceLROnPlateau (factor 0.5, patience 2), up to 40 epochs.
+- Same frames/target/split as `31_train_traj.py` (inherits the per-anchor+horizon
+  target-time purge).
+
+**Surface (b) — pooled 30-day DL** (`36_train_pooled_dl.py` → `models/pooled_dl.pt`,
+`pooled_dl_config.json`):
+- Daily GRU (last 6-h slot per station-day), `window_w=60`, `hidden=32`, 39-col
+  dense+seasonal frame (GWL slopes/devs, `rain_api*`, `*_obs*`), 3 quantile heads,
+  `MAX_EPOCHS 60 / patience 8 / batch 2048 / lr 1e-3`, **3-seed ensemble**
+  `{42, 840, 2056}` (seed-mean), `widen_k = 1.1`.
+- Split identical to `06_train` (train < 2025-10-01, val Oct–Dec 2025, test 2026).
+
+**Honest evidence:**
+
+| Surface | Artifact | Result |
+|---|---|---|
+| (b) pooled | `outputs/pooled_dl_eval.json` | 2026 non-overlap stride, n=4,355/511 st: persistence 2.187 · E0-XGB 2.206 · **DL 2.082**; paired ratio vs E0 **0.944 [0.879, 0.972]**, vs persistence 0.952 [0.906, 0.972]; bias −0.030, dir-acc 0.732, coverage_90 0.925 (raw 0.908) |
+| (a) trajectory | `outputs/traj_backtest_summary_dl.json` | 19,406 anchors / 150 st, 2025-10 → 2026-08: 30-d RMSE **1.802** vs persistence 1.907 (direct-30d 1.198); dir 0.725; coverage_calibrated 0.894 (fit-half 0.901); `promote_trajectory = false` |
+| (a) per-horizon | `outputs/traj_paired_ci_dl_vs_xgb.json` | 2,000 station-bootstrap resamples: DL not better at h6 (1.012) / h12 (1.003); beats XGB at h48 (0.962), h360 (0.985), **h720 (0.990 [0.972, 0.996])**; `dl_beats_xgb_all_horizons = false`, `dl_beats_xgb_30d = true` |
+
+**Caveat:** the win is a 2026-only signal and short horizons remain XGB's edge, so
+the promotion gate stays conservative. Serving parity is guarded by
+`tests/test_model_dl_parity.py`, `test_trajectory_backend_parity.py`,
+`test_trajectory_dispatch.py`.
+
+### 6.6 Other algorithms evaluated (SARIMA, GPR) — rejected
+
+- **SARIMA** (`experiments/baselines/arima_compare.py`; protocol: daily means,
+  10 stations × 5 rolling-2026 origins — **not** comparable to the 6-h tables):
+  `SARIMAX(1,1,1)×(1,0,1,7)`, RMSE 0.637 vs XGB 0.617, MAE 0.335 vs 0.402,
+  PICP90 **0.726 vs 0.968** (under-covers). The ARIMA+XGB **blend gave no
+  out-of-sample gain** (leave-one-origin-out: blend 0.501 vs best single 0.401,
+  beat the better single in 0/27 folds). Module removed; kept as `outputs/arima.md`.
+- **GPR** (commit `cd07868`, harness once in `ml-gpr/`): per-station GP with a single
+  `time_hours` feature. Fits the training span (train R² ≈ 0.95) but **extrapolates
+  catastrophically** (pre-2026 → 2026: Tindwara RMSE 7.82 / R² −401, Banda 2.13 /
+  −7.6, PICP90 1.00 uninformative) and is O(n³). Rejected — interpolation only.
 
 ---
 
@@ -835,11 +923,10 @@ ml/
 │                                station_recency() (cached groupby), label maps
 ├─ _assistant.py                 StationAssistant facts + prompt + Ollama client (§13)
 ├─ _soil.py / _lulc.py           static soil / LULC loaders
-├─ validation/                   P0 honesty suite: spatial_cv.py, overlap.py,
+├─ experiments/validation/        P0 honesty suite: spatial_cv.py, overlap.py,
 │                                residual_acf.py, spatial_residual.py, _spatial_folds.py
-├─ gate_check.py                 12-check regression gate (run after edits; latest GATE PASS 10/10)
+├─ gate_check.py                 13-check regression gate (run after edits; latest GATE PASS 13/13)
 ├─ tests/                        stdlib unittest (data-gated, no pytest)
-├─ MODEL_CARD.md                 model lifecycle card
 ├─ README.md                     module doc + decisions log
 ├─ data/processed/common.parquet cleaned 6-hourly GWL archive (source of truth)
 ├─ data/selected|raw|aligned|meta|features|soil   intermediate + meta dirs
@@ -884,7 +971,7 @@ Env file pattern: plain `KEY=VALUE` lines in repo `.env`, parsed by
 - **ISRIC SoilGrids v2 REST** — per-station sand/silt/clay/bdod; background fetch.
 - **Ollama (local)** — `llama3.2:3b` ~2 GB, `ollama serve`; not an external SaaS.
 - **CGWB assessments** — Excel files (imported via backend), manual/quarterly
-  UPGW dataset documented in `MODEL_CARD.md` (not ingested into ML).
+  UPGW dataset documented in §5.1.1 (not ingested into ML).
 - NCEI CFSv2 seasonal rain was **removed** (`09_cfs_rain.py` deleted — NCEI
   gridded services returned S3-403); Open-Meteo is the driver feed.
 
@@ -1079,8 +1166,8 @@ artifacts (`ml/models/*.json`), and produced outputs (`ml/outputs/*`).*
 > produced outputs). Where something is **not yet implemented** it is explicitly
 > labelled `[PLANNED]` vs `[LIVE]`.
 >
-> Related docs: `docs/ml-contract.md` (module↔gateway
-> contract), `docs/ml-system-spec.md` (ML/deep-dive spec), `ml/MODEL_CARD.md`.
+> Related docs: `Part 3` (module↔gateway
+> contract), `Part 1` (ML/deep-dive spec, incl. the model card in §5.1.1/§6.5).
 
 ---
 
@@ -1293,7 +1380,7 @@ returns only the columns named in `fnames`, so a caller that omits them (includi
 the frozen production model) sees an unchanged matrix.
 
 > **Before training on `rain_api*`, read
-> [`ml-hydro-train-serve.md`](ml-hydro-train-serve.md).** The batch definition uses
+> Part 5 (rain_api train/serve mismatch).** The batch definition uses
 > rainfall known at the anchor (horizon-invariant); the serving definition advances
 > the recursion with future forecast/climatology rainfall (varies with `h`).
 > Reproducing serving in training needs point-in-time forecast rainfall, which is
@@ -1320,7 +1407,7 @@ the frozen production model) sees an unchanged matrix.
 ### 4.1 Sources
 All via NWIC/NWDP CKAN `datastore_search` (free, no auth, no key). Resource IDs
 and value hints are in `ml/config.py` `SOURCES`. Full list in §6.5 of
-`docs/ml-system-spec.md`.
+`Part 1`.
 
 ### 4.2 `common.parquet` (source of truth) — `[LIVE]`
 `data/processed/common.parquet`, ~5.3M rows / 1,353 UP stations /
@@ -1393,7 +1480,7 @@ India → Uttar Pradesh (UP)
   `Station, District, Tehsil, Block, Latitude, Longitude, n_2026_months,
   n_2026_records, first_2026, last_record, full26`.
 - **Districts:** `data/meta/selected_districts.json` (29, alphabetical; see §4.7 of
-  `docs/ml-system-spec.md`).
+  `Part 1`).
 - **Model IDs:** `st_id` (sorted station names, 0..548) and `dist_id` (sorted
   districts, 0..28) — shared across train/val/test + app.
 - **API IDs:** lowercase hyphenated slugs (`ashadha-prathmik-vidyalaya`), URL-encoded.
@@ -1569,7 +1656,7 @@ XGBoost/Ridge/Persistence.
 ### 9.2 Feature importance (XGBoost gain) — `[LIVE]`
 Top: `monsoon 25381`, `gwl_roll7_std 21670`, `doy_sin 14347`, `gwl_roll30_std
 10718`, `year 10004`, `doy_cos 7990`, `lag1 7534`, `gwl 7330`. (Full table in
-`docs/ml-system-spec.md` §2.)
+`Part 1` §2.)
 
 ### 9.3 Ridge coefficients — `[LIVE]`
 `feature_coefficients.csv`: `num__gwl -9.73`, `num__lag4 -0.35`,
@@ -1724,9 +1811,9 @@ model, created_at). Streamlit keeps `<6` turns in `st.session_state.as_messages`
 | `_soil.py` | soil loader | `load_soil`, `SOIL_COLS` |
 | `_lulc.py` | lulc loader | `load_lulc`, `LULC_COLS` |
 | `validation/*.py` | honest suite | `spatial_cv.py`, `overlap.py`, `residual_acf.py`, `spatial_residual.py` |
-| `gate_check.py` | 12-check regression gate (latest GATE PASS 10/10) | `check(name, ok, detail)` |
+| `gate_check.py` | 13-check regression gate (latest GATE PASS 13/13) | `check(name, ok, detail)` |
 | `tests/` | stdlib unittest, 177 tests (2 skipped) | `test_trajectory_v2.py`, `test_refresh_*.py`, `test_verification.py`, `test_api.py`, … |
-| `MODEL_CARD.md`, `README.md` | docs | — |
+| `README.md` | docs | — |
 
 ### 11.2 `back-end/` (Express) `[LIVE]`
 - `app.js` — middleware (helmet, cors, json, morgan) + route mounts + 404 +
@@ -2028,7 +2115,7 @@ refresh pipeline (core/future/training/schedule), verification, Flask API,
 assistant facts, calibration/diagnostics, forecast UI. Run:
 `venv/bin/python -m unittest discover -s tests -v` (the full Forecast-page
 AppTest is gated behind `AQUIS_APPTEST=1`).
-Gate: `venv/bin/python gate_check.py` → 12 checks, latest **GATE PASS 10/10**
+Gate: `venv/bin/python gate_check.py` → 13 checks, latest **GATE PASS 13/13**
 (stride RMSE 2.339, spatial CV 1.973/1.819, coverage 0.908, half-width
 1.025/2.575, eff-N 6635, lag1 ACF 0.858, trajectory 30d 2.106 promoted, +30d
 coverage 0.90; the 2 recursive-model checks skip).
@@ -2250,7 +2337,7 @@ Cleaned 6-hourly NWIC GWL archive — the read-only source of truth: **~5.3M row
 | `correlation_report.csv`, `correlation_by_district.csv`, `lag_curves.csv` | `05_correlate.py` | driver correlation + recharge lag |
 | `ablation.csv` | `10_ablate.py` | drop-group robustness sweep |
 
-### Baseline numbers (regression gate — `gate_check.py`, latest run GATE PASS 10/10)
+### Baseline numbers (regression gate — `gate_check.py`, latest run GATE PASS 13/13)
 - Honest 30-day stride RMSE: **2.339 m** (persistence 2.382 m, +1.8%)
 - Spatial CV: mean **1.973 m** / median **1.819 m**
 - Effective sample size ≈ **6,635 rows** (lag-1 ACF **0.858**)
@@ -2262,7 +2349,7 @@ Cleaned 6-hourly NWIC GWL archive — the read-only source of truth: **~5.3M row
 ```bash
 cd ml
 venv/bin/python -m unittest discover -s tests   # 177 tests (2 skipped)
-venv/bin/python gate_check.py                   # baseline regression checks (GATE PASS 10/10)
+venv/bin/python gate_check.py                   # baseline regression checks (GATE PASS 13/13)
 ```
 
 ## 2. HTTP contract (live — `ml/api.py`, version 3.4.0)
@@ -2327,7 +2414,7 @@ The previous DB-driven Python endpoints — `POST /forecast/:stationId`, `POST /
 
 Status: **implemented, validated and promoted** (2026-09-10). The production Forecast page +
 `refresh` daemon + `/forecast/<slug>` API all serve the trajectory engine (see
-`ml/MODEL_CARD.md`, `ml/README.md`).
+`ml/README.md` and the model card in §5.1.1/§6.5).
 
 ## Objective (as commissioned)
 
@@ -2353,7 +2440,7 @@ Build a *genuine* 6-hourly groundwater-level forecast trajectory for the next 30
 | Open-Meteo weather | **Past-window driver features only**; also feeds driver-source reliability (≤16d FORECAST / 17–30d CLIMATOLOGY / UNAVAILABLE) |
 | Backtest scope | 150 stations (SEED 42) first, then full fleet (549) in the background |
 | UI | Single dark-theme card on the Forecast page (observed tail, "Forecast starts" boundary, q50 + bright q05/q95 band) |
-| Freeze | all round-1 baselines frozen; gate extended to 12 checks |
+| Freeze | all round-1 baselines frozen; gate extended to 13 checks |
 
 ## Pipeline (`ml/`)
 

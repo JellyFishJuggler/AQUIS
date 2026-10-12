@@ -2,7 +2,7 @@
 
 Historical sprint / red-team / audit notes (2026-09..10), merged from the
 former per-track markdown files. Kept for provenance only; see
-`ml/README.md` and `ml/MODEL_CARD.md` for canonical results.
+`ml/README.md` and `docs/ml.md` (incl. the model card in §5.1.1/§6.5) for canonical results.
 
 
 ---
