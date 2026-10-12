@@ -7,7 +7,7 @@
 > produced outputs). Where something is **not yet implemented** it is explicitly
 > labelled `[PLANNED]` vs `[LIVE]`.
 >
-> Related docs: `docs/api.md` (API reference), `docs/ml-contract.md` (module↔gateway
+> Related docs: `docs/ml-contract.md` (module↔gateway
 > contract), `docs/ml-system-spec.md` (ML/deep-dive spec), `ml/MODEL_CARD.md`.
 
 ---

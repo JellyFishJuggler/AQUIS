@@ -77,7 +77,7 @@ Voice input is client-side (browser Web Speech API / on-device mobile STT) → t
 
 - **URL:** `http://localhost:5000`, configurable via `ML_SERVICE_URL`; gateway forwards path + query string (see `back-end/services/mlGateway.js`).
 - **Timeout:** `ML_TIMEOUT_MS` (default 60000).
-- **Errors:** JSON `{ "error", "detail" }`; 400 / 404 / 500 / 502 / 503 (see `docs/api.md`).
+- **Errors:** JSON `{ "error", "detail" }`; 400 / 404 / 500 / 502 / 503 (see `ml/README.md`).
 - **Slugs:** lowercase hyphenated station names (e.g. `ashadha-prathmik-vidyalaya`) — always URL-encode; resolve current slugs from `/stations`. The exact station name also resolves as a fallback.
 
 ### Planned additions (not yet implemented)
