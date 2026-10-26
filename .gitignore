@@ -51,6 +51,9 @@ ml/data/selected/*.csv
 *.h5
 *.pt
 *.onnx
+# GRU weights ARE committed on purpose (deployment needs them at runtime; ~110KB each)
+!ml/models/traj_dl.pt
+!ml/models/pooled_dl.pt
 
 # ML training feature matrices (rebuilt by 06_features; app reads aligned/ at runtime)
 ml/data/features/
