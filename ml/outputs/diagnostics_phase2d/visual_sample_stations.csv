@@ -1,0 +1,30 @@
+Station,primary_classification,selection
+Banda Badokhar Khurd Chatgan,stuck,stratified random; seed=202602; excludes Phase 2c A-E
+Banda Bisndha Mrooli,stuck,stratified random; seed=202602; excludes Phase 2c A-E
+Murwa_1,stuck,stratified random; seed=202602; excludes Phase 2c A-E
+"Primary School, Purakalan, Talbehat, Lalitpur_1",stuck,stratified random; seed=202602; excludes Phase 2c A-E
+"Primary School/ Composite, Jaula Dindauli",stuck,stratified random; seed=202602; excludes Phase 2c A-E
+Sonbhadra Babhani Bhawar,stuck,stratified random; seed=202602; excludes Phase 2c A-E
+Chitrakoot Karvi Khoha,flip-flop,stratified random; seed=202602; excludes Phase 2c A-E
+Primary School Jainpur,flip-flop,stratified random; seed=202602; excludes Phase 2c A-E
+"Primary School, Brahmpur",flip-flop,stratified random; seed=202602; excludes Phase 2c A-E
+"Primary School, Gauripur Javahar Nagar",flip-flop,stratified random; seed=202602; excludes Phase 2c A-E
+"Primary School/ Composite, Jhabiran",flip-flop,stratified random; seed=202602; excludes Phase 2c A-E
+"Purv Madhyamik Vidyalaya, Mujehra",flip-flop,stratified random; seed=202602; excludes Phase 2c A-E
+Bhadarwara  P_1,placeholder-start,stratified random; seed=202602; excludes Phase 2c A-E
+Fugana_1,placeholder-start,stratified random; seed=202602; excludes Phase 2c A-E
+Primary School Shekhpuri,placeholder-start,stratified random; seed=202602; excludes Phase 2c A-E
+Punchayat Bhawan Bhaluwani,placeholder-start,stratified random; seed=202602; excludes Phase 2c A-E
+Ranipur_2,placeholder-start,stratified random; seed=202602; excludes Phase 2c A-E
+Upper Primary School Rijaula,placeholder-start,stratified random; seed=202602; excludes Phase 2c A-E
+"Anganwadi Kedra, Baini",clean,stratified random; seed=202602; excludes Phase 2c A-E
+Chitrakoot Karvi Shivrampur,clean,stratified random; seed=202602; excludes Phase 2c A-E
+Gorakhpur Pali Dumari Niwas,clean,stratified random; seed=202602; excludes Phase 2c A-E
+Mahoba Kabrai Sisri Kala,clean,stratified random; seed=202602; excludes Phase 2c A-E
+"Primary School Sahjanwa , Pratham Pipra",clean,stratified random; seed=202602; excludes Phase 2c A-E
+"Primary School, Dagarpur Tigadi",clean,stratified random; seed=202602; excludes Phase 2c A-E
+Hamirpur Kurara Jalokhar,stuck,named diagnostic; was used in Phase 2c acceptance
+Hamirpur Sarila Purani,stuck,named diagnostic; was used in Phase 2c acceptance
+Mathura Chaumuha Navagaon-11,stuck,named diagnostic; was used in Phase 2c acceptance
+"Primary School, Kalan Bar Devran",stuck,named diagnostic; was used in Phase 2c acceptance
+"Primary School/ Composite, Mehmoodpur",flip-flop,named diagnostic; was used in Phase 2c acceptance

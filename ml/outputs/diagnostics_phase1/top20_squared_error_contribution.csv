@@ -1,0 +1,61 @@
+source,model,station,n,squared_error,share_of_model_squared_error
+predictions_2026,XGBoost,Primary School chandsina,660,716845.166598975,0.33459709740217397
+predictions_2026,XGBoost,Primary School Sanda-Sanee,864,237357.6467688152,0.11078986558820668
+predictions_2026,XGBoost,"Primary School, Dera Devra bujurg",875,152543.77977007933,0.07120185545783102
+predictions_2026,XGBoost,Upper Primary School Sarahan Bujurg,864,89270.26974748226,0.04166809589235414
+predictions_2026,XGBoost,Primary School Vamanpura,864,67725.2637329918,0.031611675326441664
+predictions_2026,XGBoost,Hathras Hathras Hathras,948,65549.81661780077,0.030596256203580974
+predictions_2026,XGBoost,Banda Tindwari Bhindowra,822,42147.60687068027,0.019672960882593064
+predictions_2026,XGBoost,Goshala Bhadehdu,864,36585.39516460904,0.017076723956259733
+predictions_2026,XGBoost,"Primary School, Silana",952,28046.51918956048,0.013091089052862602
+predictions_2026,XGBoost,"Primary School, Karasdev Mandir",778,26262.535717491402,0.012258390836593957
+predictions_2026,XGBoost,Hamirpur Sarila Purani,964,23645.602969946423,0.011036902372663094
+predictions_2026,XGBoost,Rajkia High School Pakhrauli,756,20914.1376974346,0.009761954316343729
+predictions_2026,XGBoost,Varansi Cholapur Chaubepur,840,19850.975827196657,0.009265709251962498
+predictions_2026,XGBoost,Prmary School Rajpura,856,17596.198709253633,0.008213261786170163
+predictions_2026,XGBoost,"Primary School, Kalan Bar Devran",667,16631.14899790272,0.007762811888043888
+predictions_2026,XGBoost,"Primary School/ Composite, Sidki",845,14581.232545934094,0.006805985886133525
+predictions_2026,XGBoost,Gadhela Panchayat Bhawan,856,14406.048278966391,0.00672421627957257
+predictions_2026,XGBoost,Goshala Bada Gaon,856,14023.974231559381,0.006545878092734233
+predictions_2026,XGBoost,"Uccha Prathmik Vidhyalaya, Lohra (Pampawan)",864,12687.146602271574,0.0059218958643139615
+predictions_2026,XGBoost,Composite School Sagarpur,856,12575.009845354969,0.00586955452880018
+predictions_2026,Ridge,Primary School chandsina,660,695191.7781031742,0.2576791672814128
+predictions_2026,Ridge,Primary School Sanda-Sanee,864,314255.97126154363,0.11648183931178233
+predictions_2026,Ridge,Upper Primary School Sarahan Bujurg,864,116756.16366277086,0.04327673596728025
+predictions_2026,Ridge,"Primary School, Dera Devra bujurg",875,83120.40556580131,0.030809335732837544
+predictions_2026,Ridge,Hathras Hathras Hathras,948,42426.67631074397,0.015725834174995162
+predictions_2026,Ridge,Purva Madhyamik Vidhyalaya Achausa,864,42031.370940966284,0.015579310637584933
+predictions_2026,Ridge,Primary School Vamanpura,864,37994.465699079105,0.014082994924585982
+predictions_2026,Ridge,Banda Tindwari Bhindowra,822,37211.813806691905,0.013792897868991023
+predictions_2026,Ridge,"Primary School, Karasdev Mandir",778,36159.18702558343,0.013402732160825971
+predictions_2026,Ridge,Mahoba Panwari Didvara,848,31491.12873668495,0.011672473819758625
+predictions_2026,Ridge,Hamirpur Sarila Purani,964,30772.332395380952,0.011406045406037294
+predictions_2026,Ridge,"Purv Madhyamik Vidhyalaya, Doriya",809,27923.31828203506,0.010350032364135339
+predictions_2026,Ridge,"Inter college, Tindwara",836,26772.493436610865,0.00992346864863113
+predictions_2026,Ridge,Goshala Bhadehdu,864,25230.255640420204,0.009351824156291705
+predictions_2026,Ridge,Mahoba Kabrai Karaha,960,24192.48104832577,0.008967163547320847
+predictions_2026,Ridge,Varansi Cholapur Chaubepur,840,21089.23912863346,0.007816918652421626
+predictions_2026,Ridge,Prmary School Rajpura,856,19995.95404473248,0.007411682573839891
+predictions_2026,Ridge,Gadhela Panchayat Bhawan,856,16583.097807330305,0.0061466763108135
+predictions_2026,Ridge,"Swarg Dham, Hardua",864,16569.876060853792,0.006141775550002764
+predictions_2026,Ridge,Jaunpur Dobhi Kachhawan,830,16530.594149052107,0.006127215351448779
+traj_backtest_rows_dl,Trajectory DL q50,"Primary School, Dera Devra bujurg",151,14126.2039594739,0.6744123057789717
+traj_backtest_rows_dl,Trajectory DL q50,Rohari,112,443.8887584613771,0.02119210808240741
+traj_backtest_rows_dl,Trajectory DL q50,Chitrakoot Manikpur Agarhudha,142,418.4320122284132,0.019976753768264917
+traj_backtest_rows_dl,Trajectory DL q50,Hamirpur Kurara Jalokhar,133,376.24459771374325,0.01796264498296663
+traj_backtest_rows_dl,Trajectory DL q50,"Swarg Dham, Hardua",152,348.9726469006399,0.016660629290447867
+traj_backtest_rows_dl,Trajectory DL q50,Mathura Chaumuha Navagaon-11,163,325.1016965809465,0.015520983941108079
+traj_backtest_rows_dl,Trajectory DL q50,"Primary School, Garher",132,297.36652982136883,0.014196853423160518
+traj_backtest_rows_dl,Trajectory DL q50,"Primary School/ Composite, Landhoura Junardar",148,238.98720655127502,0.011409711588782937
+traj_backtest_rows_dl,Trajectory DL q50,Varansi Harahua Kakalpur,131,228.25440167366907,0.01089730672009013
+traj_backtest_rows_dl,Trajectory DL q50,Varansi Chirai Gaon Chhahi,137,201.31092679372108,0.00961097310409438
+traj_backtest_rows_dl,Trajectory DL q50,"Community Center, Ghorawal",156,199.65495775724716,0.009531913938632031
+traj_backtest_rows_dl,Trajectory DL q50,"Primary School, Bilata",148,184.22225860755793,0.008795127024908133
+traj_backtest_rows_dl,Trajectory DL q50,Saint Ravidas Nagar Abholi Gangarampur,142,168.26907151957502,0.008033491010066778
+traj_backtest_rows_dl,Trajectory DL q50,"Primary School/ Composite, Mehmoodpur",125,158.05649082125709,0.0075459226501262255
+traj_backtest_rows_dl,Trajectory DL q50,Varansi Harahua Gurwat,144,148.61248081715917,0.007095047342015457
+traj_backtest_rows_dl,Trajectory DL q50,"Block Office, Kurara",142,145.44548603950113,0.006943848884417237
+traj_backtest_rows_dl,Trajectory DL q50,Composite School Basantpur Saitali-1,122,133.34450030569343,0.006366124414747352
+traj_backtest_rows_dl,Trajectory DL q50,"Composite School, Ghamhapur",152,106.29273057090845,0.005074620592872929
+traj_backtest_rows_dl,Trajectory DL q50,"Primary School, Evani",142,96.94471369188884,0.004628328182263055
+traj_backtest_rows_dl,Trajectory DL q50,Aagan Wadi Kendra Chandni,152,81.56795932853083,0.0038942121808701823

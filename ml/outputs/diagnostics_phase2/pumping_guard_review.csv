@@ -1,0 +1,4 @@
+requested_station,matched_station,found,spike_masked_slots,pumping_like_events,spike_rule,Station,strict_classification,placeholder_start_slots,test_stuck_slots,flipflop_invalid_share_all_observed,isolated_repeated_extreme_spikes_to_mask
+Mathura Chaumuha Navagaon-11,Mathura Chaumuha Navagaon-11,True,0,3,repeated pre-tail/sentinel exact value + observed immediate exact reversion,Mathura Chaumuha Navagaon-11,pumping-like real,0,0,0.0,0
+"Block Office, Kurara","Block Office, Kurara",True,0,0,repeated pre-tail/sentinel exact value + observed immediate exact reversion,"Block Office, Kurara",clean,0,0,0.0,0
+Hamirpur Sarila Purani,Hamirpur Sarila Purani,True,0,4,repeated pre-tail/sentinel exact value + observed immediate exact reversion,Hamirpur Sarila Purani,pumping-like real,0,0,0.0,0

@@ -1,0 +1,2 @@
+source,model,n,n_stations,rmse,persistence_rmse,skill_score,mae,median_abs_error,note
+pooled_dl_eval.json,Pooled daily DL,4355,511,2.0822530691686736,2.1872163345288573,0.047989430082047035,0.7507460232963382,,Aggregate values copied from saved JSON; row level outcomes are absent.

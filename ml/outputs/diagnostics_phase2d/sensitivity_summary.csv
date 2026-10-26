@@ -1,0 +1,6 @@
+detector,setting,stations_flagged
+stuck,current thresholds,342
+stuck,"strict range<=0.01, sd<=0.005",85
+stuck,exact-value contiguous runs >=28 slots only,0
+flip-flop,"current: step>=0.5m, reversal share>=0.60",222
+flip-flop,"stricter: step>=1.0m, reversal share>=0.80",69

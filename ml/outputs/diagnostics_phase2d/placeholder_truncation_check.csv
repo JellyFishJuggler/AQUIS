@@ -1,0 +1,30 @@
+Station,placeholder_prefix_slots,first_finite_time,search_cap_time,flagged_prefix_end,post_prefix_to_cap_rows,post_prefix_distinct_values,post_prefix_sentinel_slots,post_prefix_max_exact_run_slots,post_prefix_nearflat_slots,real_looking_data_after_prefix,post_cap_to_120d_rows,post_cap_sentinel_slots,max_post_cap_exact_run_slots,post_cap_nearflat_slots,post_cap_placeholder_or_flat_continues,post_cap_series_std,interpretation
+"B.D.O. Office, Binauli",238,2024-01-18 18:00:00,2024-03-18 18:00:00,2024-03-18 18:00:00,0,0,0,0,0,False,240,0,1,8,True,9.885835334706448,placeholder/flat continues beyond 60d
+Composite Girls Primary School Mai,238,2024-01-20 12:00:00,2024-03-20 12:00:00,2024-03-20 12:00:00,0,0,0,0,0,False,240,0,1,213,True,3.407808436262797,placeholder/flat continues beyond 60d
+Fugana_1,241,2022-08-07 00:00:00,2022-10-06 00:00:00,2022-10-06 00:00:00,0,0,0,0,0,False,240,0,1,213,True,1.94694650249917,placeholder/flat continues beyond 60d
+Gadhela Panchayat Bhawan,239,2024-01-20 12:00:00,2024-03-20 12:00:00,2024-03-20 12:00:00,0,0,0,0,0,False,240,0,1,1,True,4.487507925588792,placeholder/flat continues beyond 60d
+Goshala Bankat,239,2024-01-20 12:00:00,2024-03-20 12:00:00,2024-03-20 12:00:00,0,0,0,0,0,False,240,0,1,1,True,4.125741321415176,placeholder/flat continues beyond 60d
+Goshala Basela,236,2024-01-20 12:00:00,2024-03-20 12:00:00,2024-03-19 18:00:00,3,3,0,1,0,False,240,0,1,0,False,0.49878477654793374,variable data after cap
+Goshala Bhadehdu,239,2024-01-18 00:00:00,2024-03-18 00:00:00,2024-03-18 00:00:00,0,0,0,0,0,False,240,0,1,11,True,9.642821656432332,placeholder/flat continues beyond 60d
+Goshala Churaha,239,2024-01-20 12:00:00,2024-03-20 12:00:00,2024-03-20 12:00:00,0,0,0,0,0,False,240,0,1,213,True,5.513306687937867,placeholder/flat continues beyond 60d
+Goshala Ghuri,239,2024-01-19 12:00:00,2024-03-19 12:00:00,2024-03-19 12:00:00,0,0,0,0,0,False,240,0,1,54,True,2.25803206252686,placeholder/flat continues beyond 60d
+Goshala Pachhahan,239,2024-01-20 12:00:00,2024-03-20 12:00:00,2024-03-20 12:00:00,0,0,0,0,0,False,240,0,1,8,True,3.0136931357803007,placeholder/flat continues beyond 60d
+"Office of the Development Officer, Dakore",240,2024-01-20 12:00:00,2024-03-20 12:00:00,2024-03-20 12:00:00,0,0,0,0,0,False,240,0,1,1,True,2.0337751472016277,placeholder/flat continues beyond 60d
+Prathmik Vidhyalaya Barha,239,2024-01-19 18:00:00,2024-03-19 18:00:00,2024-03-19 18:00:00,0,0,0,0,0,False,240,0,1,182,True,3.647463958774035,placeholder/flat continues beyond 60d
+Prathmik Vidhyalaya Manohari,239,2024-01-20 12:00:00,2024-03-20 12:00:00,2024-03-20 12:00:00,0,0,0,0,0,False,240,0,1,2,True,2.1462969208616034,placeholder/flat continues beyond 60d
+Prathmik Vidhyalaya Takuli (Durahi Maafi),237,2024-01-20 12:00:00,2024-03-20 12:00:00,2024-03-20 12:00:00,0,0,0,0,0,False,240,0,1,12,True,2.1129676969080915,placeholder/flat continues beyond 60d
+Primary School Jatmujheda,239,2024-01-19 12:00:00,2024-03-19 12:00:00,2024-03-19 12:00:00,0,0,0,0,0,False,240,0,1,5,True,5.303871119481126,placeholder/flat continues beyond 60d
+Primary School Kucharam,236,2024-01-20 12:00:00,2024-03-20 12:00:00,2024-03-19 18:00:00,3,3,0,1,0,False,240,0,1,0,False,2.3790147956453116,variable data after cap
+Primary School Kurdi,239,2024-01-19 18:00:00,2024-03-19 18:00:00,2024-03-19 18:00:00,0,0,0,0,0,False,240,0,1,4,True,4.4586610425489575,placeholder/flat continues beyond 60d
+Primary School No. 1 Barawad,239,2024-01-19 18:00:00,2024-03-19 18:00:00,2024-03-19 18:00:00,0,0,0,0,0,False,240,0,1,135,True,6.2799871244504875,placeholder/flat continues beyond 60d
+Primary School Pinna,238,2024-01-18 18:00:00,2024-03-18 18:00:00,2024-03-18 18:00:00,0,0,0,0,0,False,240,0,1,8,True,7.047741869976224,placeholder/flat continues beyond 60d
+Primary School Rathoda,241,2024-01-19 18:00:00,2024-03-19 18:00:00,2024-03-19 18:00:00,0,0,0,0,0,False,240,0,1,4,True,6.177416928147772,placeholder/flat continues beyond 60d
+Primary School Sanda-Sanee,239,2024-01-20 12:00:00,2024-03-20 12:00:00,2024-03-20 12:00:00,0,0,0,0,0,False,240,0,1,1,True,2.933879726526331,placeholder/flat continues beyond 60d
+Primary School chandsina,238,2024-01-18 18:00:00,2024-03-18 18:00:00,2024-03-18 18:00:00,0,0,0,0,0,False,240,0,1,8,True,7.962754392478181,placeholder/flat continues beyond 60d
+Purva Madhyamik Vidhyalaya Bhitaura,238,2024-01-19 18:00:00,2024-03-19 18:00:00,2024-03-19 18:00:00,0,0,0,0,0,False,240,0,1,16,True,4.279892162257778,placeholder/flat continues beyond 60d
+Rajkia Balika Inter College Kamasin,239,2024-01-20 12:00:00,2024-03-20 12:00:00,2024-03-20 12:00:00,0,0,0,0,0,False,240,0,1,1,True,4.039136380153886,placeholder/flat continues beyond 60d
+Rajkia High School Pakhrauli,236,2024-01-20 12:00:00,2024-03-20 12:00:00,2024-03-19 18:00:00,3,3,0,1,0,False,240,0,1,0,False,2.965035001898399,variable data after cap
+"Uccha Prathmik Vidhyalaya, Semra Bhav Nagar",239,2024-01-20 12:00:00,2024-03-20 12:00:00,2024-03-20 12:00:00,0,0,0,0,0,False,240,0,1,10,True,2.400948797639985,placeholder/flat continues beyond 60d
+Upper Primary Kasampur,239,2024-01-19 18:00:00,2024-03-19 18:00:00,2024-03-19 18:00:00,0,0,0,0,0,False,240,0,1,4,True,4.337467625381501,placeholder/flat continues beyond 60d
+Upper Primary School Pohalli,239,2024-01-18 18:00:00,2024-03-18 18:00:00,2024-03-18 18:00:00,0,0,0,0,0,False,240,0,1,8,True,6.228709236264811,placeholder/flat continues beyond 60d
+Veterinary Hospital Shahjahanpur,239,2024-01-19 00:00:00,2024-03-19 00:00:00,2024-03-19 00:00:00,0,0,0,0,0,False,240,0,1,7,True,5.894256858514845,placeholder/flat continues beyond 60d

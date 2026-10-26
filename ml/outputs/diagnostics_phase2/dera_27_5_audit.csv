@@ -1,0 +1,2 @@
+Station,value,occurrences_all_slots,occurrences_observed,first_occurrence,last_occurrence,contiguous_runs,longest_run_slots,run_lengths_slots,max_run_months,sentinel_code,pre_tail_value
+"Primary School, Dera Devra bujurg",27.5,226,226,2026-01-01,2026-03-25,14,102,102;60;20;2;2;1;24;1;2;4;2;2;2;2,2,False,True

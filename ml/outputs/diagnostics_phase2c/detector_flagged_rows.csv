@@ -1,0 +1,943 @@
+Station,detector,flagged_rows,first_flagged_time,last_flagged_time
+ASHADHA PRATHMIK VIDYALAYA,flipflop_burst,1531,2025-04-12 06:00:00,2026-10-10 18:00:00
+Aagan Wadi Kendra Chandni,placeholder_start,224,2024-01-20 18:00:00,2024-03-17 06:00:00
+Aagan Wadi Kendra Chandni,test_stuck,30,2026-01-28 06:00:00,2026-09-13 18:00:00
+Aagan Wadi Kendra Chandni,candidate_changed,224,2024-01-20 18:00:00,2024-03-17 06:00:00
+Aaganwadi Kendra Pakri Bazaar,placeholder_start,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Aaganwadi Kendra Pakri Bazaar,test_stuck,394,2026-01-05 18:00:00,2026-06-19 18:00:00
+Aaganwadi Kendra Pakri Bazaar,candidate_changed,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+"Adarsh Primary School, Dubar Kalan",flipflop_burst,2651,2024-07-04 00:00:00,2026-10-10 18:00:00
+Agan Wadi Kendra Kuchendu,placeholder_start,161,2024-01-19 18:00:00,2024-03-09 12:00:00
+Agan Wadi Kendra Kuchendu,candidate_changed,161,2024-01-19 18:00:00,2024-03-09 12:00:00
+Alakchandra Inter college Bhinga,flipflop_burst,1559,2025-03-30 06:00:00,2026-10-10 18:00:00
+Aligarh Chandaus  Somana,flipflop_burst,3892,2023-06-21 06:00:00,2026-10-04 00:00:00
+Aligarh Chandaus Maharajpur,test_stuck,15,2026-02-09 00:00:00,2026-04-11 06:00:00
+Aligarh Jawa Bahadurpur Kota,test_stuck,106,2026-01-10 18:00:00,2026-09-04 18:00:00
+Aligarh Jawa Jamalpur Siya,test_stuck,416,2026-01-05 18:00:00,2026-09-25 18:00:00
+Aligarh Jawa Sogera,test_stuck,102,2025-12-28 18:00:00,2026-09-26 00:00:00
+Aligarh Khair Arrana,test_stuck,163,2026-01-05 18:00:00,2026-09-30 00:00:00
+Aligarh Khair Arrana,flipflop_burst,414,2026-06-23 18:00:00,2026-10-10 18:00:00
+Aligarh Khair Utwara,test_stuck,128,2026-01-05 18:00:00,2026-05-17 06:00:00
+Aligarh Khair Utwara,flipflop_burst,256,2026-07-04 00:00:00,2026-10-01 00:00:00
+Aligarh Lodha Aisi Kol,flipflop_burst,300,2026-07-28 00:00:00,2026-10-10 18:00:00
+Aligarh Lodha Mahrawalpur Nagariya,test_stuck,167,2025-12-23 12:00:00,2026-09-20 06:00:00
+Amchurnirua,test_stuck,8,2025-12-21 12:00:00,2025-12-23 06:00:00
+Amchurnirua,flipflop_burst,2096,2024-11-06 12:00:00,2026-10-10 18:00:00
+Amlour,test_stuck,153,2026-03-13 12:00:00,2026-07-14 06:00:00
+Amlour,flipflop_burst,3453,2023-12-16 18:00:00,2026-10-10 18:00:00
+"Anganwadi Kedra, Baini",flipflop_burst,1027,2025-12-26 12:00:00,2026-10-10 18:00:00
+Aryavart Madhyamik Vidhyalaya Sindhora,flipflop_burst,2806,2024-05-08 12:00:00,2026-10-10 18:00:00
+Aswaniya Pr. Vid.,flipflop_burst,1491,2025-04-02 18:00:00,2026-10-10 18:00:00
+Awagarh (UP-005),test_stuck,73,2026-01-10 12:00:00,2026-08-22 00:00:00
+Awagarh (UP-005),flipflop_burst,6890,2021-04-30 00:00:00,2026-09-17 00:00:00
+Azamgarh Ahiraula Bahera,flipflop_burst,644,2026-04-16 00:00:00,2026-10-07 00:00:00
+Azamgarh Ahiraula Kandara,flipflop_burst,598,2026-04-13 06:00:00,2026-10-01 00:00:00
+Azamgarh Atrauliya Atrauliya,test_stuck,735,2026-01-05 18:00:00,2026-09-26 12:00:00
+Azamgarh Jahanganj Godhaura,flipflop_burst,704,2026-04-16 06:00:00,2026-10-10 18:00:00
+Azamgarh Lalganj Lalganj,flipflop_burst,627,2026-04-07 00:00:00,2026-10-01 00:00:00
+Azamgarh Palhana Balahi Lahucha,test_stuck,130,2025-11-29 18:00:00,2026-09-10 00:00:00
+Azamgarh Palhana Jamui Bhatauli,test_stuck,55,2025-11-26 18:00:00,2026-07-30 12:00:00
+Azamgarh Pavai Velasiya,flipflop_burst,3428,2024-01-11 00:00:00,2026-10-10 18:00:00
+Azamgarh Sathiyavn Gajahada,test_stuck,10,2025-12-29 00:00:00,2026-07-01 12:00:00
+Azamgarh Thekama Bardah,test_stuck,14,2025-11-27 00:00:00,2025-11-30 06:00:00
+Azamgarh Thekama Bardah,flipflop_burst,1979,2024-12-04 12:00:00,2026-10-10 18:00:00
+B.D.O Office Bhatini,flipflop_burst,1042,2026-01-03 06:00:00,2026-10-10 18:00:00
+B.D.O. Office Lar,placeholder_start,195,2024-01-30 18:00:00,2024-03-19 18:00:00
+B.D.O. Office Lar,test_stuck,399,2026-01-28 06:00:00,2026-05-29 18:00:00
+B.D.O. Office Lar,flipflop_burst,2981,2024-03-26 18:00:00,2026-09-13 18:00:00
+B.D.O. Office Lar,candidate_changed,195,2024-01-30 18:00:00,2024-03-19 18:00:00
+"B.D.O. Office, Binauli",placeholder_start,238,2024-01-18 18:00:00,2024-03-18 18:00:00
+"B.D.O. Office, Binauli",test_stuck,12,2026-06-19 00:00:00,2026-07-17 18:00:00
+"B.D.O. Office, Binauli",candidate_changed,238,2024-01-18 18:00:00,2024-03-18 18:00:00
+BADHANI PRATHMIK VIDYALAYA,flipflop_burst,1574,2025-03-28 12:00:00,2026-10-10 18:00:00
+BANI KHAS C.V. VIDYALAYA,flipflop_burst,3987,2023-08-03 00:00:00,2026-10-10 18:00:00
+BANSGAON PRATHMIK VIDYALAYA,flipflop_burst,1914,2024-12-25 18:00:00,2026-10-10 18:00:00
+Babina Rular,placeholder_start,135,2022-10-01 00:00:00,2022-11-30 00:00:00
+Babina Rular,test_stuck,3,2026-03-17 06:00:00,2026-03-25 18:00:00
+Babina Rular,candidate_changed,135,2022-10-01 00:00:00,2022-11-30 00:00:00
+Badaun Salarpur BDO Office,test_stuck,134,2025-11-28 18:00:00,2026-03-31 06:00:00
+Badaun Ujhani Sports Stadium,test_stuck,52,2025-12-24 00:00:00,2026-07-25 06:00:00
+Badaun Usawan BDO Office,test_stuck,2,2025-12-12 18:00:00,2025-12-13 00:00:00
+Badhai Khurd Pr. Vid.,flipflop_burst,5391,2022-08-18 18:00:00,2026-10-10 18:00:00
+Badhouli,test_stuck,72,2026-01-10 00:00:00,2026-08-14 12:00:00
+Baghora_1,test_stuck,18,2026-07-02 06:00:00,2026-07-06 12:00:00
+Baghpat Meerut Kheda Balrampur Itiyara,test_stuck,189,2026-01-01 00:00:00,2026-09-27 18:00:00
+Banda Baberu Anvan,test_stuck,115,2026-01-05 18:00:00,2026-09-05 12:00:00
+Banda Baberu Anvan,flipflop_burst,1630,2025-02-26 12:00:00,2026-10-10 00:00:00
+Banda Baberu Umrehani,test_stuck,26,2025-12-22 00:00:00,2026-06-08 00:00:00
+Banda Badokhar Khurd Chatgan,test_stuck,484,2025-11-28 12:00:00,2026-09-13 12:00:00
+Banda Bisndha Mrooli,test_stuck,2,2025-12-26 12:00:00,2025-12-26 18:00:00
+Banda Bisndha Mrooli,flipflop_burst,198,2026-08-21 12:00:00,2026-10-10 18:00:00
+Banda Kamasin Tilowsa,test_stuck,101,2025-12-15 18:00:00,2026-09-14 12:00:00
+Banda Tindwari Bhindowra,test_stuck,17,2026-02-10 00:00:00,2026-02-14 00:00:00
+Banda Tindwari Bhindowra,flipflop_burst,1447,2023-08-04 06:00:00,2024-08-03 12:00:00
+Bdo Office Campus Pipraich,flipflop_burst,1394,2025-05-04 06:00:00,2026-10-10 18:00:00
+Bhadarwara  P_1,placeholder_start,116,2022-07-30 00:00:00,2022-09-27 12:00:00
+Bhadarwara  P_1,test_stuck,6,2026-07-07 18:00:00,2026-07-09 00:00:00
+Bhadarwara  P_1,flipflop_burst,3447,2023-12-16 18:00:00,2026-10-10 18:00:00
+Bhadarwara  P_1,candidate_changed,116,2022-07-30 00:00:00,2022-09-27 12:00:00
+Bhitari_2,test_stuck,2,2026-04-23 18:00:00,2026-04-24 00:00:00
+Bijijauri_1,test_stuck,19,2026-01-05 18:00:00,2026-01-17 06:00:00
+Bijijauri_1,flipflop_burst,814,2025-06-30 18:00:00,2026-09-03 18:00:00
+Birdha /Poorabirdha,placeholder_start,149,2022-08-02 18:00:00,2022-09-23 06:00:00
+Birdha /Poorabirdha,test_stuck,2,2026-02-03 06:00:00,2026-08-06 00:00:00
+Birdha /Poorabirdha,flipflop_burst,115,2026-09-12 06:00:00,2026-10-10 18:00:00
+Birdha /Poorabirdha,candidate_changed,149,2022-08-02 18:00:00,2022-09-23 06:00:00
+Block Deoria Campus Deoria Sadar,flipflop_burst,1149,2025-06-01 00:00:00,2026-10-10 18:00:00
+Block Development Office-Khekra-Shallow,test_stuck,64,2025-11-28 12:00:00,2026-08-06 18:00:00
+"Block office, Gursarai",test_stuck,18,2026-06-04 18:00:00,2026-07-31 06:00:00
+Budh Sainy_1,flipflop_burst,1602,2025-03-23 12:00:00,2026-10-10 18:00:00
+Chakara  P_1,placeholder_start,30,2022-07-30 00:00:00,2022-08-21 18:00:00
+Chakara  P_1,test_stuck,112,2026-01-05 18:00:00,2026-08-08 00:00:00
+Chakara  P_1,flipflop_burst,1620,2025-03-07 00:00:00,2026-10-10 18:00:00
+Chakara  P_1,candidate_changed,30,2022-07-30 00:00:00,2022-08-21 18:00:00
+Chandi Kalan,placeholder_start,57,2022-09-25 00:00:00,2022-11-23 06:00:00
+Chandi Kalan,flipflop_burst,1576,2025-03-28 06:00:00,2026-10-10 18:00:00
+Chandi Kalan,candidate_changed,57,2022-09-25 00:00:00,2022-11-23 06:00:00
+Chhibaw_1,placeholder_start,78,2022-11-08 00:00:00,2022-11-27 12:00:00
+Chhibaw_1,test_stuck,66,2026-02-07 18:00:00,2026-04-22 18:00:00
+Chhibaw_1,flipflop_burst,2388,2024-09-02 18:00:00,2026-10-10 18:00:00
+Chhibaw_1,candidate_changed,78,2022-11-08 00:00:00,2022-11-27 12:00:00
+Chitrakoot Karvi Khoha,flipflop_burst,4190,2023-03-08 18:00:00,2026-10-10 18:00:00
+Chitrakoot Manikpur Agarhudha,test_stuck,3,2026-06-07 12:00:00,2026-06-08 00:00:00
+Chitrakoot Manikpur Agarhudha,flipflop_burst,2644,2024-04-14 00:00:00,2026-10-10 18:00:00
+Chitrakoot Manikpur Sardar Patel,test_stuck,50,2026-02-01 18:00:00,2026-09-10 12:00:00
+Chitrakoot Manikpur Sardar Patel,flipflop_burst,1224,2025-01-03 06:00:00,2026-10-09 00:00:00
+Chorwa Bhari Prathmik Vidyalaya,flipflop_burst,1486,2025-04-22 12:00:00,2026-10-10 18:00:00
+"Community Center, Ghorawal",flipflop_burst,3680,2023-10-17 18:00:00,2026-10-10 18:00:00
+Comosite School Campus Badalganj,placeholder_start,198,2024-01-30 18:00:00,2024-03-20 18:00:00
+Comosite School Campus Badalganj,test_stuck,135,2026-01-05 18:00:00,2026-08-06 12:00:00
+Comosite School Campus Badalganj,candidate_changed,198,2024-01-30 18:00:00,2024-03-20 18:00:00
+Composite Girls Primary School Mai,placeholder_start,238,2024-01-20 18:00:00,2024-03-20 12:00:00
+Composite Girls Primary School Mai,test_stuck,962,2026-01-05 18:00:00,2026-09-10 18:00:00
+Composite Girls Primary School Mai,candidate_changed,238,2024-01-20 18:00:00,2024-03-20 12:00:00
+Composite School Basantpur Saitali-1,placeholder_start,201,2024-01-29 18:00:00,2024-03-20 18:00:00
+Composite School Basantpur Saitali-1,flipflop_burst,903,2025-07-23 18:00:00,2026-08-15 18:00:00
+Composite School Basantpur Saitali-1,candidate_changed,201,2024-01-29 18:00:00,2024-03-20 18:00:00
+Composite School Kilhora,placeholder_start,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+Composite School Kilhora,test_stuck,243,2026-01-06 18:00:00,2026-06-19 18:00:00
+Composite School Kilhora,candidate_changed,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+Composite School Nagla Bair,placeholder_start,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+Composite School Nagla Bair,test_stuck,31,2026-01-29 18:00:00,2026-06-20 18:00:00
+Composite School Nagla Bair,candidate_changed,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+Composite School Sagarpur,placeholder_start,181,2024-01-31 00:00:00,2024-03-20 18:00:00
+Composite School Sagarpur,test_stuck,480,2026-01-11 00:00:00,2026-08-17 06:00:00
+Composite School Sagarpur,candidate_changed,181,2024-01-31 00:00:00,2024-03-20 18:00:00
+Composite School Sanjarpur,placeholder_start,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Composite School Sanjarpur,test_stuck,452,2026-01-05 18:00:00,2026-07-24 06:00:00
+Composite School Sanjarpur,candidate_changed,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Composite School katar,placeholder_start,196,2024-01-31 12:00:00,2024-03-20 18:00:00
+Composite School katar,test_stuck,970,2026-01-05 18:00:00,2026-09-13 18:00:00
+Composite School katar,candidate_changed,196,2024-01-31 12:00:00,2024-03-20 18:00:00
+"Composite School, Dhamna Khurd",placeholder_start,204,2024-01-29 18:00:00,2024-03-20 18:00:00
+"Composite School, Dhamna Khurd",test_stuck,746,2026-01-05 18:00:00,2026-07-18 18:00:00
+"Composite School, Dhamna Khurd",candidate_changed,204,2024-01-29 18:00:00,2024-03-20 18:00:00
+"Composite School, Ghamhapur",placeholder_start,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+"Composite School, Ghamhapur",candidate_changed,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+"Composite School, Mungari",flipflop_burst,1499,2025-04-02 12:00:00,2026-10-10 18:00:00
+"Composite School, Pathraha",flipflop_burst,3851,2023-08-15 18:00:00,2026-10-10 18:00:00
+"Composite Uccha Prathmik Vidhyalaya, Paltadevi",placeholder_start,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+"Composite Uccha Prathmik Vidhyalaya, Paltadevi",candidate_changed,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+Composite Upper Primary School Sajania,placeholder_start,201,2024-01-30 18:00:00,2024-03-20 18:00:00
+Composite Upper Primary School Sajania,test_stuck,60,2026-01-25 06:00:00,2026-06-20 18:00:00
+Composite Upper Primary School Sajania,candidate_changed,201,2024-01-30 18:00:00,2024-03-20 18:00:00
+DEOCHALI C.V. VIDYALAYA,flipflop_burst,1024,2025-12-31 12:00:00,2026-10-10 18:00:00
+Datt Naga_1,flipflop_burst,1537,2025-04-08 12:00:00,2026-10-10 18:00:00
+Deoria Bhaluwani Markna,test_stuck,163,2026-01-05 18:00:00,2026-05-15 06:00:00
+Deoria Bhatani Mishrauli Dichit,test_stuck,89,2025-12-30 06:00:00,2026-08-27 12:00:00
+Deoria Bhatpar Rani Dharkwan,test_stuck,15,2026-03-31 06:00:00,2026-04-04 12:00:00
+Deoria Salempur Manihari,test_stuck,70,2026-02-11 06:00:00,2026-09-04 18:00:00
+Deoria Tarkulwa Tarkulwa,test_stuck,24,2026-01-31 06:00:00,2026-08-30 00:00:00
+Devrar_1,test_stuck,3,2025-12-26 00:00:00,2026-04-23 12:00:00
+Devrar_1,flipflop_burst,2294,2024-09-23 18:00:00,2026-10-10 18:00:00
+Dhikauli,placeholder_start,185,2022-07-30 00:00:00,2022-09-28 00:00:00
+Dhikauli,test_stuck,154,2025-12-24 00:00:00,2026-07-24 00:00:00
+Dhikauli,candidate_changed,185,2022-07-30 00:00:00,2022-09-28 00:00:00
+Etah Aavagarh Badhawali,test_stuck,34,2025-12-22 00:00:00,2026-04-09 00:00:00
+Etah Jalesar Sakrauli,test_stuck,132,2026-04-11 18:00:00,2026-09-26 00:00:00
+FAREDUPUR PRATHMIK VIDYALAYA,flipflop_burst,2795,2024-05-25 18:00:00,2026-10-10 18:00:00
+Firozabad Madanpur Rudhawali,test_stuck,20,2026-09-22 18:00:00,2026-09-27 12:00:00
+Firozabad Madanpur Rudhawali,flipflop_burst,711,2026-01-15 12:00:00,2026-10-10 18:00:00
+Fugana_1,placeholder_start,241,2022-08-07 00:00:00,2022-10-06 00:00:00
+Fugana_1,flipflop_burst,2192,2024-10-21 18:00:00,2026-10-10 18:00:00
+Fugana_1,candidate_changed,241,2022-08-07 00:00:00,2022-10-06 00:00:00
+GOVINDPUR BILARI PRATHMIK VIDYALAYA,flipflop_burst,3259,2024-01-27 00:00:00,2026-10-10 18:00:00
+Gadhela Panchayat Bhawan,placeholder_start,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+Gadhela Panchayat Bhawan,flipflop_burst,180,2026-02-18 00:00:00,2026-08-02 18:00:00
+Gadhela Panchayat Bhawan,candidate_changed,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+Gloragundera/Gewara,placeholder_start,28,2022-08-02 00:00:00,2022-09-30 12:00:00
+Gloragundera/Gewara,test_stuck,422,2025-10-27 00:00:00,2026-09-30 18:00:00
+Gloragundera/Gewara,flipflop_burst,1530,2025-04-14 12:00:00,2026-10-10 18:00:00
+Gloragundera/Gewara,candidate_changed,28,2022-08-02 00:00:00,2022-09-30 12:00:00
+Gorakhpur Barahalganj Bhatpar (Saukhor),test_stuck,7,2025-12-29 18:00:00,2025-12-31 06:00:00
+Gorakhpur Barahalganj Bhatpar (Saukhor),flipflop_burst,2393,2024-09-10 12:00:00,2026-10-10 18:00:00
+Gorakhpur Barahalganj Ojhauli,test_stuck,152,2025-12-21 18:00:00,2026-09-02 12:00:00
+Gorakhpur Belghat Belghat,test_stuck,9,2026-02-21 18:00:00,2026-06-08 00:00:00
+Gorakhpur Belghat Murarpur,test_stuck,17,2025-11-30 06:00:00,2026-09-13 12:00:00
+Gorakhpur Belghat Murarpur,flipflop_burst,1698,2025-01-30 12:00:00,2026-10-10 18:00:00
+Gorakhpur Chargaon Beniganj,test_stuck,10,2026-04-02 00:00:00,2026-09-10 06:00:00
+Gorakhpur Gagaha Gagaha,test_stuck,49,2025-11-29 12:00:00,2026-09-14 18:00:00
+Gorakhpur Gagaha Gagaha,flipflop_burst,3789,2023-09-17 00:00:00,2026-10-10 18:00:00
+Gorakhpur Gola Dhakwarchak,flipflop_burst,2264,2024-10-10 18:00:00,2026-10-10 18:00:00
+Gorakhpur Gola Turkwaliya,test_stuck,26,2026-03-09 06:00:00,2026-03-15 12:00:00
+Gorakhpur Kauriram Dhausa,test_stuck,7,2026-09-07 06:00:00,2026-09-08 18:00:00
+Gorakhpur Kauriram Jagdispur Bhaluwan 2Nd,test_stuck,7,2025-11-29 18:00:00,2025-12-01 06:00:00
+Gorakhpur Pali Pali,test_stuck,93,2026-02-13 00:00:00,2026-05-11 06:00:00
+Gorakhpur Pali Pali,flipflop_burst,999,2026-01-15 12:00:00,2026-10-10 18:00:00
+Gorakhpur Sahjanwa Kasrol,test_stuck,186,2026-01-05 18:00:00,2026-07-11 18:00:00
+Goshala Bada Gaon,placeholder_start,235,2024-01-20 18:00:00,2024-03-20 12:00:00
+Goshala Bada Gaon,candidate_changed,235,2024-01-20 18:00:00,2024-03-20 12:00:00
+Goshala Bankat,placeholder_start,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+Goshala Bankat,test_stuck,337,2026-01-09 18:00:00,2026-07-13 06:00:00
+Goshala Bankat,candidate_changed,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+Goshala Basela,placeholder_start,236,2024-01-20 18:00:00,2024-03-19 18:00:00
+Goshala Basela,candidate_changed,236,2024-01-20 18:00:00,2024-03-19 18:00:00
+Goshala Bhadehdu,placeholder_start,239,2024-01-18 00:00:00,2024-03-18 00:00:00
+Goshala Bhadehdu,candidate_changed,239,2024-01-18 00:00:00,2024-03-18 00:00:00
+Goshala Churaha,placeholder_start,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+Goshala Churaha,test_stuck,224,2026-01-05 18:00:00,2026-07-12 18:00:00
+Goshala Churaha,candidate_changed,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+Goshala Ghuri,placeholder_start,239,2024-01-19 12:00:00,2024-03-19 12:00:00
+Goshala Ghuri,test_stuck,74,2026-04-05 06:00:00,2026-05-14 18:00:00
+Goshala Ghuri,candidate_changed,239,2024-01-19 12:00:00,2024-03-19 12:00:00
+Goshala Pachhahan,placeholder_start,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+Goshala Pachhahan,test_stuck,230,2026-01-06 18:00:00,2026-07-09 18:00:00
+Goshala Pachhahan,candidate_changed,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+Goyla,flipflop_burst,2662,2024-07-06 18:00:00,2026-10-10 18:00:00
+"Gram Panchayat Sachiwalaya / D.B.R. Ambedkar Samudayak Bhawan, Durkhuroo",placeholder_start,233,2024-01-18 00:00:00,2024-03-18 00:00:00
+"Gram Panchayat Sachiwalaya / D.B.R. Ambedkar Samudayak Bhawan, Durkhuroo",test_stuck,6,2026-02-03 18:00:00,2026-02-05 00:00:00
+"Gram Panchayat Sachiwalaya / D.B.R. Ambedkar Samudayak Bhawan, Durkhuroo",candidate_changed,233,2024-01-18 00:00:00,2024-03-18 00:00:00
+Grampunchayat Sachiwalaya Deori,placeholder_start,171,2024-01-30 18:00:00,2024-03-15 18:00:00
+Grampunchayat Sachiwalaya Deori,test_stuck,5,2026-07-22 18:00:00,2026-07-23 18:00:00
+Grampunchayat Sachiwalaya Deori,candidate_changed,171,2024-01-30 18:00:00,2024-03-15 18:00:00
+Gundaha,test_stuck,16,2026-03-11 06:00:00,2026-03-15 00:00:00
+Gundaha,flipflop_burst,3265,2023-12-19 18:00:00,2026-10-10 18:00:00
+Gyana Majra Pr. Vid.,flipflop_burst,3451,2023-11-13 12:00:00,2026-10-10 18:00:00
+HARNHAPUR PRATHAMIK VIDYALAYA,flipflop_burst,2795,2024-05-31 18:00:00,2026-10-10 18:00:00
+HOLAGARH PURV MADHYAMIK VIDYALAYA,flipflop_burst,1247,2025-06-04 06:00:00,2026-10-10 18:00:00
+Halwana,flipflop_burst,5425,2022-08-17 00:00:00,2026-10-10 18:00:00
+Hamirpur Kurara Damar,test_stuck,31,2026-06-08 00:00:00,2026-08-05 12:00:00
+Hamirpur Kurara Jalokhar,test_stuck,87,2026-01-16 00:00:00,2026-05-03 12:00:00
+Hamirpur Kurara Jalokhar,flipflop_burst,1158,2023-08-04 18:00:00,2024-07-24 00:00:00
+Hamirpur Sarila Purani,test_stuck,34,2026-04-22 06:00:00,2026-07-14 06:00:00
+Hamirpur Sarila Purani,flipflop_burst,4168,2023-07-12 00:00:00,2026-10-10 18:00:00
+Hamirpur Sumerpur Etara,test_stuck,7,2025-12-31 18:00:00,2026-01-02 06:00:00
+Hamirpur Sumerpur Para,test_stuck,15,2025-12-26 00:00:00,2025-12-29 12:00:00
+Hathras Hathras Hathras,test_stuck,6,2026-09-24 18:00:00,2026-09-26 00:00:00
+Hathras Hathras Hathras,flipflop_burst,5024,2022-12-16 18:00:00,2026-10-08 06:00:00
+Hathras Mursan Chandapa Sandh,test_stuck,89,2026-01-07 12:00:00,2026-09-15 12:00:00
+Hathras Mursan Chandapa Sandh,flipflop_burst,421,2026-06-17 00:00:00,2026-10-10 18:00:00
+High School & Inter College Boroda,flipflop_burst,5218,2022-09-24 18:00:00,2026-10-10 18:00:00
+Inter Collage Khampar,placeholder_start,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Inter Collage Khampar,test_stuck,212,2026-01-05 18:00:00,2026-06-19 18:00:00
+Inter Collage Khampar,candidate_changed,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+"Inter College, Sarv Hitakari",test_stuck,349,2026-01-05 18:00:00,2026-09-17 00:00:00
+"Irrigation Department, Amawar",flipflop_burst,2850,2024-05-14 18:00:00,2026-10-10 18:00:00
+Jamalpur_2,placeholder_start,76,2022-08-03 00:00:00,2022-08-27 18:00:00
+Jamalpur_2,test_stuck,12,2025-12-27 00:00:00,2025-12-29 18:00:00
+Jamalpur_2,flipflop_burst,1643,2025-03-06 12:00:00,2026-10-10 18:00:00
+Jamalpur_2,candidate_changed,76,2022-08-03 00:00:00,2022-08-27 18:00:00
+"Janata Inter College, Lachheda",flipflop_burst,159,2023-03-16 00:00:00,2023-04-26 12:00:00
+Jaunpur Dobhi Bagerwa,test_stuck,6,2026-08-15 06:00:00,2026-08-16 12:00:00
+Jaunpur Dobhi Kachhawan,flipflop_burst,4039,2023-04-13 00:00:00,2026-10-10 18:00:00
+Jaunpur Dobhi Kakarapar,test_stuck,222,2026-02-05 12:00:00,2026-09-11 00:00:00
+Jaunpur Dobhi Kakarapar,flipflop_burst,959,2026-01-16 12:00:00,2026-10-10 18:00:00
+Jaunpur Jalalpur Katuwani,test_stuck,386,2025-12-27 18:00:00,2026-07-07 12:00:00
+Jaunpur Jalalpur Vanpurwa,flipflop_burst,225,2026-08-05 06:00:00,2026-10-10 00:00:00
+Jaunpur Jalalpur Vind,test_stuck,198,2025-11-28 12:00:00,2026-08-23 18:00:00
+Jaunpur Kerakat  Kharg Senpur,test_stuck,2,2026-06-07 18:00:00,2026-06-08 00:00:00
+Jaunpur Kerakat  Kharg Senpur,flipflop_burst,995,2026-01-10 18:00:00,2026-10-08 00:00:00
+Jaunpur Kerakat Barbaspur (Sohani),test_stuck,1040,2025-12-18 18:00:00,2026-09-30 18:00:00
+Jaunpur Kerakat Mahali,test_stuck,340,2025-12-26 18:00:00,2026-09-27 18:00:00
+Jaunpur Kerakat Nihalapur,test_stuck,21,2025-11-01 18:00:00,2026-05-05 00:00:00
+Jaunpur Rampur Kamaruddin,test_stuck,596,2025-12-30 18:00:00,2026-07-21 12:00:00
+Jaunpur Rampur Kamaruddin,flipflop_burst,4232,2023-03-01 18:00:00,2026-10-10 18:00:00
+Jaunpur Rampur Kaseru Nonara,test_stuck,1,2026-05-24 12:00:00,2026-05-24 12:00:00
+Jaunpur Rampur Kathwatiya,test_stuck,127,2025-12-07 18:00:00,2026-08-15 18:00:00
+Jaunpur Rampur Sultanpur,test_stuck,36,2026-01-29 06:00:00,2026-09-29 00:00:00
+Jaurahi_1,test_stuck,222,2026-04-02 12:00:00,2026-09-30 12:00:00
+Jaurahi_1,flipflop_burst,2355,2024-08-22 06:00:00,2026-10-10 18:00:00
+"Jr. High School, Purwa Tarouha",placeholder_start,127,2022-08-03 00:00:00,2022-10-02 00:00:00
+"Jr. High School, Purwa Tarouha",test_stuck,6,2026-03-12 18:00:00,2026-04-22 00:00:00
+"Jr. High School, Purwa Tarouha",candidate_changed,127,2022-08-03 00:00:00,2022-10-02 00:00:00
+Junior High School Sihiriya,test_stuck,30,2026-07-05 06:00:00,2026-08-15 00:00:00
+Junior High School Sihiriya,flipflop_burst,3622,2023-10-21 00:00:00,2026-09-14 06:00:00
+KOSHAK IMAM PRATHMIK VIDYALAYA,flipflop_burst,2646,2024-06-08 06:00:00,2026-10-10 18:00:00
+Kamhariya_1,placeholder_start,48,2022-09-25 00:00:00,2022-11-23 12:00:00
+Kamhariya_1,test_stuck,46,2026-03-25 00:00:00,2026-04-23 00:00:00
+Kamhariya_1,candidate_changed,48,2022-09-25 00:00:00,2022-11-23 12:00:00
+Kandhari Kala,test_stuck,66,2025-12-25 06:00:00,2026-07-05 12:00:00
+Khedki_1,flipflop_burst,1471,2025-04-10 12:00:00,2026-10-10 18:00:00
+Khojapur,flipflop_burst,2330,2024-09-10 12:00:00,2026-10-10 18:00:00
+Khursropur,flipflop_burst,5502,2022-07-13 12:00:00,2026-10-10 18:00:00
+Kukwa Khaas,test_stuck,30,2026-03-25 00:00:00,2026-04-22 00:00:00
+Kukwa Khaas,flipflop_burst,1535,2024-12-16 18:00:00,2026-10-10 18:00:00
+Kusarma,placeholder_start,28,2022-08-26 00:00:00,2022-10-24 12:00:00
+Kusarma,flipflop_burst,1113,2024-08-13 00:00:00,2025-05-23 18:00:00
+Kusarma,candidate_changed,28,2022-08-26 00:00:00,2022-10-24 12:00:00
+Kushinagar Captanganj Captanganj,test_stuck,10,2025-12-13 18:00:00,2025-12-16 00:00:00
+Kushinagar Captanganj Senduriya Vishunpur,test_stuck,235,2026-02-25 06:00:00,2026-09-20 00:00:00
+Kushinagar Captanganj Senduriya Vishunpur,flipflop_burst,3249,2024-01-22 06:00:00,2026-10-07 00:00:00
+Kushinagar Dudhai Dudhai,test_stuck,18,2026-02-13 12:00:00,2026-09-15 00:00:00
+Kushinagar Dudhai Gorariya,test_stuck,12,2026-02-07 12:00:00,2026-02-10 06:00:00
+Kushinagar Dudhai Gorariya,flipflop_burst,1029,2026-01-08 18:00:00,2026-10-10 18:00:00
+Kushinagar Fazilnagar  Belwakala,test_stuck,31,2026-05-11 12:00:00,2026-09-17 00:00:00
+Kushinagar Fazilnagar  Belwakala,flipflop_burst,903,2026-01-14 18:00:00,2026-10-03 00:00:00
+Kushinagar Fazilnagar Narayanpur Khoti,test_stuck,4,2026-01-05 18:00:00,2026-01-06 12:00:00
+Kushinagar Fazilnagar Narayanpur Khoti,flipflop_burst,1023,2026-01-10 06:00:00,2026-10-10 18:00:00
+Kushinagar Khadda Basdila,test_stuck,272,2025-12-22 00:00:00,2026-08-03 12:00:00
+Kushinagar Khadda Basdila,flipflop_burst,2540,2024-08-06 18:00:00,2026-10-10 00:00:00
+Kushinagar Khadda Khadda,test_stuck,2,2026-03-16 18:00:00,2026-03-17 00:00:00
+Kushinagar Khadda Khadda,flipflop_burst,330,2026-07-18 00:00:00,2026-10-10 18:00:00
+Kushinagar Motichak Motichak,test_stuck,17,2026-04-30 06:00:00,2026-08-31 18:00:00
+Kushinagar Sewarhi  Rampur Bagra N0.2,test_stuck,28,2026-01-05 18:00:00,2026-08-19 06:00:00
+Kushinagar Sewarhi Sewarhi,test_stuck,103,2026-01-29 06:00:00,2026-06-30 18:00:00
+Kushinagar Tamkuhi Rajwatiya,test_stuck,110,2026-01-04 00:00:00,2026-09-02 00:00:00
+Kushinagar Tamkuhi Tamkuhi,test_stuck,118,2026-01-05 18:00:00,2026-08-05 12:00:00
+Ladaka Purwa,placeholder_start,30,2022-07-07 00:00:00,2022-09-05 00:00:00
+Ladaka Purwa,test_stuck,24,2026-02-04 06:00:00,2026-08-05 06:00:00
+Ladaka Purwa,candidate_changed,30,2022-07-07 00:00:00,2022-09-05 00:00:00
+Lagdi Gullar Prathmik Vidyalaya,flipflop_burst,943,2026-01-22 00:00:00,2026-10-10 18:00:00
+Luktra,placeholder_start,42,2022-07-15 00:00:00,2022-08-05 06:00:00
+Luktra,flipflop_burst,169,2026-08-29 18:00:00,2026-10-10 18:00:00
+Luktra,candidate_changed,42,2022-07-15 00:00:00,2022-08-05 06:00:00
+MANDHATA PURV MADHYAMIK VIDYALAYA,flipflop_burst,1322,2025-06-01 06:00:00,2026-10-10 18:00:00
+Madarpur_1,placeholder_start,162,2022-09-21 00:00:00,2022-11-20 00:00:00
+Madarpur_1,candidate_changed,162,2022-09-21 00:00:00,2022-11-20 00:00:00
+"Madhyamik Vidhyalaya, Dulha Daul",flipflop_burst,1474,2025-04-04 12:00:00,2026-10-10 18:00:00
+"Mahadeva Temple, Mahadeva",flipflop_burst,2895,2024-05-04 00:00:00,2026-10-10 18:00:00
+Maharajganj Dhani Nausagar,test_stuck,76,2026-01-05 18:00:00,2026-03-28 06:00:00
+Maharajganj Nautanwa Purniha,test_stuck,27,2026-01-05 18:00:00,2026-01-12 06:00:00
+Maharajganj Nautanwa Purniha,flipflop_burst,1521,2025-02-01 18:00:00,2026-10-10 18:00:00
+Maharajganj Nichlaul Balaekhor,test_stuck,147,2025-11-26 12:00:00,2026-09-11 18:00:00
+Maharajganj Nichlaul Balaekhor,flipflop_burst,4633,2023-04-05 06:00:00,2026-10-10 18:00:00
+Maharajganj Nichlaul Garaura,test_stuck,129,2025-12-25 12:00:00,2026-09-05 12:00:00
+Mahoba Charkhari Kuaan,flipflop_burst,2177,2024-07-06 00:00:00,2026-10-10 18:00:00
+Mahoba Charkhari Natara,flipflop_burst,3593,2023-08-14 18:00:00,2026-10-10 18:00:00
+Mahoba Charkhari Padha,test_stuck,3,2026-06-07 12:00:00,2026-06-08 00:00:00
+Mahoba Charkhari Padha,flipflop_burst,4013,2023-07-18 18:00:00,2026-10-10 18:00:00
+Mahoba Jaitpur saguniyamaph,test_stuck,193,2026-02-02 06:00:00,2026-07-01 00:00:00
+Mahoba Jaitpur saguniyamaph,flipflop_burst,1857,2025-01-23 06:00:00,2026-10-10 18:00:00
+Mahoba Kabrai Karaha,flipflop_burst,4330,2023-03-24 18:00:00,2026-10-10 18:00:00
+Mahoba Panwari Didvara,test_stuck,80,2026-01-11 12:00:00,2026-06-08 00:00:00
+Mainpuri Karhal  Rajpur,test_stuck,4,2026-02-02 18:00:00,2026-02-03 12:00:00
+Mainpuri Karhal  Rajpur,flipflop_burst,190,2026-08-05 00:00:00,2026-10-10 18:00:00
+Mainpuri Karhal Mohabbatpur,test_stuck,24,2025-11-28 12:00:00,2026-05-22 06:00:00
+Mainpuri Karhal Naglamdari,test_stuck,48,2026-01-30 18:00:00,2026-08-25 18:00:00
+Mainpuri Karhal Takhrau,test_stuck,35,2026-08-30 12:00:00,2026-09-08 00:00:00
+Mainpuri Karhal Takhrau,flipflop_burst,686,2026-04-22 00:00:00,2026-10-10 18:00:00
+Mainpuri Karhal Timrakh,test_stuck,1,2026-09-14 00:00:00,2026-09-14 00:00:00
+Mainpuri Karhal Timrakh,flipflop_burst,1708,2024-10-09 12:00:00,2026-10-01 00:00:00
+Mandi Samiti-Muzaffar Nagar-Medium,test_stuck,4,2026-09-01 12:00:00,2026-09-02 06:00:00
+Mathura Chaumuha Navagaon-11,test_stuck,7,2025-12-12 12:00:00,2025-12-14 00:00:00
+Mathura Chhata Chandauri,flipflop_burst,4271,2023-05-08 18:00:00,2026-10-10 18:00:00
+Mathura Chhata Sher Nagar,test_stuck,253,2025-12-25 18:00:00,2026-09-29 00:00:00
+Mathura Nandgaon Nandgaon Dehat,test_stuck,540,2025-11-27 00:00:00,2026-09-29 06:00:00
+Mathura Nandgaon Vathainkala,test_stuck,124,2026-01-20 12:00:00,2026-09-26 12:00:00
+Mathura Naujheel Badharra,test_stuck,89,2026-01-26 12:00:00,2026-04-15 06:00:00
+Mathura Naujheel Badharra,flipflop_burst,3814,2023-07-04 18:00:00,2026-10-10 18:00:00
+Mathura Pharah Nagala Medhaki,test_stuck,36,2026-03-18 06:00:00,2026-09-30 06:00:00
+Mathura Pharah Nagala Medhaki,flipflop_burst,272,2026-08-03 12:00:00,2026-10-10 18:00:00
+Mathura Rayan Kharaba,test_stuck,3,2025-12-31 18:00:00,2026-01-01 06:00:00
+Mathura Rayan Kharaba,flipflop_burst,5006,2022-11-14 18:00:00,2026-10-10 18:00:00
+Meerut Janikhurd Afjalpur Pavati,flipflop_burst,4543,2022-11-12 18:00:00,2026-10-10 18:00:00
+Meerut Janikhurd Satvai,flipflop_burst,4098,2023-06-14 18:00:00,2026-10-09 00:00:00
+Murwa_1,test_stuck,33,2026-01-10 06:00:00,2026-04-23 00:00:00
+Murwa_1,flipflop_burst,2593,2024-07-06 12:00:00,2026-10-10 18:00:00
+"Nagar Palika Campus, Gyanpur",flipflop_burst,2706,2024-06-04 06:00:00,2026-10-10 18:00:00
+Naglakabu_1,placeholder_start,147,2022-08-09 00:00:00,2022-09-30 18:00:00
+Naglakabu_1,test_stuck,225,2025-12-22 12:00:00,2026-07-15 06:00:00
+Naglakabu_1,candidate_changed,147,2022-08-09 00:00:00,2022-09-30 18:00:00
+Narajit,placeholder_start,198,2022-07-15 00:00:00,2022-09-13 00:00:00
+Narajit,test_stuck,5,2026-04-21 18:00:00,2026-04-22 18:00:00
+Narajit,flipflop_burst,3222,2024-01-05 12:00:00,2026-10-10 18:00:00
+Narajit,candidate_changed,198,2022-07-15 00:00:00,2022-09-13 00:00:00
+Navrasia,flipflop_burst,2735,2024-06-24 06:00:00,2026-10-10 18:00:00
+Niwabhari Prathmik Vidyalaya,flipflop_burst,1362,2025-05-13 06:00:00,2026-10-10 18:00:00
+"Office of Assistant Director, Resham",placeholder_start,193,2024-01-24 18:00:00,2024-03-20 00:00:00
+"Office of Assistant Director, Resham",candidate_changed,193,2024-01-24 18:00:00,2024-03-20 00:00:00
+"Office of the Development Officer, Dakore",placeholder_start,240,2024-01-20 18:00:00,2024-03-20 12:00:00
+"Office of the Development Officer, Dakore",test_stuck,4,2026-06-20 00:00:00,2026-06-20 18:00:00
+"Office of the Development Officer, Dakore",candidate_changed,240,2024-01-20 18:00:00,2024-03-20 12:00:00
+P.S Engohata,flipflop_burst,72,2025-06-20 06:00:00,2025-07-10 00:00:00
+PAHARPUR BARIGAWA PRATHMIK VIDYALAYA,flipflop_burst,1009,2026-01-04 06:00:00,2026-10-10 18:00:00
+PRIMARY SCHOOL BAKAR GANJ,flipflop_burst,1560,2025-04-12 00:00:00,2026-10-10 18:00:00
+PRIMARY SCHOOL RAMUGHAT,flipflop_burst,2701,2024-06-24 06:00:00,2026-10-10 18:00:00
+Paderi,placeholder_start,203,2022-07-14 00:00:00,2022-09-12 00:00:00
+Paderi,test_stuck,8,2026-04-21 06:00:00,2026-04-23 00:00:00
+Paderi,candidate_changed,203,2022-07-14 00:00:00,2022-09-12 00:00:00
+Palhari_1,placeholder_start,121,2023-01-23 00:00:00,2023-03-22 12:00:00
+Palhari_1,test_stuck,118,2026-01-24 00:00:00,2026-04-22 18:00:00
+Palhari_1,flipflop_burst,1053,2025-04-30 06:00:00,2026-07-25 06:00:00
+Palhari_1,candidate_changed,121,2023-01-23 00:00:00,2023-03-22 12:00:00
+Panchayat Bhawan  Suhel,test_stuck,906,2026-01-04 06:00:00,2026-09-13 12:00:00
+"Panchayat Bhawan , Jafarabad Nagla",flipflop_burst,349,2026-05-20 18:00:00,2026-09-13 18:00:00
+Panchayat Bhawan Kuda Nar Singhpur,placeholder_start,224,2024-01-24 18:00:00,2024-03-20 18:00:00
+Panchayat Bhawan Kuda Nar Singhpur,test_stuck,377,2026-01-05 18:00:00,2026-09-11 06:00:00
+Panchayat Bhawan Kuda Nar Singhpur,candidate_changed,224,2024-01-24 18:00:00,2024-03-20 18:00:00
+Panchayat Bhawan Usmanpur,placeholder_start,126,2024-01-24 18:00:00,2024-03-13 12:00:00
+Panchayat Bhawan Usmanpur,test_stuck,37,2026-01-29 18:00:00,2026-06-20 18:00:00
+Panchayat Bhawan Usmanpur,candidate_changed,126,2024-01-24 18:00:00,2024-03-13 12:00:00
+"Panchayat Bhawan, Dohri",flipflop_burst,1675,2025-03-10 00:00:00,2026-10-10 18:00:00
+"Panchayat Bhawan, Kul Doomri",flipflop_burst,3258,2024-01-16 18:00:00,2026-10-10 18:00:00
+"Panchayat Bhwan, Kon",flipflop_burst,884,2026-02-05 12:00:00,2026-10-10 18:00:00
+Pathrodi,placeholder_start,114,2022-07-23 00:00:00,2022-09-18 18:00:00
+Pathrodi,test_stuck,3,2025-12-29 12:00:00,2025-12-30 00:00:00
+Pathrodi,candidate_changed,114,2022-07-23 00:00:00,2022-09-18 18:00:00
+Perthivipur Nayakh,placeholder_start,206,2022-10-01 00:00:00,2022-11-30 00:00:00
+Perthivipur Nayakh,test_stuck,21,2026-02-10 12:00:00,2026-03-01 06:00:00
+Perthivipur Nayakh,candidate_changed,206,2022-10-01 00:00:00,2022-11-30 00:00:00
+Piparaond,flipflop_burst,1676,2025-02-28 06:00:00,2026-10-06 12:00:00
+Pipraundha,flipflop_burst,464,2025-07-08 06:00:00,2026-02-09 12:00:00
+Poorv Madhamik Vidhyalaya Kaseti,placeholder_start,199,2024-01-29 18:00:00,2024-03-20 18:00:00
+Poorv Madhamik Vidhyalaya Kaseti,test_stuck,21,2026-01-05 18:00:00,2026-08-17 06:00:00
+Poorv Madhamik Vidhyalaya Kaseti,candidate_changed,199,2024-01-29 18:00:00,2024-03-20 18:00:00
+"Prathmik Vidhyala, Riawali Nagla",test_stuck,939,2025-12-17 18:00:00,2026-09-13 12:00:00
+Prathmik Vidhyalaya Bant,placeholder_start,69,2024-01-20 18:00:00,2024-02-06 18:00:00
+Prathmik Vidhyalaya Bant,test_stuck,5,2026-01-12 06:00:00,2026-01-14 06:00:00
+Prathmik Vidhyalaya Bant,candidate_changed,69,2024-01-20 18:00:00,2024-02-06 18:00:00
+Prathmik Vidhyalaya Barha,placeholder_start,239,2024-01-19 18:00:00,2024-03-19 18:00:00
+Prathmik Vidhyalaya Barha,test_stuck,917,2026-01-06 18:00:00,2026-09-13 18:00:00
+Prathmik Vidhyalaya Barha,candidate_changed,239,2024-01-19 18:00:00,2024-03-19 18:00:00
+Prathmik Vidhyalaya Mahugarh,flipflop_burst,3760,2023-09-25 00:00:00,2026-10-10 12:00:00
+Prathmik Vidhyalaya Manohari,placeholder_start,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+Prathmik Vidhyalaya Manohari,test_stuck,101,2026-01-05 18:00:00,2026-08-26 00:00:00
+Prathmik Vidhyalaya Manohari,candidate_changed,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+Prathmik Vidhyalaya Pahalgaon,placeholder_start,119,2024-01-20 18:00:00,2024-03-07 18:00:00
+Prathmik Vidhyalaya Pahalgaon,test_stuck,61,2026-01-30 12:00:00,2026-05-09 18:00:00
+Prathmik Vidhyalaya Pahalgaon,candidate_changed,119,2024-01-20 18:00:00,2024-03-07 18:00:00
+Prathmik Vidhyalaya Pipra Sarvan,placeholder_start,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Prathmik Vidhyalaya Pipra Sarvan,test_stuck,447,2026-02-16 18:00:00,2026-06-28 18:00:00
+Prathmik Vidhyalaya Pipra Sarvan,candidate_changed,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Prathmik Vidhyalaya Sirasiya Pawar,placeholder_start,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Prathmik Vidhyalaya Sirasiya Pawar,test_stuck,54,2026-01-09 06:00:00,2026-06-06 06:00:00
+Prathmik Vidhyalaya Sirasiya Pawar,candidate_changed,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Prathmik Vidhyalaya Takuli (Durahi Maafi),placeholder_start,237,2024-01-20 18:00:00,2024-03-20 12:00:00
+Prathmik Vidhyalaya Takuli (Durahi Maafi),test_stuck,27,2026-03-30 18:00:00,2026-04-06 06:00:00
+Prathmik Vidhyalaya Takuli (Durahi Maafi),candidate_changed,237,2024-01-20 18:00:00,2024-03-20 12:00:00
+"Prathmik Vidhyalaya, AhmadShahPur Padra",test_stuck,1066,2025-12-21 18:00:00,2026-09-14 00:00:00
+"Prathmik Vidhyalaya, AhmadShahPur Padra",flipflop_burst,1695,2025-01-30 18:00:00,2026-09-14 00:00:00
+"Prathmik Vidhyalaya, Bali",test_stuck,912,2025-12-29 18:00:00,2026-09-13 12:00:00
+"Prathmik Vidhyalaya, Bichpari Kamali",test_stuck,974,2026-01-03 18:00:00,2026-09-12 06:00:00
+"Prathmik Vidhyalaya, Biharipur",test_stuck,500,2025-12-27 06:00:00,2026-09-13 12:00:00
+"Prathmik Vidhyalaya, Biharipur",flipflop_burst,2010,2024-10-03 12:00:00,2026-09-13 12:00:00
+"Prathmik Vidhyalaya, Didhora  Sadullapur",test_stuck,926,2025-12-25 06:00:00,2026-09-12 12:00:00
+"Prathmik Vidhyalaya, Didhora  Sadullapur",flipflop_burst,2012,2024-10-07 18:00:00,2026-09-13 12:00:00
+"Prathmik Vidhyalaya, Doula",test_stuck,1003,2025-12-28 18:00:00,2026-09-05 06:00:00
+"Prathmik Vidhyalaya, Gwalikhera",test_stuck,924,2025-12-26 18:00:00,2026-09-13 12:00:00
+"Prathmik Vidhyalaya, Katiliaha",placeholder_start,221,2024-01-24 18:00:00,2024-03-20 18:00:00
+"Prathmik Vidhyalaya, Katiliaha",flipflop_burst,7,2026-07-08 06:00:00,2026-07-27 06:00:00
+"Prathmik Vidhyalaya, Katiliaha",candidate_changed,221,2024-01-24 18:00:00,2024-03-20 18:00:00
+"Prathmik Vidhyalaya, Khampur",test_stuck,875,2026-01-03 18:00:00,2026-09-13 12:00:00
+"Prathmik Vidhyalaya, Khera Islampur",test_stuck,889,2025-12-24 00:00:00,2026-09-13 06:00:00
+"Prathmik Vidhyalaya, Makarndpur",placeholder_start,223,2024-01-24 18:00:00,2024-03-20 18:00:00
+"Prathmik Vidhyalaya, Makarndpur",test_stuck,156,2026-01-10 00:00:00,2026-07-24 18:00:00
+"Prathmik Vidhyalaya, Makarndpur",candidate_changed,223,2024-01-24 18:00:00,2024-03-20 18:00:00
+"Prathmik Vidhyalaya, Medpur",test_stuck,992,2025-12-25 00:00:00,2026-09-13 06:00:00
+"Prathmik Vidhyalaya, Medpur",flipflop_burst,2210,2024-09-25 18:00:00,2026-09-13 06:00:00
+"Prathmik Vidhyalaya, Nehlawa",placeholder_start,211,2024-01-27 18:00:00,2024-03-20 18:00:00
+"Prathmik Vidhyalaya, Nehlawa",flipflop_burst,205,2026-07-24 18:00:00,2026-09-13 18:00:00
+"Prathmik Vidhyalaya, Nehlawa",candidate_changed,211,2024-01-27 18:00:00,2024-03-20 18:00:00
+"Prathmik Vidhyalaya, Phaprana",placeholder_start,204,2024-01-29 18:00:00,2024-03-20 18:00:00
+"Prathmik Vidhyalaya, Phaprana",candidate_changed,204,2024-01-29 18:00:00,2024-03-20 18:00:00
+"Prathmik Vidhyalaya, Shahjahanpur_1",placeholder_start,181,2024-01-30 18:00:00,2024-03-20 18:00:00
+"Prathmik Vidhyalaya, Shahjahanpur_1",candidate_changed,181,2024-01-30 18:00:00,2024-03-20 18:00:00
+"Prathmik Vidhyalaya, Sikhera_1",test_stuck,1070,2025-12-20 18:00:00,2026-09-14 00:00:00
+"Prathmik Vidhyalaya, Taizullahpur",flipflop_burst,2012,2024-10-06 18:00:00,2026-09-13 12:00:00
+"Prathmik Vidhyalaya, Thavai",placeholder_start,198,2024-01-29 18:00:00,2024-03-20 18:00:00
+"Prathmik Vidhyalaya, Thavai",test_stuck,194,2026-01-05 18:00:00,2026-09-13 18:00:00
+"Prathmik Vidhyalaya, Thavai",candidate_changed,198,2024-01-29 18:00:00,2024-03-20 18:00:00
+"Prathmik Vidhyalaya, vilodhpura",test_stuck,911,2025-12-23 18:00:00,2026-09-12 12:00:00
+"Prathmik Vidhyalaya, vilodhpura",flipflop_burst,2087,2024-10-07 00:00:00,2026-09-13 12:00:00
+"Pratmik Vidhyalaya, Kakaruwa",placeholder_start,74,2024-01-20 12:00:00,2024-02-07 18:00:00
+"Pratmik Vidhyalaya, Kakaruwa",candidate_changed,74,2024-01-20 12:00:00,2024-02-07 18:00:00
+Priamry School Mukasim,placeholder_start,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+Priamry School Mukasim,test_stuck,703,2026-01-16 00:00:00,2026-08-12 00:00:00
+Priamry School Mukasim,candidate_changed,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+"Primary  School, Nawada Kalan",flipflop_burst,1446,2025-04-12 06:00:00,2026-10-10 18:00:00
+"Primary / Composite School, Banwaripur",test_stuck,39,2026-01-05 18:00:00,2026-01-15 06:00:00
+"Primary / Composite School, Chiraudi",test_stuck,31,2026-01-05 18:00:00,2026-01-13 06:00:00
+"Primary / Composite School, Jainpur",test_stuck,2,2025-12-26 18:00:00,2025-12-27 00:00:00
+"Primary / Composite School, Jainpur",flipflop_burst,133,2023-05-01 18:00:00,2023-06-04 18:00:00
+"Primary / Composite School, Jasad",flipflop_burst,3915,2023-04-24 18:00:00,2026-10-10 18:00:00
+"Primary / Composite School, Mahalaka",test_stuck,56,2026-03-18 12:00:00,2026-09-14 18:00:00
+"Primary / Composite School, Mohaddinpur",test_stuck,188,2025-12-02 00:00:00,2026-09-05 06:00:00
+"Primary / Composite School, Saradhana Block Office",flipflop_burst,3886,2023-08-02 18:00:00,2026-10-10 18:00:00
+Primary School  Bihasara,flipflop_burst,2235,2024-10-06 18:00:00,2026-10-10 18:00:00
+Primary School  Biraura,flipflop_burst,3842,2023-08-24 12:00:00,2026-10-10 18:00:00
+Primary School  Maharaji,flipflop_burst,1414,2025-05-07 18:00:00,2026-10-10 18:00:00
+Primary School Ashadh,placeholder_start,197,2024-01-31 06:00:00,2024-03-20 18:00:00
+Primary School Ashadh,test_stuck,68,2026-07-19 18:00:00,2026-08-05 12:00:00
+Primary School Ashadh,candidate_changed,197,2024-01-31 06:00:00,2024-03-20 18:00:00
+Primary School Babura,flipflop_burst,2529,2024-07-23 18:00:00,2026-10-10 18:00:00
+Primary School Baijnathpur,placeholder_start,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Baijnathpur,test_stuck,455,2026-01-05 18:00:00,2026-09-13 18:00:00
+Primary School Baijnathpur,candidate_changed,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Bargdhi,placeholder_start,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Bargdhi,test_stuck,358,2026-01-09 06:00:00,2026-06-19 18:00:00
+Primary School Bargdhi,candidate_changed,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Bhata Diha,placeholder_start,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Bhata Diha,test_stuck,488,2026-01-13 18:00:00,2026-06-19 18:00:00
+Primary School Bhata Diha,candidate_changed,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Bilona,placeholder_start,191,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Bilona,test_stuck,7,2026-01-10 00:00:00,2026-01-11 12:00:00
+Primary School Bilona,candidate_changed,191,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Campus Aurangabad,placeholder_start,161,2024-01-30 18:00:00,2024-03-19 06:00:00
+Primary School Campus Aurangabad,test_stuck,203,2026-01-13 12:00:00,2026-07-12 06:00:00
+Primary School Campus Aurangabad,candidate_changed,161,2024-01-30 18:00:00,2024-03-19 06:00:00
+Primary School Campus Powai,placeholder_start,196,2024-01-31 12:00:00,2024-03-20 18:00:00
+Primary School Campus Powai,test_stuck,385,2026-01-05 18:00:00,2026-09-13 18:00:00
+Primary School Campus Powai,candidate_changed,196,2024-01-31 12:00:00,2024-03-20 18:00:00
+Primary School Campus Sikraura,placeholder_start,152,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Campus Sikraura,test_stuck,856,2026-01-05 18:00:00,2026-09-13 18:00:00
+Primary School Campus Sikraura,candidate_changed,152,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Chandrapur Bichpuri,placeholder_start,224,2024-01-24 12:00:00,2024-03-20 18:00:00
+Primary School Chandrapur Bichpuri,test_stuck,706,2026-01-05 18:00:00,2026-08-18 18:00:00
+Primary School Chandrapur Bichpuri,candidate_changed,224,2024-01-24 12:00:00,2024-03-20 18:00:00
+Primary School Charkonwa,placeholder_start,146,2024-01-30 18:00:00,2024-03-19 12:00:00
+Primary School Charkonwa,test_stuck,453,2026-01-24 00:00:00,2026-07-10 18:00:00
+Primary School Charkonwa,candidate_changed,146,2024-01-30 18:00:00,2024-03-19 12:00:00
+Primary School Chobla,placeholder_start,193,2024-01-20 00:00:00,2024-03-10 06:00:00
+Primary School Chobla,test_stuck,66,2026-01-29 18:00:00,2026-03-28 06:00:00
+Primary School Chobla,candidate_changed,193,2024-01-20 00:00:00,2024-03-10 06:00:00
+Primary School Cholahe,placeholder_start,224,2024-01-24 12:00:00,2024-03-20 18:00:00
+Primary School Cholahe,test_stuck,35,2026-02-19 12:00:00,2026-08-29 18:00:00
+Primary School Cholahe,candidate_changed,224,2024-01-24 12:00:00,2024-03-20 18:00:00
+Primary School Didhai,placeholder_start,220,2024-01-25 18:00:00,2024-03-20 18:00:00
+Primary School Didhai,test_stuck,118,2026-01-11 06:00:00,2026-07-13 00:00:00
+Primary School Didhai,candidate_changed,220,2024-01-25 18:00:00,2024-03-20 18:00:00
+Primary School Dohriya,placeholder_start,165,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Dohriya,candidate_changed,165,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School English Medium Qutubpur Labdauna,flipflop_burst,2614,2024-04-05 18:00:00,2026-09-13 18:00:00
+Primary School Gudha,placeholder_start,69,2024-01-20 18:00:00,2024-02-06 18:00:00
+Primary School Gudha,candidate_changed,69,2024-01-20 18:00:00,2024-02-06 18:00:00
+Primary School Harinahpur,flipflop_burst,2599,2024-07-23 18:00:00,2026-10-10 18:00:00
+Primary School Harivanshpur,placeholder_start,204,2024-01-29 18:00:00,2024-03-20 18:00:00
+Primary School Harivanshpur,candidate_changed,204,2024-01-29 18:00:00,2024-03-20 18:00:00
+Primary School Jagannathpur,placeholder_start,133,2024-01-24 12:00:00,2024-03-02 06:00:00
+Primary School Jagannathpur,test_stuck,711,2026-01-05 18:00:00,2026-08-16 06:00:00
+Primary School Jagannathpur,flipflop_burst,3006,2024-03-20 18:00:00,2026-09-13 18:00:00
+Primary School Jagannathpur,candidate_changed,133,2024-01-24 12:00:00,2024-03-02 06:00:00
+Primary School Jagdishpur Pratham,placeholder_start,197,2024-01-31 18:00:00,2024-03-20 18:00:00
+Primary School Jagdishpur Pratham,candidate_changed,197,2024-01-31 18:00:00,2024-03-20 18:00:00
+Primary School Jainpur,flipflop_burst,1265,2025-05-29 06:00:00,2026-10-10 18:00:00
+Primary School Jairampur,placeholder_start,212,2024-01-18 00:00:00,2024-03-18 00:00:00
+Primary School Jairampur,test_stuck,836,2026-01-05 18:00:00,2026-09-13 18:00:00
+Primary School Jairampur,flipflop_burst,36,2024-07-04 12:00:00,2024-07-20 00:00:00
+Primary School Jairampur,candidate_changed,212,2024-01-18 00:00:00,2024-03-18 00:00:00
+Primary School Jamunia,placeholder_start,181,2024-01-30 18:00:00,2024-03-18 00:00:00
+Primary School Jamunia,test_stuck,3,2026-01-10 12:00:00,2026-01-11 00:00:00
+Primary School Jamunia,flipflop_burst,1361,2025-03-27 18:00:00,2026-09-13 18:00:00
+Primary School Jamunia,candidate_changed,181,2024-01-30 18:00:00,2024-03-18 00:00:00
+Primary School Jatmujheda,placeholder_start,239,2024-01-19 18:00:00,2024-03-19 12:00:00
+Primary School Jatmujheda,flipflop_burst,373,2026-06-07 18:00:00,2026-09-13 18:00:00
+Primary School Jatmujheda,candidate_changed,239,2024-01-19 18:00:00,2024-03-19 12:00:00
+Primary School Karwal,flipflop_burst,2618,2024-07-17 18:00:00,2026-10-10 18:00:00
+Primary School Keshawpur Pratham,flipflop_burst,1953,2024-12-28 06:00:00,2026-10-10 18:00:00
+Primary School Kucharam,placeholder_start,236,2024-01-20 18:00:00,2024-03-19 18:00:00
+Primary School Kucharam,test_stuck,1,2026-05-20 06:00:00,2026-05-20 06:00:00
+Primary School Kucharam,candidate_changed,236,2024-01-20 18:00:00,2024-03-19 18:00:00
+Primary School Kurdi,placeholder_start,239,2024-01-20 00:00:00,2024-03-19 18:00:00
+Primary School Kurdi,flipflop_burst,2932,2024-04-13 18:00:00,2026-09-13 18:00:00
+Primary School Kurdi,candidate_changed,239,2024-01-20 00:00:00,2024-03-19 18:00:00
+Primary School Madari,placeholder_start,224,2024-01-24 18:00:00,2024-03-20 18:00:00
+Primary School Madari,test_stuck,101,2026-01-05 18:00:00,2026-08-11 18:00:00
+Primary School Madari,candidate_changed,224,2024-01-24 18:00:00,2024-03-20 18:00:00
+Primary School Mainhe hardo,placeholder_start,201,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Mainhe hardo,test_stuck,10,2026-01-05 18:00:00,2026-01-28 00:00:00
+Primary School Mainhe hardo,candidate_changed,201,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Masuri,placeholder_start,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Masuri,test_stuck,100,2026-01-10 12:00:00,2026-05-25 18:00:00
+Primary School Masuri,candidate_changed,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Mohammadpur Gurjar,test_stuck,109,2026-01-12 18:00:00,2026-09-10 00:00:00
+Primary School Nandapur,placeholder_start,205,2024-01-29 18:00:00,2024-03-20 18:00:00
+Primary School Nandapur,test_stuck,252,2026-02-07 06:00:00,2026-07-17 06:00:00
+Primary School Nandapur,candidate_changed,205,2024-01-29 18:00:00,2024-03-20 18:00:00
+Primary School No. 1 Barawad,placeholder_start,239,2024-01-20 00:00:00,2024-03-19 18:00:00
+Primary School No. 1 Barawad,test_stuck,612,2026-01-02 06:00:00,2026-09-08 00:00:00
+Primary School No. 1 Barawad,candidate_changed,239,2024-01-20 00:00:00,2024-03-19 18:00:00
+"Primary School No.1, Bitaoda",test_stuck,936,2025-12-23 06:00:00,2026-09-13 06:00:00
+"Primary School No.1, Bitaoda",flipflop_burst,2015,2024-10-13 00:00:00,2026-09-13 06:00:00
+Primary School Odaraha,placeholder_start,196,2024-01-31 12:00:00,2024-03-20 18:00:00
+Primary School Odaraha,test_stuck,5,2026-03-02 12:00:00,2026-04-13 00:00:00
+Primary School Odaraha,candidate_changed,196,2024-01-31 12:00:00,2024-03-20 18:00:00
+Primary School Pahara,placeholder_start,224,2024-01-24 12:00:00,2024-03-20 18:00:00
+Primary School Pahara,test_stuck,712,2026-01-05 18:00:00,2026-09-13 18:00:00
+Primary School Pahara,candidate_changed,224,2024-01-24 12:00:00,2024-03-20 18:00:00
+Primary School Pinna,placeholder_start,238,2024-01-18 18:00:00,2024-03-18 18:00:00
+Primary School Pinna,candidate_changed,238,2024-01-18 18:00:00,2024-03-18 18:00:00
+Primary School Radnool Azizpur,placeholder_start,205,2024-01-24 12:00:00,2024-03-15 18:00:00
+Primary School Radnool Azizpur,test_stuck,4,2026-02-06 12:00:00,2026-02-07 06:00:00
+Primary School Radnool Azizpur,candidate_changed,205,2024-01-24 12:00:00,2024-03-15 18:00:00
+Primary School Rathoda,placeholder_start,241,2024-01-19 18:00:00,2024-03-19 18:00:00
+Primary School Rathoda,flipflop_burst,2651,2024-05-13 18:00:00,2026-09-13 18:00:00
+Primary School Rathoda,candidate_changed,241,2024-01-19 18:00:00,2024-03-19 18:00:00
+"Primary School Sahjanwa , Pratham Pipra",flipflop_burst,681,2026-04-01 12:00:00,2026-10-10 18:00:00
+Primary School Sahori,placeholder_start,225,2024-01-24 12:00:00,2024-03-20 18:00:00
+Primary School Sahori,test_stuck,587,2026-01-05 18:00:00,2026-09-13 18:00:00
+Primary School Sahori,candidate_changed,225,2024-01-24 12:00:00,2024-03-20 18:00:00
+Primary School Salawa,placeholder_start,225,2024-01-24 18:00:00,2024-03-20 18:00:00
+Primary School Salawa,flipflop_burst,1225,2025-06-14 18:00:00,2026-09-13 18:00:00
+Primary School Salawa,candidate_changed,225,2024-01-24 18:00:00,2024-03-20 18:00:00
+Primary School Sanda-Sanee,placeholder_start,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+Primary School Sanda-Sanee,test_stuck,127,2026-08-08 00:00:00,2026-09-13 18:00:00
+Primary School Sanda-Sanee,flipflop_burst,2856,2024-04-29 00:00:00,2026-09-13 18:00:00
+Primary School Sanda-Sanee,candidate_changed,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+Primary School Shekhpuri,placeholder_start,200,2024-01-20 00:00:00,2024-03-19 18:00:00
+Primary School Shekhpuri,test_stuck,24,2026-02-04 12:00:00,2026-02-10 06:00:00
+Primary School Shekhpuri,candidate_changed,200,2024-01-20 00:00:00,2024-03-19 18:00:00
+Primary School Sonda,placeholder_start,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Sonda,test_stuck,721,2026-01-06 18:00:00,2026-08-23 18:00:00
+Primary School Sonda,candidate_changed,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Primary School Vamanpura,placeholder_start,225,2024-01-24 06:00:00,2024-03-20 18:00:00
+Primary School Vamanpura,test_stuck,36,2026-04-23 18:00:00,2026-06-30 18:00:00
+Primary School Vamanpura,flipflop_burst,2347,2024-07-01 12:00:00,2026-09-13 18:00:00
+Primary School Vamanpura,candidate_changed,225,2024-01-24 06:00:00,2024-03-20 18:00:00
+Primary School chandsina,placeholder_start,238,2024-01-18 18:00:00,2024-03-18 18:00:00
+Primary School chandsina,test_stuck,182,2026-02-02 06:00:00,2026-09-11 06:00:00
+Primary School chandsina,flipflop_burst,1,2024-04-08 00:00:00,2024-04-08 00:00:00
+Primary School chandsina,candidate_changed,238,2024-01-18 18:00:00,2024-03-18 18:00:00
+Primary School kakrehwa,placeholder_start,204,2024-01-29 18:00:00,2024-03-20 18:00:00
+Primary School kakrehwa,candidate_changed,204,2024-01-29 18:00:00,2024-03-20 18:00:00
+"Primary School,  Todarpur",test_stuck,22,2025-12-24 06:00:00,2025-12-29 12:00:00
+"Primary School,  Todarpur",flipflop_burst,1928,2024-12-17 18:00:00,2026-10-10 18:00:00
+"Primary School, Asara Bighawati",test_stuck,370,2026-01-05 18:00:00,2026-08-09 18:00:00
+"Primary School, Asara Bighawati",flipflop_burst,884,2026-02-14 00:00:00,2026-10-10 18:00:00
+"Primary School, Badagaon bharati form",test_stuck,51,2026-02-06 06:00:00,2026-08-01 00:00:00
+"Primary School, Baghpokhar",flipflop_burst,2582,2024-07-07 18:00:00,2026-10-10 18:00:00
+"Primary School, Bamhauri",placeholder_start,97,2022-07-30 00:00:00,2022-09-27 12:00:00
+"Primary School, Bamhauri",test_stuck,19,2025-12-16 00:00:00,2026-08-02 18:00:00
+"Primary School, Bamhauri",candidate_changed,97,2022-07-30 00:00:00,2022-09-27 12:00:00
+"Primary School, Bamhoori Khurd",flipflop_burst,2875,2024-01-03 00:00:00,2026-10-01 12:00:00
+"Primary School, Bandpur",flipflop_burst,2275,2024-07-24 06:00:00,2026-10-10 18:00:00
+"Primary School, Bartha Lala",flipflop_burst,2701,2024-07-03 18:00:00,2026-10-10 18:00:00
+"Primary School, Basti",test_stuck,1,2026-07-05 18:00:00,2026-07-05 18:00:00
+"Primary School, Belatal",test_stuck,102,2026-02-01 18:00:00,2026-08-30 18:00:00
+"Primary School, Belaukh",flipflop_burst,3908,2023-08-21 06:00:00,2026-10-10 12:00:00
+"Primary School, Bgra khisani bujurg",test_stuck,8,2026-07-19 18:00:00,2026-07-21 12:00:00
+"Primary School, Bhadauda",flipflop_burst,4238,2023-04-25 06:00:00,2026-10-10 18:00:00
+"Primary School, Bhagwanpur",test_stuck,2,2025-12-26 18:00:00,2025-12-27 00:00:00
+"Primary School, Bhalsona",test_stuck,10,2026-02-03 18:00:00,2026-02-06 00:00:00
+"Primary School, Bhartpura",test_stuck,61,2026-06-29 00:00:00,2026-08-08 18:00:00
+"Primary School, Block Office",flipflop_burst,3361,2023-11-18 12:00:00,2026-10-10 18:00:00
+"Primary School, Bodha",flipflop_burst,3997,2023-06-08 18:00:00,2026-10-10 18:00:00
+"Primary School, Bohra",flipflop_burst,620,2026-04-30 12:00:00,2026-10-10 00:00:00
+"Primary School, Brahmpur",flipflop_burst,1431,2025-05-14 06:00:00,2026-10-10 18:00:00
+"Primary School, Chariya Bujrag",flipflop_burst,1065,2025-12-30 12:00:00,2026-10-10 18:00:00
+"Primary School, Dagarpur Tigadi",flipflop_burst,466,2026-05-08 12:00:00,2026-09-19 12:00:00
+"Primary School, Dera Devra bujurg",test_stuck,226,2026-01-01 00:00:00,2026-03-25 00:00:00
+"Primary School, Dera Devra bujurg",flipflop_burst,3731,2022-04-24 06:00:00,2026-10-10 18:00:00
+"Primary School, Dewari",flipflop_burst,702,2026-04-08 06:00:00,2026-10-10 12:00:00
+"Primary School, Dhanaura",test_stuck,321,2026-01-05 18:00:00,2026-04-02 12:00:00
+"Primary School, Dhanaura",flipflop_burst,536,2026-04-05 18:00:00,2026-10-03 00:00:00
+"Primary School, Dhanaura Tikari",flipflop_burst,1083,2026-01-12 06:00:00,2026-10-10 18:00:00
+"Primary School, Dhankharpur",flipflop_burst,1392,2025-05-28 06:00:00,2026-10-10 18:00:00
+"Primary School, Dhikana",flipflop_burst,3928,2023-05-04 18:00:00,2026-10-10 00:00:00
+"Primary School, Gaidaira",test_stuck,186,2026-01-05 18:00:00,2026-09-19 18:00:00
+"Primary School, Garher",test_stuck,21,2026-01-30 18:00:00,2026-02-06 06:00:00
+"Primary School, Gauripur Javahar Nagar",flipflop_burst,3629,2023-08-31 00:00:00,2026-10-10 18:00:00
+"Primary School, Gursarai tahrauli tahshil",test_stuck,9,2026-01-05 18:00:00,2026-01-09 06:00:00
+"Primary School, Gursarai tahrauli tahshil",flipflop_burst,451,2026-05-11 18:00:00,2026-10-03 00:00:00
+"Primary School, Jhaaro Kalan",flipflop_burst,680,2025-05-06 18:00:00,2026-03-14 06:00:00
+"Primary School, Jogiya Khera",test_stuck,291,2025-12-07 12:00:00,2026-09-11 06:00:00
+"Primary School, Johadi",flipflop_burst,2372,2024-08-16 18:00:00,2026-10-10 18:00:00
+"Primary School, Kailgwan",flipflop_burst,781,2026-03-11 18:00:00,2026-10-10 18:00:00
+"Primary School, Kakadipur",test_stuck,36,2026-07-14 12:00:00,2026-09-24 06:00:00
+"Primary School, Kakaurkala",flipflop_burst,10,2023-06-17 06:00:00,2023-06-20 00:00:00
+"Primary School, Kalan Bar Devran",test_stuck,95,2026-02-11 12:00:00,2026-03-29 12:00:00
+"Primary School, Kalan Bar Devran",flipflop_burst,188,2023-08-30 18:00:00,2026-10-10 18:00:00
+"Primary School, Kalani Khurad",flipflop_burst,1503,2025-04-17 06:00:00,2026-10-10 18:00:00
+"Primary School, Kantit",flipflop_burst,3398,2024-01-19 18:00:00,2026-10-10 18:00:00
+"Primary School, Kaparwar",flipflop_burst,1811,2025-02-19 18:00:00,2026-10-10 18:00:00
+"Primary School, Karasdev Mandir",flipflop_burst,251,2025-02-25 06:00:00,2026-02-07 12:00:00
+"Primary School, Kevtam",flipflop_burst,548,2025-05-30 06:00:00,2026-02-27 00:00:00
+"Primary School, Khandeura",test_stuck,1,2026-01-12 06:00:00,2026-01-12 06:00:00
+"Primary School, Khiriya",test_stuck,3,2026-05-17 06:00:00,2026-05-17 18:00:00
+"Primary School, Khujurahokhurd",test_stuck,138,2025-12-25 12:00:00,2026-08-03 00:00:00
+"Primary School, Kodai",flipflop_burst,2755,2024-06-04 00:00:00,2026-10-10 18:00:00
+"Primary School, Koilar",flipflop_burst,2761,2024-06-02 18:00:00,2026-10-10 18:00:00
+"Primary School, Kritikhand",placeholder_start,220,2024-01-24 12:00:00,2024-03-19 18:00:00
+"Primary School, Kritikhand",test_stuck,51,2026-01-27 18:00:00,2026-04-14 06:00:00
+"Primary School, Kritikhand",candidate_changed,220,2024-01-24 12:00:00,2024-03-19 18:00:00
+"Primary School, Leharthkurpura",test_stuck,16,2026-07-20 18:00:00,2026-08-05 06:00:00
+"Primary School, Leharthkurpura",flipflop_burst,2085,2024-06-30 18:00:00,2026-10-10 18:00:00
+"Primary School, Manupura",test_stuck,127,2026-03-19 18:00:00,2026-08-03 00:00:00
+"Primary School, Marry",test_stuck,119,2025-12-24 00:00:00,2026-07-29 12:00:00
+"Primary School, Marry",flipflop_burst,3389,2024-01-28 12:00:00,2026-10-10 18:00:00
+"Primary School, Masaurakhurd",test_stuck,30,2026-01-08 06:00:00,2026-02-09 06:00:00
+"Primary School, Mithabel",flipflop_burst,1188,2025-07-31 06:00:00,2026-10-10 18:00:00
+"Primary School, Motiyari, Mahuaa, Banda_1",test_stuck,22,2026-01-28 00:00:00,2026-09-10 00:00:00
+"Primary School, Narokhar",flipflop_burst,1571,2025-04-07 00:00:00,2026-10-10 18:00:00
+"Primary School, Narouiya Daamar",flipflop_burst,3667,2023-10-15 12:00:00,2026-10-10 18:00:00
+"Primary School, Nota",test_stuck,9,2026-06-06 00:00:00,2026-06-08 00:00:00
+"Primary School, Nota",flipflop_burst,787,2023-10-19 12:00:00,2026-08-04 06:00:00
+"Primary School, Pachar",test_stuck,6,2026-01-09 06:00:00,2026-06-29 12:00:00
+"Primary School, Padra",test_stuck,14,2026-06-06 00:00:00,2026-07-10 18:00:00
+"Primary School, Padra",flipflop_burst,2559,2024-03-30 12:00:00,2026-10-09 00:00:00
+"Primary School, Pakarhut",flipflop_burst,1363,2025-05-24 06:00:00,2026-10-10 18:00:00
+"Primary School, Pali",test_stuck,202,2026-02-14 12:00:00,2026-09-21 00:00:00
+"Primary School, Paraon",test_stuck,1,2026-07-05 18:00:00,2026-07-05 18:00:00
+"Primary School, Pashu palan Vibhag Masuri",flipflop_burst,377,2026-05-30 18:00:00,2026-09-19 12:00:00
+"Primary School, Purakalan, Talbehat, Lalitpur_1",test_stuck,105,2026-01-05 18:00:00,2026-06-03 06:00:00
+"Primary School, R.K.Inter college",flipflop_burst,2862,2023-06-06 00:00:00,2026-10-10 18:00:00
+"Primary School, Radhana",test_stuck,78,2026-01-29 18:00:00,2026-07-05 12:00:00
+"Primary School, Safpuram Chandpur",test_stuck,7,2026-03-04 06:00:00,2026-08-06 06:00:00
+"Primary School, Saina",flipflop_burst,1693,2023-06-02 18:00:00,2026-10-06 00:00:00
+"Primary School, Salarpur Jalalpur",test_stuck,904,2025-12-31 18:00:00,2026-09-13 12:00:00
+"Primary School, Salarpur Jalalpur",flipflop_burst,3790,2023-08-10 18:00:00,2026-09-13 12:00:00
+"Primary School, Salhepur",placeholder_start,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+"Primary School, Salhepur",candidate_changed,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+"Primary School, Sangholi taga",flipflop_burst,3930,2023-07-21 00:00:00,2026-10-10 18:00:00
+"Primary School, Sanori",test_stuck,4,2026-04-07 06:00:00,2026-04-08 00:00:00
+"Primary School, Sanori",flipflop_burst,2393,2024-04-23 06:00:00,2026-10-10 18:00:00
+"Primary School, Sarwa",test_stuck,19,2026-07-23 12:00:00,2026-08-07 18:00:00
+"Primary School, Shekhar",flipflop_burst,628,2026-04-08 12:00:00,2026-10-10 18:00:00
+"Primary School, Shivpur",flipflop_burst,2629,2024-07-15 12:00:00,2026-10-10 18:00:00
+"Primary School, Silana",flipflop_burst,3126,2023-02-28 18:00:00,2026-07-05 18:00:00
+"Primary School, Sindhan Kalan",placeholder_start,95,2022-07-15 00:00:00,2022-09-07 12:00:00
+"Primary School, Sindhan Kalan",test_stuck,748,2025-10-27 00:00:00,2026-09-30 18:00:00
+"Primary School, Sindhan Kalan",flipflop_burst,3894,2023-01-01 12:00:00,2026-10-10 18:00:00
+"Primary School, Sindhan Kalan",candidate_changed,95,2022-07-15 00:00:00,2022-09-07 12:00:00
+"Primary School, Sirasi",flipflop_burst,2332,2024-09-12 06:00:00,2026-10-10 18:00:00
+"Primary School, Sirjam",flipflop_burst,1056,2026-01-02 00:00:00,2026-10-10 18:00:00
+"Primary School, Sultanpur_1",test_stuck,873,2025-12-30 12:00:00,2026-09-13 12:00:00
+"Primary School, Surikalan",flipflop_burst,3597,2023-05-09 18:00:00,2026-10-09 00:00:00
+"Primary School, Tilaura",flipflop_burst,1146,2025-08-13 06:00:00,2026-10-10 18:00:00
+"Primary School, Vansha Gram Panchayt",test_stuck,2,2026-07-01 18:00:00,2026-07-02 00:00:00
+"Primary School/ Composite, Alampur",flipflop_burst,3491,2023-12-01 06:00:00,2026-10-10 18:00:00
+"Primary School/ Composite, Bhojpur Taga",test_stuck,11,2026-02-03 00:00:00,2026-02-05 12:00:00
+"Primary School/ Composite, Chittora",test_stuck,26,2026-01-30 18:00:00,2026-02-08 12:00:00
+"Primary School/ Composite, Chittora",flipflop_burst,395,2026-07-04 06:00:00,2026-10-10 18:00:00
+"Primary School/ Composite, Dadheru Kaian",test_stuck,263,2025-11-26 18:00:00,2026-07-08 00:00:00
+"Primary School/ Composite, Dholla Majra",test_stuck,8,2026-01-20 00:00:00,2026-02-09 06:00:00
+"Primary School/ Composite, Fakreda",flipflop_burst,3401,2023-08-19 00:00:00,2026-10-10 18:00:00
+"Primary School/ Composite, Ghumawati",test_stuck,464,2026-01-05 18:00:00,2026-07-02 06:00:00
+"Primary School/ Composite, Haibatpur",flipflop_burst,4332,2023-04-21 18:00:00,2026-10-10 18:00:00
+"Primary School/ Composite, Jaula Dindauli",test_stuck,5,2026-01-22 06:00:00,2026-01-23 06:00:00
+"Primary School/ Composite, Jeevna",test_stuck,83,2025-12-26 18:00:00,2026-09-26 00:00:00
+"Primary School/ Composite, Jhabiran",flipflop_burst,4579,2023-04-22 18:00:00,2026-10-10 18:00:00
+"Primary School/ Composite, Jukhedi",test_stuck,57,2026-01-05 18:00:00,2026-09-11 06:00:00
+"Primary School/ Composite, Katla Naveen",test_stuck,19,2025-12-24 00:00:00,2026-08-14 06:00:00
+"Primary School/ Composite, Katla Naveen",flipflop_burst,931,2026-01-19 00:00:00,2026-10-10 18:00:00
+"Primary School/ Composite, Landhoura Junardar",flipflop_burst,4235,2023-02-21 06:00:00,2026-10-10 18:00:00
+"Primary School/ Composite, Manganpur",flipflop_burst,3770,2023-06-11 06:00:00,2026-10-10 18:00:00
+"Primary School/ Composite, Manoharpur",test_stuck,2,2026-02-06 00:00:00,2026-02-06 06:00:00
+"Primary School/ Composite, Manoharpur",flipflop_burst,4240,2023-05-20 06:00:00,2026-10-10 18:00:00
+"Primary School/ Composite, Manpur Qadeem",test_stuck,28,2026-01-05 18:00:00,2026-08-28 00:00:00
+"Primary School/ Composite, Manpur Qadeem",flipflop_burst,3077,2023-11-13 12:00:00,2026-10-03 00:00:00
+"Primary School/ Composite, Mehmoodpur",flipflop_burst,1332,2023-03-26 18:00:00,2026-10-10 18:00:00
+"Primary School/ Composite, Mundi Kheri",test_stuck,138,2025-12-10 00:00:00,2026-07-27 18:00:00
+"Primary School/ Composite, Mundi Kheri",flipflop_burst,3254,2024-01-09 00:00:00,2026-10-10 18:00:00
+"Primary School/ Composite, Nagla Rajput",test_stuck,88,2025-11-26 18:00:00,2026-09-08 06:00:00
+"Primary School/ Composite, Nunabadi",flipflop_burst,4175,2023-06-02 00:00:00,2026-10-10 18:00:00
+"Primary School/ Composite, Pawti",test_stuck,170,2026-01-05 18:00:00,2026-06-08 00:00:00
+"Primary School/ Composite, Rasulpur",flipflop_burst,4255,2023-04-02 06:00:00,2026-10-08 00:00:00
+"Primary School/ Composite, Sidki",flipflop_burst,4250,2023-05-21 18:00:00,2026-10-10 18:00:00
+"Primary School/ Composite, Tandheda",test_stuck,113,2026-01-05 18:00:00,2026-02-15 06:00:00
+Prmary School Rajpura,placeholder_start,198,2024-01-31 00:00:00,2024-03-20 18:00:00
+Prmary School Rajpura,test_stuck,23,2026-07-29 12:00:00,2026-08-04 00:00:00
+Prmary School Rajpura,candidate_changed,198,2024-01-31 00:00:00,2024-03-20 18:00:00
+Punchayat Bhawan Bhaluwani,placeholder_start,195,2024-01-30 18:00:00,2024-03-19 18:00:00
+Punchayat Bhawan Bhaluwani,flipflop_burst,405,2026-05-29 18:00:00,2026-09-13 18:00:00
+Punchayat Bhawan Bhaluwani,candidate_changed,195,2024-01-30 18:00:00,2024-03-19 18:00:00
+Punchayat Bhawan Vijaypur,placeholder_start,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+Punchayat Bhawan Vijaypur,test_stuck,10,2026-01-08 06:00:00,2026-06-19 12:00:00
+Punchayat Bhawan Vijaypur,candidate_changed,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+"Purv Madh Vidhyalaya, Doomradeeh",flipflop_burst,1493,2025-04-10 18:00:00,2026-10-10 18:00:00
+"Purv Madh Vidhyalaya, Shivpur",flipflop_burst,1466,2025-05-03 06:00:00,2026-10-10 18:00:00
+"Purv Madhyamik Vidhyalaya, Doriya",flipflop_burst,2679,2024-06-14 18:00:00,2026-10-10 18:00:00
+"Purv Madhyamik Vidhyalaya, Fattupur",flipflop_burst,2229,2024-10-11 18:00:00,2026-10-10 18:00:00
+"Purv Madhyamik Vidhyalaya, Mahooli",flipflop_burst,2601,2024-06-26 06:00:00,2026-10-10 18:00:00
+"Purv Madhyamik Vidyalaya, Mujehra",flipflop_burst,3837,2023-08-21 06:00:00,2026-10-10 18:00:00
+"Purv Madhyamik Vidyalaya, Ranibari",flipflop_burst,2695,2024-06-22 18:00:00,2026-10-10 18:00:00
+"Purv Madhyamik Vidyalaya,Bharpura",flipflop_burst,2485,2024-08-07 18:00:00,2026-10-10 18:00:00
+Purva Madhyamik Vidhyalaya Achausa,placeholder_start,157,2024-01-20 18:00:00,2024-03-16 18:00:00
+Purva Madhyamik Vidhyalaya Achausa,test_stuck,244,2026-01-05 18:00:00,2026-06-29 18:00:00
+Purva Madhyamik Vidhyalaya Achausa,candidate_changed,157,2024-01-20 18:00:00,2024-03-16 18:00:00
+Purva Madhyamik Vidhyalaya Baroda Dang,placeholder_start,155,2024-01-20 18:00:00,2024-03-18 06:00:00
+Purva Madhyamik Vidhyalaya Baroda Dang,candidate_changed,155,2024-01-20 18:00:00,2024-03-18 06:00:00
+Purva Madhyamik Vidhyalaya Bhitaura,placeholder_start,238,2024-01-20 00:00:00,2024-03-19 18:00:00
+Purva Madhyamik Vidhyalaya Bhitaura,test_stuck,2,2026-02-08 18:00:00,2026-02-09 00:00:00
+Purva Madhyamik Vidhyalaya Bhitaura,candidate_changed,238,2024-01-20 00:00:00,2024-03-19 18:00:00
+Purva Madhyamik Vidhyalaya Ladwari,placeholder_start,208,2024-01-20 12:00:00,2024-03-20 12:00:00
+Purva Madhyamik Vidhyalaya Ladwari,candidate_changed,208,2024-01-20 12:00:00,2024-03-20 12:00:00
+Purva Madhyamik Vidhyalaya Piphara,placeholder_start,224,2024-01-24 12:00:00,2024-03-20 18:00:00
+Purva Madhyamik Vidhyalaya Piphara,test_stuck,391,2026-01-05 18:00:00,2026-09-07 12:00:00
+Purva Madhyamik Vidhyalaya Piphara,candidate_changed,224,2024-01-24 12:00:00,2024-03-20 18:00:00
+Purva Madhyamik Vidhyalaya Sihari,placeholder_start,112,2024-01-20 18:00:00,2024-03-20 12:00:00
+Purva Madhyamik Vidhyalaya Sihari,candidate_changed,112,2024-01-20 18:00:00,2024-03-20 12:00:00
+"Purva Madhyamik Vidhyalaya, Chackwara",placeholder_start,134,2024-01-30 18:00:00,2024-03-13 18:00:00
+"Purva Madhyamik Vidhyalaya, Chackwara",test_stuck,408,2026-03-08 06:00:00,2026-07-19 06:00:00
+"Purva Madhyamik Vidhyalaya, Chackwara",flipflop_burst,996,2025-09-03 18:00:00,2026-09-07 12:00:00
+"Purva Madhyamik Vidhyalaya, Chackwara",candidate_changed,134,2024-01-30 18:00:00,2024-03-13 18:00:00
+"Purva Madhyamik Vidhyalaya, Chandapur",placeholder_start,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+"Purva Madhyamik Vidhyalaya, Chandapur",test_stuck,38,2026-02-17 12:00:00,2026-06-19 18:00:00
+"Purva Madhyamik Vidhyalaya, Chandapur",candidate_changed,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+Purva Madhyamik Vidyalaya Chalakpur,test_stuck,24,2026-02-02 18:00:00,2026-02-11 12:00:00
+Pv. Compiergang,flipflop_burst,1080,2025-12-13 12:00:00,2026-10-10 18:00:00
+R.R.C. Center Aata,placeholder_start,224,2024-01-20 18:00:00,2024-03-20 12:00:00
+R.R.C. Center Aata,test_stuck,78,2026-01-15 12:00:00,2026-08-05 06:00:00
+R.R.C. Center Aata,candidate_changed,224,2024-01-20 18:00:00,2024-03-20 12:00:00
+RASULPUR BARGAON RAJKIYA UCHTTAR PRATHAMIK VIDYALAYA,flipflop_burst,3660,2023-10-29 18:00:00,2026-10-10 18:00:00
+Rajapur Sikraur,flipflop_burst,5425,2022-08-07 00:00:00,2026-10-10 18:00:00
+Rajkia Balika Inter College Kamasin,placeholder_start,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+Rajkia Balika Inter College Kamasin,test_stuck,17,2026-08-16 18:00:00,2026-08-20 18:00:00
+Rajkia Balika Inter College Kamasin,candidate_changed,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+Rajkia High School Pakhrauli,placeholder_start,236,2024-01-20 18:00:00,2024-03-19 18:00:00
+Rajkia High School Pakhrauli,candidate_changed,236,2024-01-20 18:00:00,2024-03-19 18:00:00
+"Rajkiya High School, Atali",test_stuck,866,2025-12-28 18:00:00,2026-09-13 06:00:00
+"Rajkiya High School, Atali",flipflop_burst,1148,2025-05-07 18:00:00,2026-09-13 06:00:00
+Ramchhitoni Sahawar (UP-011),test_stuck,40,2025-12-09 18:00:00,2026-02-05 06:00:00
+Ramchhitoni Sahawar (UP-011),flipflop_burst,4804,2023-03-15 06:00:00,2026-10-10 18:00:00
+Ranipur_2,placeholder_start,143,2022-07-26 00:00:00,2022-09-24 00:00:00
+Ranipur_2,test_stuck,46,2025-12-26 18:00:00,2026-04-24 00:00:00
+Ranipur_2,flipflop_burst,3504,2023-10-20 12:00:00,2026-10-10 18:00:00
+Ranipur_2,candidate_changed,143,2022-07-26 00:00:00,2022-09-24 00:00:00
+Rasin_2,placeholder_start,124,2023-01-07 00:00:00,2023-03-08 00:00:00
+Rasin_2,test_stuck,33,2025-12-26 12:00:00,2026-09-26 12:00:00
+Rasin_2,candidate_changed,124,2023-01-07 00:00:00,2023-03-08 00:00:00
+"Roadways Bus Stand, Robertsganj",flipflop_burst,1373,2025-05-17 00:00:00,2026-10-10 18:00:00
+Rohari,test_stuck,2,2026-04-23 06:00:00,2026-04-23 12:00:00
+Rohari,flipflop_burst,2151,2024-10-14 12:00:00,2026-10-10 18:00:00
+SARAHARI PRATHMIK VIDYALAYA,flipflop_burst,2531,2024-08-10 06:00:00,2026-10-10 18:00:00
+SWASTH KENDR PIPIGANJ,flipflop_burst,811,2025-05-12 06:00:00,2026-10-10 18:00:00
+Saint Ravidas Nagar Abholi Abholi,test_stuck,235,2026-01-05 18:00:00,2026-09-30 18:00:00
+Saint Ravidas Nagar Aurai Uprauth,test_stuck,10,2026-02-07 06:00:00,2026-05-09 06:00:00
+Saint Ravidas Nagar Bhadohi Munshi,test_stuck,25,2026-02-16 06:00:00,2026-02-22 06:00:00
+Saint Ravidas Nagar Bhadohi Munshi,flipflop_burst,494,2026-05-01 12:00:00,2026-09-19 12:00:00
+Saint Ravidas Nagar Deegh  Deegh,test_stuck,19,2026-01-09 18:00:00,2026-07-24 18:00:00
+Saint Ravidas Nagar Deegh Velahua,test_stuck,18,2026-06-03 18:00:00,2026-06-08 00:00:00
+Saint Ravidas Nagar Gyanpur Kansapur,flipflop_burst,1077,2026-01-13 18:00:00,2026-10-10 18:00:00
+Saint Ravidas Nagar Gyanpur Samhai,test_stuck,12,2026-04-09 18:00:00,2026-04-12 12:00:00
+Saint Ravidas Nagar Suriyawan Chhapariya,test_stuck,45,2025-11-03 18:00:00,2026-09-18 06:00:00
+Saint Ravidas Nagar Suriyawan Mond,test_stuck,30,2026-01-03 06:00:00,2026-04-04 00:00:00
+Saint Ravidas Nagar Suriyawan Mond,flipflop_burst,705,2026-04-12 18:00:00,2026-10-10 18:00:00
+Saital,flipflop_burst,1401,2025-06-01 06:00:00,2026-10-10 18:00:00
+Salhakheri,flipflop_burst,465,2026-05-24 18:00:00,2026-10-10 18:00:00
+Sanjhak,flipflop_burst,5476,2022-07-20 18:00:00,2026-10-10 18:00:00
+Satti Chau Prathmik Vidyalaya,placeholder_start,29,2022-09-17 18:00:00,2022-10-05 12:00:00
+Satti Chau Prathmik Vidyalaya,flipflop_burst,2615,2024-07-17 06:00:00,2026-10-10 18:00:00
+Satti Chau Prathmik Vidyalaya,candidate_changed,29,2022-09-17 18:00:00,2022-10-05 12:00:00
+"Shahid Chandra Shekhar Kanya P.M.V., Mallupura",flipflop_burst,4005,2023-04-27 12:00:00,2026-10-10 18:00:00
+Shahjahanpur Bhawal Kheda Bhawal Kheda,test_stuck,144,2025-12-31 00:00:00,2026-07-10 00:00:00
+Shahjahanpur Bhawal Kheda Chak Bhitara,test_stuck,96,2025-11-04 00:00:00,2026-04-08 12:00:00
+Shahjahanpur Bhawal Kheda Chaudhera,test_stuck,11,2026-01-06 06:00:00,2026-01-12 06:00:00
+Shahjahanpur Bhawal Kheda Ladhauli,flipflop_burst,4510,2023-04-27 18:00:00,2026-10-10 18:00:00
+Shahjahanpur Bhawal Kheda Shahbaj Pur,test_stuck,36,2026-01-06 06:00:00,2026-08-31 00:00:00
+Shahjahanpur Bhawal Kheda Sutnera,test_stuck,9,2025-11-04 00:00:00,2025-11-06 00:00:00
+Shahjahanpur Dadraul Banthara,test_stuck,647,2025-12-19 00:00:00,2026-09-26 06:00:00
+Shahjahanpur Dadraul Saraura (East),test_stuck,32,2026-01-06 00:00:00,2026-01-13 18:00:00
+Shahjahanpur Puvayan  Badagaon Pratham,test_stuck,82,2025-12-08 18:00:00,2026-08-30 00:00:00
+Shahjahanpur Puvayan Bhilawan,test_stuck,45,2026-01-05 18:00:00,2026-05-12 12:00:00
+Shahjahanpur Puvayan Mahua Pathak,test_stuck,19,2026-04-18 06:00:00,2026-08-02 18:00:00
+Shahjahanpur Puvayan Nahil,test_stuck,22,2026-01-10 06:00:00,2026-06-07 00:00:00
+Shahjahanpur Sidhauli Korokuiyan,test_stuck,46,2026-04-26 12:00:00,2026-08-28 12:00:00
+Shahjahanpur Sidhauli Mahanand Pur,flipflop_burst,2828,2024-03-23 00:00:00,2026-10-01 12:00:00
+Shahjahanpur Sidhauli Sidhauli,test_stuck,4,2026-06-07 06:00:00,2026-06-08 00:00:00
+Shahjahanpur Sidhauli Sidhauli,flipflop_burst,2371,2024-09-04 18:00:00,2026-10-10 18:00:00
+Shitalpur_1,placeholder_start,211,2022-07-27 12:00:00,2022-09-25 12:00:00
+Shitalpur_1,test_stuck,375,2025-12-01 12:00:00,2026-09-23 12:00:00
+Shitalpur_1,flipflop_burst,552,2026-03-19 00:00:00,2026-10-08 12:00:00
+Shitalpur_1,candidate_changed,211,2022-07-27 12:00:00,2022-09-25 12:00:00
+Sikhula Pz._1,placeholder_start,52,2022-07-19 00:00:00,2022-09-17 00:00:00
+Sikhula Pz._1,test_stuck,622,2025-12-23 12:00:00,2026-08-30 00:00:00
+Sikhula Pz._1,candidate_changed,52,2022-07-19 00:00:00,2022-09-17 00:00:00
+Singhara Pr. Vid.,flipflop_burst,3915,2023-08-20 00:00:00,2026-10-10 18:00:00
+Sitapur Mafi,test_stuck,13,2025-12-20 06:00:00,2026-01-09 00:00:00
+Sonbhadra Babhani Bhawar,test_stuck,572,2026-01-01 00:00:00,2026-08-28 18:00:00
+Sonbhadra Chopan Khairatiya,test_stuck,20,2026-05-04 06:00:00,2026-05-09 00:00:00
+Sonbhadra Chopan Khairatiya,flipflop_burst,913,2026-02-06 18:00:00,2026-10-10 18:00:00
+Sonbhadra Duddhi Mahuli,test_stuck,23,2026-06-08 00:00:00,2026-08-16 18:00:00
+Sonbhadra Duddhi Mahuli,flipflop_burst,888,2026-02-13 00:00:00,2026-10-10 18:00:00
+Sonbhadra Myorpur Agartola,test_stuck,789,2026-02-23 00:00:00,2026-09-30 18:00:00
+Srikantpur Pr. Vid.,flipflop_burst,2559,2024-08-14 06:00:00,2026-10-10 18:00:00
+Sujanpura Badhyapar,test_stuck,151,2025-11-29 00:00:00,2026-06-08 00:00:00
+Sujanpura Badhyapar,flipflop_burst,1269,2025-07-15 00:00:00,2026-10-09 00:00:00
+Sukwan,test_stuck,31,2025-12-24 18:00:00,2026-09-11 12:00:00
+Sukwan,flipflop_burst,2434,2024-08-22 06:00:00,2026-10-10 18:00:00
+"Swarg Dham, Hardua",placeholder_start,231,2024-01-20 18:00:00,2024-03-20 12:00:00
+"Swarg Dham, Hardua",test_stuck,8,2026-09-10 00:00:00,2026-09-11 18:00:00
+"Swarg Dham, Hardua",candidate_changed,231,2024-01-20 18:00:00,2024-03-20 12:00:00
+Terha_1,placeholder_start,119,2023-03-04 00:00:00,2023-05-02 12:00:00
+Terha_1,test_stuck,107,2025-12-20 06:00:00,2026-08-16 18:00:00
+Terha_1,flipflop_burst,1889,2025-01-11 00:00:00,2026-10-10 18:00:00
+Terha_1,candidate_changed,119,2023-03-04 00:00:00,2023-05-02 12:00:00
+"Thana Prisar, Lalganj",flipflop_burst,1808,2025-01-21 18:00:00,2026-10-10 18:00:00
+Uccha Prathmik Vidhyalaya Deaval,placeholder_start,225,2024-01-17 18:00:00,2024-03-17 18:00:00
+Uccha Prathmik Vidhyalaya Deaval,test_stuck,41,2026-05-23 12:00:00,2026-06-20 18:00:00
+Uccha Prathmik Vidhyalaya Deaval,flipflop_burst,2265,2024-08-03 18:00:00,2026-08-04 18:00:00
+Uccha Prathmik Vidhyalaya Deaval,candidate_changed,225,2024-01-17 18:00:00,2024-03-17 18:00:00
+Uccha Prathmik Vidhyalaya Devaratha,placeholder_start,55,2024-01-17 18:00:00,2024-01-31 12:00:00
+Uccha Prathmik Vidhyalaya Devaratha,candidate_changed,55,2024-01-17 18:00:00,2024-01-31 12:00:00
+Uccha Prathmik Vidhyalaya Odera,placeholder_start,60,2024-01-20 18:00:00,2024-03-19 06:00:00
+Uccha Prathmik Vidhyalaya Odera,test_stuck,18,2026-05-17 06:00:00,2026-06-20 18:00:00
+Uccha Prathmik Vidhyalaya Odera,candidate_changed,60,2024-01-20 18:00:00,2024-03-19 06:00:00
+Uccha Prathmik Vidhyalaya Uldan,placeholder_start,209,2024-01-17 18:00:00,2024-03-17 18:00:00
+Uccha Prathmik Vidhyalaya Uldan,test_stuck,31,2026-05-22 00:00:00,2026-08-06 06:00:00
+Uccha Prathmik Vidhyalaya Uldan,flipflop_burst,21,2026-08-31 00:00:00,2026-09-06 18:00:00
+Uccha Prathmik Vidhyalaya Uldan,candidate_changed,209,2024-01-17 18:00:00,2024-03-17 18:00:00
+"Uccha Prathmik Vidhyalaya, Chero",placeholder_start,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+"Uccha Prathmik Vidhyalaya, Chero",test_stuck,230,2026-01-05 18:00:00,2026-06-29 06:00:00
+"Uccha Prathmik Vidhyalaya, Chero",candidate_changed,199,2024-01-30 18:00:00,2024-03-20 18:00:00
+"Uccha Prathmik Vidhyalaya, Gangapur",placeholder_start,211,2024-01-27 18:00:00,2024-03-20 18:00:00
+"Uccha Prathmik Vidhyalaya, Gangapur",candidate_changed,211,2024-01-27 18:00:00,2024-03-20 18:00:00
+"Uccha Prathmik Vidhyalaya, Hasanpur Kadim",test_stuck,893,2025-12-22 18:00:00,2026-09-13 06:00:00
+"Uccha Prathmik Vidhyalaya, Kapsarh",placeholder_start,224,2024-01-24 18:00:00,2024-03-20 18:00:00
+"Uccha Prathmik Vidhyalaya, Kapsarh",test_stuck,19,2026-02-02 18:00:00,2026-02-07 06:00:00
+"Uccha Prathmik Vidhyalaya, Kapsarh",candidate_changed,224,2024-01-24 18:00:00,2024-03-20 18:00:00
+"Uccha Prathmik Vidhyalaya, Lohra (Pampawan)",placeholder_start,172,2024-01-30 18:00:00,2024-03-13 18:00:00
+"Uccha Prathmik Vidhyalaya, Lohra (Pampawan)",candidate_changed,172,2024-01-30 18:00:00,2024-03-13 18:00:00
+"Uccha Prathmik Vidhyalaya, Pathouli",placeholder_start,199,2024-01-24 18:00:00,2024-03-20 18:00:00
+"Uccha Prathmik Vidhyalaya, Pathouli",flipflop_burst,2865,2024-04-26 18:00:00,2026-09-13 18:00:00
+"Uccha Prathmik Vidhyalaya, Pathouli",candidate_changed,199,2024-01-24 18:00:00,2024-03-20 18:00:00
+"Uccha Prathmik Vidhyalaya, Semra Bhav Nagar",placeholder_start,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+"Uccha Prathmik Vidhyalaya, Semra Bhav Nagar",test_stuck,7,2026-06-19 06:00:00,2026-06-20 18:00:00
+"Uccha Prathmik Vidhyalaya, Semra Bhav Nagar",candidate_changed,239,2024-01-20 18:00:00,2024-03-20 12:00:00
+"Uccha Prathmik Vidhyalaya, Simra",placeholder_start,65,2024-01-20 18:00:00,2024-02-06 06:00:00
+"Uccha Prathmik Vidhyalaya, Simra",flipflop_burst,1651,2024-10-19 00:00:00,2026-05-24 12:00:00
+"Uccha Prathmik Vidhyalaya, Simra",candidate_changed,65,2024-01-20 18:00:00,2024-02-06 06:00:00
+"Uccha Prathmik Vidhyalaya, Sonpur",placeholder_start,182,2024-01-30 18:00:00,2024-03-18 06:00:00
+"Uccha Prathmik Vidhyalaya, Sonpur",flipflop_burst,1612,2024-05-11 00:00:00,2026-07-21 12:00:00
+"Uccha Prathmik Vidhyalaya, Sonpur",candidate_changed,182,2024-01-30 18:00:00,2024-03-18 06:00:00
+"Uchha Prathmik Vidhyala, Tadi Mustkil",test_stuck,508,2025-12-29 18:00:00,2026-07-28 06:00:00
+Upper Primary Kasampur,placeholder_start,239,2024-01-20 00:00:00,2024-03-19 18:00:00
+Upper Primary Kasampur,test_stuck,3,2026-01-05 18:00:00,2026-01-06 06:00:00
+Upper Primary Kasampur,candidate_changed,239,2024-01-20 00:00:00,2024-03-19 18:00:00
+"Upper Primary School Eng Medium, Hariyabans",flipflop_burst,3416,2023-12-24 18:00:00,2026-10-10 00:00:00
+Upper Primary School Lehra,placeholder_start,220,2024-01-24 18:00:00,2024-03-20 18:00:00
+Upper Primary School Lehra,test_stuck,49,2026-06-17 12:00:00,2026-07-12 18:00:00
+Upper Primary School Lehra,candidate_changed,220,2024-01-24 18:00:00,2024-03-20 18:00:00
+Upper Primary School Pohalli,placeholder_start,239,2024-01-18 18:00:00,2024-03-18 18:00:00
+Upper Primary School Pohalli,flipflop_burst,2817,2024-05-09 18:00:00,2026-09-13 18:00:00
+Upper Primary School Pohalli,candidate_changed,239,2024-01-18 18:00:00,2024-03-18 18:00:00
+Upper Primary School Rijaula,placeholder_start,217,2024-01-24 06:00:00,2024-03-20 18:00:00
+Upper Primary School Rijaula,test_stuck,619,2026-01-05 18:00:00,2026-09-08 18:00:00
+Upper Primary School Rijaula,candidate_changed,217,2024-01-24 06:00:00,2024-03-20 18:00:00
+Upper Primary School Sarahan Bujurg,placeholder_start,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+Upper Primary School Sarahan Bujurg,test_stuck,390,2026-01-05 18:00:00,2026-09-13 18:00:00
+Upper Primary School Sarahan Bujurg,candidate_changed,200,2024-01-30 18:00:00,2024-03-20 18:00:00
+Upper Primary School Urouliya,placeholder_start,151,2024-01-24 12:00:00,2024-03-10 06:00:00
+Upper Primary School Urouliya,test_stuck,778,2026-01-05 18:00:00,2026-09-09 06:00:00
+Upper Primary School Urouliya,candidate_changed,151,2024-01-24 12:00:00,2024-03-10 06:00:00
+"Upper Primary School, Khadui",flipflop_burst,1285,2025-05-27 00:00:00,2026-10-10 18:00:00
+Varansi Badagaon Gajapur,test_stuck,888,2025-11-02 00:00:00,2026-09-26 00:00:00
+Varansi Chirai Gaon  Gathiya Jairampur,test_stuck,183,2026-01-05 18:00:00,2026-09-02 00:00:00
+Varansi Chirai Gaon Chhahi,flipflop_burst,2192,2024-08-21 18:00:00,2026-10-03 00:00:00
+Varansi Cholapur Chaubepur,test_stuck,20,2026-06-04 06:00:00,2026-07-15 06:00:00
+Varansi Cholapur Chaubepur,flipflop_burst,984,2026-01-14 06:00:00,2026-10-06 00:00:00
+Varansi Cholapur Munari,test_stuck,18,2026-04-10 00:00:00,2026-05-05 00:00:00
+Varansi Harahua Bhaithauli,test_stuck,211,2025-11-03 18:00:00,2026-07-11 12:00:00
+Varansi Harahua Shivrampur,test_stuck,40,2026-09-16 18:00:00,2026-09-26 12:00:00
+Varansi Harahua Sulemapur,test_stuck,151,2025-12-24 12:00:00,2026-08-23 18:00:00
+Varansi Pindara Gajendra,test_stuck,329,2026-01-05 18:00:00,2026-08-26 00:00:00
+Varansi Pindara Gajendra,flipflop_burst,4203,2023-05-07 12:00:00,2026-10-10 18:00:00
+Varansi Pindara Molanapur,test_stuck,103,2026-03-25 12:00:00,2026-07-12 12:00:00
+Varansi Pindara Molanapur,flipflop_burst,3644,2023-02-25 00:00:00,2026-10-08 18:00:00
+Veterinary Hospital Shahjahanpur,placeholder_start,239,2024-01-19 00:00:00,2024-03-19 00:00:00
+Veterinary Hospital Shahjahanpur,test_stuck,240,2026-01-05 18:00:00,2026-07-04 18:00:00
+Veterinary Hospital Shahjahanpur,candidate_changed,239,2024-01-19 00:00:00,2024-03-19 00:00:00
+"Vikash Khand Parisar, Itwa",flipflop_burst,1179,2025-07-14 00:00:00,2026-10-10 18:00:00
+primary school Chaura khurd,test_stuck,195,2026-01-05 18:00:00,2026-08-08 12:00:00
+primary school kapasi,placeholder_start,221,2024-01-18 18:00:00,2024-03-18 12:00:00
+primary school kapasi,flipflop_burst,451,2026-05-19 06:00:00,2026-09-13 18:00:00
+primary school kapasi,candidate_changed,221,2024-01-18 18:00:00,2024-03-18 12:00:00

@@ -1,0 +1,9 @@
+archived 7 files
+inventory: /mnt/c/Users/Srijan Gupta/Downloads/Developement/AQUIS/ml/outputs/diagnostics_phase3a/stale_data_v2_20261026/inventory.csv
+  BUILD_INCOMPLETE_DO_NOT_USE.txt                                426 50ab7fca85964613
+  aligned/table_6h.parquet                                  18828446 47ea079c743b775e
+  cleaning_config.json                                           246 3b1d55da37b35189
+  features_6h/test.parquet                                  32731015 fd651588dd608dae
+  features_6h/train.parquet                                112401393 51d9c9c55873527e
+  features_6h/val.parquet                                     181127 5c35cce8fa09f4bf
+  features_traj/train.parquet                               32914597 903f5d9300358d93

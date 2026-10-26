@@ -1,0 +1,2 @@
+Station,finite_slots,observed_slots,large_steps_ge_0_5m,reversing_large_step_pairs,qualifying_window_endpoints,qualifying_observed_slots,current_invalid_share,strict_step1_share08_invalid_share,primary_classification,interpretation
+Hamirpur Sarila Purani,4745,4108,154,32,4168,3584,0.872444011684518,0.0,stuck,"The 0.87 is a coverage share: qualifying endpoints among gwl_obs=1 rows divided by all observed rows. The 30-day windows overlap, so one local burst flags many neighboring endpoints; this is not a claim that 87% of the series is visibly jagged."

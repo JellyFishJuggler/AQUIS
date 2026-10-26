@@ -1,0 +1,601 @@
+Station,current_primary,current_stuck,current_flipflop,strict_nearflat_stuck,exact_value_runs_only_stuck,flipflop_step1_share08,exact_occurrence_28_in_30d,exact_28_slot_run,nearflat_current,nearflat_strict,flip_share_current,flip_share_strict
+ASHADHA PRATHMIK VIDYALAYA,flip-flop,False,True,False,False,False,False,False,False,False,0.24257425742574257,0.0
+Aagan Wadi Kendra Chandni,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Aaganwadi Kendra Pakri Bazaar,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Adarsh Primary School, Dubar Kalan",flip-flop,False,True,False,False,False,False,False,False,False,0.47186147186147187,0.0
+Agan Wadi Kendra Kuchendu,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+Alakchandra Inter college Bhinga,flip-flop,False,True,False,False,False,False,False,False,False,0.23777292576419215,0.044323144104803494
+Aligarh Chandaus  Somana,flip-flop,False,True,False,False,True,False,False,False,False,0.8522888154789995,0.8506370929683813
+Aligarh Chandaus Maharajpur,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Aligarh Jawa Bahadurpur Kota,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Aligarh Jawa Jamalpur Siya,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Aligarh Jawa Sogera,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Aligarh Khair Arrana,stuck,True,False,True,False,False,False,False,True,True,0.06934812760055478,0.0
+Aligarh Khair Utwara,stuck,True,False,False,False,False,False,False,True,False,0.04634495938843765,0.0
+Aligarh Lodha Aisi Kol,spike-faults,False,False,False,False,False,False,False,False,False,0.04806591897459373,0.0
+Aligarh Lodha Mahrawalpur Nagariya,stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Amchurnirua,stuck,True,True,False,False,True,False,False,True,False,0.3464383028415726,0.2608018684312962
+Amlour,stuck,True,True,True,False,True,True,False,True,False,0.6035411855273287,0.6035411855273287
+"Anganwadi Kedra, Baini",clean,False,False,False,False,False,False,False,False,False,0.1948291782086796,0.0
+Aryavart Madhyamik Vidhyalaya Sindhora,flip-flop,False,True,False,False,False,False,False,False,False,0.5173754000914494,0.0
+Aswaniya Pr. Vid.,flip-flop,False,True,False,False,False,False,False,False,False,0.22260834014717906,0.0
+Awagarh (UP-005),stuck,True,True,False,False,True,False,False,True,False,0.9458438287153652,0.9458438287153652
+Azamgarh Ahiraula Bahera,clean,False,False,False,False,False,False,False,False,False,0.12688748173404774,0.0
+Azamgarh Ahiraula Kandara,spike-faults,False,False,False,False,False,False,False,False,False,0.13885215551441418,0.0
+Azamgarh Atrauliya Atrauliya,stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Azamgarh Jahanganj Godhaura,clean,False,False,False,False,False,False,False,False,False,0.14678899082568808,0.0
+Azamgarh Lalganj Lalganj,clean,False,False,False,False,False,False,False,False,False,0.13577090258245972,0.08514446433137306
+Azamgarh Palhana Balahi Lahucha,stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Azamgarh Palhana Jamui Bhatauli,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Azamgarh Pavai Velasiya,flip-flop,False,True,False,False,False,False,False,False,False,0.7053105737316263,0.0
+Azamgarh Sathiyavn Gajahada,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Azamgarh Thekama Bardah,stuck,True,True,False,False,False,False,False,True,False,0.3884457336233986,0.0
+B.D.O Office Bhatini,clean,False,False,False,False,False,False,False,False,False,0.19101643899050705,0.0
+B.D.O. Office Lar,placeholder-start,True,True,False,False,False,False,False,True,False,0.9199569274946159,0.0
+"B.D.O. Office, Binauli",placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+BADHANI PRATHMIK VIDYALAYA,flip-flop,False,True,False,False,False,False,False,False,False,0.2566531348669373,0.0
+BANI KHAS C.V. VIDYALAYA,flip-flop,False,True,False,False,False,False,False,False,False,0.7527809307604995,0.06538024971623156
+BANSGAON PRATHMIK VIDYALAYA,flip-flop,False,True,False,False,False,False,False,False,False,0.3311629995509654,0.0
+Babina Rular,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Badaun Salarpur BDO Office,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Badaun Ujhani Sports Stadium,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Badaun Usawan BDO Office,stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Badhai Khurd Pr. Vid.,flip-flop,False,True,False,False,False,False,False,False,False,0.9532634971796938,0.0
+Badhouli,stuck,True,False,True,False,False,True,False,False,False,0.0,0.0
+Baghora_1,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Baghpat Meerut Kheda Balrampur Itiyara,stuck,True,False,True,False,False,True,False,True,False,0.0,0.0
+Banda Baberu Anvan,stuck,True,True,False,False,False,False,False,True,False,0.2999754118514876,0.0
+Banda Baberu Umrehani,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Banda Badokhar Khurd Chatgan,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Banda Bisndha Mrooli,stuck,True,False,False,False,False,False,False,True,False,0.04784853700516351,0.0
+Banda Kamasin Tilowsa,stuck,True,False,False,False,False,False,False,True,False,0.0,0.025268951713785338
+Banda Tindwari Bhindowra,stuck,True,True,False,False,False,False,False,True,False,0.3486261040235525,0.0002453385672227674
+Bdo Office Campus Pipraich,flip-flop,False,True,False,False,False,False,False,False,False,0.23076923076923078,0.0
+Bhadarwara  P_1,placeholder-start,True,True,False,False,True,False,False,True,False,0.6074275714563484,0.6074275714563484
+Bhitari_2,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Bijijauri_1,stuck,True,False,False,False,False,False,False,True,False,0.12586857256303355,0.0003970617431010522
+Birdha /Poorabirdha,placeholder-start,True,False,False,False,False,False,False,True,False,0.021679646390233634,0.0
+Block Deoria Campus Deoria Sadar,flip-flop,False,True,False,False,False,False,False,False,False,0.2089586700531055,0.1902562918494574
+Block Development Office-Khekra-Shallow,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Block Office, Kurara",pumping-like real,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Block office, Gursarai",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Budh Sainy_1,flip-flop,False,True,False,False,True,False,False,False,False,0.2660322714108399,0.2660322714108399
+Chakara  P_1,placeholder-start,True,True,True,False,True,True,False,True,True,0.25737736955247215,0.25737736955247215
+Chandi Kalan,placeholder-start,False,True,False,False,True,False,False,False,False,0.26192893401015227,0.26192893401015227
+Chhibaw_1,placeholder-start,True,True,True,False,True,False,False,True,True,0.43425531914893617,0.3740425531914894
+Chirautha,spike-faults,False,False,False,False,False,False,False,False,False,0.0,0.0
+Chitrakoot Karvi Khoha,flip-flop,False,True,False,False,True,False,False,False,False,0.9888154550076258,0.9661921708185054
+Chitrakoot Karvi Shivrampur,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Chitrakoot Manikpur Agarhudha,stuck,True,True,False,False,True,False,False,True,False,0.600347739692002,0.600347739692002
+Chitrakoot Manikpur Sardar Patel,stuck,True,True,False,False,True,False,False,True,False,0.2315270935960591,0.2315270935960591
+Chorwa Bhari Prathmik Vidyalaya,flip-flop,False,True,False,False,False,False,False,False,False,0.21871599564744287,0.18019586507072904
+"Community Center, Ghorawal",flip-flop,False,True,False,False,False,False,False,False,False,0.6977491961414791,0.0
+Comosite School Campus Badalganj,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Composite Girls Primary School Mai,placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+Composite School Basantpur Saitali-1,placeholder-start,False,True,False,False,False,False,False,False,False,0.2867242733699921,0.0
+Composite School Biralsi,spike-faults,False,False,False,False,False,False,False,False,False,0.0,0.0
+Composite School Kilhora,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Composite School Nagla Bair,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Composite School Sagarpur,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Composite School Sanjarpur,placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+Composite School katar,placeholder-start,True,False,True,False,False,True,False,True,True,0.0,0.0
+"Composite School, Dhamna Khurd",placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Composite School, Ghamhapur",placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Composite School, Mungari",flip-flop,False,True,False,False,False,False,False,False,False,0.2450620119430409,0.0
+"Composite School, Pathraha",flip-flop,False,True,False,False,False,False,False,False,False,0.7522285714285715,0.0034285714285714284
+"Composite Uccha Prathmik Vidhyalaya, Paltadevi",placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+Composite Upper Primary School Sajania,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+DEOCHALI C.V. VIDYALAYA,clean,False,False,False,False,False,False,False,False,False,0.19314852377732702,0.0
+Datt Naga_1,flip-flop,False,True,False,False,False,False,False,False,False,0.24538781987700853,0.0
+Deoria Bhaluwani Markna,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Deoria Bhatani Mishrauli Dichit,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Deoria Bhatpar Rani Dharkwan,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Deoria Salempur Manihari,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Deoria Tarkulwa Tarkulwa,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Devrar_1,stuck,True,True,False,False,True,False,False,True,False,0.5811611374407583,0.5811611374407583
+Dhikauli,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Etah Aavagarh Badhawali,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Etah Jalesar Hasangarh,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Etah Jalesar Sakrauli,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+FAREDUPUR PRATHMIK VIDYALAYA,flip-flop,False,True,False,False,False,False,False,False,False,0.5010132852961044,0.0
+Firozabad Madanpur Rudhawali,stuck,True,False,False,False,False,False,False,True,False,0.15541976620616366,0.0
+Fugana_1,placeholder-start,False,True,False,False,True,False,False,False,False,0.3682458888018794,0.3682458888018794
+GOVINDPUR BILARI PRATHMIK VIDYALAYA,flip-flop,False,True,False,False,False,False,False,False,False,0.6021238138273837,0.07591504744690465
+Gadhela Panchayat Bhawan,placeholder-start,False,False,False,False,False,False,False,False,False,0.05884413309982487,0.0
+Gloragundera/Gewara,placeholder-start,True,True,True,False,True,True,False,True,True,0.25031107424305266,0.25031107424305266
+Gorakhpur Barahalganj Bhatpar (Saukhor),stuck,True,True,False,False,False,False,False,True,False,0.4752726350494547,0.05959928988080142
+Gorakhpur Barahalganj Ojhauli,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Gorakhpur Belghat Belghat,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Gorakhpur Belghat Murarpur,stuck,True,True,False,False,False,False,False,True,False,0.3380353936906899,0.0
+Gorakhpur Chargaon Beniganj,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Gorakhpur Gagaha Gagaha,stuck,True,True,False,False,True,False,False,True,False,0.8074398249452954,0.8074398249452954
+Gorakhpur Gola Dhakwarchak,flip-flop,False,True,False,False,False,False,False,False,False,0.44487148690847944,0.0
+Gorakhpur Gola Gopalpur Patham,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Gorakhpur Gola Turkwaliya,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Gorakhpur Kauriram Dhausa,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Gorakhpur Kauriram Jagdispur Bhaluwan 2Nd,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Gorakhpur Pali Dumari Niwas,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Gorakhpur Pali Pali,stuck,True,True,False,False,False,False,False,True,False,0.2178193453113463,0.0
+Gorakhpur Sahjanwa Kasrol,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Gorakhpur Sardarnagr Awadpur,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Gorakhpur Urwa Malhanpar,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Goshala Bada Gaon,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+Goshala Bankat,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Goshala Basela,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+Goshala Bhadehdu,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+Goshala Churaha,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Goshala Ghuri,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Goshala Pachhahan,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Goyla,flip-flop,False,True,False,False,False,False,False,False,False,0.4174854622017245,0.0
+"Gram Panchayat Sachiwalaya / D.B.R. Ambedkar Samudayak Bhawan, Durkhuroo",placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Grampunchayat Sachiwalaya Deori,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Gundaha,stuck,True,True,True,False,True,False,False,True,True,0.7131086142322097,0.7131086142322097
+Gyana Majra Pr. Vid.,flip-flop,False,True,False,False,False,False,False,False,False,0.5948831587429493,0.0
+HARNHAPUR PRATHAMIK VIDYALAYA,flip-flop,False,True,False,False,False,False,False,False,False,0.4945652173913043,0.05638586956521739
+HOLAGARH PURV MADHYAMIK VIDYALAYA,flip-flop,False,True,False,False,False,False,False,False,False,0.2122533272143185,0.0
+Halwana,flip-flop,False,True,False,False,False,False,False,False,False,0.9550718849840255,0.04492811501597444
+Hamirpur Kurara Damar,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Hamirpur Kurara Jalokhar,stuck,True,True,False,False,False,False,False,True,False,0.2841197361745307,0.0010147133434804667
+Hamirpur Sarila Purani,stuck,True,True,False,False,False,False,False,True,False,0.872444011684518,0.0
+Hamirpur Sumerpur Etara,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Hamirpur Sumerpur Para,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Hathras Hathras Hathras,stuck,True,True,False,False,True,False,False,True,False,0.9930217805032776,0.9930217805032776
+Hathras Mursan Chandapa Sandh,stuck,True,False,False,False,False,False,False,True,False,0.07220902612826603,0.0
+High School & Inter College Boroda,flip-flop,False,True,False,False,False,False,False,False,False,0.9621494410668758,0.0
+"ITI Campus, ITI Campus Area",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Inter Collage Khampar,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Inter College, Sarv Hitakari",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Inter college, Tindwara",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Irrigation Department, Amawar",flip-flop,False,True,False,False,False,False,False,False,False,0.5199543899657925,0.18517673888255415
+Jamalpur_2,placeholder-start,True,True,False,False,False,False,False,True,False,0.261843915863967,0.0
+"Janata Inter College, Lachheda",clean,False,False,False,False,False,False,False,False,False,0.038941954445260836,0.0
+Jauharpur,spike-faults,False,False,False,False,False,False,False,False,False,0.0,0.0
+Jaunpur Dobhi Bagerwa,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Jaunpur Dobhi Bankati,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Jaunpur Dobhi Kachhawan,flip-flop,False,True,False,False,True,False,False,False,False,0.943842645381984,0.8474914481185861
+Jaunpur Dobhi Kakarapar,stuck,True,False,False,False,False,False,False,True,False,0.12128851540616246,0.0
+Jaunpur Jalalpur Katuwani,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Jaunpur Jalalpur Vanpurwa,spike-faults,False,False,False,False,False,False,False,False,False,0.03451776649746193,0.0
+Jaunpur Jalalpur Vind,stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Jaunpur Kerakat  Kharg Senpur,stuck,True,True,False,False,False,False,False,True,False,0.23443983402489627,0.0
+Jaunpur Kerakat Barbaspur (Sohani),stuck,True,False,True,False,False,True,False,True,True,0.0,0.0
+Jaunpur Kerakat Mahali,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Jaunpur Kerakat Nihalapur,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Jaunpur Rampur Kamaruddin,stuck,True,True,True,False,False,False,False,True,True,0.9780473714615829,0.00028885037550548814
+Jaunpur Rampur Kaseru Nonara,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Jaunpur Rampur Kathwatiya,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Jaunpur Rampur Sultanpur,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Jaurahi_1,stuck,True,True,True,False,True,True,False,True,True,0.39847715736040606,0.39847715736040606
+"Jr. High School, Purwa Tarouha",placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Junior High School Sihiriya,stuck,True,True,False,False,True,False,False,True,False,0.8552971576227391,0.8552971576227391
+KOSHAK IMAM PRATHMIK VIDYALAYA,flip-flop,False,True,False,False,False,False,False,False,False,0.4729510099837474,0.0
+Kamhariya_1,placeholder-start,True,False,True,False,False,True,False,True,False,0.0,0.0
+Kandhari Kala,stuck,True,False,True,False,False,True,False,True,True,0.0,0.0
+Khedki_1,flip-flop,False,True,False,False,False,False,False,False,False,0.23711747285291215,0.0
+Khojapur,flip-flop,False,True,False,False,False,False,False,False,False,0.3779093507554104,0.0
+Khursropur,flip-flop,False,True,False,False,False,False,False,False,False,0.9823886639676114,0.07165991902834008
+Kukwa Khaas,stuck,True,True,True,False,True,True,False,False,False,0.2667498959633791,0.22388680815647108
+Kusarma,placeholder-start,False,True,False,False,False,False,False,False,False,0.2122622420072845,0.0
+Kushinagar Captanganj Captanganj,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Kushinagar Captanganj Senduriya Vishunpur,stuck,True,True,False,False,False,False,False,True,False,0.6922705314009662,0.0
+Kushinagar Dudhai Dudhai,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Kushinagar Dudhai Gorariya,stuck,True,True,False,False,False,False,False,True,False,0.22757598220904374,0.0
+Kushinagar Dudhai Lala Chhapra,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Kushinagar Fazilnagar  Belwakala,stuck,True,True,False,False,False,False,False,True,False,0.20512820512820512,0.0
+Kushinagar Fazilnagar Jokwa Bujurg,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Kushinagar Fazilnagar Narayanpur Khoti,stuck,True,True,False,False,False,False,False,True,False,0.22178988326848248,0.0
+Kushinagar Khadda Basdila,stuck,True,True,False,False,False,False,False,True,False,0.5002434274586174,0.0
+Kushinagar Khadda Khadda,stuck,True,False,False,False,False,False,False,True,False,0.06208935611038108,0.0
+Kushinagar Motichak Mathauli Bazar,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Kushinagar Motichak Motichak,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Kushinagar Sewarhi  Rampur Bagra N0.2,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Kushinagar Sewarhi Sewarhi,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Kushinagar Tamkuhi Rajwatiya,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Kushinagar Tamkuhi Tamkuhi,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Ladaka Purwa,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Lagdi Gullar Prathmik Vidyalaya,clean,False,False,False,False,False,False,False,False,False,0.1726634488810882,0.01491882404563405
+Luktra,placeholder-start,False,False,False,False,False,False,False,False,False,0.02932551319648094,0.00019550342130987292
+MANDHATA PURV MADHYAMIK VIDYALAYA,flip-flop,False,True,False,False,False,False,False,False,False,0.21567299006323395,0.13166214995483289
+Madarpur_1,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Madhyamik Vidhyalaya, Dulha Daul",flip-flop,False,True,False,False,False,False,False,False,False,0.24263351749539594,0.0
+"Mahadeva Temple, Mahadeva",flip-flop,False,True,False,False,False,False,False,False,False,0.5202112999540652,0.0
+Maharajganj Dhani Nausagar,stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Maharajganj Mithaura Bhagatar,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Maharajganj Mithaura Madanpura,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Maharajganj Nautanwa Purniha,stuck,True,True,True,False,False,False,False,True,True,0.32427088482451805,0.0
+Maharajganj Nautanwa Sampatiha,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Maharajganj Nichlaul Balaekhor,stuck,True,True,False,False,True,False,False,True,False,0.9594078319006686,0.7239732569245463
+Maharajganj Nichlaul Garaura,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Maharajganj Siswa Siswa,spike-faults,False,False,False,False,False,False,False,False,False,0.0,0.0
+Mahgaon (UP-031),clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Mahoba Charkhari Kuaan,flip-flop,False,True,False,False,True,False,False,False,False,0.7313266443701226,0.7350427350427351
+Mahoba Charkhari Natara,flip-flop,False,True,False,False,False,False,False,False,False,0.831494483450351,0.1421765295887663
+Mahoba Charkhari Padha,stuck,True,True,False,False,True,False,False,True,False,0.8584463625154131,0.33612823674475956
+Mahoba Jaitpur saguniyamaph,stuck,True,True,False,False,False,False,False,True,False,0.34503779565959525,0.0
+Mahoba Kabrai Karaha,flip-flop,False,True,False,False,False,False,False,False,False,0.9672131147540983,0.0
+Mahoba Kabrai Sisri Kala,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Mahoba Panwari Didvara,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Mainpuri Karhal  Rajpur,stuck,True,False,False,False,False,False,False,True,False,0.024596667548267653,0.0
+Mainpuri Karhal Mohabbatpur,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Mainpuri Karhal Naglamdari,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Mainpuri Karhal Takhrau,stuck,True,False,False,False,False,False,False,True,False,0.12707786526684164,0.0
+Mainpuri Karhal Timrakh,stuck,True,True,False,False,False,False,False,True,False,0.3679417122040073,0.0
+Mandi Samiti-Muzaffar Nagar-Medium,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Mankuwar,spike-faults,False,False,False,False,False,False,False,False,False,0.0,0.0
+Mathura Baldeo  Khanpur,spike-faults,False,False,False,False,False,False,False,False,False,0.0,0.0
+Mathura Chaumuha Navagaon-11,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Mathura Chhata Chandauri,flip-flop,False,True,False,False,True,False,False,False,False,0.9873783854851433,0.9513541940573231
+Mathura Chhata Sher Nagar,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Mathura Nandgaon Nandgaon Dehat,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Mathura Nandgaon Vathainkala,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Mathura Naujheel Badharra,stuck,True,True,False,False,True,False,False,True,False,0.7871720116618076,0.7871720116618076
+Mathura Pharah Nagala Medhaki,stuck,True,False,False,False,False,False,False,True,False,0.05219867130654856,0.0
+Mathura Rayan Kharaba,stuck,True,True,False,False,True,False,False,True,False,0.9929824561403509,0.9559210526315789
+Meerut Janikhurd Afjalpur Pavati,flip-flop,False,True,False,False,False,False,False,False,False,0.9744710211591536,0.0
+Meerut Janikhurd Satvai,flip-flop,False,True,False,False,False,False,False,False,False,0.7871265377855887,0.0
+Meerut Sardhana Chhabariya,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Murwa_1,stuck,True,True,False,False,True,False,False,True,False,0.4899129326820981,0.4899129326820981
+"Nagar Palika Campus, Gyanpur",flip-flop,False,True,False,False,False,False,False,False,False,0.49359560841720035,0.0
+Naglakabu_1,placeholder-start,True,False,True,False,False,True,False,True,False,0.0,0.0
+Narajit,placeholder-start,True,True,False,False,False,False,False,True,False,0.5685725709716114,0.0
+Navrasia,flip-flop,False,True,False,False,False,False,False,False,False,0.44052684903748734,0.018642350557244173
+Niwabhari Prathmik Vidyalaya,flip-flop,False,True,False,False,False,False,False,False,False,0.21482439129497952,0.0
+"Office of Assistant Director, Resham",placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Office of the Development Officer, Dakore",placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+P.S Engohata,spike-faults,False,False,False,False,False,False,False,False,False,0.007424211177562384,0.0072179830892967626
+PAHARPUR BARIGAWA PRATHMIK VIDYALAYA,clean,False,False,False,False,False,False,False,False,False,0.18705197132616488,0.09789426523297491
+PRIMARY SCHOOL BAKAR GANJ,flip-flop,False,True,False,False,False,False,False,False,False,0.23343135037321872,0.06016738294503506
+PRIMARY SCHOOL RAMUGHAT,flip-flop,False,True,False,False,False,False,False,False,False,0.47259192420482743,0.013309271373787504
+Paderi,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Pahara_2,spike-faults,False,False,False,False,False,False,False,False,False,0.0,0.0
+Palhari_1,placeholder-start,True,False,True,False,False,False,False,True,True,0.18073120257530467,0.0
+Panchayat Bhawan  Suhel,stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Panchayat Bhawan , Jafarabad Nagla",spike-faults,False,False,False,False,False,False,False,False,False,0.0650446871896723,0.0
+Panchayat Bhawan Kuda Nar Singhpur,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Panchayat Bhawan Usmanpur,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Panchayat Bhawan, Dohri",flip-flop,False,True,False,False,False,False,False,False,False,0.2721760610824164,0.1823489782169324
+"Panchayat Bhawan, Kul Doomri",flip-flop,False,True,False,False,False,False,False,False,False,0.6220381872555786,0.04416839199447895
+"Panchayat Bhwan, Kon",clean,False,False,False,False,False,False,False,False,False,0.16719890510948904,0.0
+Patanpur_1,spike-faults,False,False,False,False,False,False,False,False,False,0.0,0.0
+Pathrodi,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Perthivipur Nayakh,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Piparaond,flip-flop,False,True,False,False,False,False,False,False,False,0.2978531073446328,0.18531073446327684
+Pipraundha,spike-faults,False,False,False,False,False,False,False,False,False,0.05993690851735016,0.0
+Poorv Madhamik Vidhyalaya Kaseti,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Prathmik Vidhyala, Riawali Nagla",stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Prathmik Vidhyalaya Bant,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Prathmik Vidhyalaya Barha,placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+Prathmik Vidhyalaya Mahugarh,flip-flop,False,True,False,False,False,False,False,False,False,0.7132386623912048,0.01488776912505726
+Prathmik Vidhyalaya Manohari,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Prathmik Vidhyalaya Pahalgaon,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Prathmik Vidhyalaya Pipra Sarvan,placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+Prathmik Vidhyalaya Sirasiya Pawar,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Prathmik Vidhyalaya Takuli (Durahi Maafi),placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Prathmik Vidhyalaya, AhmadShahPur Padra",stuck,True,True,True,False,False,False,False,True,True,0.34510278113663845,0.0
+"Prathmik Vidhyalaya, Bali",stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Prathmik Vidhyalaya, Bichpari Kamali",stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Prathmik Vidhyalaya, Biharipur",stuck,True,True,True,False,True,False,False,True,True,0.4423364952571143,0.3235147279081378
+"Prathmik Vidhyalaya, Didhora  Sadullapur",stuck,True,True,True,False,False,False,False,True,True,0.4426229508196721,0.0
+"Prathmik Vidhyalaya, Doula",stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Prathmik Vidhyalaya, Gwalikhera",stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Prathmik Vidhyalaya, Katiliaha",placeholder-start,False,False,False,False,False,False,False,False,False,0.0025380710659898475,0.009427121102248005
+"Prathmik Vidhyalaya, Khampur",stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Prathmik Vidhyalaya, Khera Islampur",stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Prathmik Vidhyalaya, Makarndpur",placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Prathmik Vidhyalaya, Medpur",stuck,True,True,True,False,True,False,False,True,True,0.4676750426933398,0.4676750426933398
+"Prathmik Vidhyalaya, Nehlawa",placeholder-start,False,False,False,False,False,False,False,False,False,0.06776622445320904,0.0
+"Prathmik Vidhyalaya, Phaprana",placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Prathmik Vidhyalaya, Ramnagar",spike-faults,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Prathmik Vidhyalaya, Shahjahanpur_1",placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Prathmik Vidhyalaya, Sikhera_1",stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Prathmik Vidhyalaya, Taizullahpur",flip-flop,False,True,False,False,True,False,False,False,False,0.44283574638042933,0.4418372441337993
+"Prathmik Vidhyalaya, Thavai",placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Prathmik Vidhyalaya, vilodhpura",stuck,True,True,True,False,False,False,False,True,True,0.4441687344913151,0.0
+"Pratmik Vidhyalaya, Kakaruwa",placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+Priamry School Mukasim,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary  School, Nawada Kalan",flip-flop,False,True,False,False,True,False,False,False,False,0.23471490725898786,0.22670025188916876
+"Primary / Composite School, Banwaripur",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary / Composite School, Chiraudi",stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Primary / Composite School, Jainpur",stuck,True,False,False,False,False,False,False,True,False,0.03453648403012204,0.017917424045702415
+"Primary / Composite School, Jasad",flip-flop,False,True,False,False,False,False,False,False,False,0.8270169727970239,0.0
+"Primary / Composite School, Mahalaka",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary / Composite School, Mohaddinpur",stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Primary / Composite School, Pepala",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary / Composite School, Saradhana Block Office",flip-flop,False,True,False,False,False,False,False,False,False,0.8921671018276762,0.0
+Primary School  Bihasara,flip-flop,False,True,False,False,False,False,False,False,False,0.3978275627970129,0.0
+Primary School  Biraura,flip-flop,False,True,False,False,False,False,False,False,False,0.7392996108949417,0.0
+Primary School  Maharaji,flip-flop,False,True,False,False,False,False,False,False,False,0.22477272727272726,0.01818181818181818
+Primary School Ashadh,placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+Primary School Babura,flip-flop,False,True,False,False,False,False,False,False,False,0.4529505582137161,0.0
+Primary School Baijnathpur,placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+Primary School Bargdhi,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Bhata Diha,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Bilona,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Campus Aurangabad,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Campus Powai,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Campus Sikraura,placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+Primary School Chandrapur Bichpuri,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Charkonwa,placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+Primary School Chobla,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Cholahe,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Didhai,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Dohriya,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+Primary School English Medium Qutubpur Labdauna,flip-flop,False,True,False,False,True,False,False,False,False,0.8784621744522529,0.8032244729226953
+Primary School Gudha,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+Primary School Harinahpur,flip-flop,False,True,False,False,False,False,False,False,False,0.46006317689530685,0.11123646209386281
+Primary School Harivanshpur,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+Primary School Jagannathpur,placeholder-start,True,True,False,False,False,False,False,True,False,0.9207252044081052,0.0
+Primary School Jagdishpur Pratham,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+Primary School Jainpur,flip-flop,False,True,False,False,False,False,False,False,False,0.21886281588447654,0.04016245487364621
+Primary School Jairampur,placeholder-start,True,False,True,False,False,False,False,True,True,0.012963629816348578,0.0
+Primary School Jamunia,placeholder-start,True,True,False,False,False,False,False,True,False,0.4196493791088386,0.0
+Primary School Jatmujheda,placeholder-start,False,False,False,False,False,False,False,False,False,0.12299465240641712,0.0
+Primary School Karwal,flip-flop,False,True,False,False,True,False,False,False,False,0.4642696629213483,0.22269662921348315
+Primary School Keshawpur Pratham,flip-flop,False,True,False,False,False,False,False,False,False,0.32344890510948904,0.0
+Primary School Kucharam,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Kurdi,placeholder-start,False,True,False,False,True,False,False,False,False,0.881445106980007,0.8190108733777622
+Primary School Madari,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Mainhe hardo,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Masuri,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Mohammadpur Gurjar,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Nandapur,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School No. 1 Barawad,placeholder-start,True,False,True,False,False,True,False,True,True,0.0,0.0
+"Primary School No.1, Bitaoda",stuck,True,True,True,False,False,False,False,True,True,0.43211715065773143,0.0
+Primary School Odaraha,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Pahara,placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+Primary School Pinna,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+Primary School Radnool Azizpur,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Rathoda,placeholder-start,False,True,False,False,False,False,False,False,False,0.7848591549295775,0.12746478873239436
+"Primary School Sahjanwa , Pratham Pipra",clean,False,False,False,False,False,False,False,False,False,0.11816538635336647,0.0
+Primary School Sahori,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Salawa,placeholder-start,False,True,False,False,False,False,False,False,False,0.3599857853589197,0.0
+Primary School Sanda-Sanee,placeholder-start,True,True,False,False,True,False,False,True,False,0.859816384180791,0.5236581920903954
+Primary School Shekhpuri,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Primary School Sonda,placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+Primary School Vamanpura,placeholder-start,True,True,False,False,False,False,False,True,False,0.735445205479452,0.0
+Primary School chandsina,placeholder-start,True,False,False,False,False,False,False,True,False,0.000364963503649635,0.0
+Primary School kakrehwa,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School,  Todarpur",stuck,True,True,False,False,False,False,False,True,False,0.34242709313264347,0.0
+"Primary School, Anrabali",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School, Asara Bighawati",stuck,True,False,True,False,False,False,False,True,True,0.1804159850432344,0.0
+"Primary School, Badagaon bharati form",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Baghpokhar",flip-flop,False,True,False,False,False,False,False,False,False,0.4729075397740374,0.0
+"Primary School, Bamhauri",placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Bamhoori Khurd",flip-flop,False,True,False,False,False,False,False,False,False,0.7049347992840705,0.1986704167732038
+"Primary School, Bandpur",flip-flop,False,True,False,False,True,False,False,False,False,0.5747889022919179,0.3169481302774427
+"Primary School, Bartha Lala",flip-flop,False,True,False,False,False,False,False,False,False,0.4772204325816843,0.1872986654394846
+"Primary School, Basti",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Belatal",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Belaukh",flip-flop,False,True,False,False,False,False,False,False,False,0.7594089124913415,0.1175248210574925
+"Primary School, Bgra khisani bujurg",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Bhadauda",flip-flop,False,True,False,False,True,False,False,False,False,0.8824214202561118,0.8824214202561118
+"Primary School, Bhagwanpur",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Bhalsona",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Bhartpura",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Bilata",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School, Block Office",flip-flop,False,True,False,False,False,False,False,False,False,0.8574320416425679,0.0
+"Primary School, Bodha",flip-flop,False,True,False,False,False,False,False,False,False,0.8397701149425287,0.0
+"Primary School, Bohra",clean,False,False,False,False,False,False,False,False,False,0.1489539748953975,0.0
+"Primary School, Brahmpur",flip-flop,False,True,False,False,False,False,False,False,False,0.22829801777170197,0.021417179311916154
+"Primary School, Chariya Bujrag",flip-flop,False,True,False,False,False,False,False,False,False,0.2025142857142857,0.19794285714285714
+"Primary School, Chiplatha",spike-faults,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School, Dagarpur Tigadi",clean,False,False,False,False,False,False,False,False,False,0.10796781728523229,0.0
+"Primary School, Dera Devra bujurg",stuck,True,True,True,False,False,True,False,True,True,0.9647887323943662,0.0
+"Primary School, Dewari",clean,False,False,False,False,False,False,False,False,False,0.16845582163501238,0.0
+"Primary School, Dhanaura",stuck,True,False,False,False,False,False,False,True,False,0.1339633129516398,0.0
+"Primary School, Dhanaura Tikari",flip-flop,False,True,False,False,False,False,False,False,False,0.21562228024369018,0.0
+"Primary School, Dhankharpur",flip-flop,False,True,False,False,False,False,False,False,False,0.22936416184971098,0.0
+"Primary School, Dhikana",flip-flop,False,True,False,False,True,False,False,False,False,0.9844573966139328,0.8517901748542881
+"Primary School, Evani",pumping-like real,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School, Gaidaira",stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Primary School, Garher",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Gauripur Javahar Nagar",flip-flop,False,True,False,False,False,False,False,False,False,0.8618037135278515,0.13660477453580902
+"Primary School, Gotaka",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School, Gursarai tahrauli tahshil",stuck,True,False,False,False,False,False,False,True,False,0.10369795707266614,0.0
+"Primary School, Jhaaro Kalan",clean,False,False,False,False,False,False,False,False,False,0.09787816563997262,0.0
+"Primary School, Jogehthi",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School, Jogiya Khera",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Johadi",flip-flop,False,True,False,False,True,False,False,False,False,0.44529616724738674,0.44529616724738674
+"Primary School, Kailgwan",clean,False,False,False,False,False,False,False,False,False,0.18957475994513032,0.0
+"Primary School, Kakadipur",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Kakaurkala",clean,False,False,False,False,False,False,False,False,False,0.002301790281329923,0.12276214833759591
+"Primary School, Kalan Bar Devran",stuck,True,False,False,False,False,False,False,True,False,0.03967043027158987,0.0
+"Primary School, Kalani Khurad",flip-flop,False,True,False,False,False,False,False,False,False,0.23953594176524112,0.0
+"Primary School, Kantit",flip-flop,False,True,False,False,False,False,False,False,False,0.6235078053259872,0.0
+"Primary School, Kaparwar",flip-flop,False,True,False,False,False,False,False,False,False,0.29071642478691545,0.189126929278968
+"Primary School, Karasdev Mandir",clean,False,False,False,False,False,False,False,False,False,0.05998310335116869,0.0
+"Primary School, Kevtam",clean,False,False,False,False,False,False,False,False,False,0.07228086278109225,0.045663148233134464
+"Primary School, Khandeura",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Khiriya",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Khujurahokhurd",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Kodai",flip-flop,False,True,False,False,False,False,False,False,False,0.5067328136073707,0.0
+"Primary School, Koilar",flip-flop,False,True,False,False,False,False,False,False,False,0.5034818941504178,0.0
+"Primary School, Kritikhand",placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Leharthkurpura",stuck,True,True,False,False,False,False,False,True,False,0.5293311403508771,0.0
+"Primary School, Manupura",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Marry",stuck,True,True,False,False,True,False,False,True,False,0.7213866938567423,0.7213866938567423
+"Primary School, Masaurakhurd",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Mithabel",flip-flop,False,True,False,False,False,False,False,False,False,0.2166552276366964,0.0
+"Primary School, Motiyari, Mahuaa, Banda_1",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Narokhar",flip-flop,False,True,False,False,False,False,False,False,False,0.24483708122992198,0.039238182652592934
+"Primary School, Narouiya Daamar",flip-flop,False,True,False,False,False,False,False,False,False,0.7007282658170232,0.15817023213472917
+"Primary School, Nota",stuck,True,False,False,False,True,False,False,True,False,0.1841164453524004,0.3878958120531154
+"Primary School, Pachar",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Padra",stuck,True,True,False,False,True,False,False,True,False,0.6136627906976744,0.6136627906976744
+"Primary School, Pakarhut",flip-flop,False,True,False,False,False,False,False,False,False,0.22377142857142857,0.13417142857142858
+"Primary School, Pali",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Paraon",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Pashu palan Vibhag Masuri",clean,False,False,False,False,False,False,False,False,False,0.15138888888888888,0.0
+"Primary School, Purakalan, Talbehat, Lalitpur_1",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, R.K.Inter college",flip-flop,False,True,False,False,True,False,False,False,False,0.6158031088082901,0.8590673575129534
+"Primary School, Radhana",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Safpuram Chandpur",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Saina",flip-flop,False,True,False,False,False,False,False,False,False,0.48921749845964263,0.0
+"Primary School, Salarpur Jalalpur",stuck,True,True,True,False,True,False,False,True,True,0.8675480169618359,0.8675480169618359
+"Primary School, Salhepur",placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School, Sangholi taga",flip-flop,False,True,False,False,False,False,False,False,False,0.9072517078297425,0.0
+"Primary School, Sanori",stuck,True,True,False,False,True,False,False,True,False,0.5981915795422436,0.5981915795422436
+"Primary School, Sarwa",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Shekhar",clean,False,False,False,False,False,False,False,False,False,0.1543956043956044,0.11538461538461539
+"Primary School, Shivpur",flip-flop,False,True,False,False,False,False,False,False,False,0.4641622493662134,0.0
+"Primary School, Silana",flip-flop,False,True,False,False,True,False,False,False,False,0.6638237384506042,0.8661454631603885
+"Primary School, Sindhan Kalan",placeholder-start,True,True,True,False,True,True,False,True,True,0.8416898792943361,0.36513463324048284
+"Primary School, Sirasi",flip-flop,False,True,False,False,False,False,False,False,False,0.4230503795721187,0.0
+"Primary School, Sirjam",clean,False,False,False,False,False,False,False,False,False,0.19922409858512094,0.061615700593336376
+"Primary School, Sultanpur_1",stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Primary School, Surikalan",flip-flop,False,True,False,False,True,False,False,False,False,0.9773650609402206,0.9460243760882182
+"Primary School, Tewalagarhi",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School, Tilaura",flip-flop,False,True,False,False,False,False,False,False,False,0.20820843901314273,0.0
+"Primary School, Vansha Gram Panchayt",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School, Vijaypura",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School/ Composite, Alampur",flip-flop,False,True,False,False,True,False,False,False,False,0.7761855132881709,0.7655028660760813
+"Primary School/ Composite, Bhojpur Taga",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School/ Composite, Chaappar",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School/ Composite, Chittora",stuck,True,False,False,False,False,False,False,True,False,0.08035714285714286,0.07842664092664092
+"Primary School/ Composite, Dadheru Kaian",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School/ Composite, Dholla Majra",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School/ Composite, Fakreda",flip-flop,False,True,False,False,True,False,False,False,False,0.8841413311421529,0.863325116406464
+"Primary School/ Composite, Ghumawati",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School/ Composite, Haibatpur",flip-flop,False,True,False,False,False,False,False,False,False,0.9326607226654153,0.0
+"Primary School/ Composite, Harsauli",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School/ Composite, Jaula Dindauli",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School/ Composite, Jeevna",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School/ Composite, Jhabiran",flip-flop,False,True,False,False,True,False,False,False,False,0.9971167707832773,0.9966362325804902
+"Primary School/ Composite, Jukhedi",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School/ Composite, Katla Naveen",stuck,True,False,False,False,False,False,False,True,False,0.19493226292022078,0.19493226292022078
+"Primary School/ Composite, Landhoura Junardar",flip-flop,False,True,False,False,True,False,False,False,False,0.9794039253695178,0.8730312575720862
+"Primary School/ Composite, Mandawali Khadar",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School/ Composite, Manganpur",flip-flop,False,True,False,False,False,False,False,False,False,0.8784392196098049,0.0
+"Primary School/ Composite, Manoharpur",stuck,True,True,False,False,True,False,False,True,False,0.9712868702688593,0.4881232054293918
+"Primary School/ Composite, Manpur Qadeem",stuck,True,True,False,False,True,False,False,True,False,0.7255917159763313,0.7255917159763313
+"Primary School/ Composite, Mehmoodpur",flip-flop,False,True,False,False,True,False,False,False,False,0.28934624697336564,0.7634382566585957
+"Primary School/ Composite, Mundi Kheri",stuck,True,True,True,False,True,False,False,True,True,0.7293213149522799,0.7293213149522799
+"Primary School/ Composite, Nagla Rajput",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School/ Composite, Nandhera Khurd",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School/ Composite, Nasrullahgarh",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School/ Composite, Nunabadi",flip-flop,False,True,False,False,True,False,False,False,False,0.9389989572471324,0.5925443169968717
+"Primary School/ Composite, Pawti",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Primary School/ Composite, Peepalhera",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Primary School/ Composite, Rasulpur",flip-flop,False,True,False,False,True,False,False,False,False,0.9497928345113331,0.9497928345113331
+"Primary School/ Composite, Sidki",flip-flop,False,True,False,False,True,False,False,False,False,0.953305351521511,0.8247639034627492
+"Primary School/ Composite, Tandheda",stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Prmary School Rajpura,placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+Punchayat Bhawan Bhaluwani,placeholder-start,False,False,False,False,False,False,False,False,False,0.13402802730865973,0.0
+Punchayat Bhawan Vijaypur,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Purv Madh Vidhyalaya, Doomradeeh",flip-flop,False,True,False,False,True,False,False,False,False,0.24362215582624683,0.2231670880257412
+"Purv Madh Vidhyalaya, Shivpur",flip-flop,False,True,False,False,False,False,False,False,False,0.2368781378366043,0.0
+"Purv Madhyamik Vidhyalaya, Doriya",flip-flop,False,True,False,False,False,False,False,False,False,0.4948571428571429,0.04594285714285714
+"Purv Madhyamik Vidhyalaya, Fattupur",flip-flop,False,True,False,False,False,False,False,False,False,0.39479689639434046,0.1259698767685988
+"Purv Madhyamik Vidhyalaya, Mahooli",flip-flop,False,True,False,False,False,False,False,False,False,0.47598152424942264,0.18937644341801385
+"Purv Madhyamik Vidyalaya, Mujehra",flip-flop,False,True,False,False,False,False,False,False,False,0.7448840381991815,0.030013642564802184
+"Purv Madhyamik Vidyalaya, Ranibari",flip-flop,False,True,False,False,False,False,False,False,False,0.4800543970988214,0.0
+"Purv Madhyamik Vidyalaya,Bharpura",flip-flop,False,True,False,False,False,False,False,False,False,0.434135166093929,0.0
+Purva Madhyamik Vidhyalaya Achausa,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Purva Madhyamik Vidhyalaya Baroda Dang,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+Purva Madhyamik Vidhyalaya Bhitaura,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Purva Madhyamik Vidhyalaya Ladwari,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+Purva Madhyamik Vidhyalaya Piphara,placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+Purva Madhyamik Vidhyalaya Sihari,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Purva Madhyamik Vidhyalaya, Chackwara",placeholder-start,True,True,True,False,False,True,False,True,True,0.3282608695652174,0.016304347826086956
+"Purva Madhyamik Vidhyalaya, Chandapur",placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Purva Madhyamik Vidyalaya Chalakpur,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Pv. Compiergang,clean,False,False,False,False,False,False,False,False,False,0.1914506593906321,0.0
+R.R.C. Center Aata,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+RASULPUR BARGAON RAJKIYA UCHTTAR PRATHAMIK VIDYALAYA,flip-flop,False,True,False,False,False,False,False,False,False,0.6863575568435132,0.10031208203299152
+Rajapur Sikraur,flip-flop,False,True,False,False,False,False,False,False,False,0.9794715447154472,0.0
+Rajkia Balika Inter College Kamasin,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Rajkia High School Pakhrauli,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Rajkiya High School, Atali",stuck,True,True,True,False,False,False,False,True,True,0.22743318204740293,0.0
+Ramchhitoni Sahawar (UP-011),stuck,True,True,False,False,False,False,False,True,False,0.5954391891891891,0.0
+Ranipur_2,placeholder-start,True,True,True,False,True,False,False,True,True,0.6372765615585458,0.6171922072705363
+Rasin_2,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Roadways Bus Stand, Robertsganj",flip-flop,False,True,False,False,False,False,False,False,False,0.21923783287419651,0.07690541781450873
+Rohari,stuck,True,True,False,False,True,False,False,True,False,0.3821934945788157,0.3821934945788157
+SARAHARI PRATHMIK VIDYALAYA,flip-flop,False,True,False,False,False,False,False,False,False,0.4434684684684685,0.13761261261261262
+SWASTH KENDR PIPIGANJ,clean,False,False,False,False,False,False,False,False,False,0.10740072202166065,0.05708483754512635
+Saint Ravidas Nagar Abholi Abholi,stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Saint Ravidas Nagar Abholi Gangarampur,pumping-like real,False,False,False,False,False,False,False,False,False,0.0,0.0
+Saint Ravidas Nagar Aurai Ugapur,clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Saint Ravidas Nagar Aurai Uprauth,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Saint Ravidas Nagar Bhadohi Munshi,stuck,True,False,False,False,False,False,False,True,False,0.10781932977173385,0.0
+Saint Ravidas Nagar Deegh  Deegh,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Saint Ravidas Nagar Deegh Velahua,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Saint Ravidas Nagar Gyanpur Kansapur,flip-flop,False,True,False,False,False,False,False,False,False,0.23832450649975928,0.0
+Saint Ravidas Nagar Gyanpur Samhai,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Saint Ravidas Nagar Suriyawan Chhapariya,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Saint Ravidas Nagar Suriyawan Mond,stuck,True,False,True,False,False,True,False,False,False,0.1486649025739716,0.07072407986528746
+Saital,flip-flop,False,True,False,False,False,False,False,False,False,0.211672278338945,0.004489337822671156
+Salhakheri,clean,False,False,False,False,False,False,False,False,False,0.06815464328417696,0.015544041450777202
+"Samaj Sevak Junir High School, Bhaura Kalan",clean,False,False,False,False,False,False,False,False,False,0.0,0.0
+Sanjhak,flip-flop,False,True,False,False,False,False,False,False,False,0.9770504889243664,0.0
+Satti Chau Prathmik Vidyalaya,placeholder-start,False,True,False,False,False,False,False,False,False,0.43499023225526373,0.0
+Semara_1,spike-faults,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Shahid Chandra Shekhar Kanya P.M.V., Mallupura",flip-flop,False,True,False,False,True,False,False,False,False,0.9187830687830688,0.958994708994709
+Shahjahanpur Bhawal Kheda Bhawal Kheda,stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Shahjahanpur Bhawal Kheda Chak Bhitara,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Shahjahanpur Bhawal Kheda Chaudhera,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Shahjahanpur Bhawal Kheda Ladhauli,flip-flop,False,True,False,False,False,False,False,False,False,0.88997277676951,0.0
+Shahjahanpur Bhawal Kheda Shahbaj Pur,stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Shahjahanpur Bhawal Kheda Sutnera,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Shahjahanpur Dadraul Banthara,stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Shahjahanpur Dadraul Saraura (East),stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Shahjahanpur Puvayan  Badagaon Pratham,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Shahjahanpur Puvayan Bhilawan,stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Shahjahanpur Puvayan Mahua Pathak,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Shahjahanpur Puvayan Nahil,stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Shahjahanpur Sidhauli Korokuiyan,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Shahjahanpur Sidhauli Mahanand Pur,flip-flop,False,True,False,False,True,False,False,False,False,0.6113683127572016,0.6113683127572016
+Shahjahanpur Sidhauli Sidhauli,stuck,True,True,False,False,False,False,False,True,False,0.47980535279805353,0.0
+Shitalpur_1,placeholder-start,True,False,True,False,False,True,False,True,True,0.09368797141722907,0.04644700277888051
+Sikhula Pz._1,placeholder-start,True,False,True,False,False,True,False,True,True,0.0,0.0
+Singhara Pr. Vid.,flip-flop,False,True,False,False,False,False,False,False,False,0.6721144024514811,0.0
+Sitapur Mafi,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Sonbhadra Babhani Bhawar,stuck,True,False,True,False,False,True,False,True,False,0.0,0.0
+Sonbhadra Chopan Khairatiya,stuck,True,True,False,False,False,False,False,True,False,0.20326006421338602,0.0
+Sonbhadra Duddhi Mahuli,stuck,True,False,False,False,False,False,False,True,False,0.19497165393147647,0.0
+Sonbhadra Myorpur Agartola,stuck,True,False,True,False,False,True,False,True,True,0.0,0.0
+Srikantpur Pr. Vid.,flip-flop,False,True,False,False,False,False,False,False,False,0.39702587084946017,0.0
+Sujanpura Badhyapar,stuck,True,True,False,False,False,False,False,True,False,0.24447144592952613,0.1181044957472661
+Sukwan,stuck,True,True,True,False,False,True,False,False,False,0.4216691068814056,0.0
+"Swarg Dham, Hardua",placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Terha_1,placeholder-start,True,True,True,False,True,True,False,True,False,0.3647003745318352,0.3647003745318352
+"Thana Prisar, Lalganj",flip-flop,False,True,False,False,False,False,False,False,False,0.3042071197411003,0.0
+Uccha Prathmik Vidhyalaya Deaval,placeholder-start,True,True,False,False,False,False,False,True,False,0.7093984962406015,0.0
+Uccha Prathmik Vidhyalaya Devaratha,placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+Uccha Prathmik Vidhyalaya Odera,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Uccha Prathmik Vidhyalaya Uldan,placeholder-start,True,False,False,False,False,False,False,True,False,0.007178750897343862,0.0
+"Uccha Prathmik Vidhyalaya, Chero",placeholder-start,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Uccha Prathmik Vidhyalaya, Gangapur",placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Uccha Prathmik Vidhyalaya, Hasanpur Kadim",stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+"Uccha Prathmik Vidhyalaya, Kapsarh",placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Uccha Prathmik Vidhyalaya, Lohra (Pampawan)",placeholder-start,False,False,False,False,False,False,False,False,False,0.0,0.0
+"Uccha Prathmik Vidhyalaya, Pathouli",placeholder-start,False,True,False,False,True,False,False,False,False,0.8693502824858758,0.3633474576271186
+"Uccha Prathmik Vidhyalaya, Semra Bhav Nagar",placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Uccha Prathmik Vidhyalaya, Simra",placeholder-start,False,True,False,False,False,False,False,False,False,0.6449851042701092,0.0
+"Uccha Prathmik Vidhyalaya, Sonpur",placeholder-start,False,True,False,False,False,False,False,False,False,0.7393822393822393,0.0
+"Uchha Prathmik Vidhyala, Tadi Mustkil",stuck,True,False,True,False,False,False,False,True,True,0.0,0.0
+Upper Primary Kasampur,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Upper Primary School Eng Medium, Hariyabans",flip-flop,False,True,False,False,False,False,False,False,False,0.7602862254025045,0.0
+Upper Primary School Lehra,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Upper Primary School Pohalli,placeholder-start,False,True,False,False,False,False,False,False,False,0.8416193181818182,0.0
+Upper Primary School Rijaula,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Upper Primary School Sarahan Bujurg,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+Upper Primary School Urouliya,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Upper Primary School, Khadui",flip-flop,False,True,False,False,False,False,False,False,False,0.2119889756545705,0.0
+Varansi Badagaon Gajapur,stuck,True,False,True,False,False,True,False,True,True,0.0,0.0
+Varansi Chirai Gaon  Gathiya Jairampur,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Varansi Chirai Gaon Chhahi,flip-flop,False,True,False,False,True,False,False,False,False,0.4070464767616192,0.40004997501249373
+Varansi Cholapur Chaubepur,stuck,True,True,False,False,False,False,False,True,False,0.21183723797780518,0.0
+Varansi Cholapur Munari,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Varansi Harahua Bhaithauli,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Varansi Harahua Gurwat,spike-faults,False,False,False,False,False,False,False,False,False,0.0,0.0
+Varansi Harahua Kakalpur,pumping-like real,False,False,False,False,False,False,False,False,False,0.0,0.0
+Varansi Harahua Shivrampur,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Varansi Harahua Sulemapur,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+Varansi Pindara Gajendra,stuck,True,True,False,False,False,False,False,True,False,0.9149470161740101,0.0
+Varansi Pindara Molanapur,stuck,True,True,False,False,False,False,False,True,False,0.9524298425735798,0.0
+Veterinary Hospital Shahjahanpur,placeholder-start,True,False,False,False,False,False,False,True,False,0.0,0.0
+"Vikash Khand Parisar, Itwa",flip-flop,False,True,False,False,False,False,False,False,False,0.21058851335381706,0.0
+primary school Chaura khurd,stuck,True,False,False,False,False,False,False,True,False,0.0,0.0
+primary school jalalpura,spike-faults,False,False,False,False,False,False,False,False,False,0.0,0.0
+primary school kapasi,placeholder-start,False,False,False,False,False,False,False,False,False,0.15292841648590022,0.0

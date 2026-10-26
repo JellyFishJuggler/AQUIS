@@ -1,0 +1,8 @@
+group,case_type,stations,flagged,passed,failed,precision,recall,negative_control_specificity
+A_placeholder,acceptance,15,15,15.0,0.0,,1.0,
+B_stuck,acceptance,3,3,3.0,0.0,,1.0,
+B_check,descriptive,2,2,,,,,
+C_repeated_spike,acceptance,7,6,6.0,1.0,,0.8571428571428571,
+D_flipflop,acceptance,1,1,1.0,0.0,,1.0,
+D_check,descriptive,3,2,,,,,
+E_untouched,acceptance,7,0,7.0,0.0,,,1.0

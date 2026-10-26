@@ -1,0 +1,2 @@
+stations_affected,gap_station_intervals,first_last_observation,latest_last_observation,earliest_first_return,last_first_return,median_gap_days,common_gap_start,common_gap_end,common_interval_is_intersection
+9,9,2024-07-26 18:00:00,2024-12-03 18:00:00,2025-02-13 12:00:00,2025-05-06 18:00:00,154.0,2024-12-03 18:00:00,2025-02-13 12:00:00,True

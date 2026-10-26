@@ -1,0 +1,601 @@
+Station,pre_cutoff_observed_slots,exact_extreme_values_repeated,repeated_extreme_observed_slots,isolated_repeated_extreme_spikes_to_mask,placeholder_start_slots,flat_exact_run_slots,nearflat_30d_slots,test_stuck_slots,flipflop_invalid_slots,flipflop_invalid_share_all_observed,flipflop_invalid_share_pre_observed,exceeds_pre_whole_station_invalid_share,change_points,segments,rows_in_training_station_extreme_support,first_record,last_record,pumping_like_events,strict_classification
+ASHADHA PRATHMIK VIDYALAYA,3578,3,12,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-11-03 18:00:00,2026-10-10 18:00:00,0,clean
+Aagan Wadi Kendra Chandni,1904,1,45,0,0,174,55,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Aaganwadi Kendra Pakri Bazaar,1831,1,104,0,0,103,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+"Adarsh Primary School, Dubar Kalan",3511,2,9,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-11-14 18:00:00,2026-10-10 18:00:00,0,clean
+Agan Wadi Kendra Kuchendu,1823,1,33,0,0,126,9,0,0,0.0,0.0,False,1,2,1,2024-01-19 18:00:00,2025-07-16 18:00:00,0,clean
+Alakchandra Inter college Bhinga,3717,1,34,2,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-09-18 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Aligarh Chandaus  Somana,3401,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-01-13 18:00:00,2026-10-04 00:00:00,0,clean
+Aligarh Chandaus Maharajpur,2964,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-01-13 18:00:00,2026-10-01 00:00:00,0,clean
+Aligarh Jawa Bahadurpur Kota,3210,63,217,2,0,0,0,0,0,0.0,0.0,False,1,2,2,2023-02-20 06:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Aligarh Jawa Jamalpur Siya,3318,101,387,12,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-01-13 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Aligarh Jawa Sogera,3379,2,7,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2023-01-13 18:00:00,2026-10-10 18:00:00,0,clean
+Aligarh Khair Arrana,3350,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-01-14 18:00:00,2026-10-10 18:00:00,0,clean
+Aligarh Khair Utwara,3377,6,23,0,0,16,16,0,0,0.0,0.0,False,1,2,5,2023-01-14 18:00:00,2026-10-01 00:00:00,0,clean
+Aligarh Lodha Aisi Kol,3429,35,112,1,0,0,0,0,0,0.0,0.0,False,3,4,0,2023-01-14 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Aligarh Lodha Mahrawalpur Nagariya,3450,31,104,2,0,0,0,0,0,0.0,0.0,False,3,4,4,2023-01-12 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Amchurnirua,4370,4,190,3,0,0,0,0,0,0.0,0.0,False,1,2,4,2022-07-21 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Amlour,4366,3,68,14,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-07-14 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Anganwadi Kedra, Baini",3480,2,7,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-11-23 18:00:00,2026-10-10 18:00:00,0,clean
+Aryavart Madhyamik Vidhyalaya Sindhora,3517,3,27,5,0,0,0,0,0,0.0,0.0,False,2,3,3,2022-11-14 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Aswaniya Pr. Vid.,4028,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-07-13 18:00:00,2026-10-10 18:00:00,0,clean
+Awagarh (UP-005),5512,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2021-01-01 06:00:00,2026-09-17 00:00:00,0,clean
+Azamgarh Ahiraula Bahera,3169,86,294,0,0,0,0,0,0,0.0,0.0,False,3,4,0,2023-02-20 18:00:00,2026-10-07 00:00:00,0,clean
+Azamgarh Ahiraula Kandara,2848,10,36,0,0,603,603,0,0,0.0,0.0,False,2,3,5,2023-02-20 18:00:00,2026-10-01 00:00:00,0,clean
+Azamgarh Atrauliya Atrauliya,3093,8,26,1,0,90,90,0,0,0.0,0.0,False,1,2,8,2023-02-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Azamgarh Jahanganj Godhaura,3023,93,360,1,0,0,0,0,0,0.0,0.0,False,1,2,8,2023-02-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Azamgarh Lalganj Lalganj,2998,7,27,0,0,283,283,0,0,0.0,0.0,False,1,2,4,2023-02-20 18:00:00,2026-10-01 00:00:00,0,clean
+Azamgarh Palhana Balahi Lahucha,3148,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Azamgarh Palhana Jamui Bhatauli,3214,8,28,0,0,0,0,0,0,0.0,0.0,False,1,2,4,2023-02-20 18:00:00,2026-09-24 00:00:00,0,clean
+Azamgarh Pavai Velasiya,3179,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Azamgarh Sathiyavn Gajahada,3169,62,211,1,0,2,2,0,0,0.0,0.0,False,1,2,2,2023-02-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Azamgarh Thekama Bardah,3089,98,470,4,0,4,4,0,0,0.0,0.0,False,2,3,5,2023-02-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+B.D.O Office Bhatini,3472,19,64,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-11-30 18:00:00,2026-10-10 18:00:00,0,clean
+B.D.O. Office Lar,1869,1,108,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+"B.D.O. Office, Binauli",1807,1,15,0,0,229,110,0,0,0.0,0.0,False,1,2,1,2024-01-18 18:00:00,2026-09-13 18:00:00,0,clean
+BADHANI PRATHMIK VIDYALAYA,3556,1,13,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-03 18:00:00,2026-10-10 18:00:00,0,clean
+BANI KHAS C.V. VIDYALAYA,3540,8,26,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-11-03 18:00:00,2026-10-10 18:00:00,0,clean
+BANSGAON PRATHMIK VIDYALAYA,3571,2,77,12,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-11-04 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Babina Rular,4076,80,401,24,0,0,0,0,4865,1.0,1.0,True,3,4,8,2022-10-01 00:00:00,2026-10-10 18:00:00,0,flip-flop
+Badaun Salarpur BDO Office,3189,1,6,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Badaun Ujhani Sports Stadium,3398,4,17,0,0,0,0,0,0,0.0,0.0,False,1,2,4,2022-12-28 12:00:00,2026-10-10 18:00:00,0,clean
+Badaun Usawan BDO Office,3190,12,42,0,0,0,0,0,0,0.0,0.0,False,1,2,5,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Badhai Khurd Pr. Vid.,4093,6,30,1,0,0,0,0,0,0.0,0.0,False,1,2,6,2022-06-21 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Badhouli,4027,5,57,7,0,0,0,0,0,0.0,0.0,False,1,2,5,2022-09-24 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Baghora_1,3943,5,45,7,0,0,0,0,0,0.0,0.0,False,1,2,5,2022-08-24 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Baghpat Meerut Kheda Balrampur Itiyara,3693,12,44,0,0,51,51,0,0,0.0,0.0,False,1,2,10,2022-10-17 12:00:00,2026-10-10 18:00:00,0,clean
+Banda Baberu Anvan,3209,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 00:00:00,0,clean
+Banda Baberu Umrehani,3187,5,15,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 06:00:00,2026-10-10 18:00:00,0,clean
+Banda Badokhar Khurd Chatgan,3098,110,436,10,0,0,0,0,0,0.0,0.0,False,1,2,2,2023-02-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Banda Bisndha Mrooli,1954,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2024-01-08 18:00:00,2026-10-10 18:00:00,0,clean
+Banda Kamasin Tilowsa,3091,23,76,5,0,0,0,0,0,0.0,0.0,False,1,2,3,2023-02-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Banda Tindwari Bhindowra,3178,23,86,0,0,0,0,0,0,0.0,0.0,False,3,4,0,2023-02-20 18:00:00,2026-10-10 18:00:00,5,pumping-like real
+Bdo Office Campus Pipraich,3519,1,40,4,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-11 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Bhadarwara  P_1,4313,3,52,3,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-07-30 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Bhitari_2,4319,5,118,97,0,0,0,0,0,0.0,0.0,False,1,2,5,2022-07-19 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Bijijauri_1,4214,1,98,62,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-08-25 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Birdha /Poorabirdha,3962,6,150,14,116,118,39,0,0,0.0,0.0,False,1,2,6,2022-08-02 18:00:00,2026-10-10 18:00:00,0,placeholder-start
+Block Deoria Campus Deoria Sadar,3451,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-26 18:00:00,2026-10-10 18:00:00,0,clean
+Block Development Office-Khekra-Shallow,3800,16,58,0,0,0,0,0,0,0.0,0.0,False,2,3,4,2022-01-21 00:00:00,2026-10-10 18:00:00,0,clean
+"Block Office, Kurara",3117,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-03-15 06:00:00,2026-10-10 18:00:00,0,clean
+"Block office, Gursarai",2991,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+Budh Sainy_1,4017,3,39,4,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-08-06 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Chakara  P_1,4326,76,320,35,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-07-30 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Chandi Kalan,4096,5,367,168,0,0,0,0,0,0.0,0.0,False,1,2,5,2022-09-25 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Chhibaw_1,3911,7,103,3,0,2019,402,0,0,0.0,0.0,False,1,2,6,2022-11-08 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Chirautha,3801,1,208,113,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-12-07 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Chitrakoot Karvi Khoha,2999,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Chitrakoot Karvi Shivrampur,3097,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Chitrakoot Manikpur Agarhudha,3082,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-20 06:00:00,2026-10-10 18:00:00,2,pumping-like real
+Chitrakoot Manikpur Sardar Patel,2088,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-20 18:00:00,2026-10-09 00:00:00,0,clean
+Chorwa Bhari Prathmik Vidyalaya,3744,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-09-18 18:00:00,2026-10-10 18:00:00,0,clean
+"Community Center, Ghorawal",3501,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-11-21 18:00:00,2026-10-10 18:00:00,0,clean
+Comosite School Campus Badalganj,1863,1,92,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+Composite Girls Primary School Mai,1912,148,721,26,0,331,213,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-10 18:00:00,0,spike-faults on clean series
+Composite School Basantpur Saitali-1,1858,1,67,0,0,106,3,0,0,0.0,0.0,False,1,2,1,2024-01-29 12:00:00,2026-08-15 18:00:00,1,pumping-like real
+Composite School Biralsi,1845,1,16,6,0,141,22,0,0,0.0,0.0,False,1,2,1,2024-01-19 18:00:00,2026-08-27 18:00:00,0,spike-faults on clean series
+Composite School Kilhora,1810,1,121,0,123,123,44,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,placeholder-start
+Composite School Nagla Bair,1867,1,66,0,0,133,14,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-08-09 18:00:00,0,clean
+Composite School Sagarpur,1833,3,81,0,0,25,25,0,0,0.0,0.0,False,1,2,3,2024-01-31 00:00:00,2026-09-13 18:00:00,0,clean
+Composite School Sanjarpur,1860,5,115,2,0,447,447,0,0,0.0,0.0,False,1,2,4,2024-01-30 18:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Composite School katar,1828,1,93,0,0,1185,1185,0,0,0.0,0.0,False,1,2,1,2024-01-31 12:00:00,2026-09-13 18:00:00,0,clean
+"Composite School, Dhamna Khurd",1872,16,93,2,0,165,46,0,0,0.0,0.0,False,1,2,5,2024-01-29 12:00:00,2026-08-15 18:00:00,0,spike-faults on clean series
+"Composite School, Ghamhapur",1817,1,72,0,0,125,6,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+"Composite School, Mungari",3494,3,17,0,0,0,0,0,0,0.0,0.0,False,3,4,3,2022-11-18 18:00:00,2026-10-10 18:00:00,0,clean
+"Composite School, Pathraha",3503,15,54,0,0,0,0,0,0,0.0,0.0,False,2,3,4,2022-11-17 18:00:00,2026-10-10 18:00:00,0,clean
+"Composite Uccha Prathmik Vidhyalaya, Paltadevi",1485,2,89,0,0,114,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 12:00:00,2026-09-13 12:00:00,0,clean
+Composite Upper Primary School Sajania,741,1,84,0,0,117,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 12:00:00,2026-08-03 12:00:00,0,clean
+DEOCHALI C.V. VIDYALAYA,3567,1,6,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-04 18:00:00,2026-10-10 18:00:00,0,clean
+Datt Naga_1,4220,4,106,95,0,0,0,0,0,0.0,0.0,False,1,2,4,2022-08-06 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Deoria Bhaluwani Markna,3164,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Deoria Bhatani Mishrauli Dichit,3205,3,9,1,0,3,3,0,0,0.0,0.0,False,3,4,0,2023-02-20 12:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Deoria Bhatpar Rani Dharkwan,3169,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Deoria Salempur Manihari,3112,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-20 18:00:00,2026-10-10 00:00:00,0,clean
+Deoria Tarkulwa Tarkulwa,3072,2,7,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Devrar_1,2572,11,62,5,0,0,0,0,0,0.0,0.0,False,1,2,8,2022-11-24 06:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Dhikauli,4294,4,399,261,0,0,0,0,0,0.0,0.0,False,1,2,4,2022-07-30 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Etah Aavagarh Badhawali,3131,7,23,0,0,0,0,0,0,0.0,0.0,False,1,2,7,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Etah Jalesar Hasangarh,3140,49,168,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Etah Jalesar Sakrauli,3188,75,250,4,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-21 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+FAREDUPUR PRATHMIK VIDYALAYA,3574,1,6,1,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-06 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Firozabad Madanpur Rudhawali,3096,31,104,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-19 18:00:00,2026-10-10 18:00:00,0,clean
+Fugana_1,4278,5,2047,0,454,1955,1519,0,0,0.0,0.0,False,1,2,5,2022-08-07 00:00:00,2026-10-10 18:00:00,0,placeholder-start
+GOVINDPUR BILARI PRATHMIK VIDYALAYA,3570,5,24,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-04 18:00:00,2026-10-10 18:00:00,0,clean
+Gadhela Panchayat Bhawan,1939,1,41,0,0,196,77,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-11 18:00:00,0,clean
+Gloragundera/Gewara,3999,2,256,1,0,428,399,124,0,0.0,0.0,False,1,2,2,2022-08-02 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Gorakhpur Barahalganj Bhatpar (Saukhor),3032,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 06:00:00,2026-10-10 18:00:00,0,clean
+Gorakhpur Barahalganj Ojhauli,3130,2,6,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2023-02-13 18:00:00,2026-10-10 18:00:00,0,clean
+Gorakhpur Belghat Belghat,3063,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 06:00:00,2026-10-10 18:00:00,0,clean
+Gorakhpur Belghat Murarpur,3029,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Gorakhpur Chargaon Beniganj,3188,4,16,0,0,0,0,0,0,0.0,0.0,False,1,2,4,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Gorakhpur Gagaha Gagaha,3208,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Gorakhpur Gola Dhakwarchak,3216,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-18 18:00:00,2026-10-10 18:00:00,0,clean
+Gorakhpur Gola Gopalpur Patham,3227,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Gorakhpur Gola Turkwaliya,3121,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Gorakhpur Kauriram Dhausa,3040,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-18 18:00:00,2026-10-10 18:00:00,0,clean
+Gorakhpur Kauriram Jagdispur Bhaluwan 2Nd,3185,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 06:00:00,2026-10-10 18:00:00,0,clean
+Gorakhpur Pali Dumari Niwas,3193,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Gorakhpur Pali Pali,3120,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Gorakhpur Sahjanwa Kasrol,3054,52,185,2,0,0,0,0,0,0.0,0.0,False,2,3,5,2023-02-18 18:00:00,2026-10-05 00:00:00,0,spike-faults on clean series
+Gorakhpur Sardarnagr Awadpur,3149,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Gorakhpur Urwa Malhanpar,3110,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 06:00:00,2026-10-10 18:00:00,0,clean
+Goshala Bada Gaon,1834,1,29,0,0,205,87,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Goshala Bankat,1927,2,32,0,0,209,90,0,0,0.0,0.0,False,1,2,2,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Goshala Basela,1891,1,33,0,0,200,82,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Goshala Bhadehdu,1851,1,38,0,0,209,90,0,0,0.0,0.0,False,1,2,1,2024-01-18 00:00:00,2026-09-13 18:00:00,0,clean
+Goshala Churaha,1877,1,33,0,0,206,87,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Goshala Ghuri,1891,2,31,0,0,208,89,0,0,0.0,0.0,False,1,2,2,2024-01-19 12:00:00,2026-09-13 18:00:00,0,clean
+Goshala Pachhahan,1892,1,29,0,0,209,90,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Goyla,4091,3,27,2,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-06-21 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Gram Panchayat Sachiwalaya / D.B.R. Ambedkar Samudayak Bhawan, Durkhuroo",1909,2,69,0,0,182,63,0,0,0.0,0.0,False,1,2,2,2024-01-18 00:00:00,2026-09-13 18:00:00,0,clean
+Grampunchayat Sachiwalaya Deori,1880,4,93,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+Gundaha,3261,6,73,1,0,88,88,0,0,0.0,0.0,False,1,2,6,2023-03-04 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Gyana Majra Pr. Vid.,4097,1,4,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2022-06-21 18:00:00,2026-10-10 18:00:00,0,clean
+HARNHAPUR PRATHAMIK VIDYALAYA,3579,2,10,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-07 18:00:00,2026-10-10 18:00:00,0,clean
+HOLAGARH PURV MADHYAMIK VIDYALAYA,3498,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-07 18:00:00,2026-10-10 18:00:00,0,clean
+Halwana,4124,3,31,2,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-06-21 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Hamirpur Kurara Damar,3241,6,20,1,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Hamirpur Kurara Jalokhar,3111,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,3,pumping-like real
+Hamirpur Sarila Purani,3068,0,0,0,0,0,0,0,0,0.0,0.0,False,3,4,0,2023-02-20 12:00:00,2026-10-10 18:00:00,4,pumping-like real
+Hamirpur Sumerpur Etara,2337,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-09-07 06:00:00,2026-10-10 18:00:00,0,clean
+Hamirpur Sumerpur Para,3220,6,19,0,0,20,20,0,0,0.0,0.0,False,1,2,2,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Hathras Hathras Hathras,3737,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-12-08 12:00:00,2026-10-08 06:00:00,1,pumping-like real
+Hathras Mursan Chandapa Sandh,3259,12,37,0,0,8,8,0,0,0.0,0.0,False,1,2,6,2022-12-07 12:00:00,2026-10-10 18:00:00,0,clean
+High School & Inter College Boroda,4268,4,126,9,0,0,0,0,0,0.0,0.0,False,1,2,4,2022-08-07 12:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"ITI Campus, ITI Campus Area",3207,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-17 18:00:00,2026-10-10 18:00:00,0,clean
+Inter Collage Khampar,1868,1,108,0,0,107,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+"Inter College, Sarv Hitakari",2504,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Inter college, Tindwara",2886,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-04-19 18:00:00,2026-10-01 12:00:00,0,clean
+"Irrigation Department, Amawar",3519,5,32,2,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-11-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Jamalpur_2,4254,1,163,4,0,0,0,0,5087,1.0,1.0,True,1,2,1,2022-08-03 00:00:00,2026-10-10 18:00:00,0,flip-flop
+"Janata Inter College, Lachheda",3051,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-16 18:00:00,2026-10-10 18:00:00,0,clean
+Jauharpur,3815,96,525,14,0,0,0,0,0,0.0,0.0,False,1,2,10,2022-12-07 06:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Jaunpur Dobhi Bagerwa,3100,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-08-27 12:00:00,0,clean
+Jaunpur Dobhi Bankati,3154,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Jaunpur Dobhi Kachhawan,3001,1,3,0,0,0,0,0,0,0.0,0.0,False,4,5,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Jaunpur Dobhi Kakarapar,3050,9,34,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Jaunpur Jalalpur Katuwani,3158,6,19,1,0,10,10,0,0,0.0,0.0,False,2,3,3,2023-02-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Jaunpur Jalalpur Vanpurwa,3061,0,0,0,0,0,0,0,0,0.0,0.0,False,3,4,0,2023-02-20 18:00:00,2026-10-10 00:00:00,0,clean
+Jaunpur Jalalpur Vind,3209,22,80,1,0,0,0,0,0,0.0,0.0,False,3,4,6,2023-02-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Jaunpur Kerakat  Kharg Senpur,2913,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-20 18:00:00,2026-10-08 00:00:00,0,clean
+Jaunpur Kerakat Barbaspur (Sohani),3171,3,11,1,0,1217,1217,0,0,0.0,0.0,False,2,3,3,2023-02-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Jaunpur Kerakat Mahali,3234,19,67,1,0,9,9,0,0,0.0,0.0,False,1,2,4,2023-02-20 18:00:00,2026-10-10 00:00:00,0,spike-faults on clean series
+Jaunpur Kerakat Nihalapur,3223,5,15,0,0,0,0,0,0,0.0,0.0,False,2,3,3,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Jaunpur Rampur Kamaruddin,2520,59,254,13,0,87,87,0,0,0.0,0.0,False,1,2,7,2023-02-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Jaunpur Rampur Kaseru Nonara,2979,1,4,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-02-20 18:00:00,2026-09-14 18:00:00,0,clean
+Jaunpur Rampur Kathwatiya,3105,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Jaunpur Rampur Sultanpur,3158,6,18,1,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Jaurahi_1,4360,5,165,103,0,9,9,0,0,0.0,0.0,False,1,2,3,2022-07-14 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Jr. High School, Purwa Tarouha",4288,4,1767,339,0,0,0,0,0,0.0,0.0,False,1,2,4,2022-08-03 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Junior High School Sihiriya,2946,5,16,0,0,0,0,0,0,0.0,0.0,False,1,2,4,2023-05-31 00:00:00,2026-09-14 06:00:00,0,clean
+KOSHAK IMAM PRATHMIK VIDYALAYA,3570,2,7,0,0,0,0,0,0,0.0,0.0,False,2,3,2,2022-11-03 18:00:00,2026-10-10 18:00:00,0,clean
+Kamhariya_1,4070,5,79,15,0,0,0,0,0,0.0,0.0,False,1,2,5,2022-09-25 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Kandhari Kala,4193,7,343,2,0,263,144,0,0,0.0,0.0,False,1,2,7,2022-08-02 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Khedki_1,4267,19,80,2,0,0,0,0,0,0.0,0.0,False,1,2,16,2022-08-06 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Khojapur,4047,28,121,2,0,0,0,0,0,0.0,0.0,False,2,3,5,2022-07-12 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Khursropur,4075,2,12,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-06-21 18:00:00,2026-10-10 18:00:00,0,clean
+Kukwa Khaas,4012,95,442,27,0,1989,696,0,0,0.0,0.0,False,1,2,5,2022-07-14 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Kusarma,4133,7,23,1,0,0,0,0,0,0.0,0.0,False,2,3,7,2022-08-26 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Kushinagar Captanganj Captanganj,3164,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Kushinagar Captanganj Senduriya Vishunpur,3197,0,0,0,0,58,58,0,0,0.0,0.0,False,2,3,0,2023-02-20 18:00:00,2026-10-07 00:00:00,0,clean
+Kushinagar Dudhai Dudhai,3107,2,6,0,0,0,0,0,0,0.0,0.0,False,3,4,2,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Kushinagar Dudhai Gorariya,3098,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Kushinagar Dudhai Lala Chhapra,3183,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Kushinagar Fazilnagar  Belwakala,3169,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-03 00:00:00,0,clean
+Kushinagar Fazilnagar Jokwa Bujurg,3177,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Kushinagar Fazilnagar Narayanpur Khoti,3163,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Kushinagar Khadda Basdila,3184,3,9,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2023-02-20 18:00:00,2026-10-10 00:00:00,0,clean
+Kushinagar Khadda Khadda,2587,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Kushinagar Motichak Mathauli Bazar,3146,2,6,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Kushinagar Motichak Motichak,3483,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-11 18:00:00,2026-10-10 18:00:00,0,clean
+Kushinagar Sewarhi  Rampur Bagra N0.2,3079,15,50,2,0,0,0,0,0,0.0,0.0,False,3,4,3,2023-02-20 12:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Kushinagar Sewarhi Sewarhi,3196,4,16,0,0,0,0,0,0,0.0,0.0,False,1,2,4,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Kushinagar Tamkuhi Rajwatiya,3183,18,58,0,0,0,0,0,0,0.0,0.0,False,1,2,5,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Kushinagar Tamkuhi Tamkuhi,3146,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Ladaka Purwa,4344,5,129,29,0,0,0,0,0,0.0,0.0,False,1,2,5,2022-07-07 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Lagdi Gullar Prathmik Vidyalaya,3692,3,10,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-09-17 18:00:00,2026-10-10 18:00:00,0,clean
+Luktra,4392,7,232,55,0,0,0,0,0,0.0,0.0,False,2,3,5,2022-07-15 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+MANDHATA PURV MADHYAMIK VIDYALAYA,3567,4,15,0,0,0,0,0,0,0.0,0.0,False,1,2,4,2022-11-06 18:00:00,2026-10-10 18:00:00,0,clean
+Madarpur_1,4070,6,407,139,0,0,0,0,0,0.0,0.0,False,1,2,6,2022-09-21 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Madhyamik Vidhyalaya, Dulha Daul",3489,3,15,2,0,0,0,0,0,0.0,0.0,False,2,3,3,2022-11-17 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Mahadeva Temple, Mahadeva",3479,3,12,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-11-18 18:00:00,2026-10-10 18:00:00,0,clean
+Maharajganj Dhani Nausagar,3061,3,9,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Maharajganj Mithaura Bhagatar,3077,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Maharajganj Mithaura Madanpura,3168,1,4,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Maharajganj Nautanwa Purniha,3169,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Maharajganj Nautanwa Sampatiha,3154,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Maharajganj Nichlaul Balaekhor,3159,20,86,1,0,0,0,0,0,0.0,0.0,False,1,2,5,2023-02-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Maharajganj Nichlaul Garaura,3111,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-13 06:00:00,2026-10-06 12:00:00,0,clean
+Maharajganj Siswa Siswa,3165,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Mahgaon (UP-031),5974,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2021-01-01 06:00:00,2026-09-04 00:00:00,0,clean
+Mahoba Charkhari Kuaan,1670,1,3,0,0,0,0,0,0,0.0,0.0,False,3,4,0,2024-01-08 06:00:00,2026-10-10 18:00:00,0,clean
+Mahoba Charkhari Natara,2952,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Mahoba Charkhari Padha,3179,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Mahoba Jaitpur saguniyamaph,3130,4,12,0,0,0,0,0,0,0.0,0.0,False,1,2,4,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Mahoba Kabrai Karaha,2976,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 06:00:00,2026-10-10 18:00:00,0,clean
+Mahoba Kabrai Sisri Kala,3110,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Mahoba Panwari Didvara,3145,3,11,0,0,0,0,0,0,0.0,0.0,False,2,3,3,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Mainpuri Karhal  Rajpur,3058,2,6,0,0,0,0,0,0,0.0,0.0,False,2,3,2,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Mainpuri Karhal Mohabbatpur,3564,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2022-11-12 12:00:00,2026-10-10 18:00:00,0,clean
+Mainpuri Karhal Naglamdari,3220,5,16,0,0,0,0,0,0,0.0,0.0,False,2,3,3,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Mainpuri Karhal Takhrau,3551,2,6,0,0,0,0,0,0,0.0,0.0,False,2,3,2,2022-11-12 06:00:00,2026-10-10 18:00:00,0,clean
+Mainpuri Karhal Timrakh,3457,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-11-14 06:00:00,2026-10-01 00:00:00,0,clean
+Mandi Samiti-Muzaffar Nagar-Medium,4975,12,38,0,0,0,0,0,0,0.0,0.0,False,2,3,9,2021-11-20 06:00:00,2026-10-10 00:00:00,0,clean
+Mankuwar,4286,3,136,106,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-07-19 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Mathura Baldeo  Khanpur,2878,15,53,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-04-25 18:00:00,2026-10-10 18:00:00,0,clean
+Mathura Chaumuha Navagaon-11,3551,3,11,0,0,287,287,0,0,0.0,0.0,False,1,2,3,2022-11-08 12:00:00,2026-10-10 18:00:00,3,pumping-like real
+Mathura Chhata Chandauri,2928,15,48,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-04-25 18:00:00,2026-10-10 18:00:00,0,clean
+Mathura Chhata Sher Nagar,3612,139,778,7,0,126,126,0,0,0.0,0.0,False,2,3,1,2022-11-05 12:00:00,2026-09-29 00:00:00,0,spike-faults on clean series
+Mathura Nandgaon Nandgaon Dehat,3650,3,10,0,0,21,21,0,0,0.0,0.0,False,1,2,3,2022-11-07 12:00:00,2026-10-10 18:00:00,0,clean
+Mathura Nandgaon Vathainkala,3578,4,12,0,0,0,0,0,0,0.0,0.0,False,1,2,4,2022-11-07 12:00:00,2026-10-10 18:00:00,0,clean
+Mathura Naujheel Badharra,3503,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-08 12:00:00,2026-10-10 18:00:00,0,clean
+Mathura Pharah Nagala Medhaki,2190,7,24,1,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-11-01 12:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Mathura Rayan Kharaba,3589,3,9,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-11-06 18:00:00,2026-10-10 18:00:00,0,clean
+Meerut Janikhurd Afjalpur Pavati,3384,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-10-15 18:00:00,2026-10-10 18:00:00,0,clean
+Meerut Janikhurd Satvai,3665,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-10-15 12:00:00,2026-10-09 00:00:00,0,clean
+Meerut Sardhana Chhabariya,3633,3,14,0,0,0,0,0,0,0.0,0.0,False,3,4,3,2022-10-18 18:00:00,2026-10-10 18:00:00,0,clean
+Murwa_1,3916,9,84,0,0,0,0,0,0,0.0,0.0,False,1,2,9,2022-11-08 00:00:00,2026-10-10 18:00:00,0,clean
+"Nagar Palika Campus, Gyanpur",3497,0,0,0,0,0,0,0,0,0.0,0.0,False,3,4,0,2022-11-17 18:00:00,2026-10-10 18:00:00,0,clean
+Naglakabu_1,4261,6,89,8,0,0,0,0,5091,1.0,1.0,True,1,2,6,2022-08-09 00:00:00,2026-10-10 18:00:00,0,flip-flop
+Narajit,4224,5,40,1,0,0,0,0,0,0.0,0.0,False,1,2,5,2022-07-15 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Navrasia,4047,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-07-13 18:00:00,2026-10-10 18:00:00,0,clean
+Niwabhari Prathmik Vidyalaya,3757,6,21,0,0,0,0,0,0,0.0,0.0,False,1,2,6,2022-09-17 18:00:00,2026-10-10 18:00:00,0,clean
+"Office of Assistant Director, Resham",1879,1,88,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-24 12:00:00,2026-09-04 18:00:00,0,clean
+"Office of the Development Officer, Dakore",1890,3,47,0,0,198,79,0,0,0.0,0.0,False,1,2,3,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+P.S Engohata,4034,5,28,2,0,0,0,0,0,0.0,0.0,False,1,2,5,2022-09-24 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+PAHARPUR BARIGAWA PRATHMIK VIDYALAYA,3601,6,20,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-04 18:00:00,2026-10-10 18:00:00,0,clean
+PRIMARY SCHOOL BAKAR GANJ,3568,7,21,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-11-05 18:00:00,2026-10-10 18:00:00,0,clean
+PRIMARY SCHOOL RAMUGHAT,3560,1,18,5,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-05 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Paderi,4397,8,221,81,0,710,133,0,0,0.0,0.0,False,1,2,8,2022-07-14 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Pahara_2,4191,5,66,0,0,0,0,0,0,0.0,0.0,False,1,2,5,2022-07-26 00:00:00,2026-10-10 18:00:00,0,clean
+Palhari_1,3573,5,37,1,0,1236,0,0,0,0.0,0.0,False,1,2,5,2023-01-23 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Panchayat Bhawan  Suhel,2950,6,36,2,0,388,388,0,0,0.0,0.0,False,1,2,6,2023-05-27 00:00:00,2026-09-13 12:00:00,0,spike-faults on clean series
+"Panchayat Bhawan , Jafarabad Nagla",3235,4,19,1,0,0,0,0,0,0.0,0.0,False,1,2,3,2023-03-20 00:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Panchayat Bhawan Kuda Nar Singhpur,1881,7,65,0,0,246,127,0,0,0.0,0.0,False,1,2,1,2024-01-24 12:00:00,2026-09-13 18:00:00,0,clean
+Panchayat Bhawan Usmanpur,1838,1,32,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-24 12:00:00,2026-09-13 18:00:00,0,clean
+"Panchayat Bhawan, Dohri",3603,5,41,4,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-11-17 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Panchayat Bhawan, Kul Doomri",3482,1,3,2,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-24 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Panchayat Bhwan, Kon",3504,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-20 18:00:00,2026-10-10 18:00:00,0,clean
+Patanpur_1,4102,48,280,97,0,0,0,0,0,0.0,0.0,False,1,2,6,2022-09-24 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Pathrodi,4295,4,518,123,0,0,0,0,5114,1.0,1.0,True,1,2,4,2022-07-23 00:00:00,2026-10-10 18:00:00,0,flip-flop
+Perthivipur Nayakh,3781,7,70,10,0,0,0,0,0,0.0,0.0,False,1,2,7,2022-10-01 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Piparaond,3657,44,184,21,0,0,0,0,0,0.0,0.0,False,2,3,3,2023-01-07 00:00:00,2026-10-06 12:00:00,0,spike-faults on clean series
+Pipraundha,4101,17,131,3,0,0,0,0,0,0.0,0.0,False,1,2,8,2022-09-21 00:00:00,2026-09-02 18:00:00,0,spike-faults on clean series
+Poorv Madhamik Vidhyalaya Kaseti,1794,1,93,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-29 12:00:00,2026-09-13 18:00:00,0,clean
+"Prathmik Vidhyala, Riawali Nagla",3205,5,38,4,0,12,12,0,0,0.0,0.0,False,1,2,5,2023-03-18 00:00:00,2026-09-13 12:00:00,0,spike-faults on clean series
+Prathmik Vidhyalaya Bant,1589,1,49,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Prathmik Vidhyalaya Barha,1672,2,58,0,0,508,390,0,0,0.0,0.0,False,1,2,2,2024-01-19 18:00:00,2026-09-13 18:00:00,0,clean
+Prathmik Vidhyalaya Mahugarh,3511,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-11-14 18:00:00,2026-10-10 12:00:00,0,clean
+Prathmik Vidhyalaya Manohari,1871,1,45,0,0,193,74,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Prathmik Vidhyalaya Pahalgaon,1907,1,41,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Prathmik Vidhyalaya Pipra Sarvan,1853,1,108,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+Prathmik Vidhyalaya Sirasiya Pawar,1778,1,108,0,0,103,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+Prathmik Vidhyalaya Takuli (Durahi Maafi),1871,1,25,0,0,211,93,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+"Prathmik Vidhyalaya, AhmadShahPur Padra",3212,6,40,4,0,4,4,0,0,0.0,0.0,False,1,2,6,2023-03-19 00:00:00,2026-09-14 00:00:00,0,spike-faults on clean series
+"Prathmik Vidhyalaya, Bali",3206,8,27,0,0,68,68,0,0,0.0,0.0,False,1,2,8,2023-03-19 00:00:00,2026-09-13 12:00:00,0,clean
+"Prathmik Vidhyalaya, Bichpari Kamali",3199,157,663,88,0,45,45,0,0,0.0,0.0,False,1,2,4,2023-03-19 00:00:00,2026-09-13 06:00:00,0,spike-faults on clean series
+"Prathmik Vidhyalaya, Biharipur",3199,13,73,3,0,0,0,0,0,0.0,0.0,False,1,2,6,2023-03-20 00:00:00,2026-09-13 12:00:00,0,spike-faults on clean series
+"Prathmik Vidhyalaya, Didhora  Sadullapur",3196,3,12,0,0,34,34,0,0,0.0,0.0,False,1,2,3,2023-03-20 00:00:00,2026-09-13 12:00:00,0,clean
+"Prathmik Vidhyalaya, Doula",3191,139,620,77,0,128,128,0,0,0.0,0.0,False,1,2,4,2023-03-20 00:00:00,2026-09-07 12:00:00,0,spike-faults on clean series
+"Prathmik Vidhyalaya, Gwalikhera",3145,6,29,2,0,109,109,0,0,0.0,0.0,False,1,2,6,2023-03-22 00:00:00,2026-09-13 12:00:00,0,spike-faults on clean series
+"Prathmik Vidhyalaya, Katiliaha",1826,1,84,0,0,133,14,0,0,0.0,0.0,False,1,2,1,2024-01-24 12:00:00,2026-09-13 18:00:00,0,clean
+"Prathmik Vidhyalaya, Khampur",3213,5,39,4,0,17,17,0,0,0.0,0.0,False,1,2,5,2023-03-20 00:00:00,2026-09-13 12:00:00,0,spike-faults on clean series
+"Prathmik Vidhyalaya, Khera Islampur",3209,71,280,30,0,16,16,0,0,0.0,0.0,False,1,2,9,2023-03-20 00:00:00,2026-09-13 06:00:00,0,spike-faults on clean series
+"Prathmik Vidhyalaya, Makarndpur",1849,1,56,0,0,165,46,0,0,0.0,0.0,False,1,2,1,2024-01-24 18:00:00,2026-09-13 18:00:00,0,clean
+"Prathmik Vidhyalaya, Medpur",3203,5,41,1,0,108,108,0,0,0.0,0.0,False,1,2,5,2023-03-25 00:00:00,2026-09-13 06:00:00,0,spike-faults on clean series
+"Prathmik Vidhyalaya, Nehlawa",1887,1,93,0,0,117,0,0,0,0.0,0.0,False,1,2,1,2024-01-27 18:00:00,2026-09-13 18:00:00,0,clean
+"Prathmik Vidhyalaya, Phaprana",1874,1,67,0,0,137,18,0,0,0.0,0.0,False,1,2,1,2024-01-29 12:00:00,2026-08-22 18:00:00,0,clean
+"Prathmik Vidhyalaya, Ramnagar",3220,3,14,1,0,0,0,0,0,0.0,0.0,False,1,2,3,2023-03-22 00:00:00,2026-09-13 12:00:00,0,spike-faults on clean series
+"Prathmik Vidhyalaya, Shahjahanpur_1",1854,1,60,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2025-09-05 18:00:00,0,clean
+"Prathmik Vidhyalaya, Sikhera_1",3192,3,11,0,0,100,100,0,0,0.0,0.0,False,1,2,3,2023-03-20 00:00:00,2026-09-14 00:00:00,0,clean
+"Prathmik Vidhyalaya, Taizullahpur",3206,3,13,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2023-03-20 00:00:00,2026-09-13 12:00:00,0,clean
+"Prathmik Vidhyalaya, Thavai",1866,1,66,0,0,129,12,0,0,0.0,0.0,False,1,2,1,2024-01-29 12:00:00,2026-09-13 18:00:00,0,clean
+"Prathmik Vidhyalaya, vilodhpura",3205,2,7,0,0,110,110,0,0,0.0,0.0,False,1,2,2,2023-03-20 00:00:00,2026-09-13 12:00:00,0,clean
+"Pratmik Vidhyalaya, Kakaruwa",1846,4,71,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Priamry School Mukasim,1459,36,196,2,0,113,0,0,0,0.0,0.0,False,1,2,2,2024-01-30 18:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+"Primary  School, Nawada Kalan",3532,30,113,6,0,0,0,0,0,0.0,0.0,False,2,3,3,2022-11-18 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Primary / Composite School, Banwaripur",3649,7,21,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2022-10-19 12:00:00,2026-10-03 00:00:00,0,clean
+"Primary / Composite School, Chiraudi",3544,5,16,0,0,0,0,0,0,0.0,0.0,False,3,4,1,2022-10-21 06:00:00,2026-10-10 18:00:00,0,clean
+"Primary / Composite School, Jainpur",2944,6,18,0,0,0,0,0,0,0.0,0.0,False,2,3,2,2023-04-19 18:00:00,2026-10-09 00:00:00,0,clean
+"Primary / Composite School, Jasad",3544,40,137,0,0,0,0,0,0,0.0,0.0,False,3,4,3,2022-10-20 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary / Composite School, Mahalaka",3449,60,203,3,0,0,0,0,0,0.0,0.0,False,4,5,1,2022-10-21 18:00:00,2026-10-05 00:00:00,0,spike-faults on clean series
+"Primary / Composite School, Mohaddinpur",3390,5,17,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-11-12 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary / Composite School, Pepala",3632,2,6,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-10-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary / Composite School, Saradhana Block Office",2965,2,9,0,0,0,0,0,0,0.0,0.0,False,2,3,2,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+Primary School  Bihasara,3568,2,10,0,0,0,0,0,0,0.0,0.0,False,2,3,2,2022-11-12 18:00:00,2026-10-10 18:00:00,0,clean
+Primary School  Biraura,3514,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-11-12 18:00:00,2026-10-10 18:00:00,0,clean
+Primary School  Maharaji,3510,11,61,4,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-12 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Primary School Ashadh,1849,19,151,6,0,1051,932,0,0,0.0,0.0,False,1,2,3,2024-01-31 06:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Primary School Babura,3530,1,5,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-12 18:00:00,2026-10-10 18:00:00,0,clean
+Primary School Baijnathpur,1300,1,97,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+Primary School Bargdhi,1847,1,92,0,0,105,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-08-15 18:00:00,0,clean
+Primary School Bhata Diha,1855,4,110,0,0,0,0,0,0,0.0,0.0,False,1,2,4,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+Primary School Bilona,1873,1,61,0,0,10,10,0,0,0.0,0.0,False,1,2,1,2024-01-30 12:00:00,2026-09-13 18:00:00,0,clean
+Primary School Campus Aurangabad,1828,1,92,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+Primary School Campus Powai,1852,36,218,4,0,450,450,0,0,0.0,0.0,False,1,2,1,2024-01-31 12:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Primary School Campus Sikraura,1874,3,101,1,0,0,0,0,0,0.0,0.0,False,1,2,3,2024-01-30 18:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Primary School Chandrapur Bichpuri,1884,2,39,0,0,188,69,0,0,0.0,0.0,False,1,2,2,2024-01-24 12:00:00,2026-09-13 18:00:00,0,clean
+Primary School Charkonwa,1810,7,109,2,0,8,8,0,0,0.0,0.0,False,1,2,4,2024-01-30 18:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Primary School Chobla,1861,1,28,0,0,161,43,0,0,0.0,0.0,False,1,2,1,2024-01-19 18:00:00,2026-09-13 18:00:00,0,clean
+Primary School Cholahe,1901,1,109,0,0,220,0,0,0,0.0,0.0,False,1,2,1,2024-01-24 12:00:00,2026-09-06 18:00:00,0,clean
+Primary School Didhai,1321,41,233,2,0,118,0,0,0,0.0,0.0,False,2,3,1,2024-01-25 12:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Primary School Dohriya,1809,1,96,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+Primary School English Medium Qutubpur Labdauna,1487,2,14,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2024-01-19 18:00:00,2026-09-13 18:00:00,0,clean
+Primary School Gudha,1822,1,57,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Primary School Harinahpur,3554,3,26,1,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-11-12 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Primary School Harivanshpur,1902,1,91,0,0,113,0,0,0,0.0,0.0,False,1,2,1,2024-01-29 12:00:00,2026-09-13 18:00:00,0,clean
+Primary School Jagannathpur,1887,4,44,0,0,261,261,0,0,0.0,0.0,False,1,2,3,2024-01-24 12:00:00,2026-09-13 18:00:00,0,clean
+Primary School Jagdishpur Pratham,1840,1,93,0,0,16,16,0,0,0.0,0.0,False,1,2,1,2024-01-31 18:00:00,2026-09-13 18:00:00,0,clean
+Primary School Jainpur,3547,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-11 18:00:00,2026-10-10 18:00:00,0,clean
+Primary School Jairampur,1861,3,55,0,0,1132,1014,0,0,0.0,0.0,False,1,2,3,2024-01-18 00:00:00,2026-09-13 18:00:00,0,clean
+Primary School Jamunia,1810,1,76,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+Primary School Jatmujheda,1885,1,17,0,0,225,106,0,0,0.0,0.0,False,1,2,1,2024-01-19 12:00:00,2026-09-13 18:00:00,0,clean
+Primary School Karwal,3558,10,46,9,0,0,0,0,0,0.0,0.0,False,2,3,1,2022-11-12 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Primary School Keshawpur Pratham,3531,21,69,0,0,0,0,0,0,0.0,0.0,False,1,2,4,2022-11-09 18:00:00,2026-10-10 18:00:00,0,clean
+Primary School Kucharam,1829,1,25,0,0,209,90,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-08-26 18:00:00,0,clean
+Primary School Kurdi,1937,1,24,0,0,217,99,0,0,0.0,0.0,False,1,2,1,2024-01-19 18:00:00,2026-09-13 18:00:00,0,clean
+Primary School Madari,1888,2,100,0,0,125,7,0,0,0.0,0.0,False,1,2,2,2024-01-24 12:00:00,2026-09-07 18:00:00,0,clean
+Primary School Mainhe hardo,1863,1,81,0,0,118,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 12:00:00,2026-09-13 18:00:00,0,clean
+Primary School Masuri,1850,1,63,0,0,137,18,0,0,0.0,0.0,False,1,2,1,2024-01-30 12:00:00,2026-06-08 18:00:00,0,clean
+Primary School Mohammadpur Gurjar,1468,10,30,3,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-03-28 12:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Primary School Nandapur,1819,1,65,0,0,138,19,0,0,0.0,0.0,False,1,2,1,2024-01-29 12:00:00,2026-09-01 18:00:00,0,clean
+Primary School No. 1 Barawad,1879,28,674,53,0,2502,2383,0,0,0.0,0.0,False,1,2,2,2024-01-19 18:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+"Primary School No.1, Bitaoda",3220,3,12,0,0,71,71,0,0,0.0,0.0,False,1,2,3,2023-03-15 00:00:00,2026-09-13 06:00:00,0,clean
+Primary School Odaraha,1797,1,64,0,0,129,10,0,0,0.0,0.0,False,1,2,1,2024-01-31 12:00:00,2026-09-13 18:00:00,0,clean
+Primary School Pahara,1837,50,299,7,0,264,44,0,0,0.0,0.0,False,1,2,2,2024-01-24 12:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Primary School Pinna,1907,1,19,0,0,226,107,0,0,0.0,0.0,False,1,2,1,2024-01-18 18:00:00,2026-09-13 18:00:00,0,clean
+Primary School Radnool Azizpur,1094,1,30,0,0,173,54,0,0,0.0,0.0,False,1,2,1,2024-01-24 12:00:00,2026-09-13 18:00:00,0,clean
+Primary School Rathoda,1932,1,25,0,0,218,99,0,0,0.0,0.0,False,1,2,1,2024-01-19 18:00:00,2026-09-13 18:00:00,0,clean
+"Primary School Sahjanwa , Pratham Pipra",3539,16,70,9,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-11-08 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Primary School Sahori,1884,47,285,8,116,225,37,0,0,0.0,0.0,False,1,2,4,2024-01-24 12:00:00,2026-09-13 18:00:00,0,placeholder-start
+Primary School Salawa,1886,1,145,0,0,146,27,0,0,0.0,0.0,False,1,2,1,2024-01-24 12:00:00,2026-09-13 18:00:00,0,clean
+Primary School Sanda-Sanee,1925,24,118,2,0,210,91,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Primary School Shekhpuri,1957,3,34,0,0,169,50,0,0,0.0,0.0,False,1,2,2,2024-01-19 18:00:00,2026-08-15 18:00:00,0,clean
+Primary School Sonda,1879,2,68,0,0,171,52,0,0,0.0,0.0,False,1,2,2,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+Primary School Vamanpura,1402,33,150,1,0,181,62,0,0,0.0,0.0,False,1,2,1,2024-01-24 06:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Primary School chandsina,1935,54,246,2,0,222,103,0,0,0.0,0.0,False,3,4,1,2024-01-18 18:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Primary School kakrehwa,1364,12,121,0,0,114,0,0,0,0.0,0.0,False,2,3,1,2024-01-29 12:00:00,2026-09-13 18:00:00,0,clean
+"Primary School,  Todarpur",3393,3,16,3,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-12-18 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Primary School, Anrabali",1067,0,0,0,0,0,0,0,0,0.0,0.0,False,3,4,0,2023-04-19 18:00:00,2026-10-09 18:00:00,0,clean
+"Primary School, Asara Bighawati",3331,33,116,2,0,37,37,0,0,0.0,0.0,False,2,3,8,2022-12-16 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Primary School, Badagaon bharati form",2561,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Baghpokhar",3462,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-11-25 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Bamhauri",4262,5,325,3,0,2212,1401,0,0,0.0,0.0,False,1,2,5,2022-07-30 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Primary School, Bamhoori Khurd",2978,32,119,1,0,0,0,0,0,0.0,0.0,False,2,3,7,2023-03-16 18:00:00,2026-10-01 12:00:00,0,spike-faults on clean series
+"Primary School, Bandpur",2499,4,12,0,0,0,0,0,0,0.0,0.0,False,3,4,1,2023-08-04 06:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Bartha Lala",3484,19,62,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-30 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Basti",2980,10,33,0,0,0,0,0,0,0.0,0.0,False,2,3,5,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Belatal",2563,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Belaukh",3474,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-12-03 18:00:00,2026-10-10 12:00:00,0,clean
+"Primary School, Bgra khisani bujurg",2623,4,13,0,0,0,0,0,0,0.0,0.0,False,3,4,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Bhadauda",3345,22,71,1,0,0,0,0,0,0.0,0.0,False,1,2,4,2022-12-18 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Primary School, Bhagwanpur",2664,16,51,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Bhalsona",3177,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-03-02 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Bhartpura",2643,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Bilata",2722,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-04-19 18:00:00,2026-10-10 00:00:00,1,pumping-like real
+"Primary School, Block Office",2520,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Bodha",3358,0,0,0,0,0,0,0,0,0.0,0.0,False,3,4,0,2022-12-15 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Bohra",2573,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-04-19 18:00:00,2026-10-10 00:00:00,0,clean
+"Primary School, Brahmpur",3524,23,75,0,0,0,0,0,0,0.0,0.0,False,1,2,4,2022-11-26 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Chariya Bujrag",3469,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-25 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Chiplatha",3287,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-01-12 18:00:00,2026-04-28 00:00:00,0,clean
+"Primary School, Dagarpur Tigadi",2927,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-04-19 18:00:00,2026-09-19 12:00:00,0,clean
+"Primary School, Dera Devra bujurg",2715,2,229,0,0,23,23,0,0,0.0,0.0,False,4,5,0,2022-03-22 18:00:00,2026-10-10 18:00:00,3,pumping-like real
+"Primary School, Dewari",2629,1,3,0,0,0,0,0,0,0.0,0.0,False,3,4,1,2023-04-19 06:00:00,2026-10-10 12:00:00,0,clean
+"Primary School, Dhanaura",2737,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-03 00:00:00,0,clean
+"Primary School, Dhanaura Tikari",3560,0,0,0,0,0,0,0,0,0.0,0.0,False,3,4,0,2022-11-01 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Dhankharpur",3437,1,8,2,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-12-13 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Primary School, Dhikana",2788,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 00:00:00,0,clean
+"Primary School, Evani",2958,2,9,0,0,0,0,0,0,0.0,0.0,False,2,3,2,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Gaidaira",2701,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-04-19 18:00:00,2026-10-03 00:00:00,0,clean
+"Primary School, Garher",2838,2,6,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,1,pumping-like real
+"Primary School, Gauripur Javahar Nagar",2821,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Gotaka",1486,7,21,0,0,0,0,0,0,0.0,0.0,False,4,5,1,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Gursarai tahrauli tahshil",2944,22,73,0,0,0,0,0,0,0.0,0.0,False,2,3,3,2023-04-14 06:00:00,2026-10-03 00:00:00,0,clean
+"Primary School, Jhaaro Kalan",3512,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-11-21 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Jogehthi",3074,5,17,0,0,0,0,0,0,0.0,0.0,False,2,3,2,2022-11-10 12:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Jogiya Khera",3208,7,29,3,0,28,28,0,0,0.0,0.0,False,1,2,7,2023-03-15 00:00:00,2026-09-11 06:00:00,0,spike-faults on clean series
+"Primary School, Johadi",3360,6,19,0,0,0,0,0,0,0.0,0.0,False,3,4,0,2022-12-15 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Kailgwan",2691,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Kakadipur",2745,5,17,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Kakaurkala",2974,3,9,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-12-14 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Kalan Bar Devran",2543,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,8,pumping-like real
+"Primary School, Kalani Khurad",3505,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-08 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Kantit",3473,3,52,2,0,0,0,0,0,0.0,0.0,False,2,3,3,2022-11-27 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Primary School, Kaparwar",3442,2,6,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-11-29 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Karasdev Mandir",2692,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-04-19 06:00:00,2026-10-10 12:00:00,0,clean
+"Primary School, Kevtam",3517,3,14,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-11-24 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Khandeura",3133,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-03-14 12:00:00,2026-10-03 00:00:00,0,clean
+"Primary School, Khiriya",2748,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Khujurahokhurd",2923,19,65,2,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Primary School, Kodai",3370,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-12-14 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Koilar",3447,2,8,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-12-03 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Kritikhand",1863,1,84,0,0,133,14,0,0,0.0,0.0,False,1,2,1,2024-01-24 12:00:00,2026-09-13 18:00:00,0,clean
+"Primary School, Leharthkurpura",2702,2,6,0,0,0,0,0,0,0.0,0.0,False,3,4,1,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Manupura",2638,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-08-15 00:00:00,0,clean
+"Primary School, Marry",2947,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Masaurakhurd",2959,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Mithabel",3474,2,6,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-11-29 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Motiyari, Mahuaa, Banda_1",1649,0,0,0,0,0,0,0,0,0.0,0.0,False,3,4,0,2024-03-04 06:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Narokhar",3502,1,48,1,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-23 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Primary School, Narouiya Daamar",3507,2,9,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-11-20 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Nota",2962,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Pachar",2926,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Padra",2787,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-09 00:00:00,0,clean
+"Primary School, Pakarhut",3519,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-11-23 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Pali",3386,9,29,1,0,0,0,0,0,0.0,0.0,False,3,4,2,2022-10-28 18:00:00,2026-10-10 00:00:00,0,spike-faults on clean series
+"Primary School, Paraon",2864,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Pashu palan Vibhag Masuri",1236,37,171,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2024-04-25 18:00:00,2026-09-19 12:00:00,0,clean
+"Primary School, Purakalan, Talbehat, Lalitpur_1",1980,64,297,0,0,0,0,0,0,0.0,0.0,False,2,3,2,2023-10-22 18:00:00,2026-09-10 18:00:00,0,clean
+"Primary School, R.K.Inter college",2902,14,44,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Radhana",2965,3,11,0,0,0,0,0,0,0.0,0.0,False,2,3,3,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Safpuram Chandpur",3485,2,8,0,0,0,0,0,0,0.0,0.0,False,3,4,2,2022-10-28 06:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Saina",2426,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-04-30 06:00:00,2026-10-06 00:00:00,0,clean
+"Primary School, Salarpur Jalalpur",3192,4,26,3,0,3,3,0,0,0.0,0.0,False,1,2,4,2023-03-28 00:00:00,2026-09-13 12:00:00,0,spike-faults on clean series
+"Primary School, Salhepur",1850,3,88,0,0,683,564,0,0,0.0,0.0,False,1,2,3,2024-01-30 12:00:00,2026-09-13 18:00:00,0,clean
+"Primary School, Sangholi taga",2934,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Sanori",2609,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Sarwa",2938,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Shekhar",2688,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-03-18 00:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Shivpur",3480,1,5,0,0,0,0,0,0,0.0,0.0,False,3,4,1,2022-11-17 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Silana",3246,4,12,0,0,0,0,0,0,0.0,0.0,False,2,3,2,2023-01-07 06:00:00,2026-10-10 18:00:00,5,pumping-like real
+"Primary School, Sindhan Kalan",3515,15,1166,43,0,1150,913,518,0,0.0,0.0,False,1,2,4,2022-07-15 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Primary School, Sirasi",3488,3,13,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2022-11-23 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Sirjam",3485,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-11-25 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Sultanpur_1",3220,5,29,3,0,236,236,0,0,0.0,0.0,False,1,2,5,2023-03-18 00:00:00,2026-09-13 12:00:00,0,spike-faults on clean series
+"Primary School, Surikalan",2533,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-04-19 18:00:00,2026-10-09 00:00:00,0,clean
+"Primary School, Tewalagarhi",3619,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-11-01 12:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Tilaura",3458,1,11,1,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-12-03 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Primary School, Vansha Gram Panchayt",2911,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-17 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School, Vijaypura",2841,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 06:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Alampur",2917,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Bhojpur Taga",3034,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-06 18:00:00,2026-10-06 00:00:00,0,clean
+"Primary School/ Composite, Chaappar",2910,10,35,0,0,0,0,0,0,0.0,0.0,False,2,3,5,2023-04-19 18:00:00,2026-10-09 00:00:00,0,clean
+"Primary School/ Composite, Chittora",3113,3,9,0,0,0,0,0,0,0.0,0.0,False,3,4,1,2023-02-10 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Dadheru Kaian",3230,3,12,1,0,17,17,0,0,0.0,0.0,False,2,3,3,2023-02-08 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Primary School/ Composite, Dholla Majra",2924,6,20,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2023-04-18 06:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Fakreda",2727,9,27,0,0,0,0,0,0,0.0,0.0,False,3,4,3,2023-04-01 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Ghumawati",3190,4,17,2,0,0,0,0,0,0.0,0.0,False,2,3,4,2023-02-11 18:00:00,2026-10-03 00:00:00,0,spike-faults on clean series
+"Primary School/ Composite, Haibatpur",3296,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-02-08 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Harsauli",2896,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Jaula Dindauli",3238,56,178,1,0,0,0,0,0,0.0,0.0,False,1,2,6,2023-01-18 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Primary School/ Composite, Jeevna",2692,41,132,1,0,0,0,0,0,0.0,0.0,False,2,3,2,2023-04-19 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Primary School/ Composite, Jhabiran",3104,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Jukhedi",2968,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Katla Naveen",3137,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-02 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Landhoura Junardar",3190,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-01-30 18:00:00,2026-10-10 18:00:00,3,pumping-like real
+"Primary School/ Composite, Mandawali Khadar",2917,5,15,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Manganpur",3069,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-09 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Manoharpur",2934,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Manpur Qadeem",3131,5,17,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-07 18:00:00,2026-10-03 00:00:00,0,clean
+"Primary School/ Composite, Mehmoodpur",3276,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-01-18 18:00:00,2026-10-10 18:00:00,7,pumping-like real
+"Primary School/ Composite, Mundi Kheri",2931,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Nagla Rajput",2964,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-17 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Nandhera Khurd",2537,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-18 06:00:00,2026-09-25 00:00:00,0,clean
+"Primary School/ Composite, Nasrullahgarh",2916,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Nunabadi",2903,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+"Primary School/ Composite, Pawti",3103,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-09 18:00:00,2026-10-06 00:00:00,0,clean
+"Primary School/ Composite, Peepalhera",2576,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-17 06:00:00,2026-10-10 12:00:00,0,clean
+"Primary School/ Composite, Rasulpur",3212,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-09 18:00:00,2026-10-08 00:00:00,0,clean
+"Primary School/ Composite, Sidki",2852,17,54,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-04-07 06:00:00,2026-10-10 18:00:00,3,pumping-like real
+"Primary School/ Composite, Tandheda",2870,5,16,0,0,0,0,0,0,0.0,0.0,False,2,3,2,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+Prmary School Rajpura,1779,7,112,5,0,127,8,0,0,0.0,0.0,False,1,2,2,2024-01-31 00:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Punchayat Bhawan Bhaluwani,1843,2,107,0,0,103,0,0,0,0.0,0.0,False,1,2,2,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+Punchayat Bhawan Vijaypur,1810,1,76,0,0,122,3,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+"Purv Madh Vidhyalaya, Doomradeeh",3486,2,7,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-11-21 18:00:00,2026-10-10 18:00:00,0,clean
+"Purv Madh Vidhyalaya, Shivpur",3495,2,7,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-11-22 18:00:00,2026-10-10 18:00:00,0,clean
+"Purv Madhyamik Vidhyalaya, Doriya",3501,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-24 18:00:00,2026-10-10 18:00:00,0,clean
+"Purv Madhyamik Vidhyalaya, Fattupur",3507,2,17,1,0,0,0,0,0,0.0,0.0,False,3,4,2,2022-11-17 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Purv Madhyamik Vidhyalaya, Mahooli",3481,2,9,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-11-20 18:00:00,2026-10-10 18:00:00,0,clean
+"Purv Madhyamik Vidyalaya, Mujehra",3561,18,80,0,0,0,0,0,0,0.0,0.0,False,3,4,4,2022-11-13 18:00:00,2026-10-10 18:00:00,0,clean
+"Purv Madhyamik Vidyalaya, Ranibari",3555,2,16,2,0,0,0,0,0,0.0,0.0,False,2,3,2,2022-11-13 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Purv Madhyamik Vidyalaya,Bharpura",3509,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-11-14 18:00:00,2026-10-10 18:00:00,0,clean
+Purva Madhyamik Vidhyalaya Achausa,1811,1,45,0,0,111,1,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Purva Madhyamik Vidhyalaya Baroda Dang,1853,1,57,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2025-08-18 18:00:00,0,clean
+Purva Madhyamik Vidhyalaya Bhitaura,1861,1,51,0,0,190,71,0,0,0.0,0.0,False,1,2,1,2024-01-19 18:00:00,2026-09-13 18:00:00,0,clean
+Purva Madhyamik Vidhyalaya Ladwari,1889,1,54,0,0,118,0,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Purva Madhyamik Vidhyalaya Piphara,1870,1,112,0,0,111,0,0,0,0.0,0.0,False,1,2,1,2024-01-24 12:00:00,2026-09-13 18:00:00,0,clean
+Purva Madhyamik Vidhyalaya Sihari,1879,1,49,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+"Purva Madhyamik Vidhyalaya, Chackwara",1863,36,441,15,0,975,975,0,0,0.0,0.0,False,1,2,6,2024-01-30 18:00:00,2026-09-07 12:00:00,0,spike-faults on clean series
+"Purva Madhyamik Vidhyalaya, Chandapur",1826,1,68,0,0,131,12,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+Purva Madhyamik Vidyalaya Chalakpur,1897,1,59,1,0,170,51,0,0,0.0,0.0,False,1,2,1,2024-01-19 12:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Pv. Compiergang,3547,5,40,3,0,0,0,0,0,0.0,0.0,False,2,3,4,2022-11-07 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+R.R.C. Center Aata,1911,4,46,0,0,0,0,0,0,0.0,0.0,False,1,2,4,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+RASULPUR BARGAON RAJKIYA UCHTTAR PRATHAMIK VIDYALAYA,3593,5,17,1,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-03 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Rajapur Sikraur,4061,4,29,0,0,0,0,0,0,0.0,0.0,False,2,3,4,2022-07-12 18:00:00,2026-10-10 18:00:00,0,clean
+Rajkia Balika Inter College Kamasin,1908,1,29,0,0,209,90,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-08-22 00:00:00,0,clean
+Rajkia High School Pakhrauli,1909,1,33,0,0,202,83,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-08-17 18:00:00,0,clean
+"Rajkiya High School, Atali",3170,5,20,2,0,77,77,0,0,0.0,0.0,False,1,2,5,2023-03-15 00:00:00,2026-09-13 06:00:00,0,spike-faults on clean series
+Ramchhitoni Sahawar (UP-011),6055,2,6,0,0,261,261,0,0,0.0,0.0,False,1,2,1,2021-01-01 06:00:00,2026-10-10 18:00:00,0,clean
+Ranipur_2,4173,5,120,3,0,2223,125,0,0,0.0,0.0,False,1,2,5,2022-07-26 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Rasin_2,3031,3,36,26,0,0,0,0,3790,1.0,1.0,True,1,2,3,2023-01-07 00:00:00,2026-10-01 12:00:00,0,flip-flop
+"Roadways Bus Stand, Robertsganj",3498,1,16,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-21 18:00:00,2026-10-10 18:00:00,0,clean
+Rohari,4043,5,23,0,0,0,0,0,0,0.0,0.0,False,1,2,5,2022-09-21 00:00:00,2026-10-10 18:00:00,6,pumping-like real
+SARAHARI PRATHMIK VIDYALAYA,3554,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-11-07 18:00:00,2026-10-10 18:00:00,0,clean
+SWASTH KENDR PIPIGANJ,3581,2,7,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2022-11-05 18:00:00,2026-10-10 18:00:00,0,clean
+Saint Ravidas Nagar Abholi Abholi,3181,0,0,0,0,8,8,0,0,0.0,0.0,False,3,4,0,2023-02-20 18:00:00,2026-10-10 00:00:00,0,clean
+Saint Ravidas Nagar Abholi Gangarampur,3107,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-20 18:00:00,2026-10-10 18:00:00,3,pumping-like real
+Saint Ravidas Nagar Aurai Ugapur,3074,1,3,0,0,0,0,0,0,0.0,0.0,False,3,4,0,2023-02-20 18:00:00,2026-10-10 00:00:00,0,clean
+Saint Ravidas Nagar Aurai Uprauth,3126,4,12,0,0,0,0,0,0,0.0,0.0,False,2,3,4,2023-02-20 18:00:00,2026-10-10 00:00:00,0,clean
+Saint Ravidas Nagar Bhadohi Munshi,3193,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-02-20 12:00:00,2026-09-19 12:00:00,0,clean
+Saint Ravidas Nagar Deegh  Deegh,2989,2,6,0,0,0,0,0,0,0.0,0.0,False,2,3,2,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Saint Ravidas Nagar Deegh Velahua,3180,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Saint Ravidas Nagar Gyanpur Kansapur,3113,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Saint Ravidas Nagar Gyanpur Samhai,3188,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Saint Ravidas Nagar Suriyawan Chhapariya,3090,2,6,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-20 18:00:00,2026-10-10 00:00:00,0,clean
+Saint Ravidas Nagar Suriyawan Mond,3132,1,3,0,0,0,0,0,0,0.0,0.0,False,3,4,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Saital,3614,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-11-04 18:00:00,2026-10-10 18:00:00,0,clean
+Salhakheri,4121,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-06-21 18:00:00,2026-10-10 18:00:00,0,clean
+"Samaj Sevak Junir High School, Bhaura Kalan",3244,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-14 18:00:00,2026-10-10 18:00:00,0,clean
+Sanjhak,4129,4,17,0,0,0,0,0,0,0.0,0.0,False,1,2,4,2022-06-21 18:00:00,2026-10-10 18:00:00,0,clean
+Satti Chau Prathmik Vidyalaya,3730,4,123,9,0,0,0,0,0,0.0,0.0,False,1,2,4,2022-09-17 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Semara_1,4371,43,213,0,0,0,0,0,0,0.0,0.0,False,1,2,23,2022-07-19 00:00:00,2026-10-10 18:00:00,0,clean
+"Shahid Chandra Shekhar Kanya P.M.V., Mallupura",2799,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-04-19 18:00:00,2026-10-10 18:00:00,0,clean
+Shahjahanpur Bhawal Kheda Bhawal Kheda,3200,7,26,1,0,0,0,0,0,0.0,0.0,False,2,3,4,2023-02-20 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Shahjahanpur Bhawal Kheda Chak Bhitara,3162,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Shahjahanpur Bhawal Kheda Chaudhera,3201,46,147,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Shahjahanpur Bhawal Kheda Ladhauli,3422,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2022-12-27 12:00:00,2026-10-10 18:00:00,0,clean
+Shahjahanpur Bhawal Kheda Shahbaj Pur,3146,66,245,1,0,50,50,0,0,0.0,0.0,False,2,3,2,2023-02-20 06:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Shahjahanpur Bhawal Kheda Sutnera,3198,2,6,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Shahjahanpur Dadraul Banthara,3212,6,20,1,0,214,214,0,0,0.0,0.0,False,1,2,3,2023-02-20 06:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Shahjahanpur Dadraul Saraura (East),3148,52,181,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Shahjahanpur Puvayan  Badagaon Pratham,3223,10,45,0,0,0,0,0,0,0.0,0.0,False,1,2,7,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Shahjahanpur Puvayan Bhilawan,2932,16,57,1,0,0,0,0,0,0.0,0.0,False,3,4,0,2023-02-14 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Shahjahanpur Puvayan Mahua Pathak,3118,3,11,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2023-02-20 18:00:00,2026-10-07 00:00:00,0,clean
+Shahjahanpur Puvayan Nahil,3193,14,55,0,0,0,0,0,0,0.0,0.0,False,3,4,5,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Shahjahanpur Sidhauli Korokuiyan,3166,8,31,0,0,0,0,0,0,0.0,0.0,False,2,3,7,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Shahjahanpur Sidhauli Mahanand Pur,3077,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-03 06:00:00,2026-10-01 12:00:00,0,clean
+Shahjahanpur Sidhauli Sidhauli,3159,10,32,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-20 06:00:00,2026-10-10 18:00:00,0,clean
+Shitalpur_1,4268,5,130,3,0,244,138,244,0,0.0,0.0,False,1,2,5,2022-07-27 12:00:00,2026-10-08 12:00:00,0,spike-faults on clean series
+Sikhula Pz._1,4308,3,87,21,0,8,8,0,0,0.0,0.0,False,1,2,3,2022-07-19 00:00:00,2026-09-14 12:00:00,0,spike-faults on clean series
+Singhara Pr. Vid.,4016,2,8,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-07-14 18:00:00,2026-10-10 18:00:00,0,clean
+Sitapur Mafi,3589,5,56,7,0,0,0,0,0,0.0,0.0,False,1,2,5,2023-01-25 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Sonbhadra Babhani Bhawar,2937,1,4,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-06 00:00:00,0,clean
+Sonbhadra Chopan Khairatiya,3079,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-02-19 18:00:00,2026-10-10 18:00:00,0,clean
+Sonbhadra Duddhi Mahuli,3094,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Sonbhadra Myorpur Agartola,2854,99,764,27,0,452,452,0,0,0.0,0.0,False,2,3,5,2023-02-20 18:00:00,2026-10-10 12:00:00,0,spike-faults on clean series
+Srikantpur Pr. Vid.,4025,4,39,6,0,0,0,0,0,0.0,0.0,False,1,2,4,2022-07-13 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Sujanpura Badhyapar,3153,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2023-02-20 18:00:00,2026-10-09 00:00:00,0,clean
+Sukwan,3976,9,125,92,0,0,0,0,0,0.0,0.0,False,1,2,5,2022-10-01 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Swarg Dham, Hardua",1332,1,56,0,0,176,57,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Terha_1,3438,4,43,6,0,0,0,0,0,0.0,0.0,False,1,2,4,2023-03-04 00:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+"Thana Prisar, Lalganj",3455,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-11-13 18:00:00,2026-10-10 18:00:00,0,clean
+Uccha Prathmik Vidhyalaya Deaval,1876,1,36,0,0,189,74,0,0,0.0,0.0,False,1,2,1,2024-01-17 18:00:00,2026-08-04 18:00:00,0,clean
+Uccha Prathmik Vidhyalaya Devaratha,1583,3,46,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2024-01-17 18:00:00,2026-09-11 18:00:00,0,clean
+Uccha Prathmik Vidhyalaya Odera,1886,3,39,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+Uccha Prathmik Vidhyalaya Uldan,1869,2,58,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2024-01-17 18:00:00,2026-09-13 18:00:00,0,clean
+"Uccha Prathmik Vidhyalaya, Chero",1859,1,104,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-08-02 12:00:00,0,clean
+"Uccha Prathmik Vidhyalaya, Gangapur",1888,1,44,0,0,165,46,0,0,0.0,0.0,False,1,2,1,2024-01-27 18:00:00,2026-09-13 18:00:00,0,clean
+"Uccha Prathmik Vidhyalaya, Hasanpur Kadim",2059,4,33,4,0,38,38,0,0,0.0,0.0,False,1,2,4,2024-01-07 00:00:00,2026-09-13 06:00:00,0,spike-faults on clean series
+"Uccha Prathmik Vidhyalaya, Kapsarh",1849,1,137,0,0,139,20,0,0,0.0,0.0,False,1,2,1,2024-01-24 12:00:00,2026-09-13 18:00:00,0,clean
+"Uccha Prathmik Vidhyalaya, Lohra (Pampawan)",1831,1,89,0,0,11,11,0,0,0.0,0.0,False,1,2,1,2024-01-30 18:00:00,2026-09-13 18:00:00,0,clean
+"Uccha Prathmik Vidhyalaya, Pathouli",1920,1,141,0,0,144,25,0,0,0.0,0.0,False,1,2,1,2024-01-24 12:00:00,2026-09-13 18:00:00,0,clean
+"Uccha Prathmik Vidhyalaya, Semra Bhav Nagar",1905,2,56,0,0,185,67,0,0,0.0,0.0,False,1,2,2,2024-01-20 12:00:00,2026-09-13 18:00:00,0,clean
+"Uccha Prathmik Vidhyalaya, Simra",1511,1,49,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2024-01-20 12:00:00,2026-05-24 12:00:00,0,clean
+"Uccha Prathmik Vidhyalaya, Sonpur",1040,3,88,1,0,0,0,0,0,0.0,0.0,False,2,3,1,2024-01-30 12:00:00,2026-07-21 12:00:00,0,spike-faults on clean series
+"Uchha Prathmik Vidhyala, Tadi Mustkil",2068,1,3,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-12-30 00:00:00,2026-09-14 06:00:00,0,clean
+Upper Primary Kasampur,1896,1,16,0,0,225,106,0,0,0.0,0.0,False,1,2,1,2024-01-19 18:00:00,2026-09-13 18:00:00,0,clean
+"Upper Primary School Eng Medium, Hariyabans",2967,29,92,0,0,0,0,0,0,0.0,0.0,False,2,3,4,2023-04-19 18:00:00,2026-10-10 00:00:00,0,clean
+Upper Primary School Lehra,1805,3,122,0,0,218,0,0,0,0.0,0.0,False,1,2,3,2024-01-24 12:00:00,2026-09-13 18:00:00,0,clean
+Upper Primary School Pohalli,1892,1,32,0,0,213,94,0,0,0.0,0.0,False,1,2,1,2024-01-18 18:00:00,2026-09-13 18:00:00,0,clean
+Upper Primary School Rijaula,1854,3,42,0,0,198,79,0,0,0.0,0.0,False,1,2,3,2024-01-24 06:00:00,2026-09-13 18:00:00,0,clean
+Upper Primary School Sarahan Bujurg,1904,42,178,2,0,165,46,0,0,0.0,0.0,False,1,2,2,2024-01-30 12:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+Upper Primary School Urouliya,1877,3,50,0,0,0,0,0,0,0.0,0.0,False,1,2,3,2024-01-24 06:00:00,2026-09-13 18:00:00,0,clean
+"Upper Primary School, Khadui",3509,2,11,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2022-11-22 18:00:00,2026-10-10 18:00:00,0,clean
+Varansi Badagaon Gajapur,3153,71,297,0,0,291,291,0,0,0.0,0.0,False,1,2,3,2023-02-20 06:00:00,2026-10-10 18:00:00,0,clean
+Varansi Chirai Gaon  Gathiya Jairampur,3202,3,9,0,0,0,0,0,0,0.0,0.0,False,1,2,1,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Varansi Chirai Gaon Chhahi,3464,0,0,0,0,0,0,0,0,0.0,0.0,False,1,2,0,2022-10-31 12:00:00,2026-10-03 00:00:00,2,pumping-like real
+Varansi Cholapur Chaubepur,3137,3,9,0,0,0,0,0,0,0.0,0.0,False,4,5,0,2023-02-20 18:00:00,2026-10-06 00:00:00,1,pumping-like real
+Varansi Cholapur Munari,3202,2,6,0,0,0,0,0,0,0.0,0.0,False,3,4,2,2023-02-20 18:00:00,2026-10-10 18:00:00,0,clean
+Varansi Harahua Bhaithauli,3134,3,9,0,0,0,0,0,0,0.0,0.0,False,3,4,2,2023-02-13 06:00:00,2026-10-10 00:00:00,0,clean
+Varansi Harahua Gurwat,2911,2,6,0,0,0,0,0,0,0.0,0.0,False,1,2,2,2023-02-20 18:00:00,2026-09-19 12:00:00,1,pumping-like real
+Varansi Harahua Kakalpur,2960,1,3,0,0,0,0,0,0,0.0,0.0,False,2,3,1,2023-02-20 06:00:00,2026-09-19 12:00:00,1,pumping-like real
+Varansi Harahua Shivrampur,2961,0,0,0,0,0,0,0,0,0.0,0.0,False,2,3,0,2023-02-25 18:00:00,2026-10-10 18:00:00,0,clean
+Varansi Harahua Sulemapur,2832,89,335,6,0,0,0,0,0,0.0,0.0,False,2,3,6,2023-02-20 06:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Varansi Pindara Gajendra,3015,4,14,1,0,20,20,0,0,0.0,0.0,False,3,4,3,2023-02-19 06:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+Varansi Pindara Molanapur,2692,2,15,1,0,0,0,0,0,0.0,0.0,False,1,2,2,2023-01-21 06:00:00,2026-10-08 18:00:00,0,spike-faults on clean series
+Veterinary Hospital Shahjahanpur,1907,14,61,0,0,226,107,0,0,0.0,0.0,False,1,2,2,2024-01-19 00:00:00,2026-09-13 18:00:00,0,clean
+"Vikash Khand Parisar, Itwa",3392,1,11,4,0,0,0,0,0,0.0,0.0,False,1,2,1,2022-12-13 18:00:00,2026-10-10 18:00:00,0,spike-faults on clean series
+primary school Chaura khurd,1628,74,354,13,0,0,0,0,0,0.0,0.0,False,1,2,2,2024-03-28 18:00:00,2026-09-13 18:00:00,0,spike-faults on clean series
+primary school jalalpura,1556,1,233,0,0,233,114,0,0,0.0,0.0,False,1,2,1,2024-01-19 06:00:00,2026-04-02 12:00:00,0,clean
+primary school kapasi,1826,1,13,0,0,205,86,0,0,0.0,0.0,False,1,2,1,2024-01-18 18:00:00,2026-09-13 18:00:00,0,clean

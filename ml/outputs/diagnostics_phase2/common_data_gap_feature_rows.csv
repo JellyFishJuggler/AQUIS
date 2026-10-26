@@ -1,0 +1,5 @@
+split,scope,rows,anchors_in_gap,targets_in_gap,target_intervals_overlapping_gap,targets_crossing_into_gap
+train,all stations,1627745,151024,151894,214400,63376
+train,affected gap stations,10222,0,25,25,25
+val,all stations,1777,0,0,0,0
+val,affected gap stations,0,0,0,0,0

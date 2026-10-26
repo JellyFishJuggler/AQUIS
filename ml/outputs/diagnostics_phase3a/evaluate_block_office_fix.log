@@ -1,0 +1,57 @@
+=== totals ===
+m2_old                         2439
+m2_departure_only               635
+m2_departure_observed           635
+removed_by_departure 1804
+removed_by_observed  0
+
+=== removed rows by gwl_obs status ===
+gwl_obs  prev_obs  next_obs
+0.0      0.0       0.0         1619
+         1.0       0.0          179
+1.0      1.0       0.0            5
+                   1.0            1
+
+removed by station (top 20):
+Station
+Jaunpur Rampur Kamaruddin              61
+Prathmik Vidhyalaya, Bali              46
+Mahoba Jaitpur saguniyamaph            44
+Primary School, Shivpur                36
+Primary School, Sultanpur_1            35
+Primary School,  Todarpur              33
+Mahoba Panwari Didvara                 33
+Comosite School Campus Badalganj       33
+Srikantpur Pr. Vid.                    26
+Jaunpur Dobhi Bankati                  25
+Primary School No.1, Bitaoda           24
+Prathmik Vidhyalaya, Khera Islampur    24
+Mathura Chhata Sher Nagar              22
+Jaunpur Rampur Sultanpur               22
+Kushinagar Tamkuhi Rajwatiya           22
+Gorakhpur Belghat Belghat              22
+GOVINDPUR BILARI PRATHMIK VIDYALAYA    22
+Block Office, Kurara                   22
+Block office, Gursarai                 22
+Kushinagar Khadda Basdila              22
+
+=== named gate under corrected detector (departure + observed) ===
+'Primary School, Kalan Bar Devran'                      m1=   0 m2_old=  87 m2_dep=  76 m2_final=  76
+'Primary School/ Composite, Mehmoodpur'                 m1=   0 m2_old=   5 m2_dep=   5 m2_final=   5
+'Mathura Chaumuha Navagaon-11'                          m1=   0 m2_old=   0 m2_dep=   0 m2_final=   0
+'Block Office, Kurara'                                  m1=   0 m2_old=  22 m2_dep=   0 m2_final=   0
+'Hamirpur Sarila Purani'                                m1=   0 m2_old=   0 m2_dep=   0 m2_final=   0
+'Primary School, Evani'                                 m1=   0 m2_old=   0 m2_dep=   0 m2_final=   0
+'Primary School, Garher'                                m1=   0 m2_old=   0 m2_dep=   0 m2_final=   0
+'Hamirpur Kurara Jalokhar'                              m1=   0 m2_old=   0 m2_dep=   0 m2_final=   0
+
+=== retained M2 rows at named stations ===
+Station
+Primary School, Kalan Bar Devran         76
+Primary School/ Composite, Mehmoodpur     5
+
+obs status of retained rows:
+Station                                gwl_obs
+Primary School, Kalan Bar Devran       0.0        41
+                                       1.0        35
+Primary School/ Composite, Mehmoodpur  1.0         5

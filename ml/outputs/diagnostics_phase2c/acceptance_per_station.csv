@@ -1,0 +1,39 @@
+group,case_type,requested_station,matched_station,detector,detector_value,observed_flag,expected,pass_acceptance
+A_placeholder,acceptance,Composite School Sagarpur,Composite School Sagarpur,placeholder_start_slots,181,True,flagged,True
+A_placeholder,acceptance,Gadhela Panchayat Bhawan,Gadhela Panchayat Bhawan,placeholder_start_slots,239,True,flagged,True
+A_placeholder,acceptance,Goshala Bada Gaon,Goshala Bada Gaon,placeholder_start_slots,235,True,flagged,True
+A_placeholder,acceptance,Goshala Bhadehdu,Goshala Bhadehdu,placeholder_start_slots,239,True,flagged,True
+A_placeholder,acceptance,Primary School Sanda-Sanee,Primary School Sanda-Sanee,placeholder_start_slots,239,True,flagged,True
+A_placeholder,acceptance,Primary School Vamanpura,Primary School Vamanpura,placeholder_start_slots,225,True,flagged,True
+A_placeholder,acceptance,Primary School chandsina,Primary School chandsina,placeholder_start_slots,238,True,flagged,True
+A_placeholder,acceptance,Prmary School Rajpura,Prmary School Rajpura,placeholder_start_slots,198,True,flagged,True
+A_placeholder,acceptance,Rajkia High School Pakhrauli,Rajkia High School Pakhrauli,placeholder_start_slots,236,True,flagged,True
+A_placeholder,acceptance,"Uccha Prathmik Vidhyalaya, Lohra (Pampawan)","Uccha Prathmik Vidhyalaya, Lohra (Pampawan)",placeholder_start_slots,172,True,flagged,True
+A_placeholder,acceptance,Upper Primary School Sarahan Bujurg,Upper Primary School Sarahan Bujurg,placeholder_start_slots,200,True,flagged,True
+A_placeholder,acceptance,Aagan Wadi Kendra Chandni,Aagan Wadi Kendra Chandni,placeholder_start_slots,224,True,flagged,True
+A_placeholder,acceptance,Composite School Basantpur Saitali-1,Composite School Basantpur Saitali-1,placeholder_start_slots,201,True,flagged,True
+A_placeholder,acceptance,"Composite School, Ghamhapur","Composite School, Ghamhapur",placeholder_start_slots,200,True,flagged,True
+A_placeholder,acceptance,"Swarg Dham, Hardua","Swarg Dham, Hardua",placeholder_start_slots,231,True,flagged,True
+B_stuck,acceptance,"Primary School, Dera Devra bujurg","Primary School, Dera Devra bujurg",test_stuck_slots,226,True,flagged,True
+B_stuck,acceptance,Primary School chandsina,Primary School chandsina,test_stuck_slots,182,True,flagged,True
+B_stuck,acceptance,Primary School Sanda-Sanee,Primary School Sanda-Sanee,test_stuck_slots,127,True,flagged,True
+B_check,descriptive,Composite School Sagarpur,Composite School Sagarpur,test_stuck_slots,480,True,inspect,
+B_check,descriptive,Rohari,Rohari,test_stuck_slots,2,True,inspect,
+C_repeated_spike,acceptance,"Primary School/ Composite, Sidki","Primary School/ Composite, Sidki",repeated_extreme_flag,True,True,flagged,True
+C_repeated_spike,acceptance,"Primary School/ Composite, Mehmoodpur","Primary School/ Composite, Mehmoodpur",repeated_extreme_flag,True,True,flagged,True
+C_repeated_spike,acceptance,"Primary School, Silana","Primary School, Silana",repeated_extreme_flag,True,True,flagged,True
+C_repeated_spike,acceptance,"Primary School, Kalan Bar Devran","Primary School, Kalan Bar Devran",repeated_extreme_flag,True,True,flagged,True
+C_repeated_spike,acceptance,Chitrakoot Manikpur Agarhudha,Chitrakoot Manikpur Agarhudha,repeated_extreme_flag,True,True,flagged,True
+C_repeated_spike,acceptance,Banda Tindwari Bhindowra,Banda Tindwari Bhindowra,repeated_extreme_flag,True,True,flagged,True
+C_repeated_spike,acceptance,Hamirpur Kurara Jalokhar,Hamirpur Kurara Jalokhar,repeated_extreme_flag,False,False,flagged,False
+D_flipflop,acceptance,Hathras Hathras Hathras,Hathras Hathras Hathras,flipflop_station_flag,True,True,flagged,True
+D_check,descriptive,Varansi Cholapur Chaubepur,Varansi Cholapur Chaubepur,flipflop_station_flag,True,True,inspect,
+D_check,descriptive,Varansi Harahua Gurwat,Varansi Harahua Gurwat,flipflop_station_flag,False,False,inspect,
+D_check,descriptive,Varansi Chirai Gaon Chhahi,Varansi Chirai Gaon Chhahi,flipflop_station_flag,True,True,inspect,
+E_untouched,acceptance,Block Office Kurara,"Block Office, Kurara",changed_slots,0,False,untouched,True
+E_untouched,acceptance,Hamirpur Sarila Purani,Hamirpur Sarila Purani,changed_slots,0,False,untouched,True
+E_untouched,acceptance,Primary School Evani,"Primary School, Evani",changed_slots,0,False,untouched,True
+E_untouched,acceptance,Primary School Garher,"Primary School, Garher",changed_slots,0,False,untouched,True
+E_untouched,acceptance,Saint Ravidas Nagar Abholi Gangarampur,Saint Ravidas Nagar Abholi Gangarampur,changed_slots,0,False,untouched,True
+E_untouched,acceptance,Varansi Harahua Kakalpur,Varansi Harahua Kakalpur,changed_slots,0,False,untouched,True
+E_untouched,acceptance,Mathura Chaumuha Navagaon-11,Mathura Chaumuha Navagaon-11,changed_slots,0,False,untouched,True

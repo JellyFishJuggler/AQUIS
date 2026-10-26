@@ -1,0 +1,50 @@
+Station,is_union,is_random_other,is_named_guard,plot,masked_placeholder_slots,masked_repeated_spike_slots,flat_slots_flagged,flipflop_slots_flagged,change_points
+Aagan Wadi Kendra Chandni,True,False,False,before_after/Aagan_Wadi_Kendra_Chandni_c624043c_before_after.png,0,0,174,0,1
+Aligarh Khair Utwara,False,True,False,before_after/Aligarh_Khair_Utwara_98cfebfa_before_after.png,0,0,16,0,1
+Banda Tindwari Bhindowra,True,False,False,before_after/Banda_Tindwari_Bhindowra_5ab415d2_before_after.png,0,0,0,0,3
+Block Development Office-Khekra-Shallow,False,True,False,before_after/Block_Development_Office_Khekra_Shallow_04d76e87_before_after.png,0,0,0,0,2
+"Block Office, Kurara",True,False,True,before_after/Block_Office_Kurara_6a43ebdf_before_after.png,0,0,0,0,2
+Chitrakoot Manikpur Agarhudha,True,False,False,before_after/Chitrakoot_Manikpur_Agarhudha_b3a08ed7_before_after.png,0,0,0,0,2
+"Community Center, Ghorawal",True,False,False,before_after/Community_Center_Ghorawal_9da5e2e2_before_after.png,0,0,0,0,1
+Composite School Basantpur Saitali-1,True,False,False,before_after/Composite_School_Basantpur_Saitali_1_48733dd2_before_after.png,0,0,106,0,1
+Composite School Sagarpur,True,False,False,before_after/Composite_School_Sagarpur_6029996a_before_after.png,0,0,25,0,1
+"Composite School, Ghamhapur",True,False,False,before_after/Composite_School_Ghamhapur_78404e96_before_after.png,0,0,125,0,1
+Gadhela Panchayat Bhawan,True,False,False,before_after/Gadhela_Panchayat_Bhawan_5fb00cbd_before_after.png,0,0,196,0,1
+Goshala Bada Gaon,True,False,False,before_after/Goshala_Bada_Gaon_b159b3e9_before_after.png,0,0,205,0,1
+Goshala Bhadehdu,True,False,False,before_after/Goshala_Bhadehdu_f3c58ede_before_after.png,0,0,209,0,1
+Hamirpur Kurara Jalokhar,True,False,False,before_after/Hamirpur_Kurara_Jalokhar_8a80fdac_before_after.png,0,0,0,0,1
+Hamirpur Sarila Purani,True,False,True,before_after/Hamirpur_Sarila_Purani_77769dfd_before_after.png,0,0,0,0,3
+Hathras Hathras Hathras,True,False,False,before_after/Hathras_Hathras_Hathras_2a8a1743_before_after.png,0,0,0,0,1
+Mahoba Jaitpur saguniyamaph,False,True,False,before_after/Mahoba_Jaitpur_saguniyamaph_197ce6e3_before_after.png,0,0,0,0,1
+Mainpuri Karhal Naglamdari,False,True,False,before_after/Mainpuri_Karhal_Naglamdari_4ba6b877_before_after.png,0,0,0,0,2
+Mathura Chaumuha Navagaon-11,True,False,True,before_after/Mathura_Chaumuha_Navagaon_11_d222442f_before_after.png,0,0,287,0,1
+Mathura Nandgaon Vathainkala,False,True,False,before_after/Mathura_Nandgaon_Vathainkala_05f17913_before_after.png,0,0,0,0,1
+"Prathmik Vidhyalaya, Didhora  Sadullapur",False,True,False,before_after/Prathmik_Vidhyalaya_Didhora_Sadullapur_db537221_before_after.png,0,0,34,0,1
+Primary School Salawa,False,True,False,before_after/Primary_School_Salawa_f6dfc454_before_after.png,0,0,146,0,1
+Primary School Sanda-Sanee,True,False,False,before_after/Primary_School_Sanda_Sanee_de79c34f_before_after.png,0,2,210,0,1
+Primary School Vamanpura,True,False,False,before_after/Primary_School_Vamanpura_a5e98d47_before_after.png,0,1,181,0,1
+Primary School chandsina,True,False,False,before_after/Primary_School_chandsina_19b8f8ca_before_after.png,0,2,222,0,3
+"Primary School, Belaukh",False,True,False,before_after/Primary_School_Belaukh_87662f8c_before_after.png,0,0,0,0,1
+"Primary School, Bilata",True,False,False,before_after/Primary_School_Bilata_6466a5a9_before_after.png,0,0,0,0,2
+"Primary School, Dera Devra bujurg",True,False,False,before_after/Primary_School_Dera_Devra_bujurg_e457cc5a_before_after.png,0,0,23,0,4
+"Primary School, Evani",True,False,False,before_after/Primary_School_Evani_5c231b53_before_after.png,0,0,0,0,2
+"Primary School, Garher",True,False,False,before_after/Primary_School_Garher_6bb34643_before_after.png,0,0,0,0,1
+"Primary School, Kalan Bar Devran",True,False,False,before_after/Primary_School_Kalan_Bar_Devran_e00cb88d_before_after.png,0,0,0,0,1
+"Primary School, Karasdev Mandir",True,False,False,before_after/Primary_School_Karasdev_Mandir_aa4df36d_before_after.png,0,0,0,0,2
+"Primary School, Silana",True,False,False,before_after/Primary_School_Silana_659344af_before_after.png,0,0,0,0,2
+"Primary School/ Composite, Jeevna",False,True,False,before_after/Primary_School_Composite_Jeevna_5b3d0d2a_before_after.png,0,1,0,0,2
+"Primary School/ Composite, Landhoura Junardar",True,False,False,before_after/Primary_School_Composite_Landhoura_Junardar_df2280a9_before_after.png,0,0,0,0,2
+"Primary School/ Composite, Mehmoodpur",True,False,False,before_after/Primary_School_Composite_Mehmoodpur_25f733ed_before_after.png,0,0,0,0,1
+"Primary School/ Composite, Sidki",True,False,False,before_after/Primary_School_Composite_Sidki_10430c49_before_after.png,0,0,0,0,1
+Prmary School Rajpura,True,False,False,before_after/Prmary_School_Rajpura_45acd6c7_before_after.png,0,5,127,0,1
+Rajkia High School Pakhrauli,True,False,False,before_after/Rajkia_High_School_Pakhrauli_9300882f_before_after.png,0,0,202,0,1
+Rohari,True,False,False,before_after/Rohari_01564bf3_before_after.png,0,0,0,0,1
+Saint Ravidas Nagar Abholi Gangarampur,True,False,False,before_after/Saint_Ravidas_Nagar_Abholi_Gangarampur_3f251e95_before_after.png,0,0,0,0,2
+Shahjahanpur Dadraul Banthara,False,True,False,before_after/Shahjahanpur_Dadraul_Banthara_4d76cdea_before_after.png,0,1,214,0,1
+"Swarg Dham, Hardua",True,False,False,before_after/Swarg_Dham_Hardua_295af2d9_before_after.png,0,0,176,0,1
+"Uccha Prathmik Vidhyalaya, Lohra (Pampawan)",True,False,False,before_after/Uccha_Prathmik_Vidhyalaya_Lohra_Pampawan_ea14389d_before_after.png,0,0,11,0,1
+Upper Primary School Sarahan Bujurg,True,False,False,before_after/Upper_Primary_School_Sarahan_Bujurg_68ef875f_before_after.png,0,2,165,0,1
+Varansi Chirai Gaon Chhahi,True,False,False,before_after/Varansi_Chirai_Gaon_Chhahi_23f8a40f_before_after.png,0,0,0,0,1
+Varansi Cholapur Chaubepur,True,False,False,before_after/Varansi_Cholapur_Chaubepur_82ecaf78_before_after.png,0,0,0,0,4
+Varansi Harahua Gurwat,True,False,False,before_after/Varansi_Harahua_Gurwat_9c54f021_before_after.png,0,0,0,0,1
+Varansi Harahua Kakalpur,True,False,False,before_after/Varansi_Harahua_Kakalpur_86728333_before_after.png,0,0,0,0,2

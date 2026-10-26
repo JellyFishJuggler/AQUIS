@@ -1,0 +1,297 @@
+station rows 5223 range 2023-03-15 06:00:00 2026-10-10 18:00:00
+gwl finite 4576 unique 3041
+
+m1 0 m2 22
+m1_info None
+pre_median -4.181 pre_scale 0.46405380000000024
+repeat_values [-10.293, -9.863]
+base n 79 medp/scalep -4.181 0.46405380000000024 envelope -7.8934304000000015 -0.46856959999999814
+rep n 2
+rep values [-10.293, -9.863]
+
+repeated-exact detections 22
+               time   value    prev    next  pre_count_of_value  in_m2  in_m1
+2025-07-02 06:00:00 -10.293 -10.293 -10.293                  13   True  False
+2025-07-02 12:00:00 -10.293 -10.293 -10.293                  13   True  False
+2025-07-02 18:00:00 -10.293 -10.293 -10.293                  13   True  False
+2025-07-03 00:00:00 -10.293 -10.293 -10.293                  13   True  False
+2025-07-03 06:00:00 -10.293 -10.293 -10.293                  13   True  False
+2025-07-03 12:00:00 -10.293 -10.293 -10.293                  13   True  False
+2025-07-03 18:00:00 -10.293 -10.293 -10.293                  13   True  False
+2025-07-04 00:00:00 -10.293 -10.293 -10.293                  13   True  False
+2025-07-04 06:00:00 -10.293 -10.293 -10.293                  13   True  False
+2025-07-04 12:00:00 -10.293 -10.293 -10.293                  13   True  False
+2025-07-04 18:00:00 -10.293 -10.293 -10.293                  13   True  False
+2025-07-08 06:00:00  -9.863  -9.863  -9.863                  13   True  False
+2025-07-08 12:00:00  -9.863  -9.863  -9.863                  13   True  False
+2025-07-08 18:00:00  -9.863  -9.863  -9.863                  13   True  False
+2025-07-09 00:00:00  -9.863  -9.863  -9.863                  13   True  False
+2025-07-09 06:00:00  -9.863  -9.863  -9.863                  13   True  False
+2025-07-09 12:00:00  -9.863  -9.863  -9.863                  13   True  False
+2025-07-09 18:00:00  -9.863  -9.863  -9.863                  13   True  False
+2025-07-10 00:00:00  -9.863  -9.863  -9.863                  13   True  False
+2025-07-10 06:00:00  -9.863  -9.863  -9.863                  13   True  False
+2025-07-10 12:00:00  -9.863  -9.863  -9.863                  13   True  False
+2025-07-10 18:00:00  -9.863  -9.863  -9.863                  13   True  False
+
+count by year {2025: 22}
+value counts {-10.293: 11, -9.863: 11}
+
+All M2 rows with context:
+
+--- 2025-07-02 06:00:00 value -10.293
+               time     gwl    m1    m2
+2025-07-01 12:00:00     NaN False False
+2025-07-01 18:00:00     NaN False False
+2025-07-02 00:00:00 -10.293 False False
+2025-07-02 06:00:00 -10.293 False  True
+2025-07-02 12:00:00 -10.293 False  True
+2025-07-02 18:00:00 -10.293 False  True
+2025-07-03 00:00:00 -10.293 False  True
+
+--- 2025-07-02 12:00:00 value -10.293
+               time     gwl    m1    m2
+2025-07-01 18:00:00     NaN False False
+2025-07-02 00:00:00 -10.293 False False
+2025-07-02 06:00:00 -10.293 False  True
+2025-07-02 12:00:00 -10.293 False  True
+2025-07-02 18:00:00 -10.293 False  True
+2025-07-03 00:00:00 -10.293 False  True
+2025-07-03 06:00:00 -10.293 False  True
+
+--- 2025-07-02 18:00:00 value -10.293
+               time     gwl    m1    m2
+2025-07-02 00:00:00 -10.293 False False
+2025-07-02 06:00:00 -10.293 False  True
+2025-07-02 12:00:00 -10.293 False  True
+2025-07-02 18:00:00 -10.293 False  True
+2025-07-03 00:00:00 -10.293 False  True
+2025-07-03 06:00:00 -10.293 False  True
+2025-07-03 12:00:00 -10.293 False  True
+
+--- 2025-07-03 00:00:00 value -10.293
+               time     gwl    m1   m2
+2025-07-02 06:00:00 -10.293 False True
+2025-07-02 12:00:00 -10.293 False True
+2025-07-02 18:00:00 -10.293 False True
+2025-07-03 00:00:00 -10.293 False True
+2025-07-03 06:00:00 -10.293 False True
+2025-07-03 12:00:00 -10.293 False True
+2025-07-03 18:00:00 -10.293 False True
+
+--- 2025-07-03 06:00:00 value -10.293
+               time     gwl    m1   m2
+2025-07-02 12:00:00 -10.293 False True
+2025-07-02 18:00:00 -10.293 False True
+2025-07-03 00:00:00 -10.293 False True
+2025-07-03 06:00:00 -10.293 False True
+2025-07-03 12:00:00 -10.293 False True
+2025-07-03 18:00:00 -10.293 False True
+2025-07-04 00:00:00 -10.293 False True
+
+--- 2025-07-03 12:00:00 value -10.293
+               time     gwl    m1   m2
+2025-07-02 18:00:00 -10.293 False True
+2025-07-03 00:00:00 -10.293 False True
+2025-07-03 06:00:00 -10.293 False True
+2025-07-03 12:00:00 -10.293 False True
+2025-07-03 18:00:00 -10.293 False True
+2025-07-04 00:00:00 -10.293 False True
+2025-07-04 06:00:00 -10.293 False True
+
+--- 2025-07-03 18:00:00 value -10.293
+               time     gwl    m1   m2
+2025-07-03 00:00:00 -10.293 False True
+2025-07-03 06:00:00 -10.293 False True
+2025-07-03 12:00:00 -10.293 False True
+2025-07-03 18:00:00 -10.293 False True
+2025-07-04 00:00:00 -10.293 False True
+2025-07-04 06:00:00 -10.293 False True
+2025-07-04 12:00:00 -10.293 False True
+
+--- 2025-07-04 00:00:00 value -10.293
+               time     gwl    m1   m2
+2025-07-03 06:00:00 -10.293 False True
+2025-07-03 12:00:00 -10.293 False True
+2025-07-03 18:00:00 -10.293 False True
+2025-07-04 00:00:00 -10.293 False True
+2025-07-04 06:00:00 -10.293 False True
+2025-07-04 12:00:00 -10.293 False True
+2025-07-04 18:00:00 -10.293 False True
+
+--- 2025-07-04 06:00:00 value -10.293
+               time     gwl    m1    m2
+2025-07-03 12:00:00 -10.293 False  True
+2025-07-03 18:00:00 -10.293 False  True
+2025-07-04 00:00:00 -10.293 False  True
+2025-07-04 06:00:00 -10.293 False  True
+2025-07-04 12:00:00 -10.293 False  True
+2025-07-04 18:00:00 -10.293 False  True
+2025-07-05 00:00:00 -10.293 False False
+
+--- 2025-07-04 12:00:00 value -10.293
+               time     gwl    m1    m2
+2025-07-03 18:00:00 -10.293 False  True
+2025-07-04 00:00:00 -10.293 False  True
+2025-07-04 06:00:00 -10.293 False  True
+2025-07-04 12:00:00 -10.293 False  True
+2025-07-04 18:00:00 -10.293 False  True
+2025-07-05 00:00:00 -10.293 False False
+2025-07-05 06:00:00     NaN False False
+
+--- 2025-07-04 18:00:00 value -10.293
+               time     gwl    m1    m2
+2025-07-04 00:00:00 -10.293 False  True
+2025-07-04 06:00:00 -10.293 False  True
+2025-07-04 12:00:00 -10.293 False  True
+2025-07-04 18:00:00 -10.293 False  True
+2025-07-05 00:00:00 -10.293 False False
+2025-07-05 06:00:00     NaN False False
+2025-07-05 12:00:00     NaN False False
+
+--- 2025-07-08 06:00:00 value -9.863
+               time    gwl    m1    m2
+2025-07-07 12:00:00    NaN False False
+2025-07-07 18:00:00    NaN False False
+2025-07-08 00:00:00 -9.863 False False
+2025-07-08 06:00:00 -9.863 False  True
+2025-07-08 12:00:00 -9.863 False  True
+2025-07-08 18:00:00 -9.863 False  True
+2025-07-09 00:00:00 -9.863 False  True
+
+--- 2025-07-08 12:00:00 value -9.863
+               time    gwl    m1    m2
+2025-07-07 18:00:00    NaN False False
+2025-07-08 00:00:00 -9.863 False False
+2025-07-08 06:00:00 -9.863 False  True
+2025-07-08 12:00:00 -9.863 False  True
+2025-07-08 18:00:00 -9.863 False  True
+2025-07-09 00:00:00 -9.863 False  True
+2025-07-09 06:00:00 -9.863 False  True
+
+--- 2025-07-08 18:00:00 value -9.863
+               time    gwl    m1    m2
+2025-07-08 00:00:00 -9.863 False False
+2025-07-08 06:00:00 -9.863 False  True
+2025-07-08 12:00:00 -9.863 False  True
+2025-07-08 18:00:00 -9.863 False  True
+2025-07-09 00:00:00 -9.863 False  True
+2025-07-09 06:00:00 -9.863 False  True
+2025-07-09 12:00:00 -9.863 False  True
+
+--- 2025-07-09 00:00:00 value -9.863
+               time    gwl    m1   m2
+2025-07-08 06:00:00 -9.863 False True
+2025-07-08 12:00:00 -9.863 False True
+2025-07-08 18:00:00 -9.863 False True
+2025-07-09 00:00:00 -9.863 False True
+2025-07-09 06:00:00 -9.863 False True
+2025-07-09 12:00:00 -9.863 False True
+2025-07-09 18:00:00 -9.863 False True
+
+--- 2025-07-09 06:00:00 value -9.863
+               time    gwl    m1   m2
+2025-07-08 12:00:00 -9.863 False True
+2025-07-08 18:00:00 -9.863 False True
+2025-07-09 00:00:00 -9.863 False True
+2025-07-09 06:00:00 -9.863 False True
+2025-07-09 12:00:00 -9.863 False True
+2025-07-09 18:00:00 -9.863 False True
+2025-07-10 00:00:00 -9.863 False True
+
+--- 2025-07-09 12:00:00 value -9.863
+               time    gwl    m1   m2
+2025-07-08 18:00:00 -9.863 False True
+2025-07-09 00:00:00 -9.863 False True
+2025-07-09 06:00:00 -9.863 False True
+2025-07-09 12:00:00 -9.863 False True
+2025-07-09 18:00:00 -9.863 False True
+2025-07-10 00:00:00 -9.863 False True
+2025-07-10 06:00:00 -9.863 False True
+
+--- 2025-07-09 18:00:00 value -9.863
+               time    gwl    m1   m2
+2025-07-09 00:00:00 -9.863 False True
+2025-07-09 06:00:00 -9.863 False True
+2025-07-09 12:00:00 -9.863 False True
+2025-07-09 18:00:00 -9.863 False True
+2025-07-10 00:00:00 -9.863 False True
+2025-07-10 06:00:00 -9.863 False True
+2025-07-10 12:00:00 -9.863 False True
+
+--- 2025-07-10 00:00:00 value -9.863
+               time    gwl    m1   m2
+2025-07-09 06:00:00 -9.863 False True
+2025-07-09 12:00:00 -9.863 False True
+2025-07-09 18:00:00 -9.863 False True
+2025-07-10 00:00:00 -9.863 False True
+2025-07-10 06:00:00 -9.863 False True
+2025-07-10 12:00:00 -9.863 False True
+2025-07-10 18:00:00 -9.863 False True
+
+--- 2025-07-10 06:00:00 value -9.863
+               time    gwl    m1    m2
+2025-07-09 12:00:00 -9.863 False  True
+2025-07-09 18:00:00 -9.863 False  True
+2025-07-10 00:00:00 -9.863 False  True
+2025-07-10 06:00:00 -9.863 False  True
+2025-07-10 12:00:00 -9.863 False  True
+2025-07-10 18:00:00 -9.863 False  True
+2025-07-11 00:00:00 -9.863 False False
+
+--- 2025-07-10 12:00:00 value -9.863
+               time    gwl    m1    m2
+2025-07-09 18:00:00 -9.863 False  True
+2025-07-10 00:00:00 -9.863 False  True
+2025-07-10 06:00:00 -9.863 False  True
+2025-07-10 12:00:00 -9.863 False  True
+2025-07-10 18:00:00 -9.863 False  True
+2025-07-11 00:00:00 -9.863 False False
+2025-07-11 06:00:00    NaN False False
+
+--- 2025-07-10 18:00:00 value -9.863
+               time    gwl    m1    m2
+2025-07-10 00:00:00 -9.863 False  True
+2025-07-10 06:00:00 -9.863 False  True
+2025-07-10 12:00:00 -9.863 False  True
+2025-07-10 18:00:00 -9.863 False  True
+2025-07-11 00:00:00 -9.863 False False
+2025-07-11 06:00:00    NaN False False
+2025-07-11 12:00:00    NaN False False
+
+Whole-series value counts for detected values:
+-10.293 n= 15 first 2023-07-04 00:00:00 last 2025-07-05 00:00:00 years [2023, 2024, 2025]
+-9.863 n= 13 first 2025-07-08 00:00:00 last 2025-07-11 00:00:00 years [2025]
+
+last 30 rows:
+             Station                time    gwl  gwl_obs District  rain  rain_n  temp  river_level  humidity  solar  wind_speed  wind_dir  pressure  canal_level
+Block Office, Kurara 2026-10-03 12:00:00 -2.805      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-03 18:00:00 -2.742      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-04 00:00:00 -2.623      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-04 06:00:00 -2.561      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-04 12:00:00 -2.941      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-04 18:00:00 -2.947      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-05 00:00:00 -2.928      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-05 06:00:00 -2.928      0.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-05 12:00:00 -2.928      0.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-05 18:00:00 -2.928      0.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-06 00:00:00 -2.928      0.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-06 06:00:00 -3.087      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-06 12:00:00 -3.155      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-06 18:00:00 -3.133      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-07 00:00:00 -3.144      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-07 06:00:00 -3.132      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-07 12:00:00 -3.220      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-07 18:00:00 -3.208      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-08 00:00:00 -3.171      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-08 06:00:00 -3.150      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-08 12:00:00 -3.263      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-08 18:00:00 -3.232      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-09 00:00:00 -3.196      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-09 06:00:00 -3.150      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-09 12:00:00 -3.300      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-09 18:00:00 -3.242      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-10 00:00:00 -3.232      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-10 06:00:00 -3.217      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-10 12:00:00 -3.284      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN
+Block Office, Kurara 2026-10-10 18:00:00 -3.275      1.0 HAMIRPUR   NaN     NaN   NaN          NaN       NaN    NaN         NaN       NaN       NaN          NaN

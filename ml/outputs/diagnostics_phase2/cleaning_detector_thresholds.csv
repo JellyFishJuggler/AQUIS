@@ -1,0 +1,9 @@
+detector,threshold_slots,fit,window_slots
+constant_value_run,102.0,ceil(p99.99 of observed exact-value run lengths in pre-2025-10-01 training data),1
+repeated_exact_extreme,3.0,"max(2, ceil(p95 of pre-cutoff exact-value frequencies among station tail values <=p0.5 or >=p99.5))",1
+extreme_value,,"station-specific pre-cutoff p0.5/p99.5; known sentinels 99,-99,999,-999,9999,-9999 are also candidates",1
+near_flat_30d_std,0.00936133710858468,p1 of pre-cutoff 30d rolling standard deviations; requires >=80 slots,120
+flipflop_step_size,,station-specific p95 of pre-cutoff observed consecutive-read absolute differences (6h to 48h apart),120
+flipflop_reversal_count,434.0,ceil(p99.5 of pre-cutoff rolling 30d count of consecutive large sign reversals),120
+whole_station_invalid_share,0.0,p99 of per-station pre-cutoff share of observed slots covered by flipflop windows,120
+persistent_month_shift,,station-specific pre-cutoff p99.5 of consecutive observed monthly-median absolute changes; pooled fallback=72.1860m; confirmation uses next available month,0

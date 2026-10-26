@@ -1,0 +1,88 @@
+{
+  "gate_pass": true,
+  "named_gate": [
+    {
+      "requested": "Primary School, Kalan Bar Devran",
+      "matched": "Primary School, Kalan Bar Devran",
+      "m2_mask_rows": 76.0,
+      "status": "PASS",
+      "m1_m2_mask_rows": NaN
+    },
+    {
+      "requested": "Primary School/ Composite, Mehmoodpur",
+      "matched": "Primary School/ Composite, Mehmoodpur",
+      "m2_mask_rows": 5.0,
+      "status": "PASS",
+      "m1_m2_mask_rows": NaN
+    },
+    {
+      "requested": "Mathura Chaumuha Navagaon-11",
+      "matched": "Mathura Chaumuha Navagaon-11",
+      "m2_mask_rows": NaN,
+      "status": "PASS",
+      "m1_m2_mask_rows": 0.0
+    },
+    {
+      "requested": "Block Office, Kurara",
+      "matched": "Block Office, Kurara",
+      "m2_mask_rows": NaN,
+      "status": "PASS",
+      "m1_m2_mask_rows": 0.0
+    },
+    {
+      "requested": "Hamirpur Sarila Purani",
+      "matched": "Hamirpur Sarila Purani",
+      "m2_mask_rows": NaN,
+      "status": "PASS",
+      "m1_m2_mask_rows": 0.0
+    },
+    {
+      "requested": "Primary School, Evani",
+      "matched": "Primary School, Evani",
+      "m2_mask_rows": NaN,
+      "status": "PASS",
+      "m1_m2_mask_rows": 0.0
+    },
+    {
+      "requested": "Primary School, Garher",
+      "matched": "Primary School, Garher",
+      "m2_mask_rows": NaN,
+      "status": "PASS",
+      "m1_m2_mask_rows": 0.0
+    }
+  ],
+  "source_rows": 3064595,
+  "source_stations": 600,
+  "masked_M1": 16391,
+  "masked_M2": 635,
+  "detector": {
+    "version": "phase3a-2026-10-26",
+    "m1": {
+      "leading_run_slots": 28,
+      "sentinel_run_slots": 4,
+      "continuation": "two adjacent 28-slot windows: >=20 non-sentinel, >=8 distinct, p95-p05 <= 10 m"
+    },
+    "m2_physical": {
+      "max_slots": 12,
+      "local_departure_m": 30,
+      "surrounding_window": "7D",
+      "median_agreement_m": 5
+    },
+    "m2_repeated_exact": {
+      "pre_cutoff": "2025-10-01",
+      "min_pre_cutoff_occurrences": 3,
+      "robust_envelope_mad": 8,
+      "requires_exact_return": true,
+      "requires_departure_from_neighbours": true,
+      "requires_observed_slots": true,
+      "rationale": "A forward-filled carry is not a new reading, and v[i-1]==v[i+1] is trivially true inside a constant run. The old rule masked 22 carried plateau slots at Block Office, Kurara."
+    },
+    "m3": "persistent level-transition candidate; flag only, no value edit",
+    "flag_only": [
+      "stuck",
+      "flipflop",
+      "extreme_burst"
+    ]
+  },
+  "checked_at": "2026-10-26 18:21:28.396806"
+}

@@ -1,0 +1,6 @@
+Station,run_start,run_end,value,all_run_slots,observed_slots,test_overlap_slots,contains_exact_ceiling_or_floor
+Gloragundera/Gewara,2026-01-01 00:00:00,2026-01-31 18:00:00,1.0,124,101,124,False
+"Primary School, Sindhan Kalan",2026-01-01 06:00:00,2026-01-31 18:00:00,0.0,123,91,123,False
+"Primary School, Sindhan Kalan",2026-06-24 06:00:00,2026-10-10 18:00:00,0.0,435,435,395,False
+Shitalpur_1,2026-01-01 00:00:00,2026-01-31 18:00:00,1.0,124,107,124,False
+Shitalpur_1,2026-06-24 12:00:00,2026-07-24 06:00:00,1.0,120,120,120,False

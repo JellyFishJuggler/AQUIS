@@ -1,5 +1,9 @@
 # ml — pooled GWL forecasting + trajectory v2 (XGBoost + quantile GRU)
 
+> New here? Read the [end-to-end ML module guide](ML_MODULE_GUIDE.md) for the
+> full source-to-serving walkthrough, operational snapshot, model protocols,
+> directory map, and FAQ.
+
 > This is the **single** ML module (post-merge 2026-09). Big data dirs
 > (`data/processed`, `data/features*`, `outputs/*.parquet`, `venv/`) are git-ignored
 > and regenerable from `data/processed/common.parquet` + the numbered pipeline.
@@ -8,10 +12,11 @@
 > The old per-station `ml/` (Flask API, `agent/`, `artifacts/`, `xgboost_quantile.py`)
 > was merged into this module and deleted — see `merge_later` items in the merge spec.
 > Both forecast surfaces — the **trajectory v2** engine (`_trajectory.py`, XGBoost;
-> `_dl.py`, GRU) and the pooled direct-30d model — are now **served by quantile GRU**
-> models with XGBoost as an automatic fallback/benchmark. See
-> [Trajectory v2](#trajectory-v2) and
-> [Algorithms evaluated (XGBoost / GRU / SARIMA / GPR)](#algorithms-evaluated-xgboost--gru--sarima--gpr) below.
+> `_dl.py`, GRU) and the pooled direct-30d model — are configured to serve quantile
+> GRU models, with XGBoost as an automatic fallback/benchmark. Saved refresh state
+> is older than the current date; see [Operational status](#operational-status).
+> See [Trajectory v2](#trajectory-v2) and
+> [Algorithms evaluated (XGBoost / GRU / SARIMA / GPR)](#algorithms-evaluated-xgboost--gru--sarima--gpr).
 
 
 ## Setup & selection rule
@@ -286,11 +291,12 @@ results: [`../docs/ml.md`](../docs/ml.md).
 | River | `18_cwc_river_forecast.py` | `data/cfs/river_forecast_cwc.parquet` (CWC 3-day forecasts, per district) |
 
 - **Backtest artifact (2026):** anchors are every 14 d and metrics score point
-  targets at each horizon; the 30-day forecasts from adjacent anchors are not
-  non-overlapping trajectory windows. The saved **XGB** artifact reports 73,881
-  anchors and 30-d RMSE **trajectory 2.106 < direct-30d 2.132 < persistence 2.151**,
-  `promote_trajectory = True` (historical values; training-target purging has since
-  changed in source, not regenerated). The saved **DL** artifact
+  targets at each horizon; adjacent anchors still overlap in their forecast
+  periods. The saved **XGB** artifact (`traj_backtest_summary.json`) reports
+  30-day RMSE **1.829 m vs persistence 1.907 m**, but
+  `promote_trajectory = false`. These are saved historical results: target-time
+  purging has since changed in source, and the backtest has not been regenerated.
+  The saved **DL** artifact
   (`traj_backtest_summary_dl.json`, 19,406 anchors / 150 stations, 2025-10 → 2026-08)
   reports 30-d RMSE **1.802 vs persistence 1.907**, dir-acc 0.725,
   coverage_calibrated 0.894 (fit-half 0.901, disjoint held-out split), but
@@ -321,10 +327,13 @@ were rejected (**SARIMA**, **GPR**). Results kept for provenance.
 
 | Family | Where tested | Result | Verdict |
 |---|---|---|---|
-| **XGBoost** | surfaces (a)+(b) | trajectory v2 30-d RMSE **2.106 m** (< direct-30d 2.132 < persistence 2.151); pooled 2026 test **2.242 m** (+2.1% vs persistence) | incumbent / fallback |
-| **Quantile GRU** | surfaces (a)+(b) | (b) 2026 RMSE **2.082 m**, beats E0-XGB ratio **0.944 [0.879, 0.972]** / persistence 0.952; (a) beats XGB at h360 0.985, **h720 0.990** [0.972, 0.996], ties/loses at h≤12 | **served on both surfaces** |
-| **SARIMA** | daily matched-pair (10 st × 5 origins) | RMSE 0.637 vs XGB 0.617, MAE 0.335 vs 0.402, PICP90 **0.726 vs 0.968**; blend beat better single in 0/27 folds | rejected / dropped |
-| **GPR** | per-station, time-only feature | pre-2026 → 2026: Tindwara RMSE **7.82 / R² −401**, Banda 2.13 / −7.6; PICP 1.00; O(n³) | rejected (interpolation only) |
+| **XGBoost** | surfaces (a)+(b) | Trajectory backtest: 30-day RMSE **1.829 m** vs persistence **1.907 m**. Pooled historical 2026 test: **2.242 m** vs persistence **2.290 m**; that artifact predates target-time purging. | Fallback and benchmark; trajectory candidate is not promoted |
+| **Quantile GRU** | surfaces (a)+(b) | Pooled 2026 stride: RMSE **2.082 m** vs XGB **2.206 m** and persistence **2.187 m**; 90% coverage **0.925**. Trajectory: 30-day RMSE **1.802 m** vs persistence **1.907 m**, but fails short-horizon promotion checks. | Configured serving backend; promotion gate remains conservative |
+| **SARIMA / ARIMA** | daily matched-pair (10 stations, rolling 2026 origins) | RMSE **0.735 m** vs XGB **0.657 m**; MAE **0.335 m** vs **0.402 m**; 90% coverage **0.726** vs **0.968**. A fitted blend lost to the better single model in **0/27** leave-one-origin-out folds. | Research baseline only; no blend is served |
+| **GPR** | per-station, time-only feature | Pre-2026 to 2026 RMSE: Tindwara **7.82 m** (R² −401), Banda **2.13 m** (R² −7.6); 90% coverage **1.00** with uninformative wide bands. | Rejected; poor extrapolation and cubic fitting cost |
+| **Ridge** | pooled direct-30d benchmark | Historical 2026 test RMSE **2.456 m**, worse than persistence (**2.290 m**); pre-purge artifact. | Benchmark only |
+| **Persistence / climatology** | pooled direct-30d and trajectory benchmarks | Persistence is the zero-change baseline. Historical pooled 2026 RMSE **2.290 m**; climatology **3.572 m** (pre-purge artifact). | Reference baselines |
+| **Experimental MLP variants** | scratch strict temporal folds and held-out-station CV | No promotion. Corrected strict sprint: **0/28** arms passed its full gate. Held-out-station CV models lost to persistence (ratios **1.27–1.48** for reported candidates). | Research only |
 
 ### Quantile GRU — the production engine (`34_train_traj_dl.py`, `36_train_pooled_dl.py`)
 
@@ -336,7 +345,7 @@ were rejected (**SARIMA**, **GPR**). Results kept for provenance.
   coverage_90 0.925 (raw 0.908). This is the cleanest DL win.
 * **Surface (a) trajectory** — 2026 anchor backtest (`TRAJ_MODEL=dl 32_backtest_traj.py`
   → `traj_backtest_summary_dl.json`; 19,406 anchors, 150 stations, 2025-10 → 2026-08):
-  30-d RMSE **1.802 vs persistence 1.907** (direct-30d 1.198 in this artifact), dir
+  30-d RMSE **1.802 vs persistence 1.907**, dir
   0.725, coverage_calibrated 0.894 (disjoint fit-half 0.901). `promote_trajectory = false`.
 * **Per-horizon DL-vs-XGB** (`35_traj_paired_ci.py` → `traj_paired_ci_dl_vs_xgb.json`,
   2,000 station-bootstrap resamples): DL is **not** better at h6 (ratio 1.012) or
@@ -361,8 +370,9 @@ were rejected (**SARIMA**, **GPR**). Results kept for provenance.
 * `SARIMAX(1,1,1)×(1,0,1,7)` refit **per origin** on univariate daily history
   (≥180 clean days, gaps ≤3 d interpolated), forecast 30 d with 90% intervals;
   matched against the frozen trajectory XGB on the same origins.
-* Row-weighted all-days aggregate: ARIMA RMSE **0.637**, MAE **0.335**, PICP90
-  **0.726**, width 0.888 · XGB RMSE 0.617, MAE 0.402, PICP90 0.968, width 2.503.
+* Row-weighted all-days aggregate (`outputs/arima_xgb_combine.json`): ARIMA RMSE
+  **0.735**, MAE **0.335**, PICP90 **0.726**, width 0.888 · XGB RMSE **0.657**,
+  MAE **0.402**, PICP90 **0.968**, width 2.503.
   XGB wins on RMSE + coverage; SARIMA on MAE only.
 * Per-station: ARIMA wins on stable low-variance stations (Tindwara RMSE 0.028)
   but collapses on volatile ones (Banda 5.91); XGB's advantage is coverage +
@@ -394,6 +404,16 @@ were rejected (**SARIMA**, **GPR**). Results kept for provenance.
   `ml-gpr/artifacts/gpr_metrics.json` (harness removed with `ml-gpr/`).
 
 ## Refresh pipeline (`refresh/`)
+
+### Operational status
+
+The local runtime snapshot (`data/refresh/state.json`) was last updated on
+2026-10-12. It records a failed retraining attempt on 2026-10-08 because the
+candidate did not beat the incumbent and failed the short-horizon gate. The
+snapshot does not record a successful forecast refresh or a generated model
+version. Treat this as the last recorded local state, not proof of current
+service health. Check `python -m refresh.cli status` on the deployment host for
+live status.
 
 The production-facing near-real-time loop. A systemd daemon
 (`python -m refresh.cli schedule`) polls on a **fixed 6-hourly wall-clock grid**

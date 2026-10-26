@@ -1,8 +1,14 @@
 # ML scratch experiments — consolidated notes
 
-Historical sprint / red-team / audit notes (2026-09..10), merged from the
-former per-track markdown files. Kept for provenance only; see
-`ml/README.md` and `docs/ml.md` (incl. the model card in §5.1.1/§6.5) for canonical results.
+> **Archive:** this document combines historical sprint, red-team, and audit
+> notes from September–October 2026. Some runs were invalidated by a metric bug;
+> those sections are explicitly marked invalid and must not be used as current
+> performance claims. For the concise algorithm comparison and current local
+> serving state, start with [`../../README.md`](../../README.md). The detailed
+> corrected new-station analysis remains below for provenance.
+
+The reports are retained as experiment records. They may describe old artifacts,
+scripts, and configurations that no longer match the active serving setup.
 
 
 ---

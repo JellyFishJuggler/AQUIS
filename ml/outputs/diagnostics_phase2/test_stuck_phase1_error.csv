@@ -1,0 +1,6 @@
+Station,run_start,run_end,stuck_value,transition_rows,transition_sq_error,transition_share_station_sq_error,targets_inside_stuck_rows,inside_stuck_sq_error,inside_stuck_share_station_sq_error,all_station_xgb_sq_error
+Gloragundera/Gewara,2026-01-01 00:00:00,2026-01-31 18:00:00,1.0,0,0.0,,0,0.0,,0.0
+"Primary School, Sindhan Kalan",2026-01-01 06:00:00,2026-01-31 18:00:00,0.0,0,0.0,,0,0.0,,0.0
+"Primary School, Sindhan Kalan",2026-06-24 06:00:00,2026-10-10 18:00:00,0.0,0,0.0,,0,0.0,,0.0
+Shitalpur_1,2026-01-01 00:00:00,2026-01-31 18:00:00,1.0,0,0.0,,0,0.0,,0.0
+Shitalpur_1,2026-06-24 12:00:00,2026-07-24 06:00:00,1.0,0,0.0,,0,0.0,,0.0

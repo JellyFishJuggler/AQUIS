@@ -56,6 +56,10 @@ ml/data/selected/*.csv
 ml/data/features/
 # 6h feature matrices (rebuilt by 14_6h_features)
 ml/data/features_6h/
+# v2 feature store (rebuilt by the v2 pipeline; >280MB, exceeds GitHub limits)
+ml/data_v2/
+# bulk archived snapshot of stale data_v2 (copy, not source)
+ml/outputs/diagnostics_phase3a/stale_data_v2_*/
 # refresh pipeline runtime state (forecasts, journal, lock, candidate models)
 ml/data/refresh/
 # redundant 50MB wide export of table.parquet (app reads parquet)
