@@ -64,7 +64,7 @@ if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
 from _assistant import StationAssistant, get_df, ollama_status  # noqa: E402
-from _traj_dispatch import active_trajectory_forecast  # noqa: E402
+from _traj_dispatch import active_trajectory_forecast, traj_backend  # noqa: E402
 
 VERSION = "3.4.0"
 
@@ -279,6 +279,17 @@ _FLEET_SNAPSHOT = _ROOT / "outputs" / "fleet_forecast_snapshot.json"
 _fleet_cache: dict | None = None
 
 
+def _forward_backend() -> str:
+    """Runtime-selected pooled-30d backend (mirrors ``_model.forward_backend``
+    without importing streamlit). Defaults to ``dl`` like the registry."""
+    f = _ROOT / "data" / "refresh" / "runtime.json"
+    try:
+        v = json.loads(f.read_text()).get("forward_backend", "dl")
+    except (OSError, ValueError):
+        return "dl"
+    return str(v or "dl").lower()
+
+
 def _fleet() -> dict:
     """Fleet scan artifacts (11_fleet.py): forecast table + generation stamp.
 
@@ -472,6 +483,7 @@ def health():
         "ollama": ollama,
         "voice": {"mode": "client-side STT (Web Speech / on-device) → POST text to /assistant/chat"},
         "forecast_model": "trajectory (120x6h q05/q50/q95)",
+        "forecast_backend": traj_backend(),
     })
 
 
@@ -1089,7 +1101,9 @@ def list_models():
                         "detail": "models/*.json metadata missing"}), 503
     return jsonify({"models": [m for m in (info["pooled"], info["trajectory"]) if m],
                     "serving": {"forecast": "trajectory-v2",
-                                "benchmark_30d": "pooled-30d-xgb"}})
+                                "forecast_backend": traj_backend(),
+                                "benchmark_30d": "pooled-30d-xgb",
+                                "benchmark_backend": _forward_backend()}})
 
 
 @app.get("/forecast/<slug>")
