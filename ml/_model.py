@@ -209,13 +209,13 @@ def _forward_forecast_xgb(station: str) -> dict:
 
 
 def forward_backend() -> str:
-    """Runtime-selected surface-(b) backend: "xgb" (default) or "dl"."""
+    """Runtime-selected surface-(b) backend: "dl" (default) or "xgb"."""
     f = BASE / "data" / "refresh" / "runtime.json"
     try:
-        v = json.loads(f.read_text()).get("forward_backend", "xgb")
+        v = json.loads(f.read_text()).get("forward_backend", "dl")
     except (OSError, ValueError):
-        return "xgb"
-    return str(v or "xgb").lower()
+        return "dl"
+    return str(v or "dl").lower()
 
 
 @st.cache_data(ttl="15m", max_entries=48)

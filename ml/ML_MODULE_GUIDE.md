@@ -358,10 +358,11 @@ generalization.
 ### 7.1 Trajectory inference
 
 `_traj_dispatch.active_trajectory_forecast(station)` reads
-`data/refresh/runtime.json`. If `traj_backend=dl`, it attempts
-`_dl.trajectory_forecast`; an import/load/inference exception logs a fallback
-and uses `_trajectory.trajectory_forecast` (XGBoost). Missing/corrupt runtime
-configuration defaults to XGBoost. Both engines load aligned history, validate
+`data/refresh/runtime.json`. Missing/corrupt runtime configuration defaults to
+the DL (GRU) engine. If `traj_backend=dl`, it calls `_dl.trajectory_forecast`;
+an import/load/inference exception (e.g. torch not installed) logs a fallback and
+uses `_trajectory.trajectory_forecast` (XGBoost). Set `{"traj_backend": "xgb"}`
+to pin the incumbent engine. Both engines load aligned history, validate
 the anchor and model artifacts, build recent causal features, and return an
 error object with a reason when station data/artifacts/history are unusable.
 

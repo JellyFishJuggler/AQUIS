@@ -4,9 +4,10 @@ Reads ``data/refresh/runtime.json`` -> ``{"traj_backend": "xgb" | "dl"}`` and
 routes to the matching engine. Kept free of Flask/streamlit imports so it can be
 unit-tested in the torch-only environment (tests/test_trajectory_dispatch.py).
 
-The incumbent XGBoost engine remains the default and the fallback: if ``dl`` is
-selected but cannot load (e.g. torch absent), we log and serve xgb rather than
-fail the request.
+The DL (quantile GRU) engine is the default so a fresh clone serves it without
+any runtime.json. XGBoost remains the fallback: if ``dl`` cannot load (e.g. torch
+absent), we log and serve xgb rather than fail the request. Set
+``{"traj_backend": "xgb"}`` in runtime.json to pin the incumbent engine.
 """
 from __future__ import annotations
 
@@ -19,13 +20,13 @@ RUNTIME = ROOT / "data" / "refresh" / "runtime.json"
 
 
 def traj_backend() -> str:
-    """Active trajectory backend from runtime.json (default ``xgb``)."""
+    """Active trajectory backend from runtime.json (default ``dl``)."""
     try:
         if RUNTIME.exists():
-            return str(json.loads(RUNTIME.read_text()).get("traj_backend", "xgb")).lower()
+            return str(json.loads(RUNTIME.read_text()).get("traj_backend", "dl")).lower()
     except Exception:  # noqa: BLE001 - corrupt runtime file must not break the app
         pass
-    return "xgb"
+    return "dl"
 
 
 def active_trajectory_forecast(station: str):

@@ -623,16 +623,17 @@ def archive_validation(station: str, horizon_h: int = 720,
 def trajectory_forecast_safe(station: str) -> dict:
     """Call the EXISTING inference engine — a read-and-score path, no retraining.
 
-    ``_trajectory.trajectory_forecast`` builds features from the aligned table and
-    scores the frozen quantile models; it writes nothing. Returns a dict with an
+    Routes through ``_traj_dispatch`` so the app follows the same runtime backend
+    as the API (default ``dl`` GRU, falling back to the XGBoost engine when torch
+    or the DL artifacts are unavailable). Writes nothing. Returns a dict with an
     ``error`` key instead of raising when artifacts or data are missing.
     """
     if not station:
         return {"error": "no station selected", "reason": "no_station"}
     try:
         import importlib
-        traj = importlib.import_module("_trajectory")
-        return traj.trajectory_forecast(str(station))
+        dispatch = importlib.import_module("_traj_dispatch")
+        return dispatch.active_trajectory_forecast(str(station))
     except Exception as e:  # noqa: BLE001 — surface as a UI state
         return {"error": f"{type(e).__name__}: {e}", "reason": "inference_failed"}
 

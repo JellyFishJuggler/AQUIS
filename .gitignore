@@ -29,6 +29,7 @@ back-end/.env.*
 # Python
 ml/venv/
 ml/venv312/
+ml/.venv/
 **/__pycache__/
 *.py[cod]
 *.pyo
