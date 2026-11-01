@@ -74,46 +74,46 @@ SOURCE_LABELS = {
 }
 
 
-@st.cache_data(ttl="10m", max_entries=4)
+@st.cache_data(ttl="10m", max_entries=4, show_spinner=False)
 def load_manifest() -> dict:
     return json.loads((META / "manifest.json").read_text())
 
 
-@st.cache_data(ttl="10m", max_entries=4)
+@st.cache_data(ttl="10m", max_entries=4, show_spinner=False)
 def load_selected_gwl() -> pd.DataFrame:
     return pd.read_csv(META / "selected_gwl_stations.csv")
 
 
-@st.cache_data(ttl="10m", max_entries=4)
+@st.cache_data(ttl="10m", max_entries=4, show_spinner=False)
 def load_district_set() -> list[str]:
     return sorted({s for s in json.loads((META / "selected_districts.json").read_text())})
 
 
-@st.cache_data(ttl="10m", max_entries=4)
+@st.cache_data(ttl="10m", max_entries=4, show_spinner=False)
 def load_report() -> pd.DataFrame:
     return pd.read_csv(BASE / "outputs" / "correlation_report.csv")
 
 
-@st.cache_data(ttl="10m", max_entries=4)
+@st.cache_data(ttl="10m", max_entries=4, show_spinner=False)
 def load_lag_curves() -> pd.DataFrame:
     return pd.read_csv(BASE / "outputs" / "lag_curves.csv")
 
 
-@st.cache_data(ttl="10m", max_entries=2)
+@st.cache_data(ttl="10m", max_entries=2, show_spinner=False)
 def load_table() -> pd.DataFrame:
     df = pd.read_parquet(ALIGNED / "table.parquet")
     df["date"] = pd.to_datetime(df["date"], errors="coerce")
     return df.sort_values(["Station", "date"]).reset_index(drop=True)
 
 
-@st.cache_data(ttl="10m", max_entries=2)
+@st.cache_data(ttl="10m", max_entries=2, show_spinner=False)
 def load_table_6h() -> pd.DataFrame:
     df = pd.read_parquet(ALIGNED / "table_6h.parquet")
     df["time"] = pd.to_datetime(df["time"], errors="coerce")
     return df.sort_values(["Station", "time"]).reset_index(drop=True)
 
 
-@st.cache_data(ttl="10m", max_entries=2)
+@st.cache_data(ttl="10m", max_entries=2, show_spinner=False)
 def station_recency() -> pd.Series:
     """Most-recent reading per station (6h table), already cached on top of
     load_table_6h so the 3M-row groupby only runs once per TTL window."""

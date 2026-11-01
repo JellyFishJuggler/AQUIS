@@ -40,7 +40,7 @@ def load_quantile_models() -> dict:
     return out
 
 
-@st.cache_data(ttl="10m", max_entries=4)
+@st.cache_data(ttl="10m", max_entries=4, show_spinner=False)
 def load_quantile_calibration() -> dict:
     f = MODELS / "quantile_calibration.json"
     return json.loads(f.read_text()) if f.exists() else {}
@@ -51,95 +51,95 @@ def load_models() -> dict:
     return {"xgboost": load_xgb_model, "ridge": load_linear_model}
 
 
-@st.cache_data(ttl="10m", max_entries=2)
+@st.cache_data(ttl="10m", max_entries=2, show_spinner=False)
 def load_feature_config() -> dict:
     return json.loads((MODELS / "feature_config.json").read_text())
 
 
-@st.cache_data(ttl="10m", max_entries=2)
+@st.cache_data(ttl="10m", max_entries=2, show_spinner=False)
 def load_model_metrics() -> pd.DataFrame:
     return pd.read_csv(OUT / "model_metrics.csv")
 
 
-@st.cache_data(ttl="24h", max_entries=2)
+@st.cache_data(ttl="24h", max_entries=2, show_spinner=False)
 def load_predictions() -> pd.DataFrame:
     cols = ["Station", "District", "date", "time", "target", "gwl",
             "xgb", "ridge", "q05_lvl", "q95_lvl"]
     return pd.read_parquet(OUT / "predictions_2026.parquet", columns=cols)
 
 
-@st.cache_data(ttl="10m", max_entries=2)
+@st.cache_data(ttl="10m", max_entries=2, show_spinner=False)
 def load_importance() -> pd.DataFrame:
     return pd.read_csv(OUT / "feature_importance.csv")
 
 
-@st.cache_data(ttl="10m", max_entries=2)
+@st.cache_data(ttl="10m", max_entries=2, show_spinner=False)
 def load_coefficients() -> pd.DataFrame:
     return pd.read_csv(OUT / "feature_coefficients.csv")
 
 
-@st.cache_data(ttl="10m", max_entries=4)
+@st.cache_data(ttl="10m", max_entries=4, show_spinner=False)
 def load_honest_metrics() -> pd.DataFrame:
     return pd.read_csv(OUT / "honest_metrics.csv")
 
 
-@st.cache_data(ttl="10m", max_entries=4)
+@st.cache_data(ttl="10m", max_entries=4, show_spinner=False)
 def load_overlap_summary() -> dict:
     return json.loads((OUT / "overlap.json").read_text())
 
 
-@st.cache_data(ttl="10m", max_entries=4)
+@st.cache_data(ttl="10m", max_entries=4, show_spinner=False)
 def load_residual_acf() -> dict:
     return json.loads((OUT / "residual_acf.json").read_text())
 
 
-@st.cache_data(ttl="10m", max_entries=4)
+@st.cache_data(ttl="10m", max_entries=4, show_spinner=False)
 def load_residual_spatial() -> dict:
     return json.loads((OUT / "residual_spatial.json").read_text())
 
 
-@st.cache_data(ttl="10m", max_entries=4)
+@st.cache_data(ttl="10m", max_entries=4, show_spinner=False)
 def load_spatial_cv_metrics() -> pd.DataFrame:
     f = OUT / "spatial_cv_metrics.csv"
     return pd.read_csv(f) if f.exists() else pd.DataFrame()
 
 
-@st.cache_data(ttl="10m", max_entries=4)
+@st.cache_data(ttl="10m", max_entries=4, show_spinner=False)
 def load_ablation() -> pd.DataFrame:
     return pd.read_csv(OUT / "ablation.csv")
 
 
-@st.cache_data(ttl="15m", max_entries=4)
+@st.cache_data(ttl="15m", max_entries=4, show_spinner=False)
 def load_fleet_table() -> pd.DataFrame:
     f = OUT / "fleet_forecast.csv"
     return pd.read_csv(f) if f.exists() else pd.DataFrame()
 
 
-@st.cache_data(ttl="15m", max_entries=4)
+@st.cache_data(ttl="15m", max_entries=4, show_spinner=False)
 def load_fleet_district() -> pd.DataFrame:
     f = OUT / "fleet_district.csv"
     return pd.read_csv(f) if f.exists() else pd.DataFrame()
 
 
-@st.cache_data(ttl="15m", max_entries=4)
+@st.cache_data(ttl="15m", max_entries=4, show_spinner=False)
 def load_diagnostics() -> dict:
     f = OUT / "diagnostics.json"
     return json.loads(f.read_text()) if f.exists() else {}
 
 
-@st.cache_data(ttl="15m", max_entries=4)
+@st.cache_data(ttl="15m", max_entries=4, show_spinner=False)
 def load_diagnostics_permutation() -> pd.DataFrame:
     f = OUT / "diagnostics_permutation.csv"
     return pd.read_csv(f) if f.exists() else pd.DataFrame()
 
 
-@st.cache_data(ttl="15m", max_entries=4)
+@st.cache_data(ttl="15m", max_entries=4, show_spinner=False)
 def load_station_summary() -> pd.DataFrame:
     f = OUT / "station_summary.csv"
     return pd.read_csv(f) if f.exists() else pd.DataFrame()
 
 
-@st.cache_data(ttl="15m", max_entries=48)
+@st.cache_data(ttl="15m", max_entries=48, show_spinner=False)
 def _forward_forecast_xgb(station: str) -> dict:
     """Deterministic 30-day forward outlook for one station (same path as training).
 
@@ -218,7 +218,7 @@ def forward_backend() -> str:
     return str(v or "dl").lower()
 
 
-@st.cache_data(ttl="15m", max_entries=48)
+@st.cache_data(ttl="15m", max_entries=48, show_spinner=False)
 def forward_forecast(station: str) -> dict:
     """Dispatch to the runtime-selected backend, falling back to the incumbent
     XGB/Ridge path if the DL backend is unavailable or unloadable."""
