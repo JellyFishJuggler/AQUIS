@@ -7,7 +7,10 @@ requests
 flask
 flask-cors
 scipy
-xgboost
+# Pinned to 2.x: the tracked joblib artifacts (models/xgb_multihorizon.joblib,
+# models/xgb_q*.joblib) were pickled by XGBoost 2.x. XGBoost 3.x cannot unpickle
+# them ("input stream corrupted"), which breaks the XGB fallback path.
+xgboost>=2.1,<3
 joblib
 # GRU (trajectory v2 DL) runtime — required for the default "dl" backend in
 # ml/_traj_dispatch.py. Needs Python 3.12/3.13 (no 3.15 wheels yet). If your
