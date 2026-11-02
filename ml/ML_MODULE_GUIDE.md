@@ -27,6 +27,8 @@ when an older document disagrees.
 | Is there an active verified refresh? | The local `state.json` has a last refresh timestamp on 2026-10-12 but no success value or generated model version. Verification is called by the successful publish cycle, but this snapshot does not confirm a successful cycle. |
 | Where should I look for current evidence? | `outputs/pooled_dl_eval.json`, `outputs/traj_backtest_summary*.json`, `outputs/traj_paired_ci_dl_vs_xgb.json`, `models/model_metadata.json`, `data/refresh/state.json`, and `data/refresh/runtime.json`. Always check the artifact's date and protocol. |
 
+For an evaluation of the saved DL-GRU results against NSE/R², station-range-normalized RMSE, and absolute-depth heuristics, see [`outputs/benchmark_2026/model_threshold_assessment.md`](outputs/benchmark_2026/model_threshold_assessment.md). It separates the pooled 30-day benchmark from the multi-horizon trajectory backtest and records where saved row-level predictions are unavailable.
+
 ## 2. Scope and architecture
 
 `ml` is a Python package-like directory, but its numbered scripts are often run
@@ -94,7 +96,7 @@ input snapshot.
 
 | Source | Script / artifact | What it contributes | Limits / use |
 |---|---|---|---|
-| Open-Meteo | `20_openmeteo_fetch.py`; `data/cfs/openmeteo_weather_daily.parquet` | District-centroid daily weather/rain archive and short-range forecast. Refresh config requests up to 16 forecast days. | Future values are forcing estimates; daily values are spread across the 6-hour grid. Archive values are suitable for history, but realized future archive values must not be used as point-in-time forecast features in historical backtests. |
+| Open-Meteo | `20_openmeteo_fetch.py`; `data/cfs/openmeteo_weather_daily.parquet` | District-centroid daily weather/rain, FAO-56 Penman–Monteith reference ET₀, and short-range forecast. Initial fetch defaults to 365 historical days; refresh merges a rolling 400-day fetch into the retained archive and requests up to 16 forecast days. | ET₀ is a modeled reference-grass estimate, not actual ET. The water-balance page may show district P − ET₀ as a climate surplus/deficit indicator, not recharge. Neither ET₀ nor P − ET₀ is a groundwater forecast feature. Future values are forcing estimates; do not use realized archive values as point-in-time historical forecast features. |
 | CWC/FMIS river bulletin | `18_cwc_river_forecast.py`; `data/cfs/river_forecast_cwc.parquet` | Parsed river forecasts, up to a short forecast window (currently 7-day logic in future-driver builder). | Used only where a matching district/gauge forecast exists. Its river-level change is applied over a station baseline rather than copying another gauge's raw datum. |
 | ISRIC SoilGrids 2.0 | `07_soil.py`; `data/soil/soil_stations.csv` | Static soil texture and bulk density from station coordinates. | Thickness-weighted 0–30 cm aggregation; fetched as supplementary data. Soil features are gated out of the shipped main model after degrading validation. |
 | ISRO Bhuvan LULC 50K | `08_lulc.py`; `data/meta/lulc_long.csv`, `data/soil/lulc_district.csv` | District land-cover percentages for two historical cycles; the 2011–12 cycle creates static district features. | Exploratory only; static shares are gated out of the shipped model after no benefit/degradation. API key is read from the repository `.env`; do not put secrets in this guide. |

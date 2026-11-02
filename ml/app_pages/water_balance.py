@@ -61,6 +61,29 @@ def _api_curves(station: str, taus: tuple[int, ...]) -> pd.DataFrame:
     return frame[frame.index >= idx.max() - pd.Timedelta(days=730)]
 
 
+@st.cache_data(ttl="10m", show_spinner=False)
+def _district_climate(district: str) -> pd.DataFrame:
+    """Daily Open-Meteo district-centroid rain and reference ET0, if fetched."""
+    path = D.DATA / "cfs" / "openmeteo_weather_daily.parquet"
+    weather = D.read_parquet_safe(path)
+    required = {"District", "date", "rain_mm", "et0_mm"}
+    if weather is None or not required.issubset(weather.columns):
+        return pd.DataFrame()
+    weather = weather[weather["District"].astype(str).str.casefold()
+                      == str(district).casefold()].copy()
+    if weather.empty:
+        return pd.DataFrame()
+    weather["date"] = pd.to_datetime(weather["date"], errors="coerce").dt.normalize()
+    for col in ("rain_mm", "et0_mm"):
+        weather[col] = pd.to_numeric(weather[col], errors="coerce")
+    weather = weather.dropna(subset=["date", "rain_mm", "et0_mm"])
+    today_utc = pd.Timestamp.now(tz="UTC").tz_localize(None).normalize()
+    weather = weather[weather["date"] < today_utc]
+    weather = weather.sort_values("date").drop_duplicates("date", keep="last")
+    weather["p_minus_et0_mm"] = weather["rain_mm"] - weather["et0_mm"]
+    return weather.reset_index(drop=True)
+
+
 def _tile(v, unit="", fmt="{:.1f}") -> str:
     if v is None or (isinstance(v, float) and not np.isfinite(v)):
         return "—"
@@ -126,6 +149,40 @@ if "rain_30d_deficit_pct" in rb:
               help="Median 30-day total for this window historically: "
                    f"{rb.get('rain_30d_median_mm', float('nan')):.0f} mm")
 
+# ---- district climate demand proxy -----------------------------------------
+st.divider()
+st.subheader("District climate water-demand proxy")
+district = str(uni.loc[uni["Station"].astype(str) == station, "District"].iloc[0])
+climate = _district_climate(district)
+if climate.empty:
+    st.info(
+        "Reference ET₀ has been added to the Open-Meteo fetch. The saved weather "
+        "artifact does not contain `et0_mm` yet; run the ML weather refresh to populate it."
+    )
+else:
+    latest = climate["date"].max()
+    window = climate[climate["date"] >= latest - pd.Timedelta(days=29)]
+    if len(window) < 24:
+        st.info("Not enough complete district weather days to summarize a 30-day window.")
+    else:
+        rain30 = float(window["rain_mm"].sum())
+        et030 = float(window["et0_mm"].sum())
+        cols = st.columns(3)
+        cols[0].metric("District rain · 30 d", f"{rain30:.1f} mm")
+        cols[1].metric("Reference ET₀ · 30 d", f"{et030:.1f} mm")
+        cols[2].metric("P − ET₀ · 30 d", f"{rain30 - et030:+.1f} mm")
+        recent = climate[climate["date"] >= latest - pd.Timedelta(days=364)]
+        st.line_chart(
+            recent.set_index("date")[["rain_mm", "et0_mm", "p_minus_et0_mm"]],
+            x_label="Date", y_label="Daily total (mm)",
+            alt="District-centroid daily precipitation, reference evapotranspiration, and their difference",
+        )
+        st.caption(
+            f"Open-Meteo modeled weather at the {district} district centroid; latest "
+            f"complete day {latest:%Y-%m-%d}. P − ET₀ is a climatic surplus/deficit "
+            "indicator, not effective rainfall, aquifer recharge, or a closed water balance."
+        )
+
 # ---- antecedent precipitation index ----------------------------------------
 st.divider()
 st.subheader("Antecedent precipitation index")
@@ -171,14 +228,15 @@ if len(both) > 60:
 # ---- honest gaps -----------------------------------------------------------
 st.divider()
 st.warning(
-    "**This is a rainfall-balance view, not a true water balance.** Two terms are "
-    "missing from the data in this repository, and both matter:\n\n"
-    "* **Evapotranspiration (ET₀)** — never computed anywhere in the ML pipeline, so "
-    "rainfall-minus-ET₀ (effective recharge) cannot be shown. Open-Meteo already "
-    "retrieves the radiation, temperature, humidity and wind that FAO-56 needs, but the "
-    "fetch aggregates hourly to daily and keeps only a 365-day window.\n"
+    "**This page is still not a closed groundwater water balance.** It can show "
+    "rainfall condition and, when the weather refresh has populated it, district-level "
+    "Open-Meteo reference ET₀ and P − ET₀. These are climate indicators only: ET₀ is "
+    "not actual evapotranspiration, and P − ET₀ is not effective rainfall or aquifer "
+    "recharge because runoff, infiltration, soil storage, and other fluxes are not "
+    "modeled here.\n\n"
     "* **Groundwater extraction** — no pumpage dataset exists "
     "(`data/soil/cgwb_extraction_district.csv` is absent). Pumping is the largest "
     "unobserved term in any well's balance.\n\n"
-    "Until those exist, treat this page as *recharge condition*, not a closed balance."
+    "Treat this page as *recharge condition and atmospheric demand context*, not a "
+    "closed water balance."
 )

@@ -287,7 +287,7 @@ results: [`../docs/ml.md`](../docs/ml.md).
 | Paired CI | `35_traj_paired_ci.py` | `outputs/traj_paired_ci_dl_vs_xgb.json` (per-horizon DL-vs-XGB station bootstrap) |
 | Honest backtest | `32_backtest_traj.py [n_stations]` (`TRAJ_MODEL=xgb\|dl`) | `outputs/traj_backtest_metrics{,_dl}.csv`, `traj_backtest_summary{,_dl}.json`, `models/traj{,_dl}_calibration.json` |
 | Reliability tables | `33_traj_reliability.py` | `models/traj_reliability.json` (bucket rules + evidence weights) |
-| Weather | `20_openmeteo_fetch.py` | `data/cfs/openmeteo_weather_daily.parquet` (37 districts, 365 d history + 16 d forecast) |
+| Weather | `20_openmeteo_fetch.py` | `data/cfs/openmeteo_weather_daily.parquet` (district daily weather, precipitation, and FAO-56 reference ET₀; initial fetch defaults to 365 d history and refresh merges a rolling 400 d plus 16 d forecast into the retained archive) |
 | River | `18_cwc_river_forecast.py` | `data/cfs/river_forecast_cwc.parquet` (CWC 3-day forecasts, per district) |
 
 - **Backtest artifact (2026):** anchors are every 14 d and metrics score point

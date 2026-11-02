@@ -37,10 +37,12 @@ model *which datum this is*. Modelling the change makes persistence
 (`no change`) the natural benchmark and removes the datum from the learning
 problem. The anchor reading is therefore always an **input, never a prediction**.
 
-**Two engines ship today.** A pooled single-horizon XGBoost supplies the
-+30-day benchmark used by the fleet scan and the assistant; a shared
-direct multi-horizon XGBoost ("trajectory v2") supplies the genuine 120-step
-curve with quantile bands that the forecast surface shows.
+**Two quantile GRU forecast surfaces are selected in the local runtime.** The
+pooled daily GRU predicts one +30-day endpoint; the trajectory GRU predicts
+120 direct six-hourly horizons with q05/q50/q95 bands. XGBoost remains the
+benchmark, and the trajectory dispatcher uses it only when runtime explicitly
+selects XGBoost. Backend selection describes the local runtime configuration;
+it is not a model-promotion claim.
 """
     )
 with right:
@@ -65,37 +67,52 @@ with right:
         "         non-overlap backtest)\n"
         "        |\n"
         "        v\n"
-        "33      confidence + calibration",
+        "34/36   train trajectory / pooled GRU\n"
+        "        v\n"
+        "32/37   backtest + compare",
         language="text",
     )
 
 # ---- deployed models ---------------------------------------------------
 st.subheader("Deployed models")
 cfg = D.feature_config()
-tcfg = D.traj_config()
-cal = D.traj_calibration()
-rel = D.traj_reliability()
+tcfg = D.traj_dl_config()
+pcfg = D.pooled_dl_config()
+cal = D.traj_dl_calibration()
+rel = D.traj_dl_reliability()
 
-if cfg is None and tcfg is None:
+if cfg is None and tcfg is None and pcfg is None:
     st.warning("No model configuration artifacts found under `ml/models/`.")
 else:
     rows = []
     if tcfg:
         rows.append({
-            "engine": "trajectory v2 (Forecast surface)",
-            "artifact": "models/traj_xgb_q{05,50,95}.json",
+            "engine": "Trajectory quantile GRU (active forecast surface)",
+            "artifact": "models/traj_dl.pt",
             "target": tcfg.get("target", "—"),
             "horizon": f"direct 1..{tcfg.get('max_h', '—')} steps "
                        f"({int(tcfg.get('max_h', 0)) * 6 // 24} d), no recursion",
-            "features": f"{len(tcfg.get('feature_cols', []))}",
+            "features": f"{len(tcfg.get('feature_cols', []))} sequence features · "
+                        f"hidden {tcfg.get('hidden', '—')}",
             "trained_at": tcfg.get("trained_at", "—"),
+        })
+    if pcfg:
+        rows.append({
+            "engine": "Pooled daily quantile GRU (active forward surface)",
+            "artifact": "models/pooled_dl.pt",
+            "target": pcfg.get("target", "—"),
+            "horizon": "single endpoint (+30 d)",
+            "features": f"{len(pcfg.get('feature_cols', []))} features · "
+                        f"hidden {pcfg.get('hidden', '—')} · "
+                        f"{len(pcfg.get('seeds', []))}-seed ensemble",
+            "trained_at": pcfg.get("trained_at", "—"),
         })
     if cfg:
         rows.append({
-            "engine": "pooled 30-day (benchmark / fleet / assistant)",
+            "engine": "Pooled XGBoost (benchmark / fallback)",
             "artifact": "models/xgb_multihorizon.joblib",
             "target": cfg.get("target", "—"),
-            "horizon": "single, 120 steps (30 d)",
+            "horizon": "single endpoint (+30 d)",
             "features": f"{len(cfg.get('num_cols', []))} numeric + 2 ordinals",
             "trained_at": cfg.get("trained_at", "—"),
         })
@@ -114,21 +131,29 @@ else:
 st.subheader("Serving state")
 rt = D.runtime_json()
 meta = D.refresh_meta()
-s1, s2, s3 = st.columns(3)
+backend = D.trajectory_backend_status()
+s1, s2, s3, s4 = st.columns(4)
 if rt:
-    s1.metric("feature_mode", str(rt.get("feature_mode", "—")))
-    s2.metric("model_version", str(rt.get("model_version") or "unset"))
+    s1.metric("Trajectory requested", str(rt.get("traj_backend", "dl")).upper())
+    s2.metric("Trajectory load", "degraded" if backend.get("degraded") else "ready")
+    s3.metric("Pooled forward requested", str(rt.get("forward_backend", "dl")).upper())
 else:
-    s1.info("`data/refresh/runtime.json` absent")
+    s1.metric("Trajectory requested", "DL (default)")
+    s2.metric("Trajectory load", "degraded" if backend.get("degraded") else "ready")
+    s3.metric("Pooled forward requested", "DL (default)")
 if meta:
-    s3.metric("data_status", str(meta.get("data_status", "—")))
+    s4.metric("Data status", str(meta.get("data_status", "—")))
 else:
-    s3.info("`data/refresh/meta.json` absent")
+    s4.info("`data/refresh/meta.json` absent")
+if backend.get("degraded"):
+    st.error(f"Configured trajectory backend is unavailable: {backend.get('error', 'unknown error')}")
+else:
+    st.caption(f"Trajectory dispatcher resolved **{str(backend.get('backend', 'unknown')).upper()}** for this app process.")
 if rt and rt.get("feature_mode") == "flat":
     st.caption(
-        "`feature_mode = flat` means the forecast step replicates the anchor row "
-        "across all horizons; the horizon-aware `future` mode is gated behind a "
-        "backtest and is not active."
+        "`feature_mode = flat` applies to the XGBoost trajectory feature builder. "
+        "The active GRU uses its observed 120-step history and direct, "
+        "horizon-conditioned output heads."
     )
 
 # ---- calibration at a glance ------------------------------------------
@@ -142,13 +167,63 @@ if cal:
         "n anchors": cal.get("n", []),
     })
     st.dataframe(dfc, width="stretch", hide_index=True)
-    st.warning(
-        "**Protocol caveat.** In the current artifact the widening `s` is fitted "
-        "on the same anchor set whose coverage it reports, so "
-        "`calibrated coverage = 0.90` is a description of the fit, not an "
-        "independent validation. Treat it as in-sample until the calibration "
-        "and reporting anchors are separated."
+    st.caption(
+        "For the trajectory GRU snapshot, widening is fitted on alternating "
+        "anchors and coverage is reported on the disjoint complement. This is "
+        "a within-period calibration check, not a guarantee for future seasons."
     )
+
+# ---- GRU evaluation snapshot ------------------------------------------
+st.subheader("DL-GRU evaluation snapshot")
+pool_eval = D.pooled_dl_eval()
+traj_eval = D.traj_dl_backtest_summary()
+pool_col, traj_col = st.columns(2)
+with pool_col:
+    st.markdown("**Pooled daily GRU · one 30-day endpoint**")
+    if pool_eval and pool_eval.get("DL"):
+        dl = pool_eval["DL"]
+        persist = pool_eval.get("persistence", {})
+        paired = dl.get("paired_vs_persist", {})
+        ci = paired.get("ci", [])
+        with st.container(border=True):
+            st.metric("RMSE", f"{dl.get('rmse', float('nan')):.3f} m",
+                      delta=f"vs persistence {persist.get('rmse', float('nan')):.3f} m")
+            st.caption(
+                f"MAE {dl.get('mae', float('nan')):.3f} m · "
+                f"{dl.get('n', 0):,} stride rows · {dl.get('n_stations', 0):,} stations · "
+                f"direction accuracy {dl.get('dir_acc', float('nan')):.1%} · "
+                f"90% interval coverage {pool_eval.get('DL_coverage_90', float('nan')):.1%}"
+            )
+            if len(ci) == 2:
+                st.caption(
+                    f"Paired station-bootstrap DL/persistence RMSE ratio "
+                    f"{paired.get('ratio', float('nan')):.3f} "
+                    f"(95% CI {ci[0]:.3f}–{ci[1]:.3f})."
+                )
+            st.caption("Saved 2026 stride evaluation snapshot; aggregate JSON only, with no row-level pooled-GRU predictions.")
+    else:
+        st.info("`outputs/pooled_dl_eval.json` is unavailable.")
+
+with traj_col:
+    st.markdown("**Trajectory GRU · 120 six-hourly horizons**")
+    if traj_eval:
+        rmse = traj_eval.get("30d_rmse_traj")
+        persist = traj_eval.get("30d_rmse_persistence")
+        with st.container(border=True):
+            if rmse is not None and persist is not None:
+                st.metric("30-day RMSE", f"{rmse:.3f} m",
+                          delta=f"vs persistence {persist:.3f} m")
+            st.caption(
+                f"{traj_eval.get('anchors_scored', 0):,} anchors · "
+                f"{traj_eval.get('stations_sampled', 0):,} sampled stations · "
+                f"direction accuracy {traj_eval.get('30d_dir_acc', float('nan')):.1%} · "
+                f"calibrated 90% coverage {traj_eval.get('30d_coverage_calibrated', float('nan')):.1%}"
+            )
+            if not traj_eval.get("promote_trajectory", True):
+                st.warning("Trajectory promotion gate is not passed; short-horizon checks remain unmet.")
+            st.caption("Saved backtest snapshot; do not compare its RMSE directly with the pooled daily GRU protocol.")
+    else:
+        st.info("`outputs/traj_backtest_summary_dl.json` is unavailable.")
 
 # ---- artifact inventory ------------------------------------------------
 st.subheader("Artifact inventory")

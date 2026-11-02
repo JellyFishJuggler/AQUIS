@@ -4,9 +4,10 @@ Sources (both free, no API key):
   * Archive API  https://archive-api.open-meteo.com/v1/archive   (ERA5-downscaled, 1940+)
   * Forecast API https://api.open-meteo.com/v1/forecast          (GFS/ICON/CFS, up to 16 days)
 
-Hourly -> daily per district centroid: rain_mm (sum), temp_c / humidity_pct /
-pressure_hpa / wind_kmh / solar_wm2 (mean). Mirrors AQUIS NUM_COLS semantics so
-rain_1d/7d/30d and other rolling features can be rebuilt downstream.
+Hourly -> daily per district centroid: rain_mm and et0_mm (sums), temp_c /
+humidity_pct / pressure_hpa / wind_kmh / solar_wm2 (means). ET0 is Open-Meteo's
+FAO-56 Penman-Monteith reference evapotranspiration estimate, not measured actual
+evapotranspiration or groundwater recharge.
 
 Output: data/cfs/openmeteo_weather_daily.parquet  (one row per date x District)
         data/meta/openmeteo_meta.json            (source/model/run metadata)
@@ -31,7 +32,8 @@ META.mkdir(parents=True, exist_ok=True)
 ARCHIVE = "https://archive-api.open-meteo.com/v1/archive"
 FORECAST = "https://api.open-meteo.com/v1/forecast"
 HOURLY = ("precipitation,temperature_2m,relative_humidity_2m,"
-          "surface_pressure,wind_speed_10m,shortwave_radiation")
+          "surface_pressure,wind_speed_10m,shortwave_radiation,"
+          "et0_fao_evapotranspiration")
 RETRIES = 2
 TIMEOUT = 30
 MODEL_ARCHIVE = "era5_seamless"
@@ -39,6 +41,8 @@ WORKERS = 8
 
 DAILY_VARS = {
     "rain_mm": ("precipitation", "sum"),
+    # Open-Meteo returns hourly FAO-56 ET0 amounts in mm; sum to daily total.
+    "et0_mm": ("et0_fao_evapotranspiration", "sum"),
     "temp_c": ("temperature_2m", "mean"),
     "humidity_pct": ("relative_humidity_2m", "mean"),
     "pressure_hpa": ("surface_pressure", "mean"),
@@ -74,7 +78,8 @@ def _series_to_df(payload: dict, prefix: str) -> pd.DataFrame:
                        "rain_mm": h["precipitation"], "temp_c": h["temperature_2m"],
                        "humidity_pct": h["relative_humidity_2m"],
                        "pressure_hpa": h["surface_pressure"],
-                       "wind_kmh": h["wind_speed_10m"], "solar_wm2": h["shortwave_radiation"]})
+                       "wind_kmh": h["wind_speed_10m"], "solar_wm2": h["shortwave_radiation"],
+                       "et0_mm": h.get("et0_fao_evapotranspiration")})
     df[prefix] = pd.to_datetime(payload["utc_offset_seconds"], unit="s").tz_localize("UTC")
     return df
 
@@ -82,18 +87,30 @@ def _series_to_df(payload: dict, prefix: str) -> pd.DataFrame:
 def fetch_district(lat: float, lon: float, start: str, end: str,
                    fwd_days: int) -> pd.DataFrame:
     """Return one date x 6-var daily frame for a point, history + forecast."""
+    # Keep complete historical days in the archive and use the live forecast
+    # from today onward. This avoids replacing today's full-day forecast with a
+    # partial, already-realized archive day.
+    today_utc = dt.datetime.now(dt.timezone.utc).date()
+    yesterday = (today_utc - dt.timedelta(days=1)).isoformat()
+    hist_end = min(pd.Timestamp(end).date().isoformat(), yesterday)
     hist = _get(f"{ARCHIVE}?latitude={lat}&longitude={lon}"
-                f"&start_date={start}&end_date={end}&hourly={HOURLY}&models={MODEL_ARCHIVE}")
+                f"&start_date={start}&end_date={hist_end}&hourly={HOURLY}&models={MODEL_ARCHIVE}")
     src = _get(f"{FORECAST}?latitude={lat}&longitude={lon}"
                f"&hourly={HOURLY}&forecast_days={fwd_days}&timezone=UTC")
-    df = pd.concat([_series_to_df(hist, "src_hist"), _series_to_df(src, "src_fwd")])
+    hist_df = _series_to_df(hist, "src_hist")
+    fwd_df = _series_to_df(src, "src_fwd")
+    # Archive/reanalysis is used only for complete past days; today's and later
+    # values come only from the forecast run.
+    hist_df = hist_df[hist_df["time"].dt.date < today_utc]
+    fwd_df = fwd_df[fwd_df["time"].dt.date >= today_utc]
+    df = pd.concat([hist_df, fwd_df])
     df = df.dropna(subset=["rain_mm"]).copy()
     df["date"] = df["time"].dt.normalize()
-    d = df.groupby("date")[["rain_mm", "temp_c", "humidity_pct",
+    d = df.groupby("date")[["rain_mm", "et0_mm", "temp_c", "humidity_pct",
                             "pressure_hpa", "wind_kmh", "solar_wm2"]].agg(
-        {"rain_mm": "sum", "temp_c": "mean", "humidity_pct": "mean",
+        {"rain_mm": "sum", "et0_mm": "sum", "temp_c": "mean", "humidity_pct": "mean",
          "pressure_hpa": "mean", "wind_kmh": "mean", "solar_wm2": "mean"})
-    d = d.reset_index().drop_duplicates("date")
+    d = d.reset_index().drop_duplicates("date", keep="last")
     d["District"] = None
     d["source"] = None
     return d

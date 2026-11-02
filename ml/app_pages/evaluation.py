@@ -36,6 +36,26 @@ def _tbs() -> dict | None:
 
 
 @st.cache_data(ttl="10m", show_spinner=False)
+def _pooled_dl_eval() -> dict | None:
+    return D.pooled_dl_eval()
+
+
+@st.cache_data(ttl="10m", show_spinner=False)
+def _traj_dl_summary() -> dict | None:
+    return D.traj_dl_backtest_summary()
+
+
+@st.cache_data(ttl="10m", show_spinner=False)
+def _traj_dl_metrics() -> pd.DataFrame | None:
+    return D.traj_dl_backtest_metrics()
+
+
+@st.cache_data(ttl="10m", show_spinner=False)
+def _traj_dl_paired_ci() -> dict | None:
+    return D.traj_dl_paired_ci()
+
+
+@st.cache_data(ttl="10m", show_spinner=False)
 def _scv() -> pd.DataFrame | None:
     return D.spatial_cv_metrics()
 
@@ -96,9 +116,102 @@ correlated; neither row count should be read as a count of independent studies.
     )
 
 # =====================================================================
+# DL-GRU results
+# =====================================================================
+st.header("DL-GRU results")
+st.caption(
+    "The runtime selects quantile GRU for both forecast surfaces. These are "
+    "saved evaluation snapshots; the two protocols are reported separately."
+)
+pool_dl = _pooled_dl_eval()
+traj_dl = _traj_dl_summary()
+traj_ci = _traj_dl_paired_ci()
+dl_pool_col, dl_traj_col = st.columns(2)
+
+with dl_pool_col:
+    st.subheader("Pooled daily GRU · 30-day endpoint")
+    if pool_dl and pool_dl.get("DL"):
+        m = pool_dl["DL"]
+        persistence = pool_dl.get("persistence", {})
+        vs_persist = m.get("paired_vs_persist", {})
+        ci = vs_persist.get("ci", [])
+        p1, p2, p3 = st.columns(3)
+        p1.metric("DL-GRU RMSE", f"{m.get('rmse', float('nan')):.3f} m")
+        p2.metric("Persistence RMSE", f"{persistence.get('rmse', float('nan')):.3f} m")
+        p3.metric("DL-GRU MAE", f"{m.get('mae', float('nan')):.3f} m")
+        st.caption(
+            f"{m.get('n', 0):,} stride rows across {m.get('n_stations', 0):,} stations · "
+            f"direction accuracy {m.get('dir_acc', float('nan')):.1%} · "
+            f"90% interval coverage {pool_dl.get('DL_coverage_90', float('nan')):.1%} "
+            f"(raw {pool_dl.get('DL_coverage_raw', float('nan')):.1%})."
+        )
+        if len(ci) == 2:
+            st.caption(
+                f"Paired station-bootstrap RMSE ratio vs persistence: "
+                f"{vs_persist.get('ratio', float('nan')):.3f} "
+                f"(95% CI {ci[0]:.3f}–{ci[1]:.3f}); "
+                f"beats baseline in saved artifact: {bool(vs_persist.get('beats'))}."
+            )
+        st.info(
+            "This aggregate artifact has no row-level pooled-GRU predictions, so "
+            "it cannot be added to the station-level paired chart above."
+        )
+    else:
+        st.info("`outputs/pooled_dl_eval.json` is unavailable.")
+
+with dl_traj_col:
+    st.subheader("Trajectory GRU · 6-hourly direct horizons")
+    if traj_dl:
+        rmse = traj_dl.get("30d_rmse_traj")
+        persist = traj_dl.get("30d_rmse_persistence")
+        t1, t2, t3 = st.columns(3)
+        t1.metric("30-day RMSE", f"{rmse:.3f} m" if rmse is not None else "—")
+        t2.metric("Persistence RMSE", f"{persist:.3f} m" if persist is not None else "—")
+        coverage = traj_dl.get("30d_coverage_calibrated")
+        t3.metric("Calibrated coverage", f"{coverage:.1%}" if coverage is not None else "—")
+        gain = (100 * (persist - rmse) / persist
+                if rmse is not None and persist else None)
+        st.caption(
+            f"{traj_dl.get('anchors_scored', 0):,} anchors · "
+            f"{traj_dl.get('stations_sampled', 0):,} sampled stations · "
+            f"30-day direction accuracy {traj_dl.get('30d_dir_acc', float('nan')):.1%}"
+            + (f" · RMSE skill vs persistence {gain:.2f}%" if gain is not None else "")
+        )
+        if not traj_dl.get("promote_trajectory", True):
+            st.warning("Promotion gate is not passed: the trajectory model did not meet the short-horizon checks.")
+        st.caption(
+            "Calibration uses alternating anchors for interval widening and the "
+            "disjoint complement for reported coverage. This saved backtest is "
+            "distinct from the pooled daily-GRU evaluation."
+        )
+    else:
+        st.info("`outputs/traj_backtest_summary_dl.json` is unavailable.")
+
+if traj_ci and traj_ci.get("per_horizon"):
+    st.subheader("Trajectory GRU paired against trajectory XGBoost")
+    ci_rows = []
+    for row in traj_ci["per_horizon"]:
+        h = int(row.get("horizon_h", 0))
+        ci_rows.append({
+            "Horizon": f"{h / 24:g} d" if h and h % 24 == 0 else f"{h} h",
+            "Rows": row.get("n"),
+            "GRU RMSE (m)": row.get("rmse_dl"),
+            "XGBoost RMSE (m)": row.get("rmse_xgb"),
+            "GRU/XGB RMSE ratio": row.get("ratio"),
+            "95% CI": f"[{row.get('ratio_lo', float('nan')):.3f}, {row.get('ratio_hi', float('nan')):.3f}]",
+            "GRU wins (CI)": bool(row.get("dl_beats_xgb")),
+        })
+    st.dataframe(pd.DataFrame(ci_rows), width="stretch", hide_index=True)
+    st.caption(
+        "Ratios below 1 favor GRU. The saved paired bootstrap reports a 30-day "
+        f"win: {bool(traj_ci.get('dl_beats_xgb_30d'))}; it does not show a win "
+        f"at every horizon: {bool(traj_ci.get('dl_beats_xgb_all_horizons'))}."
+    )
+
+# =====================================================================
 # paired 2026 actuals vs forecasts
 # =====================================================================
-st.header("2026 actual values vs forecasts — paired targets")
+st.header("Historical pooled XGBoost 2026 predictions — paired targets")
 preds_2026 = _predictions_2026()
 if preds_2026 is None:
     st.info(
@@ -135,10 +248,11 @@ else:
     shown["error"] = shown["forecast"] - shown["actual"]
 
     st.caption(
-        "Basis: saved pooled-model 30-day test predictions. Actual target and "
+        "Basis: saved pooled XGBoost 30-day test predictions. Actual target and "
         "forecast are taken from the same artifact row; only pairs where both are "
         "finite are scored. The target date is anchor time + 30 days on the aligned "
-        "6-hour grid."
+        "6-hour grid. The saved pooled-GRU result is shown separately above because "
+        "its artifact contains aggregate metrics, not row-level predictions."
     )
     st.warning(
         "These saved 2026 predictions predate the target-time purge now present in "
@@ -384,7 +498,7 @@ else:
 # =====================================================================
 # 2. trajectory backtest
 # =====================================================================
-st.header("2 · Trajectory v2 — per-horizon backtest")
+st.header("2 · XGBoost trajectory baseline — per-horizon backtest")
 tb = _tb()
 tbs = _tbs()
 if tb is None:

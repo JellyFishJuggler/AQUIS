@@ -6,7 +6,7 @@ writes, or generates a forecast. It only:
   * reads artifacts that already exist on disk (``models/``, ``outputs/``,
     ``data/features*``, ``data/aligned/``, ``data/refresh/``), and
   * optionally *calls* the existing inference engine
-    (``_trajectory.trajectory_forecast``) when the caller explicitly asks for it
+    (the runtime dispatcher) when the caller explicitly asks for it
     via :func:`trajectory_forecast_safe`, which is a pure read-and-score path.
 
 Every loader returns ``None`` (or an empty frame) when its artifact is missing,
@@ -59,6 +59,12 @@ ARTIFACTS: list[tuple[str, Path, str]] = [
     ("traj_config.json (trajectory v2 schema)", MODELS / "traj_config.json", "json"),
     ("traj_calibration.json (per-horizon widening)", MODELS / "traj_calibration.json", "json"),
     ("traj_reliability.json (confidence tables)", MODELS / "traj_reliability.json", "json"),
+    ("traj_dl_config.json (trajectory GRU schema)", MODELS / "traj_dl_config.json", "json"),
+    ("traj_dl_calibration.json (trajectory GRU intervals)", MODELS / "traj_dl_calibration.json", "json"),
+    ("traj_dl_reliability.json (trajectory GRU confidence)", MODELS / "traj_dl_reliability.json", "json"),
+    ("traj_dl.pt (trajectory GRU weights)", MODELS / "traj_dl.pt", "bin"),
+    ("pooled_dl_config.json (pooled GRU schema)", MODELS / "pooled_dl_config.json", "json"),
+    ("pooled_dl.pt (pooled GRU weights)", MODELS / "pooled_dl.pt", "bin"),
     ("quantile_calibration.json (pooled interval)", MODELS / "quantile_calibration.json", "json"),
     # weights (existence only — the app does not load these unless it scores)
     ("xgb_multihorizon.joblib", MODELS / "xgb_multihorizon.joblib", "bin"),
@@ -89,6 +95,10 @@ ARTIFACTS: list[tuple[str, Path, str]] = [
     # trajectory v2 evaluation outputs
     ("traj_backtest_metrics.csv (per-horizon)", OUT / "traj_backtest_metrics.csv", "table"),
     ("traj_backtest_summary.json", OUT / "traj_backtest_summary.json", "json"),
+    ("traj_backtest_metrics_dl.csv (trajectory GRU)", OUT / "traj_backtest_metrics_dl.csv", "table"),
+    ("traj_backtest_summary_dl.json (trajectory GRU)", OUT / "traj_backtest_summary_dl.json", "json"),
+    ("traj_paired_ci_dl_vs_xgb.json (paired GRU comparison)", OUT / "traj_paired_ci_dl_vs_xgb.json", "json"),
+    ("pooled_dl_eval.json (pooled GRU evaluation)", OUT / "pooled_dl_eval.json", "json"),
     # external baseline
     ("arima_vs_xgb.csv", OUT / "arima_vs_xgb.csv", "table"),
     # feature tables (existence / schema only — not loaded in full)
@@ -154,6 +164,22 @@ def model_metadata() -> dict | None:
 
 def traj_config() -> dict | None:
     return read_json(MODELS / "traj_config.json")
+
+
+def traj_dl_config() -> dict | None:
+    return read_json(MODELS / "traj_dl_config.json")
+
+
+def traj_dl_calibration() -> dict | None:
+    return read_json(MODELS / "traj_dl_calibration.json")
+
+
+def traj_dl_reliability() -> dict | None:
+    return read_json(MODELS / "traj_dl_reliability.json")
+
+
+def pooled_dl_config() -> dict | None:
+    return read_json(MODELS / "pooled_dl_config.json")
 
 
 def traj_calibration() -> dict | None:
@@ -236,6 +262,22 @@ def traj_backtest_metrics() -> pd.DataFrame | None:
 
 def traj_backtest_summary() -> dict | None:
     return read_json(OUT / "traj_backtest_summary.json")
+
+
+def pooled_dl_eval() -> dict | None:
+    return read_json(OUT / "pooled_dl_eval.json")
+
+
+def traj_dl_backtest_metrics() -> pd.DataFrame | None:
+    return read_csv(OUT / "traj_backtest_metrics_dl.csv")
+
+
+def traj_dl_backtest_summary() -> dict | None:
+    return read_json(OUT / "traj_backtest_summary_dl.json")
+
+
+def traj_dl_paired_ci() -> dict | None:
+    return read_json(OUT / "traj_paired_ci_dl_vs_xgb.json")
 
 
 def spatial_cv_metrics() -> pd.DataFrame | None:
@@ -621,11 +663,11 @@ def archive_validation(station: str, horizon_h: int = 720,
 
 
 def trajectory_forecast_safe(station: str) -> dict:
-    """Call the EXISTING inference engine — a read-and-score path, no retraining.
+    """Call the runtime-selected inference engine — read-and-score, no retraining.
 
     Routes through ``_traj_dispatch`` so the app follows the same runtime backend
-    as the API (default ``dl`` GRU, falling back to the XGBoost engine when torch
-    or the DL artifacts are unavailable). Writes nothing. Returns a dict with an
+    as the API (default ``dl`` GRU). A configured DL failure is surfaced rather
+    than silently switching to XGBoost. Writes nothing. Returns a dict with an
     ``error`` key instead of raising when artifacts or data are missing.
     """
     if not station:
@@ -638,27 +680,24 @@ def trajectory_forecast_safe(station: str) -> dict:
         return {"error": f"{type(e).__name__}: {e}", "reason": "inference_failed"}
 
 
-def inference_available() -> tuple[bool, str]:
-    """Cheap pre-flight so the UI can explain *why* a forecast cannot be shown."""
-    needed = {
-        "models/traj_config.json": MODELS / "traj_config.json",
-        "models/traj_xgb_q05.json": MODELS / "traj_xgb_q05.json",
-        "models/traj_xgb_q50.json": MODELS / "traj_xgb_q50.json",
-        "models/traj_xgb_q95.json": MODELS / "traj_xgb_q95.json",
-        "models/traj_calibration.json": MODELS / "traj_calibration.json",
-        "models/traj_reliability.json": MODELS / "traj_reliability.json",
-        "data/aligned/table_6h.parquet": ALIGNED / "table_6h.parquet",
-    }
-    missing = [name for name, p in needed.items() if not p.exists()]
-    if missing:
-        return False, "missing: " + ", ".join(missing)
+def trajectory_backend_status() -> dict:
+    """Resolved runtime backend and loadability, using the same dispatcher as the API."""
     try:
         import importlib
-        importlib.import_module("xgboost")
-        importlib.import_module("_trajectory")
-    except Exception as e:  # noqa: BLE001
-        return False, f"import failed: {type(e).__name__}: {e}"
-    return True, "ready"
+        dispatch = importlib.import_module("_traj_dispatch")
+        return dispatch.backend_status(probe=True)
+    except Exception as e:  # noqa: BLE001 — render dependency failures in the UI
+        return {"requested": "unknown", "backend": None, "degraded": True,
+                "error": f"{type(e).__name__}: {e}"}
+
+
+def inference_available() -> tuple[bool, str]:
+    """Preflight the configured backend, not a hard-coded XGBoost path."""
+    status = trajectory_backend_status()
+    if status.get("degraded"):
+        return False, str(status.get("error") or "configured trajectory backend is unavailable")
+    backend = str(status.get("backend") or "unknown").upper()
+    return True, f"{backend} ready"
 
 
 def human_bytes(n: float) -> str:

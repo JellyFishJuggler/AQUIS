@@ -1,8 +1,8 @@
-"""Page 2 — Forecast explorer: observed history + the frozen model's output.
+"""Page 2 — Forecast explorer: observed history + the active GRU forecast.
 
 Read-only. The optional live path calls the EXISTING inference engine
-(``_trajectory.trajectory_forecast``), which builds features from the aligned
-table and scores the frozen quantile models. It never trains and writes nothing.
+(``_traj_dispatch.active_trajectory_forecast``), which uses the backend selected
+in runtime.json (DL-GRU by default). It never trains or writes anything.
 """
 
 from __future__ import annotations
@@ -203,7 +203,7 @@ def _band_table(traj: pd.DataFrame) -> pd.DataFrame:
 
 st.title("Forecast explorer")
 st.caption(
-    "Observed history and the frozen model's output for one station. "
+    "Observed history and the active quantile-GRU forecast for one station. "
     "No training, no regeneration — artifacts are read as-is."
 )
 
@@ -320,21 +320,35 @@ else:
                            actual_2026=actual_2026, label="verification ledger",
                            model_version=True)
 
-# ---- frozen-model scoring (optional, explicit) ------------------------
-st.subheader("Frozen model output")
+# ---- active model scoring (optional, explicit) ------------------------
+st.subheader("Active model output")
+backend_status = D.trajectory_backend_status()
+backend_name = str(backend_status.get("backend") or "unknown").upper()
+if backend_status.get("degraded"):
+    st.error(
+        f"Configured {str(backend_status.get('requested', 'unknown')).upper()} "
+        f"trajectory backend cannot load: {backend_status.get('error', 'unknown error')}"
+    )
+else:
+    st.caption(
+        f"Runtime-selected trajectory backend: **{backend_name}**. "
+        "DL uses the sequence GRU with q05/q50/q95 horizon-conditioned heads."
+        if backend_name == "DL" else
+        f"Runtime-selected trajectory backend: **{backend_name}**."
+    )
 ok, why = D.inference_available()
 if not ok:
     st.info(
-        f"**Inference unavailable — {why}.** Showing archived/observed data only. "
-        "Nothing is retrained to work around this."
+        f"**Active trajectory inference unavailable — {why}.** "
+        "Showing archived/observed data only."
     )
     traj = None
 else:
     run_live = st.toggle(
-        "Score the frozen trajectory model for this station (read-only)",
+        f"Score the active {backend_name} trajectory model for this station",
         value=False,
-        help="Calls _trajectory.trajectory_forecast on the existing aligned "
-             "table. No training, no writes.",
+        help="Uses the runtime-selected trajectory backend on the existing "
+             "aligned table. No training, no writes.",
     )
     if run_live:
         payload = _live(station)
@@ -365,7 +379,7 @@ else:
                 )
     else:
         traj = None
-        st.caption("Toggle on to score the frozen model for this station.")
+        st.caption("Toggle on to score the runtime-selected model for this station.")
 
 _plot(hist, traj, title=f"{station} — observed tail and model trajectory",
       daily_median=daily_median)

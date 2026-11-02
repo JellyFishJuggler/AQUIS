@@ -1285,5 +1285,5 @@ def _handle_error(e):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "5000"))
-    print(f"AQUIS ML API → http://localhost:{port} (version {VERSION})")
+    print(f"AQUIS ML API -> http://localhost:{port} (version {VERSION})")
     app.run(host="0.0.0.0", port=port, threaded=True)
