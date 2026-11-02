@@ -18,7 +18,8 @@ Endpoints (all JSON):
     GET  /fleet/forecasts      full fleet forecast table (?district=&category=&
                                limit=) — map/table source
     GET  /fleet/scan           scan metadata: eligible/scanned, horizon,
-                               generated_at + status counts
+                               generated_at, status counts + active trajectory
+                               backend / degraded flag
     GET  /models               trained-model index: pooled + trajectory specs,
                                calibration, trained_at
     GET  /forecast/<slug>?days=N  trajectory trimmed to the first N days
@@ -64,7 +65,9 @@ if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
 from _assistant import StationAssistant, get_df, ollama_status  # noqa: E402
-from _traj_dispatch import active_trajectory_forecast, traj_backend  # noqa: E402
+from _traj_dispatch import (  # noqa: E402
+    active_trajectory_forecast, backend_status, traj_backend,
+)
 
 VERSION = "3.4.0"
 
@@ -158,6 +161,7 @@ _FORECAST_422_HINTS = {
     "no_feature_frame": "not enough usable history to build model features (needs recent GWL lags/rolling windows)",
     "anchor_invalid": "latest reading failed spike/validity checks (NaN anchor)",
     "artifacts_missing": "server-side model artifacts incomplete — redeploy or rerun the training pipeline",
+    "backend_unavailable": "the runtime trajectory backend failed to load (see /health) - refusing to silently serve a different model",
     "unknown": "",
 }
 
@@ -474,8 +478,13 @@ def health():
         ollama = {"server": False, "error": "probe failed"}
     df = _data()
     last = pd.Timestamp(df["time"].max()) if "time" in df else None
+    try:
+        backend = backend_status()
+    except Exception as exc:  # noqa: BLE001 - status probe must never fail /health
+        backend = {"requested": traj_backend(), "backend": "dl", "degraded": True,
+                   "error": f"{type(exc).__name__}: {exc}"}
     return jsonify({
-        "status": "ok",
+        "status": "degraded" if backend["degraded"] else "ok",
         "service": "aquis-ml",
         "version": VERSION,
         "stations": int(df["Station"].nunique()),
@@ -483,7 +492,10 @@ def health():
         "ollama": ollama,
         "voice": {"mode": "client-side STT (Web Speech / on-device) → POST text to /assistant/chat"},
         "forecast_model": "trajectory (120x6h q05/q50/q95)",
-        "forecast_backend": traj_backend(),
+        "forecast_backend": backend["backend"],
+        "forecast_backend_requested": backend["requested"],
+        "forecast_degraded": bool(backend["degraded"]),
+        "forecast_backend_error": backend.get("error"),
     })
 
 
@@ -1089,6 +1101,15 @@ def fleet_scan():
         if "category" in df.columns:
             meta["n_stable"] = int((df["category"].astype(str) == "stable").sum())
             meta["n_unreliable"] = int((df["category"].astype(str) != "stable").sum())
+    try:
+        backend = backend_status()
+    except Exception as exc:  # noqa: BLE001 - scan metadata must still return
+        backend = {"requested": traj_backend(), "backend": "dl", "degraded": True,
+                   "error": f"{type(exc).__name__}: {exc}"}
+    meta["traj_backend"] = backend["backend"]
+    meta["traj_backend_requested"] = backend["requested"]
+    meta["degraded"] = bool(backend["degraded"])
+    meta["backend_error"] = backend.get("error")
     return jsonify(meta)
 
 
@@ -1129,11 +1150,15 @@ def forecast(slug: str):
     if not isinstance(out, dict) or "error" in out:
         reason = (out.get("reason", "unknown") if isinstance(out, dict)
                   else "unknown")
+        degraded = bool(out.get("degraded")) if isinstance(out, dict) else False
+        code = 503 if reason == "backend_unavailable" else 422
         return jsonify({"error": "forecast unavailable",
                         "reason": reason,
                         "detail": out.get("error", "unknown") if isinstance(out, dict) else "unknown",
                         "hint": _FORECAST_422_HINTS.get(reason, ""),
-                        "slug": slug, "station": info["station"]}), 422
+                        "backend": out.get("backend") if isinstance(out, dict) else None,
+                        "degraded": degraded,
+                        "slug": slug, "station": info["station"]}), code
     traj = out.get("trajectory") or []
     out["trajectory"] = traj[:days * 4]
     out["days"] = days
