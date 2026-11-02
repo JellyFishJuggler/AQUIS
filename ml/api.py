@@ -6,8 +6,9 @@ Endpoints (all JSON):
     GET  /stations             slug list (recency-sorted; filter by district/q)
     GET  /stations/<slug>      rich per-station facts (same object as chat "facts")
     GET  /stations/<slug>/series  6-hourly GWL + driver series for relation charts
-    GET  /stations/<slug>/alerts  notification-ready zone (safe/alert/danger/
-                               unknown) + reasons + top drivers, no LLM call
+    GET  /stations/<slug>/alerts  notification-ready zone (safe/watch/
+                               watch (high)/alert/danger/unknown) + reasons
+                               + top drivers, no LLM call
     GET  /fleet/alerts         fleet-wide zones in one call (?zone=&district=&
                                sort=&limit=) for bell-icon / notification center
     GET  /districts            district list with water-scarcity status
@@ -65,6 +66,9 @@ if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
 from _assistant import StationAssistant, get_df, ollama_status  # noqa: E402
+from _thresholds import (  # noqa: E402 - category/zone single source of truth
+    ZONE_ORDER, worst_zone, zone_for_category,
+)
 from _traj_dispatch import (  # noqa: E402
     active_trajectory_forecast, backend_status, traj_backend,
 )
@@ -328,9 +332,8 @@ def _fleet_category(station: str) -> str | None:
     return str(rows.iloc[0]["category"])
 
 
-# Zone thresholds mirror the assistant's rule-based precautions
-# (_assistant._precautions): any "action" -> danger, any "watch" -> alert.
-ZONE_ORDER = ("danger", "alert", "unknown", "safe")
+# Zone tiers/order live in _thresholds.py (shared with the fleet scan and the
+# category -> zone mapping) so the API cannot drift from the scanner.
 
 _FLEET_DISTRICT_CSV = _ROOT / "outputs" / "fleet_district.csv"
 _EVAL_DISTRICT_CSV = _ROOT / "outputs" / "eval_by_district.csv"
@@ -407,20 +410,27 @@ def _unreliable_frac(district: str) -> float:
 
 
 def _zone_from_precautions(precautions: list[dict],
-                           fleet_category: str | None = None) -> str:
-    """safe / alert / danger / unknown from rule-based precaution levels.
+                           fleet_category: str | None = None,
+                           change_m: float | None = None) -> str:
+    """safe / alert / danger / watch / watch (high) / unknown for one station.
 
-    A fleet-scan 'unreliable' station (stale/NaN anchor) is 'unknown' — there
-    is no trustworthy signal to zone on.
+    The fleet scan sets the baseline zone from its category
+    (``_thresholds.zone_for_category``: unreliable -> unknown, stable/recovering
+    -> safe, decline -> watch, decline (high) -> watch (high)). The per-station
+    precaution rules stay authoritative for danger/alert and can only escalate
+    relative to that baseline. A station missing from the scan keeps the
+    precaution-only behaviour.
     """
-    if fleet_category is not None and fleet_category != "stable":
-        return "unknown"
+    base, _ = (zone_for_category(fleet_category, change_m)
+               if fleet_category is not None else ("safe", ""))
     levels = {str(p.get("level", "")) for p in (precautions or [])}
     if "action" in levels:
-        return "danger"
-    if "watch" in levels:
-        return "alert"
-    return "safe"
+        precaution_zone = "danger"
+    elif "watch" in levels:
+        precaution_zone = "alert"
+    else:
+        precaution_zone = "safe"
+    return worst_zone(base, precaution_zone)
 
 
 # ---------------------------------------------------------------------------
@@ -692,10 +702,12 @@ def fleet_alerts():
     """Fleet-wide zones in one call — bell-icon / notification-center source.
 
     Zones here come from the latest published fleet scan (11_fleet.py), NOT
-    the per-station history rules: 'unreliable' scan rows (stale/NaN anchor)
-    -> unknown; 30-day model change <= -1.0 m -> danger; <= -0.5 m -> alert;
-    else safe. The per-station /alerts endpoint (full precaution rules) is
-    authoritative for detail; this one is the fast fleet overview.
+    the per-station history rules. The scan category maps 1:1 onto a zone
+    (_thresholds.zone_for_category): 'unreliable' -> unknown, 'stable' /
+    'recovering' -> safe, 'decline' -> watch, 'decline (high)' -> watch (high);
+    a stale/NaN anchor is always unknown. The per-station /alerts endpoint
+    (full precaution rules) is authoritative for danger/alert detail; this one
+    is the fast fleet overview.
 
     Query params: ``zone`` (comma list, e.g. danger,alert), ``district``
     (exact, case-insensitive), ``sort`` (severity|change, default severity),
@@ -735,14 +747,7 @@ def fleet_alerts():
         chg = None if chg is None or (isinstance(chg, float) and np.isnan(chg)) else float(chg)
         cat = str(r.get("category", "stable"))
         anchor_ok = bool(r.get("anchor_valid", True)) if not pd.isna(r.get("anchor_valid", True)) else False
-        if cat != "stable" or not anchor_ok:
-            zone, reason = "unknown", f"insufficient reliable telemetry (scan: {cat})"
-        elif chg is not None and chg <= -1.0:
-            zone, reason = "danger", f"30-day model change {chg:+.2f} m (drop >= 1.0 m)"
-        elif chg is not None and chg <= -0.5:
-            zone, reason = "alert", f"30-day model change {chg:+.2f} m (drop >= 0.5 m)"
-        else:
-            zone, reason = "safe", "no scan-level warnings"
+        zone, reason = zone_for_category(cat, chg, anchor_ok=anchor_ok)
         if zones and zone not in zones:
             continue
         if district and str(r.get("district", "")).casefold() != district:
@@ -915,15 +920,8 @@ def district_detail(name: str):
             chg = r.get("change_30d_m")
             chg = None if chg is None or (isinstance(chg, float) and np.isnan(chg)) else float(chg)
             cat = str(r.get("category", "stable"))
-            ok = bool(r.get("anchor_valid", True)) if not pd.isna(r.get("anchor_valid", True)) else False
-            if cat != "stable" or not ok:
-                zone, reason = "unknown", f"insufficient reliable telemetry (scan: {cat})"
-            elif chg is not None and chg <= -1.0:
-                zone, reason = "danger", f"30-day model change {chg:+.2f} m (drop >= 1.0 m)"
-            elif chg is not None and chg <= -0.5:
-                zone, reason = "alert", f"30-day model change {chg:+.2f} m (drop >= 0.5 m)"
-            else:
-                zone, reason = "safe", "no scan-level warnings"
+            anchor_ok = bool(r.get("anchor_valid", True)) if not pd.isna(r.get("anchor_valid", True)) else False
+            zone, reason = zone_for_category(cat, chg, anchor_ok=anchor_ok)
             band = r.get("band_half_m")
             band = None if band is None or (isinstance(band, float) and np.isnan(band)) else float(band)
             stations.append({"slug": station_to_slug.get(st), "station": st,

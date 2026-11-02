@@ -193,10 +193,11 @@ class TestFleetAlerts(unittest.TestCase):
         cls.client = api.app.test_client()
 
     def test_fleet_shape_and_counts(self):
+        from _thresholds import ZONE_ORDER
         body = self.client.get("/fleet/alerts?limit=5").get_json()
         self.assertEqual(len(body["alerts"]), 5)
         for a in body["alerts"]:
-            self.assertIn(a["zone"], ("safe", "alert", "danger", "unknown"))
+            self.assertIn(a["zone"], ZONE_ORDER)
             for k in ("slug", "station", "district", "zone", "reason",
                       "change_30d_m", "band_half_m"):
                 self.assertIn(k, a)
@@ -254,8 +255,9 @@ class TestDistricts(unittest.TestCase):
                   "stations", "scarcity_basis"):
             self.assertIn(k, body)
         self.assertTrue(body["stations"])
+        from _thresholds import ZONE_ORDER
         for s in body["stations"]:
-            self.assertIn(s["zone"], ("safe", "alert", "danger", "unknown"))
+            self.assertIn(s["zone"], ZONE_ORDER)
 
     def test_detail_unknown_404(self):
         r = self.client.get("/districts/BOGUSXYZ")

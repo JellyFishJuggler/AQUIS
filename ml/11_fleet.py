@@ -22,6 +22,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from _thresholds import DECLINE_M, category  # noqa: E402 - single source of truth
+
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "outputs"
 SNAP = OUT / "fleet_forecast_snapshot.json"
@@ -30,24 +32,7 @@ DIST_CSV = OUT / "fleet_district.csv"
 
 MIN_OBS = 2000
 MIN_SPAN_DAYS = 730
-DECLINE_M = 0.3          # >= 0.3 m drop over 30 days = flagged decline
-HIGH_DECLINE_M = 0.6
 HORIZON = 30
-
-
-def category(change: float | None, anchor_valid: bool = True,
-             plausible: bool = True, verbose: bool = True) -> str:
-    if not anchor_valid or not plausible:
-        return "unreliable"
-    if change is None:
-        return "unknown"
-    if change <= -HIGH_DECLINE_M:
-        return "decline (high)"
-    if change <= -DECLINE_M:
-        return "decline"
-    if change >= DECLINE_M:
-        return "recovering"
-    return "stable"
 
 
 def main() -> None:
