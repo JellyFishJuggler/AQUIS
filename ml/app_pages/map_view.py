@@ -344,6 +344,93 @@ with s2:
         st.session_state["focus_station"] = manual
         st.caption(f"Focus set to **{manual}**.")
 
+_active = st.session_state.get("focus_station")
+if _active and _active in set(layer_df["Station"].astype(str)):
+    _row = layer_df[layer_df["Station"] == _active].iloc[0]
+    _render_influence(_active, str(_row.get("District", "") or ""))
+
+@st.cache_data(ttl="10m", show_spinner=False)
+def _influence_station(name: str, top: int = 5) -> dict:
+    """Read-only research artifact lookup (JSON only, never touches torch)."""
+    try:
+        from serving import influence as I
+        return I.station(name, top=top)
+    except Exception:  # noqa: BLE001 - the page must never break on this
+        return {"available": False, "reason": "loader_error"}
+
+
+@st.cache_data(ttl="10m", show_spinner=False)
+def _influence_meta() -> dict:
+    try:
+        from serving import influence as I
+        return I.meta()
+    except Exception:  # noqa: BLE001
+        return {"available": False, "reason": "loader_error"}
+
+
+def _render_influence(name: str, district: str) -> None:
+    """Selected-station influence expander + district heatmap (research only)."""
+    data = _influence_station(name)
+    if not data.get("available"):
+        return                                   # hidden: off / missing / corrupt
+    horizons = data.get("horizons") or {}
+    if not horizons:
+        return
+
+    def _label(h: str) -> str:
+        try:
+            return f"{int(h) / 4:.0f} d ahead"
+        except (TypeError, ValueError):
+            return str(h)
+
+    keys = sorted(horizons, key=lambda x: int(x))
+    with st.expander(f"Spatial influence — {name} (research)", expanded=False):
+        st.caption("Experimental. Shows model sensitivity between stations, not "
+                   "proven causation. Pumping and local geology are not observed.")
+        hk = st.radio("Horizon", keys, format_func=_label, horizontal=True,
+                      key=f"infl_h_{name}")
+        block = horizons.get(hk, {})
+        c1, c2 = st.columns(2)
+        for col, key, title in ((c1, "influenced_by", "Influenced by (upstream)"),
+                                (c2, "influences", "Influences (downstream)")):
+            rows = block.get(key) or []
+            with col:
+                st.markdown(f"**{title}**")
+                if not rows:
+                    st.caption("No scored neighbours at this horizon.")
+                    continue
+                df = pd.DataFrame([{
+                    "station": r.get("station"),
+                    "district": r.get("district"),
+                    "sensitivity": float(r.get("sensitivity") or 0.0),
+                } for r in rows])
+                df["|sensitivity|"] = df["sensitivity"].abs()
+                st.dataframe(
+                    df[["station", "district", "sensitivity", "|sensitivity|"]],
+                    hide_index=True, use_container_width=True,
+                    column_config={
+                        "sensitivity": st.column_config.NumberColumn(
+                            "Δ q50 / m", format="%.2e",
+                            help="Signed change in this station's median forecast "
+                                 "per metre of the source station's input."),
+                        "|sensitivity|": st.column_config.ProgressColumn(
+                            "|sensitivity|", min_value=0.0,
+                            max_value=float(max(df["|sensitivity|"].max(), 1e-9)),
+                            format="%.2e"),
+                    },
+                )
+        st.caption("Δ q50 per metre of source-station input, graph edges minus the "
+                   "no-edge ablation. The district heatmap below aggregates station "
+                   "pairs by signed mean.")
+
+    png = D.OUT / "gnn_influence" / f"district_influence_h{hk}.png"
+    if png.exists():
+        with st.expander(f"District influence heatmap — {_label(hk)}", expanded=False):
+            st.image(str(png), caption=f"{png.name} · source district → influenced district")
+            if district:
+                st.caption(f"Selected station's district: **{district}** (row/column).")
+
+
 st.caption(
     f"State outline: {B.outline_source()}. Station coordinates come from "
     "`data/meta/selected_gwl_stations.csv`; the aligned 6-hourly table carries none, "

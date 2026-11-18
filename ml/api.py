@@ -73,6 +73,7 @@ from core.thresholds import (  # noqa: E402 - category/zone single source of tru
 from serving.core import (  # noqa: E402
     active_trajectory_forecast, backend_status, traj_backend,
 )
+from serving import influence as _influence  # noqa: E402 - JSON-only, no torch
 
 VERSION = "3.4.0"
 
@@ -1274,6 +1275,71 @@ def _install_underscore_aliases(flask_app):
     flask_app.wsgi_app = _wsgi_with_aliases
 
 
+# --------------------------------------------------------------------------- #
+# research GNN influence — read-only JSON artifacts, hidden unless enabled
+# --------------------------------------------------------------------------- #
+def _influence_top(default: int, cap: int) -> int:
+    try:
+        v = int(request.args.get("top") or default)
+    except (TypeError, ValueError):
+        v = default
+    return max(1, min(v, cap))
+
+
+@app.get("/influence/meta")
+@app.get("/api/influence/meta")
+def influence_meta():
+    """Model version / split / caveat. ``available:false`` when off or missing."""
+    try:
+        return jsonify(_influence.meta())
+    except Exception as e:  # noqa: BLE001 - never surface a 500 to forecast clients
+        return jsonify({"available": False, "reason": type(e).__name__})
+
+
+@app.get("/influence/graph")
+@app.get("/api/influence/graph")
+def influence_graph():
+    """Nodes (lat/lon) + edges for the map overlay."""
+    try:
+        return jsonify(_influence.graph())
+    except Exception as e:  # noqa: BLE001
+        return jsonify({"available": False, "reason": type(e).__name__})
+
+
+@app.get("/influence/station/<path:arg>")
+@app.get("/api/influence/station/<path:arg>")
+def influence_station(arg: str):
+    """Per-station top influencers / influenced. ``?top=5`` (1..25)."""
+    try:
+        top = _influence_top(5, 25)
+        hit = _resolve(arg)
+        name = hit[1]["station"] if hit else arg
+        return jsonify(_influence.station(name, top=top))
+    except Exception as e:  # noqa: BLE001
+        return jsonify({"available": False, "reason": type(e).__name__})
+
+
+@app.get("/influence/district/<path:name>")
+@app.get("/api/influence/district/<path:name>")
+def influence_district(name: str):
+    """District-level influence row/column. ``?top=10`` (1..40)."""
+    try:
+        top = _influence_top(10, 40)
+        return jsonify(_influence.district(name, top=top))
+    except Exception as e:  # noqa: BLE001
+        return jsonify({"available": False, "reason": type(e).__name__})
+
+
+@app.get("/influence/consistency")
+@app.get("/api/influence/consistency")
+def influence_consistency():
+    """Derived-feature consistency summary. ``available:false`` when off/missing."""
+    try:
+        return jsonify(_influence.consistency())
+    except Exception as e:  # noqa: BLE001 - never surface a 500
+        return jsonify({"available": False, "reason": type(e).__name__})
+
+
 _install_underscore_aliases(app)
 
 
@@ -1285,7 +1351,10 @@ def _http_error(e: HTTPException):
                  "/stations/<slug>/series", "/stations/<slug>/alerts",
                  "/fleet/alerts", "/districts", "/districts/<name>",
                  "/fleet/recovery",
-                 "/forecast/<slug>", "/assistant/chat"]
+                 "/forecast/<slug>", "/assistant/chat",
+                 "/influence/meta", "/influence/graph",
+                 "/influence/station/<id>", "/influence/district/<name>",
+                 "/influence/consistency"]
     guess = _difflib.get_close_matches(
         request.path.rstrip("/") or "/", available, n=1, cutoff=0.5)
     # also try matching the first segment ("/assistant_chat" -> "/assistant/chat")

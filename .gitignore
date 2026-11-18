@@ -99,3 +99,9 @@ ml-temp/
 
 # refresh cycle backups (local, regenerated)
 *.prev.refresh
+
+ml/tests
+# Research GNN: checkpoints/configs stay local, per-fold run cache is regenerated
+ml/models/research/
+ml/outputs/gnn_influence/folds/runs/
+ml/outputs/gnn_influence/*.log

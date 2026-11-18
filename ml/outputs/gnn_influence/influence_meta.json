@@ -1,0 +1,341 @@
+{
+ "model": {
+  "checkpoint": "gnn_traj.pt",
+  "config": {
+   "arch": "GNNTraj",
+   "nfeat": 30,
+   "hidden": 64,
+   "static": 30,
+   "nq": 3,
+   "gat_layers": 2,
+   "gat_heads": 2,
+   "dropout": 0.1,
+   "quantiles": [
+    0.05,
+    0.5,
+    0.95
+   ],
+   "window_w": 120,
+   "max_h": 120,
+   "feat_mean": [
+    -6.898167610168457,
+    -6.867049694061279,
+    -6.777624130249023,
+    -6.680203437805176,
+    -6.491130352020264,
+    -6.146169185638428,
+    -6.88395881652832,
+    0.20611755549907684,
+    -6.832437992095947,
+    0.420820951461792,
+    6.998884677886963,
+    48.60595703125,
+    202.3098907470703,
+    2.4475061893463135,
+    3.9580984115600586,
+    3.5192408561706543,
+    4.451820373535156,
+    35.227508544921875,
+    1.8523660898208618,
+    118.26927947998047,
+    2.354527711868286,
+    1.3298193216323853,
+    2024.340087890625,
+    0.07841049134731293,
+    -0.08322020620107651,
+    0.10192751884460449,
+    -0.05701185762882233,
+    0.0013423915952444077,
+    0.0004840035689994693,
+    15.446527481079102
+   ],
+   "feat_std": [
+    11.198319435119629,
+    11.192352294921875,
+    11.180872917175293,
+    11.167848587036133,
+    11.128161430358887,
+    10.987824440002441,
+    11.20486068725586,
+    0.8521106839179993,
+    11.273681640625,
+    1.3845436573028564,
+    49.400390625,
+    255.50169372558594,
+    931.1434936523438,
+    8.803567886352539,
+    10.73398208618164,
+    14.678105354309082,
+    15.818914413452148,
+    190.38003540039062,
+    12.98335075378418,
+    327.0150451660156,
+    12.5946683883667,
+    11.037175178527832,
+    1.145105004310608,
+    0.7121203541755676,
+    0.692683756351471,
+    0.700855016708374,
+    0.7036779522895813,
+    0.707317054271698,
+    0.7068949937820435,
+    100.6902084350586
+   ],
+   "feat_scaling": "train-only z-score, clipped to +/-8 sigma; gru_production is scored unscaled",
+   "seed": 42,
+   "epochs": 30,
+   "patience": 5,
+   "nodes_per_batch": 1024,
+   "lr": 0.002,
+   "weight_decay": 0.0001,
+   "max_snapshots": 0,
+   "split": {
+    "train": "< 2025-10-01",
+    "val": "2025-10-01..2025-12-31",
+    "test": ">= 2026-01-01",
+    "purging": "labels crossing a boundary removed"
+   },
+   "target": "GWL(t+h*6h) - GWL(t); level = anchor + delta (anchor observed only)",
+   "train_anchors": 217853,
+   "train_snapshots": 5230,
+   "val_anchors": 13743,
+   "holdout_block": -1,
+   "holdout_unseen_stations": 0,
+   "edge_km_mean": 31.420053482055664,
+   "edge_km_std": 21.799694061279297,
+   "graph": {
+    "path": "outputs/gnn_influence/graph.json",
+    "n_nodes": 548,
+    "n_edges": 5705
+   },
+   "best_val_loss": 0.06599368040378277,
+   "best_epoch": 5,
+   "val_metrics": [
+    {
+     "h": 4,
+     "days": 1.0,
+     "n": 10943,
+     "n_stations_nse": 264,
+     "rmse": 0.20996534824371338,
+     "mae": 0.07815788686275482,
+     "bias": -0.0019549259450286627,
+     "direction_acc": 0.1919034999543087,
+     "coverage_raw": 0.9210454171616559,
+     "halfwidth_median_raw": 0.19998973608016968,
+     "nse_median": -0.09232835672653594
+    },
+    {
+     "h": 28,
+     "days": 7.0,
+     "n": 3185,
+     "n_stations_nse": 118,
+     "rmse": 0.35105612874031067,
+     "mae": 0.19209729135036469,
+     "bias": 0.03718199580907822,
+     "direction_acc": 0.6222919937205651,
+     "coverage_raw": 0.8734693877551021,
+     "halfwidth_median_raw": 0.3661997318267822,
+     "nse_median": -0.3313315854023329
+    },
+    {
+     "h": 60,
+     "days": 15.0,
+     "n": 1915,
+     "n_stations_nse": 89,
+     "rmse": 0.5404796004295349,
+     "mae": 0.3179387152194977,
+     "bias": 0.18403300642967224,
+     "direction_acc": 0.7738903394255875,
+     "coverage_raw": 0.8255874673629243,
+     "halfwidth_median_raw": 0.4769379496574402,
+     "nse_median": -2.454422936863396
+    },
+    {
+     "h": 120,
+     "days": 30.0,
+     "n": 1608,
+     "n_stations_nse": 80,
+     "rmse": 0.9526863694190979,
+     "mae": 0.47095435857772827,
+     "bias": 0.2513662576675415,
+     "direction_acc": 0.8022388059701493,
+     "coverage_raw": 0.9160447761194029,
+     "halfwidth_median_raw": 0.8580873608589172,
+     "nse_median": -6.895168591246838
+    }
+   ],
+   "val_calibration": [
+    {
+     "h": 4,
+     "days": 1.0,
+     "n_fit": 5471,
+     "n_heldout": 5472,
+     "widening_s": 0.8000000000000003,
+     "coverage_fit": 0.9002010601352587,
+     "coverage": 0.903874269005848,
+     "halfwidth_median": 0.15992221236228943
+    },
+    {
+     "h": 28,
+     "days": 7.0,
+     "n_fit": 1592,
+     "n_heldout": 1593,
+     "widening_s": 1.2100000000000006,
+     "coverage_fit": 0.9007537688442211,
+     "coverage": 0.9139987445072191,
+     "halfwidth_median": 0.45194822549819946
+    },
+    {
+     "h": 60,
+     "days": 15.0,
+     "n_fit": 957,
+     "n_heldout": 958,
+     "widening_s": 1.3200000000000007,
+     "coverage_fit": 0.9007314524555904,
+     "coverage": 0.9029227557411273,
+     "halfwidth_median": 0.6285976767539978
+    },
+    {
+     "h": 120,
+     "days": 30.0,
+     "n_fit": 804,
+     "n_heldout": 804,
+     "widening_s": 0.9500000000000004,
+     "coverage_fit": 0.9017412935323383,
+     "coverage": 0.9154228855721394,
+     "halfwidth_median": 0.808904767036438
+    }
+   ],
+   "history": [
+    {
+     "epoch": 1,
+     "train_loss": 0.11264295414017111,
+     "val_loss": 0.06776806454245861,
+     "val_rmse30": 0.99691241979599,
+     "seconds": 30.8
+    },
+    {
+     "epoch": 2,
+     "train_loss": 0.10303970926678648,
+     "val_loss": 0.06640715553210332,
+     "val_rmse30": 0.9640952944755554,
+     "seconds": 17.6
+    },
+    {
+     "epoch": 3,
+     "train_loss": 0.09986037592969689,
+     "val_loss": 0.0660898728439441,
+     "val_rmse30": 0.9630405902862549,
+     "seconds": 15.9
+    },
+    {
+     "epoch": 4,
+     "train_loss": 0.09550652807442153,
+     "val_loss": 0.06631731843719116,
+     "val_rmse30": 0.9489228129386902,
+     "seconds": 15.7
+    },
+    {
+     "epoch": 5,
+     "train_loss": 0.08923241267820783,
+     "val_loss": 0.06599368040378277,
+     "val_rmse30": 0.9526863694190979,
+     "seconds": 14.6
+    },
+    {
+     "epoch": 6,
+     "train_loss": 0.08858181694295349,
+     "val_loss": 0.0698507299216894,
+     "val_rmse30": 0.9758139252662659,
+     "seconds": 14.1
+    },
+    {
+     "epoch": 7,
+     "train_loss": 0.08783766826359081,
+     "val_loss": 0.07098129993447891,
+     "val_rmse30": 0.9622756838798523,
+     "seconds": 13.8
+    },
+    {
+     "epoch": 8,
+     "train_loss": 0.08735418485068694,
+     "val_loss": 0.06879458089287464,
+     "val_rmse30": 0.9723095893859863,
+     "seconds": 12.7
+    },
+    {
+     "epoch": 9,
+     "train_loss": 0.08409326608951499,
+     "val_loss": 0.0716788711456152,
+     "val_rmse30": 0.9794846773147583,
+     "seconds": 13.7
+    },
+    {
+     "epoch": 10,
+     "train_loss": 0.08298030606493717,
+     "val_loss": 0.07084796377099477,
+     "val_rmse30": 0.962533175945282,
+     "seconds": 13.9
+    }
+   ],
+   "trained_at": "2026-11-18 19:36:01",
+   "date": "2026-11-18",
+   "note": "Research-only checkpoint. Production models in ml/models/ (traj_dl.pt, pooled_dl.pt, XGB) were not read or written."
+  },
+  "graph": {
+   "kind": "station_graph",
+   "rule": "kNN(k=5, haversine) UNION same-district pairs",
+   "k": 5,
+   "n_nodes": 548,
+   "n_edges": 5705,
+   "n_knn_edges": 1699,
+   "n_same_district_only_edges": 4006,
+   "n_districts": 37,
+   "edge_feature": "haversine distance (km)",
+   "directed": false,
+   "self_loops": false,
+   "district_matching": "casefold+strip",
+   "note": "Research artifact. Not used by the serving forecast path."
+  }
+ },
+ "generated_at": "2026-11-18 21:58:31",
+ "date": "2026-11-18",
+ "split": {
+  "train": "< 2025-10-01",
+  "val": "2025-10-01..2025-12-31",
+  "test": ">= 2026-01-01"
+ },
+ "n_stations": 548,
+ "n_districts": 37,
+ "snapshots": {
+  "val": 24,
+  "train": 16,
+  "total": 40
+ },
+ "snapshots_scored": {
+  "28": 29,
+  "120": 23
+ },
+ "station_coverage": {
+  "with_any_snapshot": 499,
+  "total": 548
+ },
+ "horizons_h": [
+  28,
+  120
+ ],
+ "magnitudes_m": [
+  0.05,
+  0.1,
+  0.25
+ ],
+ "input_scaling": "train-only z-score (clip +/-8 sigma); perturbations applied as m / std(gwl)",
+ "perturbation_features": "gwl + rolling mean/std updated by the exact single-element delta (consistent derived features)",
+ "caveat": "Experimental. Shows model sensitivity between stations, not proven causation. Pumping and local geology are not observed.",
+ "caveat_text": "Experimental. Shows model sensitivity between stations, not proven causation. Pumping and local geology are not observed.",
+ "eval": {
+  "val_rmse_30d_gnn": 0.9526863694190979,
+  "val_rmse_30d_gru_production": 0.9511452317237854
+ },
+ "note": "Research only. Not promoted; serving forecasts are unchanged."
+}

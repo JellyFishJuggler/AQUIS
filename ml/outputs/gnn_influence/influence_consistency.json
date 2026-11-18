@@ -1,0 +1,264 @@
+{
+ "meta": {
+  "generated_at": "2026-11-18 21:14:40",
+  "definition": "graph-only sensitivity (edges minus no-edge ablation) with and without updating the rolling GWL features that contain the perturbed anchor",
+  "horizons_h": [
+   28,
+   120
+  ],
+  "magnitudes_m": [
+   0.05,
+   0.1,
+   0.25
+  ],
+  "snapshots": 4
+ },
+ "feature_audit": {
+  "model_inputs": [
+   "gwl",
+   "lag1",
+   "lag4",
+   "lag8",
+   "lag28",
+   "lag120",
+   "gwl_roll7_mean",
+   "gwl_roll7_std",
+   "gwl_roll30_mean",
+   "gwl_roll30_std",
+   "rain_1d",
+   "rain_7d",
+   "rain_30d",
+   "temp",
+   "temp_7d",
+   "humidity",
+   "humidity_7d",
+   "solar",
+   "wind_speed",
+   "pressure",
+   "river_level",
+   "canal_level",
+   "year",
+   "month_sin",
+   "month_cos",
+   "doy_sin",
+   "doy_cos",
+   "hour_sin",
+   "hour_cos",
+   "monsoon"
+  ],
+  "gwl_lag_columns_in_model": [
+   "lag1",
+   "lag4",
+   "lag8",
+   "lag28",
+   "lag120"
+  ],
+  "gwl_rolling_columns_in_model": [
+   "gwl_roll7_mean",
+   "gwl_roll7_std",
+   "gwl_roll30_mean",
+   "gwl_roll30_std"
+  ],
+  "lag_columns_changed_by_anchor_perturbation": false,
+  "rolling_columns_changed_by_anchor_perturbation": true,
+  "derived_columns_not_in_model": [
+   "gwl_dev7",
+   "gwl_dev30",
+   "gwl_slope7",
+   "gwl_slope30",
+   "gwl_slope90",
+   "gwl_obs7",
+   "gwl_obs30",
+   "gwl_obs90",
+   "gwl_imputed"
+  ],
+  "note": "Lags are GWL(t-k) and therefore do not move when GWL(t) is perturbed. Slopes/deviations/flags are computed by pipelines.model.build but are not in the frozen traj_dl schema, so the model never sees them (no update possible or needed). Rolling mean/std windows contain GWL(t) and are updated by roll_delta."
+ },
+ "snapshots": [
+  {
+   "kind": "val",
+   "time": "2025-10-31T06:00:00.000000000",
+   "nodes": 64,
+   "horizons": {
+    "120": {
+     "n_pairs": 9,
+     "raw_max_abs": 0.0014105737209320068,
+     "raw_zero_fraction": 0.0,
+     "con_zero_fraction": 0.0,
+     "diff_max_abs": 0.016237080097198486,
+     "diff_mean_abs": 0.002390215242350543,
+     "diff_rel_frobenius": 9.164553146804263,
+     "corr_all": -0.7233256319682253,
+     "corr_offdiag": 0.7864186005184898,
+     "sign_agreement_nonzero": 0.5,
+     "top10_source_overlap": 10
+    }
+   }
+  },
+  {
+   "kind": "val",
+   "time": "2025-12-05T06:00:00.000000000",
+   "nodes": 75,
+   "horizons": {
+    "28": {
+     "n_pairs": 196,
+     "raw_max_abs": 0.00031041353940963745,
+     "raw_zero_fraction": 0.3112244897959184,
+     "con_zero_fraction": 0.336734693877551,
+     "diff_max_abs": 0.013858050107955933,
+     "diff_mean_abs": 0.00012206928139286382,
+     "diff_rel_frobenius": 30.70019260014297,
+     "corr_all": 0.6403107026041137,
+     "corr_offdiag": -0.6108748672267654,
+     "sign_agreement_nonzero": 0.5,
+     "top10_source_overlap": 8
+    }
+   }
+  },
+  {
+   "kind": "val",
+   "time": "2025-12-22T06:00:00.000000000",
+   "nodes": 153,
+   "horizons": {
+    "28": {
+     "n_pairs": 3844,
+     "raw_max_abs": 0.0011786719163258859,
+     "raw_zero_fraction": 0.16415192507804371,
+     "con_zero_fraction": 0.1511446409989594,
+     "diff_max_abs": 0.023956747104724247,
+     "diff_mean_abs": 4.460571802051965e-05,
+     "diff_rel_frobenius": 17.323821525498122,
+     "corr_all": -0.06552399905415528,
+     "corr_offdiag": -0.1466542517425001,
+     "sign_agreement_nonzero": 0.4992071043450682,
+     "top10_source_overlap": 3
+    }
+   }
+  },
+  {
+   "kind": "val",
+   "time": "2025-12-31T06:00:00.000000000",
+   "nodes": 101,
+   "horizons": {}
+  }
+ ],
+ "roll_reproducibility": {
+  "rows": 64,
+  "max_abs_diff_m": 2.0862533354204515e-06,
+  "mean_abs_diff_m": 1.5584903587529203e-07,
+  "rows_over_1mm": 0,
+  "per_column_max_m": {
+   "gwl_roll7_mean": 1.1003561439792975e-06,
+   "gwl_roll7_std": 6.910940346105399e-07,
+   "gwl_roll30_mean": 2.0862533354204515e-06,
+   "gwl_roll30_std": 6.753923746383172e-07
+  },
+  "window_counts": {
+   "n7_min": 1,
+   "n7_median": 6.0,
+   "n7_max": 14,
+   "n30_min": 1,
+   "n30_median": 6.0,
+   "n30_max": 14,
+   "rows_n30_lt_2": 6
+  },
+  "note": "Residual is expected: the stored features use time-based windows over rows that were later dropped from the axis (break purges). The perturbation therefore applies the exact analytic delta to the stored statistics."
+ },
+ "static_vs_seq_last_max_abs": 0.0,
+ "example_deltas": {
+  "row": 9,
+  "n7": 14,
+  "n30": 14,
+  "step_m": 0.05,
+  "gwl_scaled_delta": 0.004464955682831517,
+  "rolling_columns": {
+   "gwl_roll7_mean": {
+    "scaled_delta": 0.0003187392214067941,
+    "physical_delta_m": 0.0035714285714272265
+   },
+   "gwl_roll7_std": {
+    "scaled_delta": 0.00960086915015454,
+    "physical_delta_m": 0.008181003177745394
+   },
+   "gwl_roll30_mean": {
+    "scaled_delta": 0.00031679345623514266,
+    "physical_delta_m": 0.0035714285714281147
+   },
+   "gwl_roll30_std": {
+    "scaled_delta": 0.005908812107899397,
+    "physical_delta_m": 0.008181008326186456
+   }
+  },
+  "lag_columns_scaled_delta": {
+   "lag1": 0.0,
+   "lag4": 0.0,
+   "lag8": 0.0,
+   "lag28": 0.0,
+   "lag120": 0.0
+  }
+ },
+ "lag_audit": {
+  "lags_are_past_values": true,
+  "definition": "lagK = GWL(t-K); verified where the trailing K axis rows form a complete 6 h run, so the anchor perturbation leaves the lag columns untouched by construction",
+  "per_column": [
+   {
+    "column": "lag1",
+    "steps": 1,
+    "n_verified": 58,
+    "n_skipped": 6,
+    "max_abs_diff_m": 1.231629312314908e-06,
+    "median_abs_diff_m": 1.0230964164748002e-07
+   },
+   {
+    "column": "lag4",
+    "steps": 4,
+    "n_verified": 52,
+    "n_skipped": 12,
+    "max_abs_diff_m": 1.3501696685125353e-06,
+    "median_abs_diff_m": 9.364643460685329e-08
+   },
+   {
+    "column": "lag8",
+    "steps": 8,
+    "n_verified": 16,
+    "n_skipped": 48,
+    "max_abs_diff_m": 2.977807014303835e-07,
+    "median_abs_diff_m": 1.133381317686144e-07
+   },
+   {
+    "column": "lag28",
+    "steps": 28,
+    "n_verified": 0,
+    "n_skipped": 64,
+    "max_abs_diff_m": null,
+    "median_abs_diff_m": null
+   },
+   {
+    "column": "lag120",
+    "steps": 120,
+    "n_verified": 0,
+    "n_skipped": 64,
+    "max_abs_diff_m": null,
+    "median_abs_diff_m": null
+   }
+  ]
+ },
+ "summary": {
+  "28": {
+   "snapshots": 2,
+   "diff_max_abs_max": 0.023956747104724247,
+   "diff_rel_frobenius_mean": 24.012007062820544,
+   "corr_offdiag_min": -0.6108748672267654,
+   "sign_agreement_nonzero_min": 0.4992071043450682,
+   "top10_source_overlap_min": 3
+  },
+  "120": {
+   "snapshots": 1,
+   "diff_max_abs_max": 0.016237080097198486,
+   "diff_rel_frobenius_mean": 9.164553146804263,
+   "corr_offdiag_min": 0.7864186005184898,
+   "sign_agreement_nonzero_min": 0.5,
+   "top10_source_overlap_min": 10
+  }
+ }
+}
