@@ -43,7 +43,7 @@ st.caption(
 groups = _groups()
 if groups.empty:
     st.error(
-        "**Data/artifact unavailable.** Could not import `pipeline_model` to read "
+        "**Data/artifact unavailable.** Could not import `pipelines.model` to read "
         "`NUM_COLS` / `HYDRO_COLS` (missing module or dependency)."
     )
     st.stop()

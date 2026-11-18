@@ -26,7 +26,7 @@ else:
         return lambda fn: fn
     cache_resource = cache_data = _no_cache
 
-BASE = Path(__file__).resolve().parent
+BASE = Path(__file__).resolve().parents[1]
 DATA = BASE / "data"
 META = DATA / "meta"
 ALIGNED = DATA / "aligned"
@@ -255,7 +255,7 @@ def _forward_forecast_xgb(station: str) -> dict:
     """
     import importlib
 
-    feats_mod = importlib.import_module("pipeline_model")
+    feats_mod = importlib.import_module("pipelines.model")
     cfg = load_feature_config()
     t = load_table_6h()
     t = t[t["Station"] == station].copy()
@@ -314,7 +314,7 @@ def forward_forecast(station: str) -> dict:
     """Dispatch to the runtime-selected backend; XGB is the fallback path."""
     if forward_backend() == "dl":
         try:
-            from serving_engines import dl_forward_forecast
+            from serving.engines import dl_forward_forecast
 
             out = dl_forward_forecast(station)
             if out:
@@ -374,7 +374,7 @@ def dl_probe(*, use_cache: bool = True) -> dict:
             json.loads(TRAJ_DL_CALIB.read_text())
         if TRAJ_DL_RELI.exists():
             json.loads(TRAJ_DL_RELI.read_text())
-        dlmod = importlib.import_module("pipeline_traj_dl")
+        dlmod = importlib.import_module("pipelines.traj_dl")
         net = dlmod.TrajGRU(len(cfg["feature_cols"]), hidden=int(cfg["hidden"]))
         net.load_state_dict(torch.load(TRAJ_DL_MODEL, map_location="cpu",
                                        weights_only=True))
@@ -415,7 +415,7 @@ def active_trajectory_forecast(station: str, *, allow_fallback: bool = False):
     requested = traj_backend()
     if requested == "dl":
         try:
-            from serving_engines import dl_trajectory_forecast
+            from serving.engines import dl_trajectory_forecast
 
             return dl_trajectory_forecast(station)
         except Exception as e:  # noqa: BLE001 - surface, never hide
@@ -430,6 +430,6 @@ def active_trajectory_forecast(station: str, *, allow_fallback: bool = False):
                     "degraded": True,
                 }
             print("[traj_backend=dl] explicit allow_fallback -> xgb", file=sys.stderr)
-    from serving_engines import xgb_trajectory_forecast
+    from serving.engines import xgb_trajectory_forecast
 
     return xgb_trajectory_forecast(station)

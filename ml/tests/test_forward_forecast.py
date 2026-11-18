@@ -8,12 +8,12 @@ import numpy as np
 from tests._helpers import ROOT, has
 
 
-@unittest.skipUnless(has("serving_core.py") and has("models/xgb_multihorizon.joblib"),
+@unittest.skipUnless(has("serving/core.py") and has("models/xgb_multihorizon.joblib"),
                      "model artifacts missing")
 class TestForwardForecast(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        import serving_core as _model
+        import serving.core as _model
         cls._model = _model
         cls.fc = _model.forward_forecast("ASHADHA PRATHMIK VIDYALAYA")
         assert cls.fc, "forward_forecast returned empty for a known station"
@@ -31,7 +31,7 @@ class TestForwardForecast(unittest.TestCase):
         self.assertAlmostEqual(self.fc["xgb_level"], self.fc["anchor"] + self.fc["pred_xgb"], places=5)
 
     def test_anchor_is_last_observed_gwl(self):
-        from serving_core import load_table_6h
+        from serving.core import load_table_6h
         t = load_table_6h()
         g = t[t["Station"] == "ASHADHA PRATHMIK VIDYALAYA"].sort_values("time")
         last = g.dropna(subset=["gwl"])["gwl"].iloc[-1]
@@ -52,10 +52,10 @@ class TestForwardForecast(unittest.TestCase):
             self.assertAlmostEqual(bh, (hi - lo) / 2, places=5)
 
 
-@unittest.skipUnless(has("serving_core.py"), "module missing")
+@unittest.skipUnless(has("serving/core.py"), "module missing")
 class TestForwardForecastUnknownStation(unittest.TestCase):
     def test_returns_empty_for_unknown(self):
-        import serving_core as _model
+        import serving.core as _model
         self.assertEqual(_model.forward_forecast("NOT A REAL STATION"), {})
 
 

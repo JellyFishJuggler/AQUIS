@@ -1,7 +1,7 @@
 """_hydrology.py — causal hydrology-informed feature helpers (block 1).
 
-Shared by the batch builder (``pipeline_model.build``) and the serving paths
-(``serving_engines``/``refresh.refresh_data.build_step_features``) so training,
+Shared by the batch builder (``pipelines.model.build``) and the serving paths
+(``serving.engines``/``refresh.refresh_data.build_step_features``) so training,
 backtesting and inference compute identical values from the same history.
 
 Features produced here

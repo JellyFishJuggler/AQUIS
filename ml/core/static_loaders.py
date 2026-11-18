@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pandas as pd
 
-BASE = Path(__file__).resolve().parent
+BASE = Path(__file__).resolve().parents[1]
 SOIL_DIR = BASE / "data" / "soil"
 SOIL_CSV = SOIL_DIR / "soil_stations.csv"
 SOIL_META = SOIL_DIR / "soil_meta.json"

@@ -23,7 +23,7 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from _hydrology import API_TAUS, STEP_H, api_alpha, rain_memory_block
+from core.hydrology import API_TAUS, STEP_H, api_alpha, rain_memory_block
 from tests._helpers import has
 
 N_HIST = 200
@@ -228,7 +228,7 @@ class TestBatchRainObsProvenance(unittest.TestCase):
         # assertion genuinely tests reduced coverage rather than passing on a
         # window that never saw the gap.
         rain[n - 15] = np.nan
-        # `pipeline_model.build` emits and selects the driver columns, so a fixture
+        # `pipelines.model.build` emits and selects the driver columns, so a fixture
         # without them cannot exercise it (KeyError on the column selection).
         return pd.DataFrame({
             "Station": "S1", "District": "ALIGARH", "time": times,
@@ -240,7 +240,7 @@ class TestBatchRainObsProvenance(unittest.TestCase):
 
     def test_missing_slot_reduces_coverage_and_api_uses_forcing(self):
         import importlib
-        F = importlib.import_module("pipeline_model")
+        F = importlib.import_module("pipelines.model")
         frame = self._frame()
         # guard: the gap must actually sit inside the trailing 28 slots, else the
         # coverage assertion below would be vacuous
@@ -259,11 +259,11 @@ class TestBatchRainObsProvenance(unittest.TestCase):
         """`build` must not drop the columns it computes rather than reads.
 
         Regression guard: returning `df[KEEP]` silently removed `rain_api*` /
-        `rain_obs*` / `gwl_imputed`, which broke `serving_core.forward_forecast` and
+        `rain_obs*` / `gwl_imputed`, which broke `serving.core.forward_forecast` and
         bare-fixture callers while leaving the batch `build_full` path working.
         """
         import importlib
-        F = importlib.import_module("pipeline_model")
+        F = importlib.import_module("pipelines.model")
         out = F.build(self._frame(), keep_na=True)
         for c in list(F.HYDRO_COLS) + ["target_time"]:
             self.assertIn(c, out.columns, f"{c} was dropped by build()")

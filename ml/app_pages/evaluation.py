@@ -565,7 +565,7 @@ if tbs:
             f"**Internal inconsistency in this artifact.** The summary records a "
             f"*removed* recursive model at **{tbs['30d_rmse_prev_recursive']} m**, "
             f"which is better at +30 d than the promoted trajectory "
-            f"(**{traj} m**). The promotion decision in `gate_check.py` never "
+            f"(**{traj} m**). The promotion decision in `checks/gate_check.py` never "
             f"compares against that number. Worth resolving before the trajectory "
             f"margin is treated as settled."
         )

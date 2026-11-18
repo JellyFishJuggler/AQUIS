@@ -19,9 +19,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from _hydrology import (API_TAUS, DEV_WINS, SLOPE_WINS, gwl_imputed_flag,
-                        gwl_observed, gwl_trend_block, rain_memory_block)
-from pipeline_data import STAGES
+from core.hydrology import (API_TAUS, DEV_WINS, SLOPE_WINS, gwl_imputed_flag,
+                            gwl_observed, gwl_trend_block, rain_memory_block)
+from pipelines.data import STAGES
 from refresh.refresh_core import atomic_write_json, atomic_write_parquet
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -63,7 +63,7 @@ def _import(name: str):
 def _fetch_gwl_impl(*, parquet: Path, districts: list[str] | None,
                     dry_run: bool, sleep: float) -> dict:
     nwic = _import("ml.data.raw.nwic")
-    pipeline = _import("pipeline_data")
+    pipeline = _import("pipelines.data")
     if not parquet.exists():
         raise FileNotFoundError(parquet)
     dists = districts or nwic.get_aquis_districts(parquet)
@@ -111,7 +111,7 @@ def _one_district(om, row, start: str, end: str, fwd_days: int) -> pd.DataFrame:
 def _fetch_weather_impl(*, out_parquet: Path, out_meta: Path, districts_csv: Path | None,
                         start_days: int, forecast_days: int, dry_run: bool,
                         workers: int) -> dict:
-    om = _import("openmeteo_weather")
+    om = _import("pipelines.openmeteo_weather")
     import concurrent.futures as cf
     csv = districts_csv or (ROOT / "data" / "meta" / "selected_gwl_stations.csv")
     cents = om.district_centroids() if not csv else _centroids_from_csv(csv)
@@ -174,7 +174,7 @@ def fetch_weather(*, out_parquet: Path, out_meta: Path, districts_csv: Path | No
 
 def _fetch_river_forecast_impl(*, out_parquet: Path, out_meta: Path,
                                dry_run: bool) -> dict:
-    cwc = _import("pipeline_data")
+    cwc = _import("pipelines.data")
     df, meta = cwc.cwc_fetch_forecast(out_parquet=out_parquet, out_meta=out_meta,
                                       dry_run=dry_run)
     return {
@@ -262,7 +262,7 @@ def restore(path: Path, backup_path: Path | None) -> None:
 
 
 def _run(cmd_label: str, timeout_s: int = 1800, *, stage: bool = False,
-         module: str = "pipeline_data") -> None:
+         module: str = "pipelines.data") -> None:
     cmd = ([sys.executable, "-u", "-m", module, cmd_label] if stage
            else [sys.executable, "-u", str(ROOT / cmd_label)])
     proc = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=timeout_s)
@@ -332,7 +332,7 @@ def rebuild_traj_features(*, dry_run: bool = False) -> dict:
     for step in steps:
         if not dry_run:
             _run(step, stage=True,
-                 module="pipeline_traj" if step == "datasets" else "pipeline_data")
+                 module="pipelines.traj" if step == "datasets" else "pipelines.data")
     return {"ok": True, "steps": steps, "dry_run": dry_run}
 
 
@@ -542,7 +542,7 @@ def _series_get(cw, key: str) -> float:
 def _gwl_hydro_pinned(hist: pd.DataFrame, anchor_gwl: float, memory: dict) -> dict:
     """Anchor-pinned GWL state/trend (constant over every horizon step).
 
-    ``hist`` is restricted to rows <= anchor_t. Mirrors pipeline_model.build.
+    ``hist`` is restricted to rows <= anchor_t. Mirrors pipelines.model.build.
     """
     gwl = hist["gwl"]
     obs_flags = hist["gwl_obs"] if "gwl_obs" in hist.columns else None

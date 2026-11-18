@@ -16,9 +16,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-F = importlib.import_module("pipeline_model")
+F = importlib.import_module("pipelines.model")
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 ALIGNED = ROOT / "data" / "aligned" / "table_6h.parquet"
 OM = ROOT / "data" / "cfs" / "openmeteo_weather_daily.parquet"
 OM_META = ROOT / "data" / "meta" / "driver_climatology_meta.json"
@@ -282,8 +282,8 @@ def _load_xgb():
         return _XGB_CACHE
     import xgboost as xgb
     try:
-        from serving_core import forward_forecast
-    except Exception:  # noqa: BLE001 - serving_core needs streamlit; optional here
+        from serving.core import forward_forecast
+    except Exception:  # noqa: BLE001 - serving.core needs streamlit; optional here
         forward_forecast = None
     cfg = json.loads(TRAJ_CFG.read_text())
     fnames = list(cfg["feature_cols"])
@@ -387,7 +387,7 @@ def _load_traj():
     import torch
     torch.set_num_threads(1)
     cfg = json.loads(TRAJ_DL_CFG.read_text())
-    dlmod = importlib.import_module("pipeline_traj_dl")
+    dlmod = importlib.import_module("pipelines.traj_dl")
     net = dlmod.TrajGRU(len(cfg["feature_cols"]), hidden=int(cfg["hidden"]))
     net.load_state_dict(torch.load(TRAJ_MODEL, map_location="cpu", weights_only=True))
     net.eval()
@@ -460,9 +460,9 @@ def dl_trajectory_forecast(station: str) -> dict:
     station_row["stability"] = 0.7 if flips > int(0.25 * (MAX_H - 2)) else 1.0
 
     try:
-        from serving_core import forward_forecast
+        from serving.core import forward_forecast
         ff = forward_forecast(station)
-    except Exception:  # noqa: BLE001 - serving_core imports streamlit; optional here
+    except Exception:  # noqa: BLE001 - serving.core imports streamlit; optional here
         ff = None
     return _response(station, anchor_t, anc,
                      "sequence GRU + horizon-conditioned quantile heads (q05/q50/q95)",
@@ -487,7 +487,7 @@ def _load_fwd():
     torch.set_num_threads(1)
     cfg = json.loads(FWD_CFG.read_text())
     states = torch.load(FWD_MODEL, map_location="cpu", weights_only=True)
-    mod = importlib.import_module("pipeline_traj_dl")
+    mod = importlib.import_module("pipelines.traj_dl")
     nets = []
     for st in states:
         net = mod.GRUNetQ(2 * len(cfg["feature_cols"]), nq=len(cfg["quantiles"]),

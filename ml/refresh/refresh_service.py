@@ -118,7 +118,7 @@ def run_forecast_cycle(*, cfg=None, state=None, dry_run: bool = False,
 
 
 def _load_future_data() -> tuple:
-    from serving_engines import OM, CLIM, RAIN_CLIM
+    from serving.engines import OM, CLIM, RAIN_CLIM
     om = pd.read_parquet(OM) if OM.exists() else None
     clim = pd.read_parquet(CLIM) if CLIM.exists() else None
     rc = pd.read_parquet(RAIN_CLIM) if RAIN_CLIM.exists() else None

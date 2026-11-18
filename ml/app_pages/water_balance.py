@@ -111,7 +111,7 @@ rain_present = (df is not None and "rain" in df.columns
 if not rain_present:
     st.warning(
         f"**No rainfall record for {station}.** Rainfall reaches a well through the gauge "
-        "association built in `pipeline_data`; a well with no gauge inside the search radius "
+        "association built in `pipelines.data`; a well with no gauge inside the search radius "
         "carries no rain column at all rather than a filled one."
     )
     st.stop()

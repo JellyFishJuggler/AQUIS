@@ -226,7 +226,7 @@ class TestSchedulerDrift(unittest.TestCase):
         self.assertEqual(self.st.get("drift_streak"), 0)
 
 
-@unittest.skipUnless(has("pipeline_data.py"), "pipeline_data.py missing")
+@unittest.skipUnless(has("pipelines/data.py"), "pipelines/data.py missing")
 class TestTrimHighSide(unittest.TestCase):
     """High-side apex-relax: monsoon-recharge readings survive the trim.
 
@@ -245,7 +245,7 @@ class TestTrimHighSide(unittest.TestCase):
         })
 
     def test_high_visibly_recent_reading_survives(self):
-        m = importlib.import_module("pipeline_data")
+        m = importlib.import_module("pipelines.data")
         # 500 dry readings at -12..-6 plus a genuinely shallow monsoon reading
         values = list(np.linspace(-12.0, -6.0, 500)) + [-1.2, 0.05]
         df, dropped = m.clean(self._df(values), None, None, "gwl")
@@ -254,7 +254,7 @@ class TestTrimHighSide(unittest.TestCase):
         self.assertGreater(len(df), 490)
 
     def test_low_sentinel_still_trimmed(self):
-        m = importlib.import_module("pipeline_data")
+        m = importlib.import_module("pipelines.data")
         values = list(np.linspace(-120.0, -10.0, 400))
         df, _ = m.clean(self._df(values), None, None, "gwl")
         self.assertLess(df["value"].min(), -10.0)

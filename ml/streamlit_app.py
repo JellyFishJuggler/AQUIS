@@ -18,7 +18,7 @@ APP_PAGES = ML_ROOT / "app_pages"
 # `st.navigation` runs each page with `exec(code, module.__dict__)`, which does NOT
 # put the page's own directory on `sys.path` the way running a script directly
 # would. The pages import their shared helpers by flat name (`_data`,
-# `_hydro_metrics`), so both the ml root (for `pipeline_model`, `serving_core`, ...)
+# `_hydro_metrics`), so both the ml root (for `pipelines.model`, `serving.core`, ...)
 # and app_pages (for those helpers) must be importable before `page.run()`.
 # Order matters: app_pages first, so `_data` can never be shadowed by `ml/_data`.
 for _p in (APP_PAGES, ML_ROOT):

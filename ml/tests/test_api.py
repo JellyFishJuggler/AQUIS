@@ -62,7 +62,7 @@ class TestStationDetail(unittest.TestCase):
             self.assertIn(k, body)
 
     def test_detail_matches_chat_facts(self):
-        import _assistant
+        import core.assistant as _assistant
         chat_facts = _assistant.StationAssistant().facts(
             "ASHADHA PRATHMIK VIDYALAYA")
         body = self.client.get(f"/stations/{self.slug}").get_json()
@@ -193,7 +193,7 @@ class TestFleetAlerts(unittest.TestCase):
         cls.client = api.app.test_client()
 
     def test_fleet_shape_and_counts(self):
-        from _thresholds import ZONE_ORDER
+        from core.thresholds import ZONE_ORDER
         body = self.client.get("/fleet/alerts?limit=5").get_json()
         self.assertEqual(len(body["alerts"]), 5)
         for a in body["alerts"]:
@@ -255,7 +255,7 @@ class TestDistricts(unittest.TestCase):
                   "stations", "scarcity_basis"):
             self.assertIn(k, body)
         self.assertTrue(body["stations"])
-        from _thresholds import ZONE_ORDER
+        from core.thresholds import ZONE_ORDER
         for s in body["stations"]:
             self.assertIn(s["zone"], ZONE_ORDER)
 

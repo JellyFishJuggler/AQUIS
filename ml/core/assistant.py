@@ -3,11 +3,11 @@
 Ported from ``ml/agent/data_assistant.py``, adapted to the ml service:
   * data      -> ``data/aligned/table_6h.parquet`` (Station / time / gwl / District)
   * forecast  -> the pooled XGBoost 30-day change model (same engine served
-                 by the API, via ``serving_core.forward_forecast``)
+                 by the API, via ``serving.core.forward_forecast``)
   * scope     -> one station, pinned (no district / fleet intent routing)
   * model     -> ``qwen2.5:3b`` via Ollama (local); overridable with
                  ``AQUIS_OLLAMA_MODEL`` in the repo ``.env`` (same read pattern as
-                 ``LULC_STATISTICS_API_KEY`` in pipeline_data).
+                 ``LULC_STATISTICS_API_KEY`` in pipelines.data).
 
 The LLM only phrases answers from pre-computed, deterministic facts — it never
 invents numbers. If Ollama is down, callers can still use ``StationAssistant.facts``
@@ -24,7 +24,7 @@ import numpy as np
 import pandas as pd
 import requests
 
-_BASE = Path(__file__).resolve().parent
+_BASE = Path(__file__).resolve().parents[1]
 REPO = _BASE.parent
 
 STATION_COL = "Station"
@@ -44,7 +44,7 @@ _district_cache: dict[str, dict] = {}
 
 
 # ---------------------------------------------------------------------------
-# Config (matches pipeline_data.lulc_read_env pattern)
+# Config (matches pipelines.data.lulc_read_env pattern)
 # ---------------------------------------------------------------------------
 def read_env(repo: Path) -> dict[str, str]:
     env: dict[str, str] = {}
@@ -622,11 +622,11 @@ def _fleet_recency(days: int = 14) -> dict:
 
     Lets the LLM answer questions like "how many stations have their latest reading
     on 11 September" with an exact count instead of guessing — the counts are handed
-    to it verbatim. Reuses the cached recency Series from ``serving_core.station_recency``
+    to it verbatim. Reuses the cached recency Series from ``serving.core.station_recency``
     (built once per TTL window on top of ``table_6h``).
     """
     try:
-        from serving_core import station_recency
+        from serving.core import station_recency
 
         t = station_recency()
         counts = t.dt.normalize().value_counts().sort_index(ascending=False)
@@ -762,7 +762,7 @@ def _precautions(facts: dict) -> list[dict]:
 # Forecast (ml pooled 30-day model)
 # ---------------------------------------------------------------------------
 def _forecast_summary(station: str) -> dict | None:
-    from serving_core import forward_forecast, load_station_summary
+    from serving.core import forward_forecast, load_station_summary
 
     fc = forward_forecast(station)
     if not fc:

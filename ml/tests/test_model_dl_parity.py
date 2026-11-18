@@ -1,4 +1,4 @@
-"""Pooled-30d DL backbone parity (serving_engines.dl_forward_forecast).
+"""Pooled-30d DL backbone parity (serving.engines.dl_forward_forecast).
 
 Requires torch + the pooled DL artifacts + the aligned 6h table. Skipped when
 any are missing. Runs in the torch-only env (venv312) - no streamlit needed.
@@ -36,7 +36,7 @@ SCHEMA = {
 class TestModelDlParity(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.m = importlib.import_module("serving_engines")
+        cls.m = importlib.import_module("serving.engines")
         cls.fc = cls.m.dl_forward_forecast("ASHADHA PRATHMIK VIDYALAYA")
 
     def test_schema_and_finiteness(self):

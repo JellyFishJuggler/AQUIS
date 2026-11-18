@@ -1,4 +1,4 @@
-"""DL guard tests (serving_core dispatcher).
+"""DL guard tests (serving.core dispatcher).
 
 With ``traj_backend=dl`` a GRU load/scoring failure must surface as a degraded
 error payload instead of silently serving XGBoost. The XGB fallback stays
@@ -11,7 +11,7 @@ import unittest
 from tests._helpers import has
 
 ROOT_RUNTIME = "data/refresh/runtime.json"
-READY = all(has(p) for p in ("serving_core.py", "serving_engines.py", ROOT_RUNTIME))
+READY = all(has(p) for p in ("serving/core.py", "serving/engines.py", ROOT_RUNTIME))
 
 
 @unittest.skipUnless(READY, "dispatch / engines / runtime.json missing")
@@ -31,8 +31,8 @@ class TestDlGuard(unittest.TestCase):
         self.runtime.write_text(json.dumps(data))
 
     def test_dl_failure_returns_degraded_error(self):
-        import serving_core
-        import serving_engines
+        import serving.core as serving_core
+        import serving.engines as serving_engines
 
         def boom(station):
             raise RuntimeError("torch exploded")
@@ -61,8 +61,8 @@ class TestDlGuard(unittest.TestCase):
         self.assertEqual(called["xgb"], 0, "guard must not fall back to xgb")
 
     def test_explicit_opt_in_falls_back(self):
-        import serving_core
-        import serving_engines
+        import serving.core as serving_core
+        import serving.engines as serving_engines
 
         def boom(station):
             raise RuntimeError("torch exploded")
@@ -85,7 +85,7 @@ class TestDlGuard(unittest.TestCase):
         self.assertIn("XGBoost", out["model"])
 
     def test_backend_status_marks_degraded(self):
-        import serving_core
+        import serving.core as serving_core
         orig = serving_core.dl_probe
         serving_core.dl_probe = lambda: {"ok": False, "error": "no torch"}
         try:
@@ -98,7 +98,7 @@ class TestDlGuard(unittest.TestCase):
         self.assertEqual(st["error"], "no torch")
 
     def test_backend_status_healthy(self):
-        import serving_core
+        import serving.core as serving_core
         orig = serving_core.dl_probe
         serving_core.dl_probe = lambda: {"ok": True, "error": None}
         try:

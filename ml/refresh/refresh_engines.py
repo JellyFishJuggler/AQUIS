@@ -21,14 +21,14 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-import serving_engines as engines
-from serving_core import active_trajectory_forecast, traj_backend
+import serving.engines as engines
+from serving.core import active_trajectory_forecast, traj_backend
 from refresh import refresh_core as pubmod
 from refresh.refresh_core import (REFRESH_DIR, RefreshState, atomic_write_json,
                                   models_frozen, refresh_lock)
 
-F = importlib.import_module("pipeline_model")
-T = importlib.import_module("pipeline_traj")
+F = importlib.import_module("pipelines.model")
+T = importlib.import_module("pipelines.traj")
 ROOT = Path(__file__).resolve().parent.parent
 F_PATH_ROOT = ROOT   # former backtest alias
 
@@ -979,7 +979,7 @@ def rebuild_reliability(per_h_candidate: pd.DataFrame) -> None:
         shutil.copy2(METRICS_OUT, Path(str(METRICS_OUT) + ".bak.promote"))
     per_h_candidate.to_csv(METRICS_OUT, index=False)
     try:
-        proc = subprocess.run([sys.executable, "-u", "-m", "pipeline_traj", RELI_STAGE],
+        proc = subprocess.run([sys.executable, "-u", "-m", "pipelines.traj", RELI_STAGE],
                               cwd=ROOT, capture_output=True, text=True, timeout=1800)
         if proc.returncode != 0:
             raise RetrainError(f"reliability stage failed: {proc.stderr[-800:]}")

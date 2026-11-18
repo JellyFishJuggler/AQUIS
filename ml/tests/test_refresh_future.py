@@ -325,11 +325,11 @@ def _cwc_html(*rows):
     return f"<html><table>{body}</table></html>"
 
 
-@unittest.skipUnless(has("pipeline_data.py"), "pipeline_data missing")
+@unittest.skipUnless(has("pipelines/data.py"), "pipelines.data missing")
 class TestCwcDashboardParser(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        import pipeline_data
+        from pipelines import data as pipeline_data
         cls.m = pipeline_data
 
     def test_normal_layout(self):

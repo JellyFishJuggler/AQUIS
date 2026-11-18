@@ -7,12 +7,12 @@ import numpy as np
 from tests._helpers import has
 
 
-@unittest.skipUnless(has("_assistant.py") and has("data/aligned/table_6h.parquet"),
+@unittest.skipUnless(has("core/assistant.py") and has("data/aligned/table_6h.parquet"),
                      "assistant module / aligned table missing")
 class TestAssistantFacts(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        import _assistant
+        import core.assistant as _assistant
         cls.a = _assistant
         cls.df = _assistant.get_df()
         cls.station = "ASHADHA PRATHMIK VIDYALAYA"
