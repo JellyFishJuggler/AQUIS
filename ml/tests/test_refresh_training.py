@@ -17,9 +17,10 @@ from pathlib import Path
 
 import pandas as pd
 
-from refresh import inference, model_update, pipeline, scheduler
-from refresh.config import RefreshConfig, models_frozen
-from refresh.state import RefreshState
+from refresh import refresh_engines, refresh_service
+from refresh.refresh_core import RefreshConfig, RefreshState, models_frozen
+inference = model_update = verification = refresh_engines
+pipeline = scheduler = refresh_service
 from tests._helpers import has
 
 NOW = datetime(2026, 9, 10, 6, 0, tzinfo=timezone.utc)
@@ -43,7 +44,7 @@ def _per_h_df(cand30: float, inc30: float, persist30: float,
     }
 
 
-@unittest.skipUnless(has("refresh/model_update.py"), "refresh missing")
+@unittest.skipUnless(has("refresh/refresh_engines.py"), "refresh missing")
 class TestCutoffs(unittest.TestCase):
     def test_moving_window_geometry(self):
         cfg = RefreshConfig(candidate_holdout_days=90,
@@ -53,7 +54,7 @@ class TestCutoffs(unittest.TestCase):
         self.assertEqual((now - val_end).days, 90)
 
 
-@unittest.skipUnless(has("refresh/model_update.py"), "refresh missing")
+@unittest.skipUnless(has("refresh/refresh_engines.py"), "refresh missing")
 class TestGate(unittest.TestCase):
     def test_promote_when_candidate_wins(self):
         cfg = RefreshConfig()
@@ -101,7 +102,7 @@ class TestGate(unittest.TestCase):
         self.assertEqual(gate["decision"], "promote")
 
 
-@unittest.skipUnless(has("refresh/scheduler.py"), "refresh missing")
+@unittest.skipUnless(has("refresh/refresh_service.py"), "refresh missing")
 class TestSchedulerDecisions(unittest.TestCase):
     def setUp(self):
         self.cfg = RefreshConfig()
@@ -134,7 +135,7 @@ class TestSchedulerDecisions(unittest.TestCase):
                                                NOW.replace(hour=2)))
 
 
-@unittest.skipUnless(has("refresh/scheduler.py"), "refresh missing")
+@unittest.skipUnless(has("refresh/refresh_service.py"), "refresh missing")
 class TestModelFreeze(unittest.TestCase):
     """models_frozen_until must block retrain + promotion until the instant."""
 
@@ -152,7 +153,7 @@ class TestModelFreeze(unittest.TestCase):
                                       self.NOW))
 
     def test_validate_rejects_malformed_freeze(self):
-        from refresh.config import ConfigError
+        from refresh.refresh_core import ConfigError
         with self.assertRaises(ConfigError):
             RefreshConfig(models_frozen_until="not-a-date").validate()
 
@@ -216,7 +217,7 @@ class _FakeState:
         self.events.append({"kind": kind, "ok": ok, "msg": msg, **extra})
 
 
-@unittest.skipUnless(has("refresh/pipeline.py"), "refresh missing")
+@unittest.skipUnless(has("refresh/refresh_service.py"), "refresh missing")
 class TestNoNewSourceData(unittest.TestCase):
     """A clean zero-new-row fetch is a benign no-op; everything else raises."""
 

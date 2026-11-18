@@ -14,11 +14,11 @@ _FEAT_MOD = None
 
 
 def _features_mod():
-    """Load 06_features.py by path (leading-digit filename is not importable)."""
+    """Load the shared feature builder (pipeline_model) by path."""
     global _FEAT_MOD
     if _FEAT_MOD is None:
         spec = importlib.util.spec_from_file_location(
-            "arima_baseline_features", ROOT / "06_features.py")
+            "arima_baseline_features", ROOT / "pipeline_model.py")
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)  # cache only after success: a failed exec
         _FEAT_MOD = mod              # must not leave a partial module behind
@@ -28,8 +28,8 @@ import numpy as np
 import pandas as pd
 import xgboost as xgb
 
-ROOT = Path(__file__).resolve().parents[1]
-# 06_features.py does "from _soil import ..." / "from _lulc import ...": ensure
+ROOT = Path(__file__).resolve().parents[2]
+# pipeline_model imports static_loaders / _hydrology: ensure
 # the ml/ root is importable no matter where this script is launched from.
 import sys as _sys
 if str(ROOT) not in _sys.path:
@@ -63,7 +63,7 @@ def select_stations(daily: pd.DataFrame, valid: dict[str, list]) -> list[str]:
     print(f"Selection logic: stations with >={N_ORIGINS} valid origins: {len(qual)}; "
           f"10 taken evenly spaced by pre-test daily variance (low→high). "
           f"Validity already excludes origins the frozen XGB pipeline refuses "
-          f"(telemetry regime shift, same rule as 06_features.flag_regime_shift).")
+          f"(telemetry regime shift, same rule as pipeline_model.flag_regime_shift).")
     if len(qual) < 10:
         raise SystemExit(f"Only {len(qual)} stations have >={N_ORIGINS} valid origins; need 10.")
     idx = np.linspace(0, len(qual) - 1, 10, dtype=int)
@@ -89,7 +89,7 @@ def xgb_feasible(ymaps: dict[str, dict[int, float]], station: str,
     """True when build_full(history <= origin) would keep the station, i.e. no
     yearly median (2021..origin-year, 2026 partial to the origin) deviates more
     than max_delta from the station's 2021-2024 baseline. Same rule as
-    06_features.flag_regime_shift; telemetry datum jumps make XGB refuse the
+    pipeline_model.flag_regime_shift; telemetry datum jumps make XGB refuse the
     station in production too, so such origins cannot be matched.
     """
     ym = ymaps.get(station, {})

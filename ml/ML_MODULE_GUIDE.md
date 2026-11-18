@@ -32,14 +32,14 @@ For an evaluation of the saved DL-GRU results against NSE/R², station-range-nor
 ## 2. Scope and architecture
 
 `ml` is a Python package-like directory, but its numbered scripts are often run
-as flat scripts (for example, `python 06_features.py`) and internal modules are
+as flat scripts (for example, `python -m pipeline_data features`) and internal modules are
 imported by filename. The principal components are:
 
 | Component | Location | Purpose |
 |---|---|---|
-| Source configuration and ingestion | `config.py`, `data/raw/nwic.py`, `00_probe.py`–`04b_align_6h.py` | Discover NWIC schemas, select stations, retrieve observations, clean them, and align them in space and time. |
+| Source configuration and ingestion | `config.py`, `data/raw/nwic.py`, `pipeline_data.py (probe stage)`–`pipeline_data.py (align6 stage)` | Discover NWIC schemas, select stations, retrieve observations, clean them, and align them in space and time. |
 | Feature and model research | numbered scripts, `experiments/` | Build training rows, fit pooled/tree/GRU models, compare baselines, diagnose errors, and preserve research evidence. |
-| Shared prediction logic | `_model.py`, `_trajectory.py`, `_dl.py`, `_traj_dispatch.py` | Load model artifacts, construct forecast rows, choose backend, and produce forecast response objects. |
+| Shared prediction logic | `serving_core.py`, `serving_engines.py`, `static_loaders.py` | Load model artifacts, construct forecast rows, choose backend, and produce forecast response objects. |
 | Operational refresh | `refresh/` | Incrementally fetch live GWL, Open-Meteo weather, and CWC/FMIS river forecasts; rebuild aligned inputs, infer forecasts, publish atomically, verify outcomes, and gate retraining. |
 | HTTP service | `api.py` | Flask JSON API for station, district, fleet, model, forecast, and assistant data. |
 | ML showcase | `streamlit_app.py`, `app_pages/` | Read and explain existing datasets and artifacts; not the training/refresh service. |
@@ -67,7 +67,7 @@ must not be compared as if they came from the same sample.
 ### 3.1 NWIC/NWDP observations
 
 `config.py` holds the archive/live resource IDs and value hints for each
-configured NWIC/NWDP source. `00_probe.py` probes metadata and detects the
+configured NWIC/NWDP source. `pipeline_data.py (probe stage)` probes metadata and detects the
 numeric value column; `data/meta/probe.json` records the local probe result.
 `data/raw/nwic.py` wraps the CKAN API. Retrieval uses `datastore_search`, not
 the portal's CSV download links. The repository-side catalogue is
@@ -82,7 +82,7 @@ the portal's CSV download links. The repository-side catalogue is
 | Canal | `canal_level`, `canal_discharge` | Historical context / exploratory association. | Canal level uses nearest gauge within 100 km where coordinates exist; configured discharge feed had no usable coverage in selected districts in the saved report. |
 | Reservoir/barrage | `res_okhla`, `res_okhla_agra_canal`, `res_matatila`, `res_ganga_rmc`, `res_ganga_1` | Exploratory historical drivers. | Selected barrage feeds had no usable coverage in the saved source report; discharge files keep one detected Gate-1 series as an approximation. |
 
-The full-coverage selection rule is in `config.py` and `01_select.py`: a station
+The full-coverage selection rule is in `config.py` and `pipeline_data.py (select stage)`: a station
 needs at least one 2026 observation in 8 of January–September, a first 2026
 record no later than January 15, and a last record on or after August 1. The
 checked-in README's data-probe snapshot says **600 of 1,353 stations** passed
@@ -96,10 +96,10 @@ input snapshot.
 
 | Source | Script / artifact | What it contributes | Limits / use |
 |---|---|---|---|
-| Open-Meteo | `20_openmeteo_fetch.py`; `data/cfs/openmeteo_weather_daily.parquet` | District-centroid daily weather/rain, FAO-56 Penman–Monteith reference ET₀, and short-range forecast. Initial fetch defaults to 365 historical days; refresh merges a rolling 400-day fetch into the retained archive and requests up to 16 forecast days. | ET₀ is a modeled reference-grass estimate, not actual ET. The water-balance page may show district P − ET₀ as a climate surplus/deficit indicator, not recharge. Neither ET₀ nor P − ET₀ is a groundwater forecast feature. Future values are forcing estimates; do not use realized archive values as point-in-time historical forecast features. |
-| CWC/FMIS river bulletin | `18_cwc_river_forecast.py`; `data/cfs/river_forecast_cwc.parquet` | Parsed river forecasts, up to a short forecast window (currently 7-day logic in future-driver builder). | Used only where a matching district/gauge forecast exists. Its river-level change is applied over a station baseline rather than copying another gauge's raw datum. |
-| ISRIC SoilGrids 2.0 | `07_soil.py`; `data/soil/soil_stations.csv` | Static soil texture and bulk density from station coordinates. | Thickness-weighted 0–30 cm aggregation; fetched as supplementary data. Soil features are gated out of the shipped main model after degrading validation. |
-| ISRO Bhuvan LULC 50K | `08_lulc.py`; `data/meta/lulc_long.csv`, `data/soil/lulc_district.csv` | District land-cover percentages for two historical cycles; the 2011–12 cycle creates static district features. | Exploratory only; static shares are gated out of the shipped model after no benefit/degradation. API key is read from the repository `.env`; do not put secrets in this guide. |
+| Open-Meteo | `openmeteo_weather.py`; `data/cfs/openmeteo_weather_daily.parquet` | District-centroid daily weather/rain, FAO-56 Penman–Monteith reference ET₀, and short-range forecast. Initial fetch defaults to 365 historical days; refresh merges a rolling 400-day fetch into the retained archive and requests up to 16 forecast days. | ET₀ is a modeled reference-grass estimate, not actual ET. The water-balance page may show district P − ET₀ as a climate surplus/deficit indicator, not recharge. Neither ET₀ nor P − ET₀ is a groundwater forecast feature. Future values are forcing estimates; do not use realized archive values as point-in-time historical forecast features. |
+| CWC/FMIS river bulletin | `pipeline_data cwc_forecast`; `data/cfs/river_forecast_cwc.parquet` | Parsed river forecasts, up to a short forecast window (currently 7-day logic in future-driver builder). | Used only where a matching district/gauge forecast exists. Its river-level change is applied over a station baseline rather than copying another gauge's raw datum. |
+| ISRIC SoilGrids 2.0 | `pipeline_data soil`; `data/soil/soil_stations.csv` | Static soil texture and bulk density from station coordinates. | Thickness-weighted 0–30 cm aggregation; fetched as supplementary data. Soil features are gated out of the shipped main model after degrading validation. |
+| ISRO Bhuvan LULC 50K | `pipeline_data lulc`; `data/meta/lulc_long.csv`, `data/soil/lulc_district.csv` | District land-cover percentages for two historical cycles; the 2011–12 cycle creates static district features. | Exploratory only; static shares are gated out of the shipped model after no benefit/degradation. API key is read from the repository `.env`; do not put secrets in this guide. |
 | Ollama local model | `_assistant.py` | Turns precomputed station facts into conversational wording. | Local LLM dependency; no data-source authority and no permission to invent values. Numeric facts are prepared by Python before prompting. |
 
 ### 3.3 Source coverage snapshot
@@ -121,14 +121,14 @@ and expensive transforms can be rerun independently:
 
 | Order | Script | Input → output | Main job |
 |---:|---|---|---|
-| 0 | `00_probe.py` | CKAN resource metadata → `data/meta/probe.json` | Inspect schemas/value fields and resource health. |
-| 1 | `01_select.py` | `data/processed/common.parquet` → selected station/district CSV/JSON metadata | Apply the full-2026 live-station rule; write `selected_gwl_stations.csv`, `selected_districts.json`, flags, stale watchlist. |
-| 2 | `02_fetch_selected.py` | Local GWL parquet + CKAN archive/live resources → `data/selected/*_selected.csv` | Extract GWL for selected wells; fetch each other configured source by selected district and time window. Uses page offsets, retries in the NWIC client, and `.done` markers to resume. |
-| 3 | `03_merge_normalize.py` | Selected CSVs → `data/raw/*_norm.parquet`, `data/meta/manifest.json` | Normalize names/types, drop duplicates and invalid timestamps/values, apply caps and GWL station-wise trim, record row counts/ranges/drops. |
-| 4 | `04_align.py` | Normalized source parquets → daily `data/aligned/table.parquet` plus `assoc_*.csv` | Build well-to-gauge links; aggregate observations to daily; IDW rainfall and nearest-gauge/proxy join other sources. |
-| 4b | `04b_align_6h.py` | Normalized source parquets + associations → `data/aligned/table_6h.parquet` | Build the production-cadence 6-hour grid, aggregate rainfall by sum and other driver values by mean, preserve GWL observation-vs-forward-fill provenance. |
-| 5 | `05_correlate.py` | Daily/6-hour aligned tables → correlation/lag CSV/HTML outputs | Calculate raw, deseasonalized, differenced associations and rainfall lag summaries. This is analysis, not training. |
-| 6 | `06_features.py` | `table_6h.parquet` (+ optional static sources) → `data/features/{train,val,test}.parquet`, `prep.json` | Remove GWL outliers/regime shifts; build anchor features, label, target time, and split/purge rows. |
+| 0 | `pipeline_data.py (probe stage)` | CKAN resource metadata → `data/meta/probe.json` | Inspect schemas/value fields and resource health. |
+| 1 | `pipeline_data.py (select stage)` | `data/processed/common.parquet` → selected station/district CSV/JSON metadata | Apply the full-2026 live-station rule; write `selected_gwl_stations.csv`, `selected_districts.json`, flags, stale watchlist. |
+| 2 | `pipeline_data.py (fetch stage)` | Local GWL parquet + CKAN archive/live resources → `data/selected/*_selected.csv` | Extract GWL for selected wells; fetch each other configured source by selected district and time window. Uses page offsets, retries in the NWIC client, and `.done` markers to resume. |
+| 3 | `pipeline_data.py (normalize stage)` | Selected CSVs → `data/raw/*_norm.parquet`, `data/meta/manifest.json` | Normalize names/types, drop duplicates and invalid timestamps/values, apply caps and GWL station-wise trim, record row counts/ranges/drops. |
+| 4 | `pipeline_data.py (align stage)` | Normalized source parquets → daily `data/aligned/table.parquet` plus `assoc_*.csv` | Build well-to-gauge links; aggregate observations to daily; IDW rainfall and nearest-gauge/proxy join other sources. |
+| 4b | `pipeline_data.py (align6 stage)` | Normalized source parquets + associations → `data/aligned/table_6h.parquet` | Build the production-cadence 6-hour grid, aggregate rainfall by sum and other driver values by mean, preserve GWL observation-vs-forward-fill provenance. |
+| 5 | `pipeline_model.py (correlate stage)` | Daily/6-hour aligned tables → correlation/lag CSV/HTML outputs | Calculate raw, deseasonalized, differenced associations and rainfall lag summaries. This is analysis, not training. |
+| 6 | `pipeline_model.py (features stage)` | `table_6h.parquet` (+ optional static sources) → `data/features/{train,val,test}.parquet`, `prep.json` | Remove GWL outliers/regime shifts; build anchor features, label, target time, and split/purge rows. |
 
 The source window defaults in `config.py` are 2021-01-01 through 2026-09-05.
 Fetch code extends the driver extraction start by 40 days and end by one day to
@@ -140,35 +140,36 @@ is shown below. These commands write data and some make network requests; this
 is a runbook only, and none was executed while preparing this guide:
 
 ```powershell
-python 00_probe.py
-python 01_select.py
-python 02_fetch_selected.py
-python 03_merge_normalize.py
-python 04_align.py
-python 04b_align_6h.py
-python 05_correlate.py
-python 06_features.py
-python 06_train.py
-python 07_evaluate.py
-python 11_quantile.py
+python -m pipeline_data probe
+python -m pipeline_data select
+python -m pipeline_data fetch
+python -m pipeline_data normalize
+python -m pipeline_data align
+python -m pipeline_data align6
+python -m pipeline_data correlate
+python -m pipeline_data features
+python -m pipeline_data train
+python -m pipeline_data evaluate
+python -m pipeline_data quantile
 ```
 
-Supplementary source fetches (`07_soil.py`, `08_lulc.py`), future-driver
-climatology (`16_future_drivers.py`), external forecast fetches
-(`18_cwc_river_forecast.py`, `20_openmeteo_fetch.py`), fleet scoring, and
+Supplementary source fetches (`pipeline_data soil`, `pipeline_data lulc`), future-driver
+climatology (`pipeline_data climatology`), external forecast fetches
+(`pipeline_data cwc_forecast`, `openmeteo_weather.py`), fleet scoring, and
 diagnostics are optional branches. For trajectory v2, build the one-step
-6-hourly feature frame and long horizon frame with `14_6h_features.py` only if
+6-hourly feature frame and long horizon frame with `pipeline_data features6h` only if
 the chosen training path requires it; the current direct trajectory dataset
-builder consumes `data/features_6h/` and is invoked as `30_traj_datasets.py`,
-then run `31_train_traj.py`, `32_backtest_traj.py`, and `33_traj_reliability.py`.
-For GRU candidates use `34_train_traj_dl.py` (trajectory) or
-`36_train_pooled_dl.py` (pooled) and their corresponding paired/backtest
-scripts. Check dependencies, input dates, and artifact provenance before
+builder consumes `data/features_6h/` and is invoked as `pipeline_traj datasets`,
+then run `pipeline_traj train`, `pipeline_traj backtest`, and
+`pipeline_traj reliability`.
+For GRU candidates use `pipeline_traj train_dl` (trajectory) or
+`pipeline_traj train_pooled_dl` (pooled) and their corresponding paired/backtest
+stages. Check dependencies, input dates, and artifact provenance before
 replacing any saved model.
 
 ### 4.2 Retrieval and normalization details
 
-`02_fetch_selected.py` uses CKAN `filters={"District": ...}`, limit 5,000,
+`pipeline_data.py (fetch stage)` uses CKAN `filters={"District": ...}`, limit 5,000,
 offset pagination, and retains records with a parseable acquisition/date field
 inside the extraction window. It fetches archive and live resource pairs. Each
 source gets a `.done` marker only when rows were written; missing-source markers
@@ -176,7 +177,7 @@ in `data/selected/` prevent re-probing known-empty resources on later runs.
 GWL is not re-downloaded in this initial stage: it is extracted from
 `data/processed/common.parquet` for the selected station names.
 
-`03_merge_normalize.py` writes a canonical long-form schema:
+`pipeline_data.py (normalize stage)` writes a canonical long-form schema:
 `source`, `Station`, optional `Tehsil`, `District`, `lat`, `lon`, `time`,
 `value`. District/station strings are trimmed, timestamps parsed, numeric values
 coerced, and `(Station,time)` duplicates removed. Per-source plausibility caps
@@ -188,7 +189,7 @@ script. The manifest records counts, coverage span, extrema, and drops.
 
 ### 4.3 Spatial linkage and aggregation
 
-`04_align.py` creates persistent association tables so a well's gauges are
+`pipeline_data.py (align stage)` creates persistent association tables so a well's gauges are
 inspectable and reused by the 6-hour aligner:
 
 * Rainfall: up to 3 gauges within 150 km, weights `1 / max(distance_km, 0.05)^2`.
@@ -212,7 +213,7 @@ variables are average states/rates.
 
 ### 4.4 Feature construction
 
-`06_features.py` builds one feature record per station and 6-hour anchor. The
+`pipeline_model.py (features stage)` builds one feature record per station and 6-hour anchor. The
 main trained XGBoost trajectory schema is 30 base numeric features plus horizon
 fields `h`, `h_sin`, `h_cos` (33 total). The pooled XGBoost model uses the 30
 base features plus station/district IDs where configured. Model configs are the
@@ -270,26 +271,26 @@ the current purged pipeline.
 
 ### 5.1 Pooled direct-30-day model
 
-`06_train.py` fits pooled XGBoost and Ridge over the feature rows. Target is
+`pipeline_model.py (train stage)` fits pooled XGBoost and Ridge over the feature rows. Target is
 30-day delta; conversion to level adds the anchor. Training samples one of each
 four 6-hour rows for the dense Ridge solve (roughly one slot per day); features
 are already grid-derived. A time-ordered tail of training is used for XGBoost
 early stopping. Model output is saved under `models/` with feature schema and
-metadata; evaluation is separate (`07_evaluate.py`).
+metadata; evaluation is separate (`pipeline_model.py (evaluate stage)`).
 
-`11_quantile.py` fits pooled q05/q50/q95 XGBoost uncertainty models and writes
+`pipeline_model quantile` fits pooled q05/q50/q95 XGBoost uncertainty models and writes
 `xgb_q05/q50/q95.joblib` plus calibration. The existing pooled daily GRU
-(`36_train_pooled_dl.py`) builds daily records from the last 6-hour point per
+(`pipeline_traj train_pooled_dl`) builds daily records from the last 6-hour point per
 station/day, uses a 60-day sequence and 39 feature columns (including selected
 hydrology features), predicts three quantiles with pinball loss, and averages a
 3-seed ensemble (42, 840, 2056). Its honest stride comparison is
-`37_backtest_pooled_dl.py` → `outputs/pooled_dl_eval.json`.
+`pipeline_traj backtest_pooled_dl` → `outputs/pooled_dl_eval.json`.
 
 ### 5.2 Trajectory model
 
-`30_traj_datasets.py` builds train/validation long frames and `prep_traj.json`.
-`31_train_traj.py` trains shared direct XGBoost quantile models for q05/q50/q95
-with explicit horizon and sinusoidal horizon encoding. `34_train_traj_dl.py`
+`pipeline_traj datasets` builds train/validation long frames and `prep_traj.json`.
+`pipeline_traj train` trains shared direct XGBoost quantile models for q05/q50/q95
+with explicit horizon and sinusoidal horizon encoding. `pipeline_traj train_dl`
 trains the GRU candidate on the same anchor/horizon targets: it encodes up to
 120 previous 6-hour records, left-pads short histories with a mask, conditions
 the quantile head on the requested horizon, and uses pinball loss. It does not
@@ -297,14 +298,14 @@ recursively reuse predictions as observations.
 
 The post-training chain is:
 
-1. `32_backtest_traj.py` evaluates a station/horizon sample against observations,
+1. `pipeline_traj backtest` evaluates a station/horizon sample against observations,
    persistence, and direct-30-day references; calibration widening is fit on
    one anchor subset and assessed on a disjoint subset.
-2. `33_traj_reliability.py` builds per-horizon reliability/evidence tables used
+2. `pipeline_traj reliability` builds per-horizon reliability/evidence tables used
    to turn model uncertainty and data quality into confidence labels.
-3. `35_traj_paired_ci.py` compares DL and XGB by station-bootstrap confidence
+3. `pipeline_traj paired_ci` compares DL and XGB by station-bootstrap confidence
    intervals at selected horizons.
-4. `gate_check.py` and `refresh/model_update.py` apply promotion criteria; a
+4. `gate_check.py` and `refresh/refresh_engines.py` apply promotion criteria; a
    candidate is not promoted simply because its 30-day RMSE is lower.
 
 ### 5.3 Other tested algorithms and baselines
@@ -359,12 +360,13 @@ generalization.
 
 ### 7.1 Trajectory inference
 
-`_traj_dispatch.active_trajectory_forecast(station)` reads
+`serving_core.active_trajectory_forecast(station)` reads
 `data/refresh/runtime.json`. Missing/corrupt runtime configuration defaults to
-the DL (GRU) engine. If `traj_backend=dl`, it calls `_dl.trajectory_forecast`;
-an import/load/inference exception (e.g. torch not installed) logs a fallback and
-uses `_trajectory.trajectory_forecast` (XGBoost). Set `{"traj_backend": "xgb"}`
-to pin the incumbent engine. Both engines load aligned history, validate
+the DL (GRU) engine. `traj_backend=dl` calls
+`serving_engines.dl_trajectory_forecast`; an import/load/inference exception
+(e.g. torch not installed) returns a degraded `backend_unavailable` error instead
+of silently serving a different model. XGBoost is used only when
+`traj_backend=xgb` or the caller opts in with `allow_fallback=True`. Both engines load aligned history, validate
 the anchor and model artifacts, build recent causal features, and return an
 error object with a reason when station data/artifacts/history are unusable.
 
@@ -376,7 +378,7 @@ performance-vs-persistence, width, and trajectory stability all contribute.
 
 ### 7.2 Flat versus future feature mode
 
-`refresh/config.py` allows `flat` or `future`. Flat repeats anchor feature
+`refresh/refresh_core.py` allows `flat` or `future`. Flat repeats anchor feature
 values for the direct horizon rows; future mode rebuilds future-time driver and
 calendar values. In future mode, source precedence is broadly:
 
@@ -395,16 +397,17 @@ driver matrix used at their original issue time.
 
 ### 7.3 Pooled inference
 
-`_model.forward_forecast` is the pooled XGBoost direct-30-day path; it predicts a
-single change and interval from the latest usable station anchor. Backend
-selection reads `forward_backend` in `runtime.json`; the DL path is provided by
-`_dl.forward_forecast`. The HTTP API's `/forecast/<slug>` endpoint is the
+`serving_core.forward_forecast` is the runtime-dispatched pooled direct-30-day
+path; it predicts a single change and interval from the latest usable station
+anchor. The XGBoost benchmark lives at `serving_core._forward_forecast_xgb`;
+backend selection reads `forward_backend` in `runtime.json`, and the DL path is
+`serving_engines.dl_forward_forecast`. The HTTP API's `/forecast/<slug>` endpoint is the
 120-point trajectory, not the scalar pooled 30-day outlook. Keep this distinction
 in clients and dashboards.
 
 ## 8. Refresh: how and when operational data changes
 
-The refresh system is in `refresh/`. Code defaults are in `refresh/config.py`;
+The refresh system is in `refresh/`. Code defaults are in `refresh/refresh_core.py`;
 operator overrides live in the ignored `data/refresh/refresh_config.json` and
 some environment variables. Defaults: data/forecast refresh every 6 hours at
 01:00, 07:00, 13:00, 19:00 local time; retrain cadence every 24 hours in allowed
@@ -414,7 +417,7 @@ cycles back off at least 90 minutes rather than spinning.
 
 High-level refresh cycle:
 
-1. `refresh/sources.py` incrementally fetches GWL from live NWIC resources,
+1. `refresh/refresh_data.py` incrementally fetches GWL from live NWIC resources,
    Open-Meteo weather history/forecast, and CWC/FMIS river forecasts. Failures
    preserve the last good parquet and are reported rather than fabricating
    values. Other historical NWIC driver feeds are part of initial ingestion;
@@ -423,7 +426,7 @@ High-level refresh cycle:
    backup/restore protections.
 3. Inference updates stations whose anchors changed using selected trajectory
    backend and source/climatology logic.
-4. `refresh/publish.py` stages per-station JSON plus fleet Parquet; writes
+4. `refresh/refresh_core.py` stages per-station JSON plus fleet Parquet; writes
    metadata last as the commit point; archives previous forecasts for later
    verification.
 5. Verification joins archived forecasts to later actual GWL at the exact
@@ -511,7 +514,7 @@ signals from local aligned data and saved outputs. The user selects/pins a
 station; the LLM is asked to phrase those facts, not calculate a new forecast or
 create unsupported measurements. Ollama is local and can be offline; the facts
 panel/API facts remain independently useful. The documented default model is
-`llama3.2:3b`, configurable via `AQUIS_OLLAMA_MODEL`; voice transcription occurs
+`qwen2.5:3b`, configurable via `AQUIS_OLLAMA_MODEL`; voice transcription occurs
 on the client and sends text to the same endpoint (no server audio/STT pipeline).
 
 ## 10. Directory map: where to find things
@@ -556,31 +559,31 @@ lock path is not established by this checkout. Soil fetching also shells out to
 
 | Script | Role |
 |---|---|
-| `00_probe.py` | Probe configured source resources/schemas. |
-| `01_select.py` | Select full-2026 GWL stations and districts. |
-| `02_fetch_selected.py` | Extract local GWL plus district-filtered NWIC drivers. |
-| `03_merge_normalize.py` | Clean and standardize selected CSVs into Parquets. |
-| `04_align.py`, `04b_align_6h.py` | Daily and 6-hour spatial/temporal alignment. |
-| `05_correlate.py` | Driver correlations, deseasonalized/differenced analysis, lag curves. |
-| `06_features.py` | Feature/label engineering and purged temporal split. |
-| `06_train.py`, `07_evaluate.py` | Pooled XGBoost/Ridge training and evaluation. |
-| `07_soil.py`, `08_lulc.py` | Supplementary static soil/LULC data fetch and aggregation. |
-| `10_ablate.py`, `12_diagnostics.py` | Feature-group ablation, permutation/VIF/sensitivity diagnostics. |
-| `11_quantile.py` | Pooled XGBoost quantile models and interval calibration. |
-| `11_fleet.py` | Fleet-wide saved forecast scan and district aggregation. |
-| `13_refresh_nwic.py` | Incremental NWIC GWL update helper used by refresh. |
-| `14_6h_features.py` | Build a one-step-ahead (+6h) recursive-model frame; legacy/experimental, distinct from direct trajectory v2's multi-horizon labels. The direct trajectory dataset builder currently reads `data/features_6h/` produced by this script. |
-| `16_future_drivers.py` | Driver climatology/scenario utilities. |
-| `18_cwc_river_forecast.py`, `20_openmeteo_fetch.py` | Fetch/parse short-range river and weather forecasts. |
-| `30_traj_datasets.py` | Build anchor × horizon trajectory datasets. |
-| `31_train_traj.py`, `32_backtest_traj.py`, `33_traj_reliability.py` | Train/backtest XGBoost trajectory, calibration, reliability. |
-| `34_train_traj_dl.py`, `35_traj_paired_ci.py` | Train trajectory GRU and compare against trajectory XGB. |
-| `36_train_pooled_dl.py`, `37_backtest_pooled_dl.py` | Train and honestly compare pooled daily GRU. |
-| `31_honest_baseline.py` | Recompute station-split summaries from existing historical prediction artifact; its input artifact is documented as pre-purge. |
+| `pipeline_data.py (probe stage)` | Probe configured source resources/schemas. |
+| `pipeline_data.py (select stage)` | Select full-2026 GWL stations and districts. |
+| `pipeline_data.py (fetch stage)` | Extract local GWL plus district-filtered NWIC drivers. |
+| `pipeline_data.py (normalize stage)` | Clean and standardize selected CSVs into Parquets. |
+| `pipeline_data.py (align stage)`, `pipeline_data.py (align6 stage)` | Daily and 6-hour spatial/temporal alignment. |
+| `pipeline_model.py (correlate stage)` | Driver correlations, deseasonalized/differenced analysis, lag curves. |
+| `pipeline_model.py (features stage)` | Feature/label engineering and purged temporal split. |
+| `pipeline_model.py (train stage)`, `pipeline_model.py (evaluate stage)` | Pooled XGBoost/Ridge training and evaluation. |
+| `pipeline_data soil`, `pipeline_data lulc` | Supplementary static soil/LULC data fetch and aggregation. |
+| `pipeline_model ablate`, `pipeline_model diagnostics` | Feature-group ablation, permutation/VIF/sensitivity diagnostics. |
+| `pipeline_model quantile` | Pooled XGBoost quantile models and interval calibration. |
+| `pipeline_model fleet` | Fleet-wide saved forecast scan and district aggregation. |
+| `pipeline_data nwic` | Incremental NWIC GWL update helper used by refresh. |
+| `pipeline_data features6h` | Build a one-step-ahead (+6h) recursive-model frame; legacy/experimental, distinct from direct trajectory v2's multi-horizon labels. The direct trajectory dataset builder currently reads `data/features_6h/` produced by this script. |
+| `pipeline_data climatology` | Driver climatology/scenario utilities. |
+| `pipeline_data cwc_forecast`, `openmeteo_weather.py` | Fetch/parse short-range river and weather forecasts. |
+| `pipeline_traj datasets` | Build anchor × horizon trajectory datasets. |
+| `pipeline_traj train`, `pipeline_traj backtest`, `pipeline_traj reliability` | Train/backtest XGBoost trajectory, calibration, reliability. |
+| `pipeline_traj train_dl`, `pipeline_traj paired_ci` | Train trajectory GRU and compare against trajectory XGB. |
+| `pipeline_traj train_pooled_dl`, `pipeline_traj backtest_pooled_dl` | Train and honestly compare pooled daily GRU. |
 | `gate_check.py` | Check stored model/artifact gates. |
 
-There are intentional numbering gaps and a reused `31_` prefix. Run scripts by
-their explicit filename; do not assume that the number alone conveys ordering.
+Numbered pipeline scripts were consolidated into `pipeline_data.py`,
+`pipeline_model.py`, and `pipeline_traj.py`. Run stages with
+`python -m <module> <stage>`; do not assume a number alone conveys ordering.
 
 ## 12. Saved performance evidence (local snapshot)
 
@@ -702,13 +705,13 @@ missing artifacts.
 
 ### Where should an edit go?
 
-* Source/schema acquisition: `config.py`, `data/raw/nwic.py`, and `00_probe.py`.
-* Historical feature logic: `04_align.py`, `04b_align_6h.py`, `06_features.py`,
+* Source/schema acquisition: `config.py`, `data/raw/nwic.py`, and `pipeline_data.py (probe stage)`.
+* Historical feature logic: `pipeline_data.py (align stage)`, `pipeline_data.py (align6 stage)`, `pipeline_model.py (features stage)`,
   `_hydrology.py`; keep training and serving definitions aligned.
 * Model architecture/training: the matching numbered training script and its
   config writer.
-* Inference/response shape: `_model.py`, `_trajectory.py`, `_dl.py`,
-  `_traj_dispatch.py`; preserve backend parity.
+* Inference/response shape: `serving_core.py`, `serving_engines.py`;
+  preserve backend parity.
 * Scheduled updates/publication: `refresh/`; preserve atomic publish, rollback,
   freshness and promotion gates.
 * UI or HTTP response: `app_pages/` or `api.py`; do not put training/fetch side

@@ -21,8 +21,8 @@ import _charts as C
 import _data as D
 import _hydro_metrics as M
 
-SPIKE_Z = 30.0          # mirrors 06_features.drop_gwl_spikes
-REGIME_JUMP_M = 15.0    # mirrors 06_features.flag_regime_shift
+SPIKE_Z = 30.0          # mirrors pipeline_model.drop_gwl_spikes
+REGIME_JUMP_M = 15.0    # mirrors pipeline_model.flag_regime_shift
 
 
 @st.cache_data(ttl="10m", show_spinner="Reading this station's record…")
@@ -40,7 +40,7 @@ def _datum_scan() -> pd.DataFrame:
     """Annual medians per station, to flag >15 m datum jumps.
 
     One pass over three thin columns; the same rule the feature pipeline uses to
-    drop a station wholesale (`06_features.flag_regime_shift`).
+    drop a station wholesale (`pipeline_model.flag_regime_shift`).
     """
     df = D.read_parquet_safe(D.ALIGNED / "table_6h.parquet",
                              columns=["Station", "time", "gwl"])
@@ -118,7 +118,7 @@ k[4].metric("Provenance column",
 if not q.get("has_provenance"):
     st.warning(
         "**This aligned table predates the provenance column.** `gwl_obs` is written "
-        "by `04b_align_6h.gwl_track`; until that runs, every present value is treated "
+        "by `pipeline_data.gwl_track`; until that runs, every present value is treated "
         "as measured — so carried-forward readings are invisible here *and* in the "
         "hydrology features."
     )
@@ -151,7 +151,7 @@ longest = float((t.diff().dt.total_seconds() / 3600.0).max()) if len(t) > 1 else
 s = st.columns(3)
 s[0].metric("Spikes flagged", f"{int(spikes.sum()):,}",
             help=f"|level − median| > {SPIKE_Z:.0f} × MAD — the mask "
-                 "`06_features.drop_gwl_spikes` applies at build time.")
+                 "`pipeline_model.drop_gwl_spikes` applies at build time.")
 s[1].metric("Robust spread (MAD)", f"{mad:.3f} m")
 s[2].metric("Longest gap", f"{longest:.0f} h" if np.isfinite(longest) else "—")
 if int(spikes.sum()):
@@ -177,7 +177,7 @@ else:
     if not this.empty and float(this["max_annual_dev_m"].iloc[0]) > REGIME_JUMP_M:
         st.error(
             f"**{station} is itself flagged** (max annual deviation "
-            f"{float(this['max_annual_dev_m'].iloc[0]):.1f} m). `06_features.build_full` "
+            f"{float(this['max_annual_dev_m'].iloc[0]):.1f} m). `pipeline_model.build_full` "
             "drops such stations wholesale, so the pooled models will not forecast it."
         )
     st.caption(

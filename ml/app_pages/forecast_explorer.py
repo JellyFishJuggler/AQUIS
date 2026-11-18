@@ -1,7 +1,7 @@
 """Page 2 — Forecast explorer: observed history + the active GRU forecast.
 
 Read-only. The optional live path calls the EXISTING inference engine
-(``_traj_dispatch.active_trajectory_forecast``), which uses the backend selected
+(``serving_core.active_trajectory_forecast``), which uses the backend selected
 in runtime.json (DL-GRU by default). It never trains or writes anything.
 """
 

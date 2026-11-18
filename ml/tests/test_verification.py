@@ -8,6 +8,7 @@ verify_forecasts scoring realised readings against the *older* anchor.
 
 from __future__ import annotations
 
+import importlib
 import json
 import os
 import shutil
@@ -20,7 +21,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from refresh import config, publish, verification
+from refresh import refresh_core, refresh_engines, refresh_service
+config = publish = state = refresh_core
+verification = refresh_engines
+scheduler = refresh_service
 from tests._helpers import has
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -42,7 +46,7 @@ def _pod(station: str, anchor: str, q50: float = -1.0,
     return pod
 
 
-@unittest.skipUnless(has("refresh/publish.py"), "refresh package missing")
+@unittest.skipUnless(has("refresh/refresh_core.py"), "refresh package missing")
 class TestVerification(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
@@ -152,7 +156,7 @@ class TestVerification(unittest.TestCase):
         publish.publish_forecasts([fresh], engine="e", model_version="v2",
                                   model_trained_at=None, keep_staging=False)
         verification.verify_forecasts(min_generation_age_s=0)
-        from refresh.verification import VERIF_LEDGER
+        from refresh.refresh_engines import VERIF_LEDGER
         ledger = verification._load_ledger()
         summary = verification.build_summary(ledger)
         self.assertIn("30d", summary["windows"])
@@ -175,14 +179,14 @@ class TestVerification(unittest.TestCase):
         self.assertEqual(len(n2), len(n1))
 
 
-@unittest.skipUnless(has("refresh/scheduler.py"), "refresh package missing")
+@unittest.skipUnless(has("refresh/refresh_service.py"), "refresh package missing")
 class TestSchedulerDrift(unittest.TestCase):
     """drift_retrain_due: per-summary streak, armed only once per summary."""
 
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
-        from refresh import scheduler, state
+        from refresh import refresh_service as scheduler, refresh_core as state
         self.sched = scheduler
         self.sup = self.tmp / "verification_summary.json"
         self.old_path = verification.VERIF_SUMMARY
@@ -222,7 +226,7 @@ class TestSchedulerDrift(unittest.TestCase):
         self.assertEqual(self.st.get("drift_streak"), 0)
 
 
-@unittest.skipUnless(has("03_merge_normalize.py"), "merge/normalize missing")
+@unittest.skipUnless(has("pipeline_data.py"), "pipeline_data.py missing")
 class TestTrimHighSide(unittest.TestCase):
     """High-side apex-relax: monsoon-recharge readings survive the trim.
 
@@ -241,11 +245,7 @@ class TestTrimHighSide(unittest.TestCase):
         })
 
     def test_high_visibly_recent_reading_survives(self):
-        import importlib.util
-        spec = importlib.util.spec_from_file_location(
-            "merge_norm", ROOT / "03_merge_normalize.py")
-        m = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(m)
+        m = importlib.import_module("pipeline_data")
         # 500 dry readings at -12..-6 plus a genuinely shallow monsoon reading
         values = list(np.linspace(-12.0, -6.0, 500)) + [-1.2, 0.05]
         df, dropped = m.clean(self._df(values), None, None, "gwl")
@@ -254,17 +254,13 @@ class TestTrimHighSide(unittest.TestCase):
         self.assertGreater(len(df), 490)
 
     def test_low_sentinel_still_trimmed(self):
-        import importlib.util
-        spec = importlib.util.spec_from_file_location(
-            "merge_norm", ROOT / "03_merge_normalize.py")
-        m = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(m)
+        m = importlib.import_module("pipeline_data")
         values = list(np.linspace(-120.0, -10.0, 400))
         df, _ = m.clean(self._df(values), None, None, "gwl")
         self.assertLess(df["value"].min(), -10.0)
 
 
-@unittest.skipUnless(has("refresh/verification.py"), "refresh package missing")
+@unittest.skipUnless(has("refresh/refresh_engines.py"), "refresh package missing")
 class TestDedupEquivalence(unittest.TestCase):
     """The key-set de-dup must keep/skip exactly what the old ledger scan did.
 

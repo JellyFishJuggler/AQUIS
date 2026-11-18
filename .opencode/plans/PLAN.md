@@ -144,7 +144,7 @@ ml/artifacts/<station_slug>/
 
 ### 4.4 Background Execution
 - `setsid PYTHONPATH=/home/srijan/Downloads/Developement/AQUIS ml/venv/bin/python -u -m ml.scripts.diagnose_fleet > /tmp/diagnose_fleet.log 2>&1 & disown`
-  (historical command; current equivalent = `cd ml && venv/bin/python -u 11_fleet.py --force`)
+  (historical command; current equivalent = `cd ml && venv/bin/python -u pipeline_model fleet --force`)
 
 ---
 

@@ -292,7 +292,7 @@ def main():
         ii=df.index[(df.Station==st)&df.time.isin(ts)];clean.loc[ii,'m3_break_here']=True
     (OUT/'aligned').mkdir(parents=True,exist_ok=True); clean.to_parquet(OUT/'aligned'/'table_6h.parquet',index=False)
     # Build features using the existing causal engineering function only; avoid build_full (which drops regimes/reads static sources).
-    sys.path.insert(0,str(ROOT));F=importlib.import_module('06_features')
+    sys.path.insert(0,str(ROOT));F=importlib.import_module('pipeline_model')
     feats=F.build(clean.drop(columns=['gwl_raw']),keep_na=False)
     # Add row/station detector flags to feature rows, then purge lag/target pairs straddling breaks.
     extra=['m1_mask','m2_mask','m3_break_here','flag_stuck','flag_flipflop','flag_extreme_burst','flag_early_era_unverified','station_stuck_rows','station_flip_rows','station_extreme_burst_rows','station_early_era_unverified_rows','station_flag_stuck','station_flag_flipflop','station_flag_extreme_burst','station_flag_early_era_unverified']
@@ -320,7 +320,7 @@ def main():
     del feats, features
     # Direct trajectory expansion. Preserve existing train/validation schedules;
     # test uses the established sparse training horizon schedule to bound output size.
-    T=importlib.import_module('30_traj_datasets');tdir=OUT/'features_traj';tdir.mkdir(parents=True,exist_ok=True)
+    T=importlib.import_module('pipeline_traj');tdir=OUT/'features_traj';tdir.mkdir(parents=True,exist_ok=True)
     parts_rows=[];purge_summary={}
     clean_index={str(s):np.asarray(ix,dtype=int) for s,ix in clean.groupby('Station',sort=False).indices.items()}
     import pyarrow as pa, pyarrow.parquet as pq

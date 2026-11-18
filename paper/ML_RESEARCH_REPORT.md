@@ -277,14 +277,14 @@ The Claude review notes that an unrelated district-heating/Andrić article was a
 | Question | Source files / artifacts |
 |---|---|
 | Overall data/model architecture | [`ml/ML_MODULE_GUIDE.md`](../ml/ML_MODULE_GUIDE.md), [`ml/README.md`](../ml/README.md), [`docs/ml.md`](../docs/ml.md) |
-| Station selection and preprocessing | `ml/01_select.py`, `ml/04b_align_6h.py`, `ml/06_features.py`, `ml/14_6h_features.py` |
-| Pooled GRU architecture/training | `ml/36_train_pooled_dl.py`, `ml/37_backtest_pooled_dl.py`, `ml/models/pooled_dl_config.json`, `ml/outputs/pooled_dl_eval.json` |
-| Trajectory data/training/inference | `ml/30_traj_datasets.py`, `ml/34_train_traj_dl.py`, `ml/_dl.py`, `ml/_traj_dispatch.py` |
-| Trajectory backtests/calibration/reliability | `ml/32_backtest_traj.py`, `ml/33_traj_reliability.py`, `ml/35_traj_paired_ci.py`, `ml/outputs/traj_backtest_summary_dl.json`, `ml/outputs/traj_backtest_rows_dl.parquet`, `ml/outputs/traj_paired_ci_dl_vs_xgb.json` |
+| Station selection and preprocessing | `ml/pipeline_data.py` (select, align6 stages), `ml/pipeline_model.py` (features, features6h stages) |
+| Pooled GRU architecture/training | `ml/pipeline_traj_dl.py` (train_pooled_dl, backtest_pooled_dl stages), `ml/models/pooled_dl_config.json`, `ml/outputs/pooled_dl_eval.json` |
+| Trajectory data/training/inference | `ml/pipeline_traj.py` (datasets stage), `ml/pipeline_traj_dl.py` (train_dl stage), `ml/serving_engines.py`, `ml/serving_core.py` |
+| Trajectory backtests/calibration/reliability | `ml/pipeline_traj.py` (backtest, reliability, paired_ci stages), `ml/outputs/traj_backtest_summary_dl.json`, `ml/outputs/traj_backtest_rows_dl.parquet`, `ml/outputs/traj_paired_ci_dl_vs_xgb.json` |
 | Current endpoint comparison | `ml/outputs/benchmark_2026/benchmark_2026.md` |
 | Threshold calculations | [`ml/outputs/benchmark_2026/model_threshold_assessment.md`](../ml/outputs/benchmark_2026/model_threshold_assessment.md) |
 | Data-quality/research failure modes | `ml/outputs/benchmark_2026/decline_investigation.md`, `ml/data/scratch_exp/REPORT.md`, `ml/outputs/diagnostics_phase1/phase1_report.md` |
-| Weather and climate indicator | `ml/20_openmeteo_fetch.py`, `ml/refresh/sources.py`, `ml/app_pages/water_balance.py`, `ml/data/cfs/openmeteo_weather_daily.parquet` |
+| Weather and climate indicator | `ml/openmeteo_weather.py`, `ml/refresh/refresh_data.py`, `ml/app_pages/water_balance.py`, `ml/data/cfs/openmeteo_weather_daily.parquet` |
 | Service and UI | `ml/api.py`, `ml/streamlit_app.py`, `ml/app_pages/` |
 | Reference PDFs | [`paper/pprs/`](pprs/) |
 

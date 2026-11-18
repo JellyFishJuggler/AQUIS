@@ -1,7 +1,7 @@
 """_thresholds.py - single source of truth for fleet categories and alert zones.
 
 Every place that turns a 30-day model change into a *category* (the fleet scan,
-``11_fleet.py``) or a category into an *alert zone* (``api.py`` fleet/alerts,
+``pipeline_data fleet``) or a category into an *alert zone* (``api.py`` fleet/alerts,
 district detail and the per-station zone rule) imports from here, so the two
 cannot drift apart.
 

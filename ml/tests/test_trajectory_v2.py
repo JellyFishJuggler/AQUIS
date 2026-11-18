@@ -25,18 +25,18 @@ MODELS = all(has(f"models/traj_xgb_{q}.json") for q in ("q05", "q50", "q95")) an
     "models/traj_reliability.json")
 
 
-@unittest.skipUnless(MODELS and has("_trajectory.py"), "trajectory artifacts missing")
+@unittest.skipUnless(MODELS and has("serving_engines.py"), "trajectory artifacts missing")
 class TestTrajectoryCausalContract(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        from _trajectory import trajectory_forecast
+        from serving_engines import xgb_trajectory_forecast as trajectory_forecast
         cls.traj = trajectory_forecast("ASHADHA PRATHMIK VIDYALAYA")
         assert cls.traj and "error" not in cls.traj, cls.traj
         cls.pts = pd.DataFrame(cls.traj["trajectory"])
         cls.pts["time"] = pd.to_datetime(cls.pts["time"])
 
     def test_anchor_is_last_observed_gwl(self):
-        from _utils import load_table_6h
+        from serving_core import load_table_6h
         t = load_table_6h()
         t = t[t["Station"] == "ASHADHA PRATHMIK VIDYALAYA"].sort_values("time")
         last = t.dropna(subset=["gwl"])["gwl"].iloc[-1]
@@ -67,7 +67,7 @@ class TestTrajectoryCausalContract(unittest.TestCase):
         self.assertGreater(reg[0], 0, "calibrated half-width must widen with horizon")
 
     def test_no_future_observed_gwl_leaked_into_output(self):
-        from _utils import load_table_6h
+        from serving_core import load_table_6h
         t = load_table_6h()
         g = t[t["Station"] == "ASHADHA PRATHMIK VIDYALAYA"].sort_values("time")
         future = g[g["time"] > pd.Timestamp(self.traj["anchor_time"])].dropna(subset=["gwl"])
@@ -113,10 +113,10 @@ class TestTrajectoryCausalContract(unittest.TestCase):
         self.assertAlmostEqual(t30["q95"], self.pts["q95"].iloc[-1], places=4)
 
 
-@unittest.skipUnless(has("_trajectory.py"), "module missing")
+@unittest.skipUnless(has("serving_engines.py"), "module missing")
 class TestTrajectoryUnknownStation(unittest.TestCase):
     def test_returns_error_not_crash(self):
-        from _trajectory import trajectory_forecast
+        from serving_engines import xgb_trajectory_forecast as trajectory_forecast
         out = trajectory_forecast("NOT A REAL STATION")
         self.assertTrue(not isinstance(out, list))
         if out:

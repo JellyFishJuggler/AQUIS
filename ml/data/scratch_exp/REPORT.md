@@ -543,16 +543,15 @@ new-station test.
 | protocol | script | what it actually does | scored on stations unseen in fit? | result |
 |----------|--------|-----------------------|-----------------------------------|--------|
 | corrected station CV | `exp_stationcv.py` | retrain from scratch per fold on group g train/val rows, score the **other** group's stride rows | **yes** (rows of scored stations are absent from train+val) | E0 **1.482** (2024) / 1.216 (2025); E_best 1.269 / 1.108 → **loses to persistence** |
-| "OOS held-out stations" | `31_honest_baseline.py` | read `outputs/predictions_2026.parquet` (produced by the model trained on **all** stations) and partition the *already-scored rows* by station parity | **no** — every station was in the fit | xgb 2.7627 vs persist 2.8218 = **+2.09%** |
+| "OOS held-out stations" | former `honest_baseline` diagnostic (removed in final cleanup) | read `outputs/predictions_2026.parquet` (produced by the model trained on **all** stations) and partition the *already-scored rows* by station parity | **no** — every station was in the fit | xgb 2.7627 vs persist 2.8218 = **+2.09%** |
 | "spatial CV ~0.99" | `scratch_assoc_ablate.py` | genuine station-held-out retrain (fit half the stations, score the other half) | yes | but the reported 0.9925 is **ratio C/B between two model variants**, not model/persistence |
 
 ## Why the +2.1% is not a new-station result
 
-`31_honest_baseline.py:102-107` only partitions rows. The xgb model in
-`predictions_2026.parquet` (`06_train.py`) was fit with every station,
-including the 228 "held-out" ones, and the file's own caveat says it is
-recomputed from **pre-purge** frames, so target leakage is still present
-(`honest_baseline_oos.json.caveat`). It is an upper bound on a *row* split, not
+The former `honest_baseline` diagnostic only partitioned rows. The xgb model in
+`predictions_2026.parquet` (former `06_train.py`) was fit with every station,
+including the 228 "held-out" ones, and its own caveat says it recomputed from
+**pre-purge** frames, so target leakage was still present. It is an upper bound on a *row* split, not
 a test of generalization. The +2.09% (`oos_heldout_stations`) is exactly that
 row-split artifact.
 
@@ -589,7 +588,7 @@ context). Neither station-held-out script does this, so:
 The **only** protocol that both retrains without the scored stations and scores
 against persistence is `exp_stationcv.py`, and it says the models do **not**
 generalize to unseen stations (ratio 1.27–1.48). For the claim "works on new
-stations" that protocol is the right one; the `31_honest_baseline` OOS and the
+stations" that protocol is the right one; the former `honest_baseline` OOS and the
 ablation spatial-CV numbers do **not** support that claim. No promotion on this
 basis.
 
@@ -619,8 +618,8 @@ delta itself (`yd`), **not** `yd − gwl`.
 pattern occurs **only** in the three scripts above. Everything else scores in
 level space and was never affected — `scratch_assoc_ablate.py`
 (`true_l − (anchor+pred)` / `true_l − anchor`), `data/scratch_assoc/diag_4c_glitches/run.py`
-(`(xgb−target)²` / `(persist−target)²`), `31_honest_baseline.py`, `06_train.py`,
-`gate_check.py`.
+(`(xgb−target)²` / `(persist−target)²`), the former `honest_baseline.py` and
+`06_train.py`, and `gate_check.py`.
 
 **Rule of thumb:** every number reported from the three scripts BEFORE the
 fix timestamp (`arm_reports.json` rewritten 2026-10-08 10:11, `eval_2026.json`
@@ -714,7 +713,7 @@ every *ratio* does not.
 | Rain-link ablation (`scratch_assoc_ablate.py`, `diagnosis/2026-10-08_association_ablation/ablation_report.json`) | A 0.9919 [0.9865, 0.9942], B 0.9919 [0.9865, 0.9942], C 0.9989 [0.9977, 0.9997]; spatial CV C/B 0.9932 (p=0.869); decision: C does not beat B; seed-spread rule numbers | level-space errors: `true_l − (anchor+pred)` / `true_l − anchor` |
 | Diag 4c glitch scan (`summary.json`) | all-rows 2.4182/2.4759 → 0.9767 [0.9522, 0.9866]; excl-glitch 1.9577/2.0209 → 0.9687 [0.9448, 0.9825]; fleet event counts | level-space from `predictions_2026` |
 | Diag 4b best-lag (`fleet_summary.json`, `best_lag.csv`) | lag distribution (mean 10.6 d, median 4 d), 511 st / 3764 rows | correlation/lag analysis, no error formula |
-| Production honest metrics (`outputs/honest_metrics.csv`, `outputs/honest_baseline_oos.csv`) | xgb stride 2.4182, persist 2.4759, ridge 2.6699, clim 3.7499; raw/window stats | level-space (`target` vs `anchor+pred`) |
+| Production honest metrics (`outputs/honest_metrics.csv`) | xgb stride 2.4182, persist 2.4759, ridge 2.6699, clim 3.7499; raw/window stats | level-space (`target` vs `anchor+pred`) |
 | Gate (`gate_check.py`) | GATE PASS 13/13; stride RMSE 2.418; g30 traj 1.0947 / direct 1.0764 / persist 1.2183 | reads production artifacts above |
 | Track 0 findings (`tracks/track0_and_limitations.md`) | no future-rain source; 2025 coverage tables | record counts / source audit, no error formula |
 | Fold windows & row counts | see above | structural |

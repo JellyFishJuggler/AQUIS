@@ -5,7 +5,7 @@ training and scoring the pooled XGBoost on that block's 2026 test rows. A model
 that only memorises district/monsoon patterns performs worse here than on the
 temporal split, exposing how much of the number is real out-of-domain accuracy.
 
-Method faithfully mirrors 06_train: fit on `target_d` (delta), anchor gwl is
+Method faithfully mirrors pipeline_model: fit on `target_d` (delta), anchor gwl is
 never predicted, features are rebuilt once and only the station split changes.
 """
 
@@ -72,7 +72,7 @@ def main() -> None:
     print(f"assigned {len(coords_df)} stations to {int(labels.max()) + 1} spatial blocks "
           f"(sizes {np.bincount(labels).tolist()})")
 
-    # replicate 06_train's 1-slot/day train sampling (frame order preserved)
+    # replicate pipeline_model's 1-slot/day train sampling (frame order preserved)
     train_mask = train.groupby("Station")["time"].cumcount() % 4 == 0
 
     done_blocks = set()

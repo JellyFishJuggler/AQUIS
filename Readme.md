@@ -20,7 +20,7 @@ NWDP Telemetry API + Assessment Excel files → PostgreSQL → Statistical Analy
 
 The **ML module (`ml/`)** is the forecasting/analytics engine. It consumes a cleaned 6-hourly telemetry archive and serves **two forecast surfaces** over 600 Uttar Pradesh groundwater stations — a **pooled (global) XGBoost** 30-day model and a **quantile GRU** deep-learning model. Both surfaces are now served by the **GRU** (deep-learning) engine, with XGBoost retained as an automatic fallback and benchmark. Forecasts are calibrated q05/q50/q95 into 90% prediction intervals, the whole fleet is scanned for 30-day moves, and a **4-page Streamlit dashboard** (`ml/app.py`, port 8501) exposes it.
 
-The forecast surface is a dedicated **trajectory v2** engine (`ml/_trajectory.py`, XGBoost; `ml/_dl.py`, GRU): a genuine **120-step, 6-hourly, 30-day** forecast per station (no interpolation — one real model output per 6 h step), with per-horizon q05/q50/q95 and an **evidence-based confidence label** (HIGH / DIRECTIONAL / LOW). Drivers ahead of the anchor are legitimate forecasts — **Open-Meteo** weather (days 1–16) with climatology beyond, and **CWC 3-day river forecasts** where the district is covered. The Forecast page renders this as a single dark-theme dashboard card (bright q05/q95 band, no dot markers).
+The forecast surface is a dedicated **trajectory v2** engine (`ml/serving_engines.py`: XGBoost + GRU, dispatched by `ml/serving_core.py`): a genuine **120-step, 6-hourly, 30-day** forecast per station (no interpolation — one real model output per 6 h step), with per-horizon q05/q50/q95 and an **evidence-based confidence label** (HIGH / DIRECTIONAL / LOW). Drivers ahead of the anchor are legitimate forecasts — **Open-Meteo** weather (days 1–16) with climatology beyond, and **CWC 3-day river forecasts** where the district is covered. The Forecast page renders this as a single dark-theme dashboard card (bright q05/q95 band, no dot markers).
 
 A **near-real-time refresh daemon** (`ml/refresh/`) keeps forecast surfaces current: it runs fetch → align → inference → publish on a fixed 6-hourly wall-clock grid (01:00 / 07:00 / 13:00 / 19:00 IST), writes per-station forecasts + `meta.json`, and scores realised readings (verification + drift gating).
 
@@ -38,7 +38,7 @@ A **near-real-time refresh daemon** (`ml/refresh/`) keeps forecast surfaces curr
   - **Manual** — measured a few times a year by field staff (CGWB ~1,000 UP wells, 4×/yr; UPGW publishes its own *"Ground Water Level (Manual - Quarterly)"* dataset, 1991–2020).
   - **Telemetry** — automated 6-hourly Digital Water Level Recorders, a *narrow, recently-deployed slice* of the network.
 - **AQUIS only ingests the telemetry feed** (`GWL Telemetry 6-Hourly, UPGW`). That feed wires just **1,353 stations across 34 of UP's ~75 districts**. Districts without telemetry gauges never appear in the archive — verified: NWIC probes return `total=0` for e.g. Allahabad/Prayagraj, Amethi, Amroha, Sambhal, G.B. Nagar even with rename aliases (`ml/data/raw/nwic.py`).
-- Therefore, in this repo: **1,353 stations / 34 districts = "everything the telemetry archive has"**, and **600 stations / 29 districts = "the ones still alive in 2026"** (selected by `01_select.py`, ≥8 of 9 Jan–Sep 2026 months with a reading). Neither number is a scope preference — the data decides.
+- Therefore, in this repo: **1,353 stations / 34 districts = "everything the telemetry archive has"**, and **600 stations / 29 districts = "the ones still alive in 2026"** (selected by `pipeline_data select`, ≥8 of 9 Jan–Sep 2026 months with a reading). Neither number is a scope preference — the data decides.
 - **Project vs ML scope:** the backend ingests NWDP telemetry countrywide (~7.4M records) + CGWB assessment Excels; the **forecasting** scope is **UP-GWL telemetry only**. A station without a live 2026 telemetry stream is simply not forecast-able by this pipeline.
 - More detail + the source links (UPGW portal, CGWB monitoring-station page, CGWB high-frequency-data guidelines, UP GW Year Book) live in **`docs/ml.md` §5.1.1**.
 
@@ -94,18 +94,17 @@ ml/
 │                                #   Stations/Model/Fleet pages removed)
 ├─ app_charts.py                 # dark-theme Altair helpers for the forecast chart
 ├─ config.py                     # sources, resource IDs, radii, coverage rules, paths
-├─ 00_probe.py … 13_refresh_nwic.py   # classic pooled pipeline
-├─ 14_6h_features.py             # causal 6h feature frames (used by 30_traj_datasets)
-├─ 16_future_drivers.py          # driver-climatology refresh + future-driver bridge
-├─ 18_cwc_river_forecast.py      # CWC 3-day river-forecast fetch (per district)
-├─ 20_openmeteo_fetch.py         # Open-Meteo daily weather (365d history + 16d forecast)
-├─ 30_traj_datasets.py … 33_traj_reliability.py   # trajectory v2 (XGBoost) train/backtest/reliability
-├─ 34_train_traj_dl.py           # trajectory v2 DL: sequence GRU + horizon-conditioned quantile heads
-├─ 35_traj_paired_ci.py          # DL-vs-XGB paired station-bootstrap CI (per horizon)
-├─ 36_train_pooled_dl.py         # pooled 30-day DL: daily GRU + 3 pinball heads (3-seed ensemble)
-├─ 37_backtest_pooled_dl.py      # honest 2026-stride backtest for the pooled DL
-├─ _model.py _trajectory.py _dl.py _traj_dispatch.py  # forward/trajectory serving (XGB + GRU dispatch)
-├─ _assistant.py _utils.py _soil.py _lulc.py _hydrology.py _association.py _spatial.py  # shared libs
+├─ pipeline_data.py              # ingest/align + static/source fetchers + CLI
+├─ pipeline_model.py             # features/target/train/evaluate + experiments + CLI
+├─ pipeline_traj.py              # trajectory datasets/XGB backtest/reliability/CI + CLI
+├─ pipeline_traj_dl.py           # trajectory + pooled quantile GRU trainers
+├─ openmeteo_weather.py         # Open-Meteo daily weather (365d history + 16d forecast)
+├─ benchmark_2026.py             # rolling 2026 benchmark snapshot
+├─ gate_check.py                 # regression gate
+├─ serving_core.py              # artifact/data loaders + runtime backend dispatch
+├─ serving_engines.py           # XGB + quantile-GRU trajectory/forward engines
+├─ static_loaders.py            # soil / extraction / LULC static loaders
+├─ _assistant.py _hydrology.py _thresholds.py  # assistant + shared pure helpers
 ├─ api.py                        # Flask HTTP API (JSON; /health, /stations, /forecast/<slug>, /assistant/chat)
 ├─ snapshot.py                   # matplotlib PNG export (used by Snapshot tests only)
 ├─ refresh/                      # refresh pipeline: config, features, inference,
@@ -115,7 +114,7 @@ ml/
 │  ├─ aligned/      table.parquet (daily) + table_6h.parquet (6h grid, ~3M rows)
 │  ├─ cfs/          openmeteo_weather_daily.parquet + river_forecast_cwc.parquet
 │  ├─ meta/         associations, manifest, probe, station flags, climatology
-│  ├─ features_6h/  train/val/test parquet (causal 6h feature frames; built by 14_6h_features)
+│  ├─ features_6h/  train/val/test parquet (causal 6h feature frames; built by `pipeline_data features6h`)
 │  └─ soil/         ISRIC SoilGrids + ISRO LULC (one-off fetch)
 ├─ experiments/                 # baselines (arima_compare/combine), validation, diagnosis
 ├─ models/                      # joblib (pooled XGB) + traj_*.json (traj XGB) + *_dl.pt/*_dl_config.json (GRU)
@@ -124,63 +123,64 @@ ml/
 └─ gate_check.py                # regression gate (frozen baselines + trajectory)
 ```
 
-### Pipeline (run in order, each step from `ml/`)
+### Pipeline (stages, each from `ml/`)
 ```
-00_probe.py           probe every NWIC resource (archive + live) → meta/probe.json
-01_select.py          select GWL anchor stations with full-2026 coverage  → 600 of 1,353
-02_fetch_selected.py  fetch each driver for the selected districts (resume-safe)
-03_merge_normalize.py plausibility caps → raw/<source>_norm.parquet + manifest
-04_align.py           daily station×day table with spatial association (IDW rain, nearest weather)
-04b_align_6h.py       6-hourly station×slot table (production-consistent cadence)
-05_correlate.py       driver correlation report, recharge-lag curve, charts
-06_features.py        feature/target engineering on the 6h grid
-06_train.py           pooled XGBoost + Ridge (delta target), writes models/ + model_metadata.json
-07_evaluate.py        4-way benchmark (XGB / Ridge / persistence / climatology) + honest re-score
-07_soil.py            ISRIC SoilGrids per-station texture (background fetch)
-08_lulc.py            ISRO Bhuvan LULC 50K district stats
-10_ablate.py          drop-group ablation sweep
-11_quantile.py        pooled q05/q50/q95 + empirical coverage calibration
-11_fleet.py           whole-fleet 30-day forecast scan + recovery snapshot
-12_diagnostics.py     VIF + permutation importance + OAT sensitivity
-13_refresh_nwic.py    incremental NWIC refresh (+ optional retrain / deploy sync)
-14_6h_features.py     causal 6h feature frames (used by 30_traj_datasets for traj v2)
-16_future_drivers.py  driver-climatology refresh + future-driver bridge
-18_cwc_river_forecast.py  CWC 3-day river forecast fetch (per district, resume-safe)
-20_openmeteo_fetch.py     Open-Meteo daily weather: 365d history + 16d forecast
-30_traj_datasets.py       trajectory v2 feature frames (train/val, exact-time targets)
-31_train_traj.py          trajectory shared multi-horizon XGBoost (q05/q50/q95)
-32_backtest_traj.py       honest non-overlap trajectory backtest + per-horizon calibration
-33_traj_reliability.py    reliability bucket rules + evidence weights
-34_train_traj_dl.py       trajectory v2 DL (sequence GRU + horizon-conditioned quantile heads)
-35_traj_paired_ci.py      DL-vs-XGB paired bootstrap CI, per horizon (reads 32_'s rows)
-36_train_pooled_dl.py     pooled 30-day DL (daily GRU + 3 pinball heads, 3-seed ensemble)
-37_backtest_pooled_dl.py  honest 2026-stride pooled-DL eval vs incumbent XGB
+python -m pipeline_data probe        # probe NWIC resources → meta/probe.json
+python -m pipeline_data select       # full-2026 GWL anchor stations
+python -m pipeline_data fetch        # fetch selected drivers (resume-safe)
+python -m pipeline_data normalize    # plausibility caps → raw/<source>_norm.parquet
+python -m pipeline_data align        # daily station×day table + spatial association
+python -m pipeline_data align6       # 6-hourly station×slot table (production cadence)
+python -m pipeline_data correlate    # driver correlation + recharge-lag charts
+python -m pipeline_data features     # feature/target engineering on the 6h grid
+python -m pipeline_model train       # pooled XGBoost + Ridge (delta target)
+python -m pipeline_model evaluate    # 4-way benchmark + honest re-score
+python -m pipeline_data soil         # ISRIC SoilGrids texture (optional)
+python -m pipeline_data lulc         # ISRO Bhuvan LULC 50K stats (optional)
+python -m pipeline_model ablate      # drop-group ablation sweep
+python -m pipeline_model quantile    # pooled q05/q50/q95 + coverage calibration
+python -m pipeline_model fleet       # whole-fleet 30-day scan + recovery snapshot
+python -m pipeline_model diagnostics # VIF + permutation importance + OAT
+python -m pipeline_data nwic         # incremental NWIC refresh
+python -m pipeline_data climatology # driver-climatology refresh
+python -m pipeline_data cwc_forecast # CWC 3-day river forecast fetch
+python openmeteo_weather.py        # Open-Meteo daily weather
+
+# trajectory chain
+python -m pipeline_traj datasets          # train/val long frames (exact-time targets)
+python -m pipeline_traj train             # shared multi-horizon XGBoost q05/q50/q95
+python -m pipeline_traj backtest          # honest non-overlap backtest + calibration
+python -m pipeline_traj reliability       # reliability buckets + evidence weights
+python -m pipeline_traj train_dl          # trajectory quantile GRU
+python -m pipeline_traj paired_ci         # DL-vs-XGB paired bootstrap CI
+python -m pipeline_traj train_pooled_dl   # pooled daily quantile GRU
+python -m pipeline_traj backtest_pooled_dl  # honest 2026-stride pooled-DL eval
 ```
 
 ### Data
 - **Archive:** `data/processed/common.parquet` — the cleaned 6-hourly telemetry source of truth: **~5.3M records / 1,353 UP stations, 2021-01-01 → 2026-09-05**. Every pipeline step reads it read-only.
-- **Refresh:** `13_refresh_nwic.py` pulls *newer-than-current-max* rows per district from the live NWIC 2026 resource, merges (deduped, chronological, dtype-coerced) back into the archive, and can retrain (`--retrain`) or run the staging check / swap (`--deploy-check`, `--deploy-install`). Run it **manually**:
+- **Refresh:** `pipeline_data nwic` pulls *newer-than-current-max* rows per district from the live NWIC 2026 resource, merges (deduped, chronological, dtype-coerced) back into the archive, and can retrain (`--retrain`) or run the staging check / swap (`--deploy-check`, `--deploy-install`). Run it **manually**:
   ```bash
   cd ml
-  venv/bin/python -u 13_refresh_nwic.py --dry-run       # report new rows
-  venv/bin/python -u 13_refresh_nwic.py --retrain       # merge + rerun pipeline to the trained model
-  venv/bin/python 13_refresh_nwic.py --deploy-check     # is the loaded build 2026-current?
+  venv/bin/python -u -m pipeline_data nwic --dry-run       # report new rows
+  venv/bin/python -u -m pipeline_data nwic --retrain       # merge + rerun pipeline to the trained model
+  venv/bin/python -m pipeline_data nwic --deploy-check     # is the loaded build 2026-current?
   ```
 - **Cleaning:** telemetry sentinels and `|GWL|>100 m` spikes dropped; per-station 0.5–99.5% quantile trim; stations with a >15 m annual-median regime shift (datum errors) excluded; features are causal (lags only).
 
 ### Models — XGBoost + quantile GRU on two surfaces
 
-Production serves **two families on two surfaces**, and each surface is now served by the **GRU** with XGBoost kept as an automatic fallback/benchmark (`_dl.py` / `_model.py`, dispatched by `_traj_dispatch.py`; backend flags in `data/refresh/runtime.json`):
+Production serves **two families on two surfaces**, and each surface is now served by the **GRU** with XGBoost kept as an automatic fallback/benchmark (`serving_engines.py`, dispatched by `serving_core.py`; backend flags in `data/refresh/runtime.json`):
 
 - **Surface (a) — trajectory v2** (Forecast page + `/forecast/<slug>`): a genuine **120-step, 6-hourly, 30-day** per-horizon forecast.
-  - **XGBoost** — direct multi-horizon shared booster, horizon `h ∈ 1..120` an input feature, q05/q50/q95 heads (`31_train_traj.py`).
-  - **GRU (served)** — sequence encoder over the last 120 observed 6-h rows, horizon-conditioned quantile heads, pinball loss (`34_train_traj_dl.py` → `models/traj_dl.pt`).
+  - **XGBoost** — direct multi-horizon shared booster, horizon `h ∈ 1..120` an input feature, q05/q50/q95 heads (`pipeline_traj train`).
+  - **GRU (served)** — sequence encoder over the last 120 observed 6-h rows, horizon-conditioned quantile heads, pinball loss (`pipeline_traj train_dl` → `models/traj_dl.pt`).
 - **Surface (b) — pooled 30-day** (assistant, fleet scan, +30 d benchmark): the single delta `GWL(t+120) − GWL(t)`.
-  - **XGBoost** — `reg:squarederror`, early stopping on the Oct–Dec 2025 split (`06_train.py` → `models/xgb_multihorizon.joblib`).
-  - **GRU (served)** — daily GRU over a 60-day window + 3 pinball quantile heads (q05/q50/q95), 3-seed ensemble (`36_train_pooled_dl.py` → `models/pooled_dl.pt`).
+  - **XGBoost** — `reg:squarederror`, early stopping on the Oct–Dec 2025 split (`pipeline_model train` → `models/xgb_multihorizon.joblib`).
+  - **GRU (served)** — daily GRU over a 60-day window + 3 pinball quantile heads (q05/q50/q95), 3-seed ensemble (`pipeline_traj train_pooled_dl` → `models/pooled_dl.pt`).
 - **Grid + horizon:** 6-hourly track. Today's level is the anchor feature — never predicted.
-- **Baselines:** Ridge (linear), persistence (0-change) and per-station day-of-year climatology (`07_evaluate.py`).
-- **Quantile uncertainty:** native quantile heads calibrated into 90% intervals (XGB `11_quantile.py`; GRU per-horizon `*_dl_calibration.json`).
+- **Baselines:** Ridge (linear), persistence (0-change) and per-station day-of-year climatology (`pipeline_model evaluate`).
+- **Quantile uncertainty:** native quantile heads calibrated into 90% intervals (XGB `pipeline_model quantile`; GRU per-horizon `*_dl_calibration.json`).
 
 ### Trajectory v2 — the Forecast page model
 

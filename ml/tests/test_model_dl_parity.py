@@ -1,4 +1,4 @@
-"""Pooled-30d DL backbone parity (_dl.forward_forecast).
+"""Pooled-30d DL backbone parity (serving_engines.dl_forward_forecast).
 
 Requires torch + the pooled DL artifacts + the aligned 6h table. Skipped when
 any are missing. Runs in the torch-only env (venv312) - no streamlit needed.
@@ -36,8 +36,8 @@ SCHEMA = {
 class TestModelDlParity(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.m = importlib.import_module("_dl")
-        cls.fc = cls.m.forward_forecast("ASHADHA PRATHMIK VIDYALAYA")
+        cls.m = importlib.import_module("serving_engines")
+        cls.fc = cls.m.dl_forward_forecast("ASHADHA PRATHMIK VIDYALAYA")
 
     def test_schema_and_finiteness(self):
         self.assertTrue(self.fc, "empty forecast for known station")
@@ -62,7 +62,7 @@ class TestModelDlParity(unittest.TestCase):
         self.assertIsNone(self.fc["ridge_level"])
 
     def test_unknown_station_empty(self):
-        self.assertEqual(self.m.forward_forecast("__NO_SUCH_STATION__"), {})
+        self.assertEqual(self.m.dl_forward_forecast("__NO_SUCH_STATION__"), {})
 
 
 if __name__ == "__main__":

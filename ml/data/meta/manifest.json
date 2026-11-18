@@ -1,13 +1,13 @@
 [
   {
     "source": "gwl",
-    "rows": 2348560,
+    "rows": 2371733,
     "stations": 600,
     "districts": 37,
-    "dropped_by_caps": 13491,
+    "dropped_by_caps": 13601,
     "min": -999.999,
     "max": 1007.84,
-    "span": "2021-01-01..2026-10-29",
+    "span": "2021-01-01..2026-11-17",
     "discharge_gate1_only": false
   },
   {

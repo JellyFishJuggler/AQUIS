@@ -21,7 +21,7 @@ os.environ.setdefault("OMP_NUM_THREADS", "4")
 
 ROOT = Path(__file__).resolve().parents[2]        # ml/
 sys.path.insert(0, str(ROOT))
-F = importlib.import_module("06_features")
+F = importlib.import_module("pipeline_model")
 
 HERE = ROOT / "data" / "scratch_exp"
 FROZEN = HERE / "frozen" / "table_6h.parquet"

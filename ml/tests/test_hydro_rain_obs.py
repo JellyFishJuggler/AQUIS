@@ -142,13 +142,13 @@ class TestRainMemoryBlockMask(unittest.TestCase):
             rain_memory_block(np.ones(10), np.ones(9, dtype=bool))
 
 
-@unittest.skipUnless(has("refresh/future_drivers.py"), "refresh missing")
+@unittest.skipUnless(has("refresh/refresh_data.py"), "refresh missing")
 class TestServingRainObsProvenance(unittest.TestCase):
     """End-to-end: the serving matrix must not call forecast rain 'observed'."""
 
     @classmethod
     def setUpClass(cls):
-        from refresh.future_drivers import (build_step_features,
+        from refresh.refresh_data import (build_step_features,
                                             future_weather_matrix,
                                             _rain_memory_steps)
         cls.hist = _driver_fixture()
@@ -228,7 +228,7 @@ class TestBatchRainObsProvenance(unittest.TestCase):
         # assertion genuinely tests reduced coverage rather than passing on a
         # window that never saw the gap.
         rain[n - 15] = np.nan
-        # `06_features.build` emits and selects the driver columns, so a fixture
+        # `pipeline_model.build` emits and selects the driver columns, so a fixture
         # without them cannot exercise it (KeyError on the column selection).
         return pd.DataFrame({
             "Station": "S1", "District": "ALIGARH", "time": times,
@@ -240,7 +240,7 @@ class TestBatchRainObsProvenance(unittest.TestCase):
 
     def test_missing_slot_reduces_coverage_and_api_uses_forcing(self):
         import importlib
-        F = importlib.import_module("06_features")
+        F = importlib.import_module("pipeline_model")
         frame = self._frame()
         # guard: the gap must actually sit inside the trailing 28 slots, else the
         # coverage assertion below would be vacuous
@@ -259,11 +259,11 @@ class TestBatchRainObsProvenance(unittest.TestCase):
         """`build` must not drop the columns it computes rather than reads.
 
         Regression guard: returning `df[KEEP]` silently removed `rain_api*` /
-        `rain_obs*` / `gwl_imputed`, which broke `_model.forward_forecast` and
+        `rain_obs*` / `gwl_imputed`, which broke `serving_core.forward_forecast` and
         bare-fixture callers while leaving the batch `build_full` path working.
         """
         import importlib
-        F = importlib.import_module("06_features")
+        F = importlib.import_module("pipeline_model")
         out = F.build(self._frame(), keep_na=True)
         for c in list(F.HYDRO_COLS) + ["target_time"]:
             self.assertIn(c, out.columns, f"{c} was dropped by build()")

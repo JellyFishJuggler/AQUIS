@@ -16,14 +16,15 @@ from pathlib import Path
 
 import pandas as pd
 
-from refresh import config, publish, state
+from refresh import refresh_core
+config = state = publish = refresh_core
 from tests._helpers import has
 
 REFRESH_DIR = config.REFRESH_DIR
 STATE_FILE = state.state_path()
 
 
-@unittest.skipUnless(has("refresh/config.py"), "refresh package missing")
+@unittest.skipUnless(has("refresh/refresh_core.py"), "refresh package missing")
 class TestConfig(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
@@ -66,7 +67,7 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(cfg.feature_mode, "future")
 
 
-@unittest.skipUnless(has("refresh/state.py"), "refresh package missing")
+@unittest.skipUnless(has("refresh/refresh_core.py"), "refresh package missing")
 class TestStateAndLock(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
@@ -127,7 +128,7 @@ class TestStateAndLock(unittest.TestCase):
             state.REFRESH_DIR = REFRESH_DIR
 
 
-@unittest.skipUnless(has("refresh/publish.py"), "refresh package missing")
+@unittest.skipUnless(has("refresh/refresh_core.py"), "refresh package missing")
 class TestPublish(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())

@@ -2,7 +2,13 @@
   "source": "open-meteo",
   "forecast_days": 16,
   "districts": 37,
-  "rows": 25525,
-  "fetched_at": "2026-11-02T08:02:42+00:00",
-  "district_failures": {}
+  "rows": 26225,
+  "fetched_at": "2026-11-16T21:52:43+00:00",
+  "district_failures": {
+    "BAREILLY": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "ALIGARH": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "DEORIA": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "MAHOBA": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429",
+    "VARANASI": "RuntimeError: Open-Meteo reach after 2 tries: HTTP 429"
+  }
 }

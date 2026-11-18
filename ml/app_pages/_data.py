@@ -42,7 +42,7 @@ REFRESH = DATA / "refresh"
 FORECASTS = REFRESH / "forecasts"
 FORECAST_ARCHIVE = REFRESH / "forecast_archive"
 
-# Make the flat module names (06_features, _hydrology, ...) importable no matter
+# Make the flat module names (pipeline_model, _hydrology, ...) importable no matter
 # where streamlit is launched from.
 if str(ML_ROOT) not in sys.path:
     sys.path.insert(0, str(ML_ROOT))
@@ -317,7 +317,7 @@ def hydro_columns() -> tuple[list[str], list[str]]:
     """(NUM_COLS, HYDRO_COLS) — what the frozen models use vs what is carried."""
     try:
         import importlib
-        F = importlib.import_module("06_features")
+        F = importlib.import_module("pipeline_model")
         return list(F.NUM_COLS), list(F.HYDRO_COLS)
     except Exception:  # noqa: BLE001
         return [], []
@@ -459,7 +459,7 @@ def station_frame(station: str) -> pd.DataFrame | None:
 def station_coords() -> pd.DataFrame:
     """Station → District + Latitude/Longitude, from the selection metadata.
 
-    `data/meta/selected_gwl_stations.csv` is written by `01_select` and is the
+    `data/meta/selected_gwl_stations.csv` is written by `pipeline_data` and is the
     authoritative station list *with coordinates*; the aligned table has no
     coordinates. Rows with no coordinate are dropped (they cannot be mapped) but
     the caller can compare counts to see how many were lost.
@@ -578,7 +578,7 @@ def archive_station_index() -> dict[str, list[str]]:
 
 
 def station_key(station: str) -> str:
-    """Must match `refresh.publish.station_key` exactly, or the archive index
+    """Must match `refresh.refresh_core.station_key` exactly, or the archive index
     will not find a station's files."""
     return hashlib.sha1(str(station).encode("utf-8")).hexdigest()[:16]
 
@@ -665,7 +665,7 @@ def archive_validation(station: str, horizon_h: int = 720,
 def trajectory_forecast_safe(station: str) -> dict:
     """Call the runtime-selected inference engine — read-and-score, no retraining.
 
-    Routes through ``_traj_dispatch`` so the app follows the same runtime backend
+    Routes through ``serving_core`` so the app follows the same runtime backend
     as the API (default ``dl`` GRU). A configured DL failure is surfaced rather
     than silently switching to XGBoost. Writes nothing. Returns a dict with an
     ``error`` key instead of raising when artifacts or data are missing.
@@ -674,7 +674,7 @@ def trajectory_forecast_safe(station: str) -> dict:
         return {"error": "no station selected", "reason": "no_station"}
     try:
         import importlib
-        dispatch = importlib.import_module("_traj_dispatch")
+        dispatch = importlib.import_module("serving_core")
         return dispatch.active_trajectory_forecast(str(station))
     except Exception as e:  # noqa: BLE001 — surface as a UI state
         return {"error": f"{type(e).__name__}: {e}", "reason": "inference_failed"}
@@ -684,7 +684,7 @@ def trajectory_backend_status() -> dict:
     """Resolved runtime backend and loadability, using the same dispatcher as the API."""
     try:
         import importlib
-        dispatch = importlib.import_module("_traj_dispatch")
+        dispatch = importlib.import_module("serving_core")
         return dispatch.backend_status(probe=True)
     except Exception as e:  # noqa: BLE001 — render dependency failures in the UI
         return {"requested": "unknown", "backend": None, "degraded": True,

@@ -25,8 +25,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from refresh.future_drivers import (RiverForecastIndex, build_step_features,
-                                    future_weather_matrix)
+from refresh.refresh_data import (RiverForecastIndex, build_step_features,
+                                  future_weather_matrix)
 from tests._helpers import has
 
 NUM_COLS = [
@@ -100,7 +100,7 @@ def _rfc():
     return pd.DataFrame([rec])
 
 
-@unittest.skipUnless(has("refresh/future_drivers.py"), "refresh missing")
+@unittest.skipUnless(has("refresh/refresh_data.py"), "refresh missing")
 class TestFutureFeatureMatrix(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -178,7 +178,7 @@ class TestFutureFeatureMatrix(unittest.TestCase):
                            float(self.df["monsoon"].iloc[0]))
 
 
-@unittest.skipUnless(has("refresh/future_drivers.py"), "refresh missing")
+@unittest.skipUnless(has("refresh/refresh_data.py"), "refresh missing")
 class TestFutureWeatherMatrixSources(unittest.TestCase):
     def test_no_om_frame_all_climatology(self):
         fw, src = future_weather_matrix(
@@ -205,7 +205,7 @@ class TestFutureWeatherMatrixSources(unittest.TestCase):
                                 mode="flat")
 
 
-@unittest.skipUnless(has("refresh/future_drivers.py"), "refresh missing")
+@unittest.skipUnless(has("refresh/refresh_data.py"), "refresh missing")
 class TestRiverCanalCwcBridge(unittest.TestCase):
     """River forecast is a *delta over the station's own baseline*: in-window
     steps use station baseline + CWC district delta, out-of-window steps fall
@@ -251,7 +251,7 @@ class TestRiverCanalCwcBridge(unittest.TestCase):
             self.assertIn("river_canal:canal_persistence", rec["river_canal"])
 
 
-@unittest.skipUnless(has("refresh/future_drivers.py"), "refresh missing")
+@unittest.skipUnless(has("refresh/refresh_data.py"), "refresh missing")
 class TestRiverForecastIndex(unittest.TestCase):
     def test_covers_window(self):
         rfi = RiverForecastIndex(_rfc())
@@ -325,17 +325,15 @@ def _cwc_html(*rows):
     return f"<html><table>{body}</table></html>"
 
 
-@unittest.skipUnless(has("18_cwc_river_forecast.py"), "cwc module missing")
+@unittest.skipUnless(has("pipeline_data.py"), "pipeline_data missing")
 class TestCwcDashboardParser(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        spec = importlib.util.spec_from_file_location(
-            "cwc18", Path(__file__).resolve().parent.parent / "18_cwc_river_forecast.py")
-        cls.m = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(cls.m)
+        import pipeline_data
+        cls.m = pipeline_data
 
     def test_normal_layout(self):
-        df = self.m.parse_html(_cwc_html(_cwc_header(), _cwc_body_row()))
+        df = self.m.cwc_parse_html(_cwc_html(_cwc_header(), _cwc_body_row()))
         self.assertEqual(len(df), 1)
         r = df.iloc[0]
         self.assertEqual(int(r["sr_no"]), 7)
@@ -347,8 +345,8 @@ class TestCwcDashboardParser(unittest.TestCase):
         self.assertEqual(r["observed_cond"], "Severe")
 
     def test_stray_leading_cell_is_aligned(self):
-        a = self.m.parse_html(_cwc_html(_cwc_header(), _cwc_body_row()))
-        b = self.m.parse_html(_cwc_html(_cwc_header(), [""] + _cwc_body_row()))
+        a = self.m.cwc_parse_html(_cwc_html(_cwc_header(), _cwc_body_row()))
+        b = self.m.cwc_parse_html(_cwc_html(_cwc_header(), [""] + _cwc_body_row()))
         self.assertEqual(len(a), 1)
         self.assertEqual(len(b), 1)
         for col in ("sr_no", "site", "district", "observed_wl", "d4_wl"):
@@ -359,7 +357,7 @@ class TestCwcDashboardParser(unittest.TestCase):
         row[8] = ""   # observed date empty
         row[9] = ""   # observed condition empty
         row[10] = ""  # observed level empty
-        df = self.m.parse_html(_cwc_html(_cwc_header(), row))
+        df = self.m.cwc_parse_html(_cwc_html(_cwc_header(), row))
         self.assertEqual(len(df), 1)
         r = df.iloc[0]
         self.assertTrue(pd.isna(r["observed_dt"]))

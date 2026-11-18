@@ -1,4 +1,4 @@
-"""DL guard tests (_traj_dispatch.py).
+"""DL guard tests (serving_core dispatcher).
 
 With ``traj_backend=dl`` a GRU load/scoring failure must surface as a degraded
 error payload instead of silently serving XGBoost. The XGB fallback stays
@@ -11,10 +11,10 @@ import unittest
 from tests._helpers import has
 
 ROOT_RUNTIME = "data/refresh/runtime.json"
+READY = all(has(p) for p in ("serving_core.py", "serving_engines.py", ROOT_RUNTIME))
 
 
-@unittest.skipUnless(has("_traj_dispatch.py") and has(ROOT_RUNTIME),
-                     "dispatch module / runtime.json missing")
+@unittest.skipUnless(READY, "dispatch / engines / runtime.json missing")
 class TestDlGuard(unittest.TestCase):
     def setUp(self):
         from pathlib import Path
@@ -31,9 +31,8 @@ class TestDlGuard(unittest.TestCase):
         self.runtime.write_text(json.dumps(data))
 
     def test_dl_failure_returns_degraded_error(self):
-        import _dl
-        import _traj_dispatch
-        import _trajectory
+        import serving_core
+        import serving_engines
 
         def boom(station):
             raise RuntimeError("torch exploded")
@@ -44,14 +43,15 @@ class TestDlGuard(unittest.TestCase):
             called["xgb"] += 1
             return {"model": "XGBoost", "trajectory": []}
 
-        orig_dl, orig_xgb = _dl.trajectory_forecast, _trajectory.trajectory_forecast
-        _dl.trajectory_forecast = boom
-        _trajectory.trajectory_forecast = xgb_stub
+        orig_dl = serving_engines.dl_trajectory_forecast
+        orig_xgb = serving_engines.xgb_trajectory_forecast
+        serving_engines.dl_trajectory_forecast = boom
+        serving_engines.xgb_trajectory_forecast = xgb_stub
         try:
-            out = _traj_dispatch.active_trajectory_forecast("ANY STATION")
+            out = serving_core.active_trajectory_forecast("ANY STATION")
         finally:
-            _dl.trajectory_forecast = orig_dl
-            _trajectory.trajectory_forecast = orig_xgb
+            serving_engines.dl_trajectory_forecast = orig_dl
+            serving_engines.xgb_trajectory_forecast = orig_xgb
 
         self.assertIn("error", out)
         self.assertEqual(out["reason"], "backend_unavailable")
@@ -61,9 +61,8 @@ class TestDlGuard(unittest.TestCase):
         self.assertEqual(called["xgb"], 0, "guard must not fall back to xgb")
 
     def test_explicit_opt_in_falls_back(self):
-        import _dl
-        import _traj_dispatch
-        import _trajectory
+        import serving_core
+        import serving_engines
 
         def boom(station):
             raise RuntimeError("torch exploded")
@@ -71,40 +70,41 @@ class TestDlGuard(unittest.TestCase):
         def xgb_stub(station):
             return {"model": "XGBoost", "trajectory": []}
 
-        orig_dl, orig_xgb = _dl.trajectory_forecast, _trajectory.trajectory_forecast
-        _dl.trajectory_forecast = boom
-        _trajectory.trajectory_forecast = xgb_stub
+        orig_dl = serving_engines.dl_trajectory_forecast
+        orig_xgb = serving_engines.xgb_trajectory_forecast
+        serving_engines.dl_trajectory_forecast = boom
+        serving_engines.xgb_trajectory_forecast = xgb_stub
         try:
-            out = _traj_dispatch.active_trajectory_forecast("ANY STATION",
-                                                            allow_fallback=True)
+            out = serving_core.active_trajectory_forecast("ANY STATION",
+                                                          allow_fallback=True)
         finally:
-            _dl.trajectory_forecast = orig_dl
-            _trajectory.trajectory_forecast = orig_xgb
+            serving_engines.dl_trajectory_forecast = orig_dl
+            serving_engines.xgb_trajectory_forecast = orig_xgb
 
         self.assertNotIn("error", out)
         self.assertIn("XGBoost", out["model"])
 
     def test_backend_status_marks_degraded(self):
-        import _traj_dispatch
-        orig = _traj_dispatch.dl_probe
-        _traj_dispatch.dl_probe = lambda: {"ok": False, "error": "no torch"}
+        import serving_core
+        orig = serving_core.dl_probe
+        serving_core.dl_probe = lambda: {"ok": False, "error": "no torch"}
         try:
-            st = _traj_dispatch.backend_status()
+            st = serving_core.backend_status()
         finally:
-            _traj_dispatch.dl_probe = orig
+            serving_core.dl_probe = orig
         self.assertEqual(st["requested"], "dl")
         self.assertEqual(st["backend"], "dl")
         self.assertTrue(st["degraded"])
         self.assertEqual(st["error"], "no torch")
 
     def test_backend_status_healthy(self):
-        import _traj_dispatch
-        orig = _traj_dispatch.dl_probe
-        _traj_dispatch.dl_probe = lambda: {"ok": True, "error": None}
+        import serving_core
+        orig = serving_core.dl_probe
+        serving_core.dl_probe = lambda: {"ok": True, "error": None}
         try:
-            st = _traj_dispatch.backend_status()
+            st = serving_core.backend_status()
         finally:
-            _traj_dispatch.dl_probe = orig
+            serving_core.dl_probe = orig
         self.assertFalse(st["degraded"])
         self.assertIsNone(st["error"])
 

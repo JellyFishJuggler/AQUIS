@@ -11,8 +11,8 @@
 > git-ignored DL checkpoints (`models/*_dl.pt`) copied out-of-band.
 > The old per-station `ml/` (Flask API, `agent/`, `artifacts/`, `xgboost_quantile.py`)
 > was merged into this module and deleted — see `merge_later` items in the merge spec.
-> Both forecast surfaces — the **trajectory v2** engine (`_trajectory.py`, XGBoost;
-> `_dl.py`, GRU) and the pooled direct-30d model — are configured to serve quantile
+> Both forecast surfaces — the **trajectory v2** engine (`serving_engines.py`: XGBoost + GRU,
+> dispatched by `serving_core.py`) and the pooled direct-30d model — are configured to serve quantile
 > GRU models, with XGBoost as an automatic fallback/benchmark. Saved refresh state
 > is older than the current date; see [Operational status](#operational-status).
 > See [Trajectory v2](#trajectory-v2) and
@@ -118,7 +118,7 @@ Production serving remains the Flask API in this directory (`api.py`, used by
 the Node back-end gateway) and the refresh pipeline (`refresh/`,
 `python -m refresh.cli status`). Pipeline outputs (`fleet_forecast.csv`,
 `model_metrics.csv`, honest/ablation/diagnostics) are produced by the numbered
-scripts and read via `_model.py` loaders. The Streamlit showcase is for ML
+merged pipeline modules and read via `serving_core.py` loaders. The Streamlit showcase is for ML
 inspection and demonstration; it does not replace the mobile APK or production
 serving paths.
 
@@ -132,7 +132,7 @@ even if Ollama is down. Requires the local Ollama server + model:
 
 ```bash
 ollama serve            # usually already running as a service
-ollama pull llama3.2:3b # ~2 GB, one-time
+ollama pull qwen2.5:3b # ~2 GB, one-time
 ```
 
 Model override: `AQUIS_OLLAMA_MODEL` in the repo `.env` (same read pattern as
@@ -168,9 +168,9 @@ STT model or audio upload involved.
   `target_time < 2026-01-01`. Before this, a late-September label was observed
   inside the validation window and a late-December label inside the test window,
   so early stopping selected on later-split labels. The same purge is applied to
-  the trajectory long-frame (`30_traj_datasets`) and the refresh candidate build
+  the trajectory long-frame (`pipeline_traj datasets`) and the refresh candidate build
   (`refresh/model_update`); row counts fall by ≈120 anchors × n_stations.
-* **Hydrology block (carried, not yet trained)**: `HYDRO_COLS` in `06_features.py`
+* **Hydrology block (carried, not yet trained)**: `HYDRO_COLS` in `pipeline_model.py (features stage)`
   — `gwl_dev{7,30}`, `gwl_slope{7,30,90}` (trailing Theil-Sen on daily medians),
   `gwl_obs{7,30,90}`, `gwl_imputed`, and the exponential antecedent-precipitation
   indices `rain_api{7,22,60}` with `rain_obs{7,22,60}`. Built once in
@@ -186,7 +186,7 @@ STT model or audio upload involved.
   τ·4-slot denominator — so forecast/climatology rain never counts as observed
   and coverage decays across the horizon. Rainfall is never forward-filled or
   interpolated anywhere in the pipeline, so in batch frames a finite value is a
-  genuine observation (the mask is built explicitly in `06_features.build`).
+  genuine observation (the mask is built explicitly in `pipeline_model.build`).
   See `../docs/ml.md` §2.1 and `../docs/ml.md` §3.1.1.
 * **Hydrology block is UNTRAINED, and `rain_api*` has a train/serve definition
   mismatch**: batch builds it from rainfall known at the anchor (horizon-invariant),
@@ -199,13 +199,7 @@ STT model or audio upload involved.
 * **ML showcase app**: `streamlit_app.py` + `app_pages/` — read-only demonstration
   of the pipeline, features, forecasts and evaluation. Run with
   `cd ml && ./venv/bin/python -m streamlit run streamlit_app.py`.
-* **Out-of-sample baseline diagnostic** (`31_honest_baseline.py`): recomputes the
-  pooled margin over persistence **and** the interval coverage on a held-out half of
-  the stations from the existing `outputs/predictions_2026.parquet`, so the headline
-  numbers can be read on a fair split without rerunning the pipeline. Reads and
-  recomputes only. Caveat: the feature frames are still pre-purge, so its output is
-  an upper bound on honest performance.
-* **Calibration is fitted out-of-sample**: `32_backtest_traj.py` and
+* **Calibration is fitted out-of-sample**: `pipeline_traj backtest` and
   `refresh/backtest._calibrate` now split the anchors, fit the widening on one half
   and report coverage on the other (`coverage_calibrated_fit` = fit half, held-out
   `coverage_calibrated` = headline). The refresh promotion gate reads the held-out
@@ -226,8 +220,8 @@ STT model or audio upload involved.
   2.290 m, +2.1%)** · ridge 2.456 (−7.3%) · climatology 3.572. The 6h grid tightens
   persistence itself from 2.395 → 2.290 m. Driver value at 30 d stays marginal —
   consistent with "drivers add ~0 at h≤7".
-* **Stride evaluation** (`experiments/validation/*` + `10_ablate.py`, run automatically by
-  `07_evaluate`): the dense 6h test anchors produce temporally correlated endpoint
+* **Stride evaluation** (`experiments/validation/*` + `pipeline_model ablate`, run automatically by
+  `pipeline_model` (evaluate stage)): the dense 6h test anchors produce temporally correlated endpoint
   errors, not independent 30-day trajectory windows. The saved stride artifact
   reports **RMSE = 2.339 m** (vs persistence 2.382 m → +1.8%) for one 30-day endpoint
   per station every 120 six-hour steps. These points can still be serially
@@ -248,47 +242,48 @@ STT model or audio upload involved.
 ### Deep-learning models (quantile GRU) — now the served engines
 
 Two pooled PyTorch models (sequence GRU encoder + pinball quantile heads) replace
-the XGBoost incumbents **on the served path** (`_dl.py`; dispatched by
-`_model.forward_forecast` / `_traj_dispatch`; backend flags in
+the XGBoost incumbents **on the served path** (`serving_engines.py`; dispatched by
+`serving_core.forward_forecast` / `serving_core.active_trajectory_forecast`; backend flags in
 `data/refresh/runtime.json`). XGBoost is retained as an automatic fallback.
 
-* **Surface (a) — trajectory DL** (`34_train_traj_dl.py` → `models/traj_dl.pt`
+* **Surface (a) — trajectory DL** (`pipeline_traj train_dl` → `models/traj_dl.pt`
   + `traj_dl_config.json`): anchor-centric sequence GRU (hidden 64, AdamW lr 2e-3,
   up to 40 epochs, plateau schedule) over the last 120 observed 6-h rows on the
   station's own axis (left-zero-padded + masked), horizon-conditioned heads for
   q05/q50/q95 and horizon `h ∈ 1..120`. Same frames/target/split as
-  `31_train_traj.py`, so the backtest is apples-to-apples. 30 features (`NUM_COLS`).
-* **Surface (b) — pooled 30-day DL** (`36_train_pooled_dl.py` → `models/pooled_dl.pt`
+  `pipeline_traj train`, so the backtest is apples-to-apples. 30 features (`NUM_COLS`).
+* **Surface (b) — pooled 30-day DL** (`pipeline_traj train_pooled_dl` → `models/pooled_dl.pt`
   + `pooled_dl_config.json`): daily GRU (hidden 32, window 60, up to 60 epochs,
   3-seed ensemble {42,840,2056}) over a 39-column dense+seasonal frame (incl.
   hydrology slopes/devs, `rain_api*`, `*_obs*`), three pinball heads, z-scored
   inputs, `widen_k = 1.1` calibration. Target = the same `GWL(t+30d) − GWL(t)`
-  delta as `06_train`'s pooled XGB.
+  delta as `pipeline_model` (train stage)'s pooled XGB.
 * **Evidence** — see [Algorithms evaluated](#algorithms-evaluated-xgboost--gru--sarima--gpr).
-  `35_traj_paired_ci.py` (DL-vs-XGB per-horizon station bootstrap) and
-  `37_backtest_pooled_dl.py` (`outputs/pooled_dl_eval.json`) produce the honest
+  `pipeline_traj paired_ci` (DL-vs-XGB per-horizon station bootstrap) and
+  `pipeline_traj backtest_pooled_dl` (`outputs/pooled_dl_eval.json`) produce the honest
   numbers; `test_model_dl_parity.py`, `test_trajectory_backend_parity.py`,
   `test_trajectory_dispatch.py` guard serving parity.
 
 ## Trajectory v2 — genuine 6-hourly global forecast
 The Forecast page's model. Two interchangeable engines on the same frame/target/split:
-a **direct multi-horizon shared XGBoost** (`_trajectory.py`) and a **sequence GRU
-with horizon-conditioned quantile heads** (`_dl.py` → `34_train_traj_dl.py`). In both,
+a **direct multi-horizon shared XGBoost** (`serving_engines.xgb_trajectory_forecast`) and a
+**sequence GRU with horizon-conditioned quantile heads** (`serving_engines.dl_trajectory_forecast`
+→ `pipeline_traj train_dl`). In both,
 horizon `h ∈ 1..120` is modelled explicitly, every step is a real model output (no
 recursion, no interpolation), `q05 ≤ q50 ≤ q95` at every horizon. **The GRU is the
 served engine**, with XGBoost as the automatic fallback/benchmark. Spec + full
 results: [`../docs/ml.md`](../docs/ml.md).
 
-| Step | Script | Output |
+| Step | Stage | Output |
 |---|---|---|
-| Datasets | `30_traj_datasets.py` | `data/features_traj/{train,val}.parquet` + `prep_traj.json` (6.53M rows; targets by exact-time lookup, never positional shift across grid gaps) |
-| Models (XGBoost) | `31_train_traj.py` | `models/traj_xgb_{q05,q50,q95}.json` + `traj_config.json` (33 features incl. `h,h_sin,h_cos`) |
-| Models (GRU) | `34_train_traj_dl.py` | `models/traj_dl.pt` + `traj_dl_config.json` (30 `NUM_COLS`, hidden 64, horizon-cond. quantile heads) |
-| Paired CI | `35_traj_paired_ci.py` | `outputs/traj_paired_ci_dl_vs_xgb.json` (per-horizon DL-vs-XGB station bootstrap) |
-| Honest backtest | `32_backtest_traj.py [n_stations]` (`TRAJ_MODEL=xgb\|dl`) | `outputs/traj_backtest_metrics{,_dl}.csv`, `traj_backtest_summary{,_dl}.json`, `models/traj{,_dl}_calibration.json` |
-| Reliability tables | `33_traj_reliability.py` | `models/traj_reliability.json` (bucket rules + evidence weights) |
-| Weather | `20_openmeteo_fetch.py` | `data/cfs/openmeteo_weather_daily.parquet` (district daily weather, precipitation, and FAO-56 reference ET₀; initial fetch defaults to 365 d history and refresh merges a rolling 400 d plus 16 d forecast into the retained archive) |
-| River | `18_cwc_river_forecast.py` | `data/cfs/river_forecast_cwc.parquet` (CWC 3-day forecasts, per district) |
+| Datasets | `pipeline_traj datasets` | `data/features_traj/{train,val}.parquet` + `prep_traj.json` (6.53M rows; targets by exact-time lookup, never positional shift across grid gaps) |
+| Models (XGBoost) | `pipeline_traj train` | `models/traj_xgb_{q05,q50,q95}.json` + `traj_config.json` (33 features incl. `h,h_sin,h_cos`) |
+| Models (GRU) | `pipeline_traj train_dl` | `models/traj_dl.pt` + `traj_dl_config.json` (30 `NUM_COLS`, hidden 64, horizon-cond. quantile heads) |
+| Paired CI | `pipeline_traj paired_ci` | `outputs/traj_paired_ci_dl_vs_xgb.json` (per-horizon DL-vs-XGB station bootstrap) |
+| Honest backtest | `pipeline_traj backtest [n_stations]` (`TRAJ_MODEL=xgb\|dl`) | `outputs/traj_backtest_metrics{,_dl}.csv`, `traj_backtest_summary{,_dl}.json`, `models/traj{,_dl}_calibration.json` |
+| Reliability tables | `pipeline_traj reliability` | `models/traj_reliability.json` (bucket rules + evidence weights) |
+| Weather | `openmeteo_weather.py` | `data/cfs/openmeteo_weather_daily.parquet` (district daily weather, precipitation, and FAO-56 reference ET₀; initial fetch defaults to 365 d history and refresh merges a rolling 400 d plus 16 d forecast into the retained archive) |
+| River | `pipeline_data cwc_forecast` | `data/cfs/river_forecast_cwc.parquet` (CWC 3-day forecasts, per district) |
 
 - **Backtest artifact (2026):** anchors are every 14 d and metrics score point
   targets at each horizon; adjacent anchors still overlap in their forecast
@@ -310,7 +305,7 @@ results: [`../docs/ml.md`](../docs/ml.md).
   with inference-time downgrades (stale anchor, missing/climatology-only drivers, OOD anchor,
   oscillation) each carrying a reason string.
 - **Forward drivers are forecasts, not observations:** Open-Meteo days 1–16, climatology
-  beyond, CWC river forecast where the district is covered (`refresh/future_drivers.py`).
+  beyond, CWC river forecast where the district is covered (`refresh/refresh_data.py`).
 - **Forecast UI:** single dark-theme card — "Forecast starts" boundary marker, observed tail,
   q50 + q05/q95 bright uncertainty band (no dot markers), direction banner, 6 metrics
   (anchor/+24h/+7d/+30d/change/confidence).
@@ -335,19 +330,19 @@ were rejected (**SARIMA**, **GPR**). Results kept for provenance.
 | **Persistence / climatology** | pooled direct-30d and trajectory benchmarks | Persistence is the zero-change baseline. Historical pooled 2026 RMSE **2.290 m**; climatology **3.572 m** (pre-purge artifact). | Reference baselines |
 | **Experimental MLP variants** | scratch strict temporal folds and held-out-station CV | No promotion. Corrected strict sprint: **0/28** arms passed its full gate. Held-out-station CV models lost to persistence (ratios **1.27–1.48** for reported candidates). | Research only |
 
-### Quantile GRU — the production engine (`34_train_traj_dl.py`, `36_train_pooled_dl.py`)
+### Quantile GRU — the production engine (`pipeline_traj train_dl`, `pipeline_traj train_pooled_dl`)
 
 * **Surface (b) pooled 30-day** — honest non-overlapping 2026 stride
-  (`37_backtest_pooled_dl.py` → `outputs/pooled_dl_eval.json`; n=4,355, 511
+  (`pipeline_traj backtest_pooled_dl` → `outputs/pooled_dl_eval.json`; n=4,355, 511
   stations): persistence RMSE 2.187 · E0-XGB 2.206 · **DL 2.082**. Paired
   station-bootstrap: DL vs E0 ratio **0.944 [0.879, 0.972]** and DL vs persistence
   **0.952 [0.906, 0.972]** — both beat. DL bias −0.030, direction-acc 0.732,
   coverage_90 0.925 (raw 0.908). This is the cleanest DL win.
-* **Surface (a) trajectory** — 2026 anchor backtest (`TRAJ_MODEL=dl 32_backtest_traj.py`
+* **Surface (a) trajectory** — 2026 anchor backtest (`TRAJ_MODEL=dl python -m pipeline_traj backtest`
   → `traj_backtest_summary_dl.json`; 19,406 anchors, 150 stations, 2025-10 → 2026-08):
   30-d RMSE **1.802 vs persistence 1.907**, dir
   0.725, coverage_calibrated 0.894 (disjoint fit-half 0.901). `promote_trajectory = false`.
-* **Per-horizon DL-vs-XGB** (`35_traj_paired_ci.py` → `traj_paired_ci_dl_vs_xgb.json`,
+* **Per-horizon DL-vs-XGB** (`pipeline_traj paired_ci` → `traj_paired_ci_dl_vs_xgb.json`,
   2,000 station-bootstrap resamples): DL is **not** better at h6 (ratio 1.012) or
   h12 (1.003); it wins from ~h48 (0.962 [0.957, 0.998]), h360 (0.985), and the
   30-day endpoint h720 (**0.990 [0.972, 0.996]**). `dl_beats_xgb_30d = true`,
@@ -356,8 +351,9 @@ were rejected (**SARIMA**, **GPR**). Results kept for provenance.
   30 `NUM_COLS`, 120-step 6-h window, horizon-conditioned quantile heads.
   (b) `models/pooled_dl_config.json` — daily GRU hidden 32, window 60, 39-col
   dense+seasonal frame, 3-seed ensemble, `widen_k = 1.1`.
-* **Serving/parity:** `_dl.py` (`forward_forecast`, `trajectory_forecast`,
-  `preview`, `clear_caches`); guarded by `test_model_dl_parity.py`,
+* **Serving/parity:** `serving_engines.py` (`dl_forward_forecast`,
+  `dl_trajectory_forecast`, `xgb_trajectory_forecast`, `clear_caches`);
+  guarded by `test_model_dl_parity.py`,
   `test_trajectory_backend_parity.py`, `test_trajectory_dispatch.py`.
 * **Caveat:** the 30-day DL win is a 2026-only signal and short horizons remain
   XGB's edge, so the promotion gate stays conservative.
@@ -417,22 +413,17 @@ live status.
 
 The production-facing near-real-time loop. A systemd daemon
 (`python -m refresh.cli schedule`) polls on a **fixed 6-hourly wall-clock grid**
-(01:00 / 07:00 / 13:00 / 19:00 IST — `refresh/schedule.py`, `refresh_at_hours`
+(01:00 / 07:00 / 13:00 / 19:00 IST — `refresh/refresh_core.py`, `refresh_at_hours`
 in `refresh_config.json`) and runs fetch → feature/align → inference → publish,
 re-arming ~24 h model updates:
 
 | Module | Responsibility |
 |---|---|
-| `refresh/config.py` | paths + `refresh_config.json` (intervals, grid hours, gates) |
-| `refresh/state.py` | `state.json` atomic writes (PID-unique tmp + `os.replace`), corrupt auto-re-arm, journal `journal.jsonl`, refresh lock |
-| `refresh/schedule.py` | `next_grid_due()` — next fixed local-time slot (with rolling-interval fallback) |
-| `refresh/sources.py` | NWIC incremental fetch (`13_refresh_nwic`, per-station max), Open-Meteo, CWC |
-| `refresh/features.py` | align chain + climatology rebuild, backup/restore guarded |
-| `refresh/inference.py` | per-station active trajectory forecast for changed anchors (GRU via `_dl`, XGB fallback), publish-or-abort gate |
-| `refresh/publish.py` | staged per-station JSON + `forecasts.parquet` + `meta.json` last (commit point), freshness verdict (`data_status` fresh/stale/unknown) |
-| `refresh/model_update.py` | drift-gated retrain (trajectory v2 + reliability) — 24 h cadence, memory-bounded |
-| `refresh/verification.py` | score archived anchors against realised readings, sign-accuracy ledger + drift detection |
-| `refresh/cli.py` | `refresh.cli fetch|forecast|schedule|status|verify` |
+| `refresh/refresh_core.py` | config + `refresh_config.json`, `state.json` atomic writes / journal / lock, `next_grid_due()` wall-clock schedule, staged publish + freshness verdict (`data_status` fresh/stale/unknown) |
+| `refresh/refresh_data.py` | NWIC + Open-Meteo + CWC fetch, guarded align/climatology rebuild, future-step driver features |
+| `refresh/refresh_engines.py` | per-station anchored trajectory forecast (GRU via `serving_engines`, XGB fallback), publish-or-abort gate, verification ledger + drift, memory-bounded refit/backtest/promotion |
+| `refresh/refresh_service.py` | one-cycle orchestration, restart-safe scheduler daemon, CLI handlers (`validate-config`, `status`, `dry-run`, `forecast`, `retrain`, `schedule`) |
+| `refresh/cli.py` | thin `python -m refresh.cli` shim (`run_forecast.cmd` / `.pyw` unchanged) |
 
 Runtime state lives in `data/refresh/` (git-ignored): `state.json`,
 `journal.jsonl`, `forecasts/`, `forecast_archive/`, `refresh_config.json`.
@@ -458,7 +449,7 @@ showcase pages documented above do not expose a separate Verification page.
 * `outputs/pooled_dl_eval.json` — surface (b) honest 2026-stride DL-vs-E0-XGB-vs-persistence
 * `outputs/traj_paired_ci_dl_vs_xgb.json` — surface (a) per-horizon DL-vs-XGB paired bootstrap CI
 * `outputs/traj_backtest_metrics_dl.csv` + `traj_backtest_summary_dl.json` + `traj_backtest_rows_dl.parquet` — surface (a) DL backtest artifacts
-* `models/xgb_q{05,50,95}.joblib` + `quantile_calibration.json` — `11_quantile.py`:
+* `models/xgb_q{05,50,95}.joblib` + `quantile_calibration.json` — `pipeline_model quantile`:
   pooled quantile forecasters (`reg:quantileerror`) with empirical coverage
   calibration; raw q05–q95 stride coverage 0.908 ≥ target 0.80 → widen factor k=1.0,
   median half-width ≈1.03 m (old uncalibrated ±1.96σ ≈ ±4.39 m was over-wide)
@@ -467,23 +458,23 @@ showcase pages documented above do not expose a separate Verification page.
   `spatial_cv_summary.json`, `spatial_folds.csv`), `overlap.py`
   (`honest_metrics.csv`, `station_summary.csv`, `overlap.json`), `residual_acf.py`
   (`residual_acf.json`), `spatial_residual.py` (`residual_spatial.json`)
-* `outputs/ablation.csv` — `10_ablate.py` drop-group sweep (rain/weather/calendar
+* `outputs/ablation.csv` — `pipeline_model ablate` drop-group sweep (rain/weather/calendar
   positive; river/canal + GWL lags neutral at 30 d)
-* `outputs/diagnostics.json` + `diagnostics_permutation.csv` — `12_diagnostics.py`
+* `outputs/diagnostics.json` + `diagnostics_permutation.csv` — `pipeline_model diagnostics`
   (VIF on a mean-imputed sample, permutation importance on the stride subset, OAT
   driver sensitivity). The saved stride points are temporally correlated, not
   independent windows; season/level/monsoon carry the largest single-driver swing
   (~0.39 m) in that artifact.
-* `outputs/fleet_forecast.csv` + `fleet_district.csv` — `11_fleet.py` whole-fleet 30-day
+* `outputs/fleet_forecast.csv` + `fleet_district.csv` — `pipeline_model fleet` whole-fleet 30-day
   scan (q50-median headline per station, quality-gated): 502 stations scored (43
   rejected: NaN anchor / stale / implausible), median Δ +0.32 m, decline 0, recovering
   259 at ±0.3 m — post-monsoon, all changes inside their 90% intervals (reset the
-  snapshot with `python 11_fleet.py --force`)
+  snapshot with `python -m pipeline_data fleet --force`)
 * `outputs/correlation_lulc.csv` — static LULC class % × district GWL summary (exploratory)
 * `data/meta/lulc_long.csv` + `data/soil/lulc_district.csv` — ISRO Bhuvan LULC 50K, 29 districts
 * `data/aligned/table.parquet` / `table.csv` — daily station×day table (correlation/overview)
 * `data/aligned/table_6h.parquet` — **6h station×slot table (2.99M rows / 600 stations)**,
-  consumed by `06_features`
+  consumed by `pipeline_model`
 * `data/soil/soil_stations.csv` — ISRIC SoilGrids 2.0 per-station texture (background fetch)
 * `tests/` — forecast-validation suite (stdlib `unittest`, data-gated, no pytest).
 * `data/meta/` — association CSVs, manifest, probe results, per-station flags
@@ -498,7 +489,7 @@ showcase pages documented above do not expose a separate Verification page.
 2. Canal discharge / reservoir discharge: genuinely absent from selected districts.
    If future API expansion covers those districts, re-run `02`.
 3. **Soil**: SoilGrids REST fetch running in background (~56/600 cached so far). Once
-   complete, `06_features` auto-merges sand/silt/clay/bdod (0-30 + 60-100 cm) and the
+   complete, `pipeline_model` auto-merges sand/silt/clay/bdod (0-30 + 60-100 cm) and the
    run is replayable. Fetch resumes on restart (station-set skip by CSV);
    NullResponse profiles are skipped.
 4. **Extraction**: no groundwater-extraction dataset on NWDP; CGWB dynamic assessments are
@@ -510,14 +501,14 @@ showcase pages documented above do not expose a separate Verification page.
    (2.339 m vs persistence 2.382 m, +1.8%) is provisional and predates the
    target-time purge; it is not a re-score of the corrected code. Treat per-row
    RMSE deltas below ~±0.05 m as noise until a clean evaluation is run.
-6. **Quantile uncertainty + calibration** — **DONE** (`11_quantile.py`): pooled
+6. **Quantile uncertainty + calibration** — **DONE** (`pipeline_model quantile`): pooled
    q05/q50/q95 (`reg:quantileerror`) trained and calibrated on the saved stride
     sample (not an independent calibration holdout). Raw stride coverage 0.908 vs target 0.80 → `widen_factor_k = 1.0` (no
    widening needed), median half-width ~1.03 m. Forecast page + assistant now use the
    calibrated interval; band_half is per-station `(q95−q05)/2` (median ~1.0 m, p90
    ~2.6 m). Global band shipped; **station-aware bands** (per-station residual scale)
    remain a follow-up.
-7. **Fleet scan + recovery ranking** — **DONE** (`11_fleet.py`): 30-day scan across the
+7. **Fleet scan + recovery ranking** — **DONE** (`pipeline_model fleet`): 30-day scan across the
    ≥2 y subset (596 eligible), q50-median headline + quality gate for NaN/stale
    anchors. Note: the pooled regression delta saturates to identical values on stations
    whose recent driver/lag columns are empty — the q50 median stays flat there, so fleet
@@ -525,17 +516,17 @@ showcase pages documented above do not expose a separate Verification page.
    snapshot: 502 scored, median +0.32 m, 9→0 declines / 259 recovering at ±0.3 m, no
    station clears its 90% band. Follow-up: flood an **alerts** view for real movers
    (|Δ| > band) and monitor drift on re-scans.
-8. **LULC**: Bhuvan 50K district stats fetched for all 29 districts (`08_lulc.py`,
+8. **LULC**: Bhuvan 50K district stats fetched for all 29 districts (`pipeline_data lulc`,
    key in `<repo>/.env`). Class shares correlate with district GWL (fallow ↔ deeper
    GWL r≈+0.42, built-up ↔ shallower r≈−0.42, n=28) but are **kept out of the model**:
    static district constants are redundant with the st_id/dist_id ordinals (test
    XGB 30 d 2.242 → 2.288 m, best_iteration collapsed 15 → 1). Shown in the app's
    Sources page for reference. AOI-wise endpoint + per-station buffer stays unused.
-9. **Soil**: ISRIC SoilGrids v2 fetched for all 580 stations (`07_soil.py`, thickness-
+9. **Soil**: ISRIC SoilGrids v2 fetched for all 580 stations (`pipeline_data soil`, thickness-
    weighted sand/silt/clay/bdod at 0-30/60-100 cm). Same verdict as LULC — included
    in the model, test XGB 30 d 2.242 → 2.277 m, best_iteration 15 → 2, so gated out
    (`ENABLE_SOIL_FEATURES = False`). Mapped stations shown in the Sources page.
-10. **Future-rain expectation** (`ENABLE_RAIN_EXP = False` in `06_features.py`): a
+10. **Future-rain expectation** (`ENABLE_RAIN_EXP = False` in `pipeline_model.py (features stage)`): a
     leak-free *trailing* district-day climatology of observed NWIC rainfall summed
     over the next 30 days. Offline ablation (2026 test, XGB 30 d): **2.242 → 2.226 m**
     (+2.8% vs +2.1% over persistence) — small but real, so the feature stays

@@ -19,7 +19,7 @@ STATION = "ASHADHA PRATHMIK VIDYALAYA"
 DL_READY = all(has(p) for p in (
     "models/traj_dl.pt", "models/traj_dl_config.json",
     "models/traj_dl_calibration.json", "models/traj_dl_reliability.json",
-    "_dl.py", "_trajectory.py",
+    "serving_engines.py", "serving_core.py",
     "models/traj_xgb_q50.json", "models/traj_calibration.json",
     "models/traj_reliability.json",
 ))
@@ -35,8 +35,8 @@ _POINT_KEYS = {"time", "gwl", "q05", "q50", "q95", "confidence_level",
 class TestTrajectoryBackendParity(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        from _trajectory import trajectory_forecast as xgb_fc
-        from _dl import trajectory_forecast as dl_fc
+        from serving_engines import xgb_trajectory_forecast as xgb_fc
+        from serving_engines import dl_trajectory_forecast as dl_fc
         cls.xgb = xgb_fc(STATION)
         cls.dl = dl_fc(STATION)
         assert "error" not in cls.xgb, cls.xgb
@@ -98,7 +98,7 @@ class TestTrajectoryBackendParity(unittest.TestCase):
 @unittest.skipUnless(DL_READY, "DL trajectory artifacts missing")
 class TestTrajectoryDLUnknownStation(unittest.TestCase):
     def test_returns_error_not_crash(self):
-        from _dl import trajectory_forecast
+        from serving_engines import dl_trajectory_forecast as trajectory_forecast
         out = trajectory_forecast("NOT A REAL STATION")
         self.assertTrue(not isinstance(out, list))
         if out:

@@ -9,7 +9,7 @@ fewer independent forecasts than the raw count suggests. This module:
   * aggregates per-window RMSE so every independent window weighs equally,
   * reports the effective sample size vs the raw row count.
 
-Reads outputs/predictions_2026.parquet (produced by 07_evaluate). Writes
+Reads outputs/predictions_2026.parquet (produced by pipeline_model). Writes
 outputs/honest_metrics.csv, outputs/station_summary.csv, outputs/overlap.json.
 """
 

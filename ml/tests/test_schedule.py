@@ -1,10 +1,9 @@
-"""Tests for fixed wall-clock grid scheduling (refresh/schedule.py)."""
+"""Tests for fixed wall-clock grid scheduling (refresh/refresh_core.py)."""
 
 import unittest
 from datetime import datetime, timezone, timedelta
 
-from refresh.config import RefreshConfig
-from refresh.schedule import next_grid_due
+from refresh.refresh_core import RefreshConfig, next_grid_due
 
 
 class TestGridDue(unittest.TestCase):

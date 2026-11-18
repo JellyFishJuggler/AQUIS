@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AQUIS — Qwen Assistant</title>
+<style>
+  :root {
+    --bg: #f6f8fa;
+    --panel: #ffffff;
+    --ink: #0f172a;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --accent: #0891b2;
+    --accent-soft: rgba(8, 145, 178, 0.12);
+    --bad: #b91c1c;
+    --good: #047857;
+    --warn: #92400e;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  header {
+    padding: 16px 24px 13px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+  header h1 { margin: 0; font-size: 18px; letter-spacing: -0.01em; }
+  header .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  header .spacer { flex: 1 1 auto; }
+  header .api { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+  header .api input {
+    width: 200px; padding: 5px 8px; font-size: 12px;
+    border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--ink);
+  }
+  header a.back { font-size: 12px; color: var(--accent); text-decoration: none; }
+  header a.back:hover { text-decoration: underline; }
+  main { max-width: 1180px; margin: 0 auto; padding: 20px 24px 40px; }
+  .controls {
+    display: grid;
+    grid-template-columns: 1.1fr 2fr;
+    gap: 14px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 15px 16px;
+  }
+  .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .field label {
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  select, button, input[type="text"] {
+    font: inherit; padding: 9px 10px; border-radius: 8px;
+    border: 1px solid var(--line); background: #fff; color: var(--ink); min-width: 0;
+  }
+  select:focus, button:focus, input:focus { outline: 2px solid var(--accent-soft); outline-offset: 1px; }
+  button { cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  button:disabled { opacity: 0.5; cursor: default; }
+  #status { margin: 14px 0 0; font-size: 13px; color: var(--muted); min-height: 18px; }
+  #status.error { color: var(--bad); }
+  #status.warn { color: var(--warn); }
+
+  .wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1.75fr) minmax(250px, 1fr);
+    gap: 16px;
+    margin-top: 14px;
+    align-items: start;
+  }
+  .panel {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .chat { display: flex; flex-direction: column; min-height: 520px; }
+  .messages {
+    flex: 1 1 auto; overflow-y: auto; padding: 16px;
+    display: flex; flex-direction: column; gap: 10px;
+    max-height: 58vh; min-height: 300px;
+  }
+  .msg { max-width: 85%; padding: 10px 13px; border-radius: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .msg.user { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .msg.bot { align-self: flex-start; background: #f1f5f9; border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .msg.bot.error { background: #fef2f2; border-color: #fecaca; color: var(--bad); }
+  .msg .meta { margin-top: 6px; font-size: 11px; color: var(--muted); }
+  .msg.user .meta { color: rgba(255,255,255,0.75); }
+  .msg.bot.error .meta { color: var(--bad); }
+  .msg code {
+    background: rgba(15, 23, 42, 0.06); padding: 1px 4px; border-radius: 4px;
+    font-size: 0.92em;
+  }
+  .dots::after {
+    content: "…";
+    animation: blink 1.2s steps(4, end) infinite;
+  }
+  @keyframes blink { 0% { opacity: .2; } 50% { opacity: 1; } 100% { opacity: .2; } }
+
+  .composer { border-top: 1px solid var(--line); padding: 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 9px; }
+  .chip {
+    font-size: 12px; padding: 5px 9px; border-radius: 999px;
+    border: 1px solid var(--line); background: #fff; color: var(--muted); cursor: pointer;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .send-row { display: flex; gap: 8px; }
+  .send-row input { flex: 1 1 auto; }
+
+  .facts { padding: 15px 16px; }
+  .facts h2 { margin: 0 0 10px; font-size: 14px; }
+  .fact { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+  .fact:last-child { border-bottom: 0; }
+  .fact .k { font-size: 12px; color: var(--muted); }
+  .fact .v { font-size: 13px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+  .note { margin-top: 12px; font-size: 11.5px; line-height: 1.45; color: var(--muted); }
+  .note b { color: var(--ink); }
+  footer { max-width: 1180px; margin: 0 auto; padding: 0 24px 30px; font-size: 12px; color: var(--muted); }
+  @media (max-width: 900px) {
+    .controls { grid-template-columns: 1fr; }
+    .wrap { grid-template-columns: 1fr; }
+    .chat { min-height: 420px; }
+    header .api input { width: 150px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>AQUIS — Qwen Assistant</h1>
+    <div class="sub" id="statusLine">Checking Ollama…</div>
+  </div>
+  <div class="spacer"></div>
+  <a class="back" href="forecast.html">Forecast map &rarr;</a>
+  <label class="api">
+    API
+    <input id="apiBase" type="text" spellcheck="false" aria-label="API base URL">
+    <button id="connect" type="button">Connect</button>
+  </label>
+</header>
+
+<main>
+  <section class="controls">
+    <div class="field">
+      <label for="district">District</label>
+      <select id="district"><option value="">Loading…</option></select>
+    </div>
+    <div class="field">
+      <label for="station">Station</label>
+      <select id="station"><option value="">—</option></select>
+    </div>
+  </section>
+
+  <div id="status"></div>
+
+  <div class="wrap">
+    <section class="panel chat">
+      <div class="messages" id="messages" aria-live="polite"></div>
+      <div class="composer">
+        <div class="chips" id="chips"></div>
+        <div class="send-row">
+          <input id="question" type="text" placeholder="Ask about this station…" autocomplete="off">
+          <button id="send" class="primary" type="button">Send</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel facts">
+      <h2 id="factsTitle">Station facts</h2>
+      <div id="factsBody">
+        <div class="note">Pick a station, then ask a question. Numbers are computed in Python; the model only phrases them.</div>
+      </div>
+      <div class="note">
+        Runs fully offline through Ollama with <b>Qwen 2.5 (3B)</b>. Answers usually take
+        <b>10–60 s</b> on a laptop, depending on the question length.
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer>
+  Qwen answers are generated from observed AQUIS facts and must not be treated as measurements.
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  const $ = (sel) => document.querySelector(sel);
+  const elDistrict = $("#district");
+  const elStation = $("#station");
+  const elStatus = $("#status");
+  const elStatusLine = $("#statusLine");
+  const elMessages = $("#messages");
+  const elQuestion = $("#question");
+  const elSend = $("#send");
+  const elChips = $("#chips");
+  const elFactsTitle = $("#factsTitle");
+  const elFactsBody = $("#factsBody");
+  const elApi = $("#apiBase");
+  const btnConnect = $("#connect");
+
+  const state = {
+    api: (localStorage.getItem("aquis.api") || "http://localhost:5000").replace(/\/+$/, ""),
+    stations: [],
+    bySlug: new Map(),
+    station: null,          // slug
+    stationName: "",
+    district: "",
+    busy: false,
+    model: "qwen2.5:3b"
+  };
+
+  const SUGGESTIONS = [
+    "What is the latest level?",
+    "How has the level changed over 30 days?",
+    "What is driving the level?",
+    "Suggest precautions"
+  ];
+
+  elApi.value = state.api;
+
+  function setStatus(text, kind) {
+    elStatus.textContent = text || "";
+    elStatus.className = kind || "";
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, (ch) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[ch]));
+  }
+
+  // Tiny markdown: **bold**, `code`, bullets and line breaks. Everything else
+  // is escaped first, so model output can never inject HTML.
+  function render(text) {
+    let s = esc(text);
+    s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
+    s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    s = s.replace(/^\s*[-*]\s+/gm, "• ");
+    return s.replace(/\n/g, "<br>");
+  }
+
+  function fmtNum(v, digits) {
+    return Number.isFinite(Number(v)) ? Number(v).toFixed(digits === undefined ? 2 : digits) : "—";
+  }
+
+  function fmtDate(iso) {
+    const d = new Date(iso);
+    if (isNaN(d)) return String(iso || "");
+    return d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+  }
+
+  async function getJSON(path, opts) {
+    const res = await fetch(state.api + path, opts || { headers: { "Accept": "application/json" } });
+    let body = null;
+    try { body = await res.json(); } catch (_) { body = null; }
+    if (!res.ok) {
+      const err = new Error((body && (body.detail || body.error)) || ("HTTP " + res.status));
+      err.status = res.status;
+      err.body = body;
+      throw err;
+    }
+    return body;
+  }
+
+  /* ---------------- connection + model ---------------- */
+
+  async function loadHealth() {
+    try {
+      const h = await getJSON("/health");
+      const ol = h.ollama || {};
+      const pulled = Array.isArray(ol.models) ? ol.models : [];
+
+      // Qwen only: the page is a Qwen demo, so there is no model picker and
+      // no listing of the other pulled models.
+      state.model = ol.model || "qwen2.5:3b";
+      const installed = pulled.includes(state.model);
+
+      const lastTs = h.dataset_last ? new Date(h.dataset_last) : null;
+      const lastLabel = lastTs && !isNaN(lastTs)
+        ? lastTs.toLocaleString()
+        : (h.dataset_last || "unknown");
+      elStatusLine.innerHTML =
+        "Ollama <b>" + (ol.server ? "online" : "offline") + "</b> · model <b>" +
+        esc(state.model) + "</b>" +
+        (ol.server && !installed ? " · model not pulled" : "") +
+        " · data through <b>" + esc(lastLabel) + "</b>";
+      elStatusLine.style.color = ol.server ? "" : "var(--bad)";
+
+      if (!ol.server) {
+        setStatus("Ollama is not reachable. Start it with: ollama serve", "warn");
+      } else if (!installed) {
+        setStatus("Ollama is running but " + state.model + " is not pulled. Run: ollama pull " + state.model, "warn");
+      }
+    } catch (e) {
+      elStatusLine.textContent = "Ollama status unavailable";
+      elStatusLine.style.color = "var(--bad)";
+      setStatus("Cannot reach the API at " + state.api + ". Start it with: python api.py", "error");
+    }
+  }
+
+  /* ---------------- stations ---------------- */
+
+  async function loadStations() {
+    elDistrict.innerHTML = '<option value="">Loading…</option>';
+    elStation.innerHTML = '<option value="">—</option>';
+    elMessages.innerHTML = "";
+    addMessage("bot", "Hello. Pick a station above, then ask me about its groundwater level, trend, drivers or precautions.");
+    updateFacts(null);
+
+    let body;
+    try {
+      body = await getJSON("/stations?limit=2000");
+    } catch (e) {
+      elDistrict.innerHTML = '<option value="">—</option>';
+      if (e.status === undefined) {
+        setStatus("Cannot reach the API at " + state.api + ". Start it with: python api.py", "error");
+      } else {
+        setStatus("API error: " + e.message, "error");
+      }
+      return;
+    }
+
+    state.stations = Array.isArray(body.stations) ? body.stations : (Array.isArray(body) ? body : []);
+    if (!state.stations.length) {
+      setStatus("The API returned no stations.", "error");
+      return;
+    }
+    state.bySlug = new Map(state.stations.map((s) => [s.slug, s]));
+
+    const districts = Array.from(
+      new Set(state.stations.map((s) => s.district).filter(Boolean))
+    ).sort((a, b) => a.localeCompare(b));
+
+    elDistrict.innerHTML = "";
+    const all = document.createElement("option");
+    all.value = "";
+    all.textContent = "All districts (" + state.stations.length + " stations)";
+    elDistrict.appendChild(all);
+    for (const d of districts) {
+      const o = document.createElement("option");
+      o.value = d;
+      o.textContent = d;
+      elDistrict.appendChild(o);
+    }
+
+    setStatus("");
+    fillStations();
+    syncStation();
+    buildChips();
+  }
+
+  function fillStations() {
+    const district = elDistrict.value;
+    const list = state.stations.filter((s) => !district || s.district === district);
+    list.sort((a, b) => String(a.station).localeCompare(String(b.station)));
+
+    elStation.innerHTML = "";
+    if (!list.length) {
+      const o = document.createElement("option");
+      o.value = "";
+      o.textContent = "No stations in this district";
+      elStation.appendChild(o);
+      return;
+    }
+    for (const s of list) {
+      const o = document.createElement("option");
+      o.value = s.slug;
+      o.textContent = s.station + (s.last_ts ? " — " + fmtDate(s.last_ts) : "");
+      elStation.appendChild(o);
+    }
+
+    // Default to the freshest station in view (same rule as the forecast page).
+    const freshest = list.reduce((best, s) => {
+      const tb = s.last_ts ? Date.parse(s.last_ts) : -Infinity;
+      const ta = best.last_ts ? Date.parse(best.last_ts) : -Infinity;
+      return tb > ta ? s : best;
+    }, list[0]);
+    elStation.value = freshest ? freshest.slug : "";
+  }
+
+  function syncStation() {
+    const slug = elStation.value;
+    const rec = state.bySlug.get(slug) || null;
+    state.station = slug || null;
+    state.stationName = rec ? rec.station : "";
+    state.district = rec ? (rec.district || "") : "";
+    elMessages.innerHTML = "";
+    if (rec) {
+      const age = rec.last_ts ? Math.floor((Date.now() - Date.parse(rec.last_ts)) / 86400000) : null;
+      addMessage(
+        "bot",
+        "You are asking about **" + rec.station + "**" +
+        (rec.district ? " (" + rec.district + ")" : "") + "." +
+        (age !== null && age > 7
+          ? "\n\nHeads-up: this station's latest reading is " + age + " days old, so time-based answers stop at that date."
+          : "") +
+        "\n\nTry one of the suggestions below."
+      );
+    }
+    updateFacts(null);
+  }
+
+  /* ---------------- chat ---------------- */
+
+  function addMessage(role, text, meta, isError) {
+    const div = document.createElement("div");
+    div.className = "msg " + role + (isError ? " error" : "");
+    div.innerHTML = render(text);
+    if (meta) {
+      const m = document.createElement("div");
+      m.className = "meta";
+      m.textContent = meta;
+      div.appendChild(m);
+    }
+    elMessages.appendChild(div);
+    elMessages.scrollTop = elMessages.scrollHeight;
+    return div;
+  }
+
+  function setBusy(busy) {
+    state.busy = busy;
+    elSend.disabled = busy;
+    elQuestion.disabled = busy;
+    elSend.textContent = busy ? "Thinking…" : "Send";
+  }
+
+  async function ask(question) {
+    question = String(question || "").trim();
+    if (!question) return;
+    if (state.busy) return;
+    if (!state.station) {
+      setStatus("Pick a station first.", "warn");
+      return;
+    }
+
+    setStatus("");
+    addMessage("user", question);
+    elQuestion.value = "";
+
+    const pending = document.createElement("div");
+    pending.className = "msg bot";
+    pending.innerHTML = "Thinking";
+    const dots = document.createElement("span");
+    dots.className = "dots";
+    pending.appendChild(dots);
+    elMessages.appendChild(pending);
+    elMessages.scrollTop = elMessages.scrollHeight;
+
+    setBusy(true);
+    const t0 = performance.now();
+
+    try {
+      const res = await getJSON("/assistant/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          question: question,
+          station: state.station,
+          model: state.model
+        })
+      });
+
+      const secs = ((performance.now() - t0) / 1000).toFixed(1);
+      pending.className = "msg bot";
+      pending.innerHTML = render(res.answer || "(the model returned an empty answer)");
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      meta.textContent = state.model + " · " + secs + " s";
+      pending.appendChild(meta);
+      elMessages.scrollTop = elMessages.scrollHeight;
+
+      updateFacts(res.facts || null, res.station || state.stationName);
+    } catch (e) {
+      pending.className = "msg bot error";
+      pending.textContent = e.message;
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      meta.textContent = e.status === 503
+        ? "Ollama is not answering — start it with: ollama serve"
+        : (e.status ? "HTTP " + e.status : "network error");
+      pending.appendChild(meta);
+      elMessages.scrollTop = elMessages.scrollHeight;
+    } finally {
+      setBusy(false);
+      elQuestion.focus();
+    }
+  }
+
+  /* ---------------- facts ---------------- */
+
+  function updateFacts(facts, stationLabel) {
+    const name = stationLabel || state.stationName;
+    if (!facts) {
+      elFactsTitle.textContent = name ? name : "Station facts";
+      elFactsBody.innerHTML =
+        '<div class="note">' +
+        (name
+          ? "Ask a question to load this station's computed facts."
+          : "Pick a station, then ask a question. Numbers are computed in Python; the model only phrases them.") +
+        "</div>";
+      return;
+    }
+    elFactsTitle.textContent = facts.station || name || "Station facts";
+    const rows = [
+      ["District", facts.district || state.district || "—"],
+      ["Latest level", fmtNum(facts.last) + " m"],
+      ["Latest reading", facts.last_date || "—"],
+      ["30-day change", facts.change_30d == null ? "—" : (facts.change_30d >= 0 ? "+" : "") + fmtNum(facts.change_30d) + " m"],
+      ["Range (all data)", fmtNum(facts.min) + " … " + fmtNum(facts.max) + " m"],
+      ["Observations", facts.n_obs == null ? "—" : String(facts.n_obs)],
+      ["District median", facts.district_median == null ? "—" : fmtNum(facts.district_median) + " m"]
+    ];
+    elFactsBody.innerHTML = rows.map(([k, v]) =>
+      '<div class="fact"><span class="k">' + esc(k) + '</span><span class="v">' + esc(v) + "</span></div>"
+    ).join("");
+  }
+
+  function buildChips() {
+    elChips.innerHTML = "";
+    for (const s of SUGGESTIONS) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip";
+      b.textContent = s;
+      b.addEventListener("click", () => ask(s));
+      elChips.appendChild(b);
+    }
+  }
+
+  /* ---------------- events ---------------- */
+
+  elDistrict.addEventListener("change", () => {
+    fillStations();
+    syncStation();
+  });
+  elStation.addEventListener("change", syncStation);
+
+  elSend.addEventListener("click", () => ask(elQuestion.value));
+  elQuestion.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      ask(elQuestion.value);
+    }
+  });
+
+  btnConnect.addEventListener("click", () => {
+    const v = elApi.value.trim().replace(/\/+$/, "");
+    if (!v) return;
+    state.api = v;
+    localStorage.setItem("aquis.api", v);
+    loadHealth();
+    loadStations();
+  });
+  elApi.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") btnConnect.click();
+  });
+
+  /* ---------------- boot ---------------- */
+
+  loadHealth();
+  loadStations();
+})();
+</script>
+</body>
+</html>

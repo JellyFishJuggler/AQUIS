@@ -18,7 +18,7 @@ APP_PAGES = ML_ROOT / "app_pages"
 # `st.navigation` runs each page with `exec(code, module.__dict__)`, which does NOT
 # put the page's own directory on `sys.path` the way running a script directly
 # would. The pages import their shared helpers by flat name (`_data`,
-# `_hydro_metrics`), so both the ml root (for `06_features`, `_trajectory`, ...)
+# `_hydro_metrics`), so both the ml root (for `pipeline_model`, `serving_core`, ...)
 # and app_pages (for those helpers) must be importable before `page.run()`.
 # Order matters: app_pages first, so `_data` can never be shadowed by `ml/_data`.
 for _p in (APP_PAGES, ML_ROOT):
@@ -36,37 +36,21 @@ st.set_page_config(
 
 st.sidebar.title("AQUIS")
 st.sidebar.caption("Groundwater monitoring & forecasting")
-st.sidebar.info(
-    "Read-only: no training, fetching, or artifact generation. "
-    "Hydrology views are descriptive; model views state their protocol."
-)
 
 
 def _p(name: str, title: str, icon: str):
     return st.Page(str(ML_ROOT / "app_pages" / name), title=title, icon=icon)
 
 
+# Trimmed navigation: only the map and the data-source page are exposed.
+# The other page modules (monitoring, station, water_balance, quality,
+# forecast_explorer, overview, evaluation, feature_explorer) remain on disk and
+# can be re-added here; they are simply not routed.
 page = st.navigation(
-    {
-        "Monitor": [
-            _p("map_view.py", "Map", ":material/map:"),
-            _p("monitoring.py", "Monitoring", ":material/dashboard:"),
-            _p("station.py", "Station", ":material/water_drop:"),
-            _p("water_balance.py", "Water balance", ":material/rainy:"),
-            _p("quality.py", "Quality", ":material/fact_check:"),
-        ],
-        "Forecast": [
-            _p("forecast_explorer.py", "Forecast explorer", ":material/query_stats:"),
-        ],
-        "Model": [
-            _p("overview.py", "Model overview", ":material/home:"),
-            _p("evaluation.py", "Model trust", ":material/assessment:"),
-            _p("feature_explorer.py", "Features", ":material/tune:"),
-        ],
-        "Reference": [
-            _p("data_quality.py", "Sources & limits", ":material/database:"),
-        ],
-    },
+    [
+        _p("map_view.py", "Map", ":material/map:"),
+        _p("data_quality.py", "Sources & limits", ":material/database:"),
+    ],
     position="sidebar",
 )
 page.run()

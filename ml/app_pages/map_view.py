@@ -112,7 +112,7 @@ coords = _coords()
 if coords.empty:
     st.error(
         "**No coordinates available.** `data/meta/selected_gwl_stations.csv` is missing "
-        "or has no Latitude/Longitude columns (written by `01_select.py`)."
+        "or has no Latitude/Longitude columns (written by `pipeline_data.py`)."
     )
     st.stop()
 

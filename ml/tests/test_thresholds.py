@@ -1,6 +1,6 @@
 """Category + zone threshold tests (_thresholds.py).
 
-These pin the single source of truth shared by 11_fleet.py (scan categories) and
+These pin the single source of truth shared by pipeline_data fleet (scan categories) and
 api.py (alert zones) so a threshold edit cannot silently change one side.
 """
 

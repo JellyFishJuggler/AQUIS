@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AQUIS — Groundwater Forecast</title>
+<style>
+  :root {
+    --bg: #f6f8fa;
+    --panel: #ffffff;
+    --ink: #0f172a;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --accent: #0891b2;
+    --accent-soft: rgba(8, 145, 178, 0.14);
+    --bad: #b91c1c;
+    --good: #047857;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  header {
+    padding: 18px 24px 14px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+  header h1 { margin: 0; font-size: 18px; letter-spacing: -0.01em; }
+  header .datastamp { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  header .datastamp b { color: var(--ink); font-weight: 600; }
+  header .spacer { flex: 1 1 auto; }
+  header a.back { font-size: 12px; color: var(--accent); text-decoration: none; }
+  header a.back:hover { text-decoration: underline; }
+  header .api { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+  header .api input {
+    width: 210px; padding: 5px 8px; font-size: 12px;
+    border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--ink);
+  }
+  main { max-width: 1060px; margin: 0 auto; padding: 22px 24px 40px; }
+  .controls {
+    display: grid;
+    grid-template-columns: 1.1fr 2fr 0.9fr;
+    gap: 14px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .field label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  select, button {
+    font: inherit; padding: 9px 10px; border-radius: 8px;
+    border: 1px solid var(--line); background: #fff; color: var(--ink);
+    min-width: 0;
+  }
+  select:focus, button:focus, input:focus { outline: 2px solid var(--accent-soft); outline-offset: 1px; }
+  button { cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  button:disabled { opacity: 0.55; cursor: default; }
+  #status { margin: 16px 0 0; font-size: 13px; color: var(--muted); min-height: 18px; }
+  #status.error { color: var(--bad); }
+  #status.warn { color: #92400e; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 12px; margin-top: 16px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+  .card .k { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .card .v { font-size: 22px; font-weight: 650; margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .card .s { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .panel {
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    margin-top: 16px; padding: 14px 16px 8px;
+  }
+  .panel h2 { margin: 4px 0 10px; font-size: 14px; }
+  svg { width: 100%; height: auto; display: block; }
+  .grid-line { stroke: var(--line); stroke-width: 1; }
+  .axis-text { fill: var(--muted); font-size: 11px; }
+  .band { fill: var(--accent-soft); }
+  .line { fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linejoin: round; }
+  .dot { fill: var(--accent); }
+  details { margin-top: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 16px; }
+  summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); }
+  .split {
+    display: grid;
+    grid-template-columns: 420px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+    margin-top: 16px;
+  }
+  .map-panel { position: sticky; top: 16px; margin-top: 0 !important; }
+  .map-panel h2 { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .hint { font-size: 11px; font-weight: 400; color: var(--muted); text-transform: none; letter-spacing: 0; }
+  #map svg { width: 100%; height: auto; display: block; }
+  .map-dot {
+    fill: var(--accent); opacity: 0.45; cursor: pointer;
+    transition: opacity 0.12s ease, r 0.12s ease, fill 0.12s ease;
+  }
+  .map-dot.dim { opacity: 0.10; }
+  .map-dot:hover, .map-dot.hover { opacity: 1; r: 5; }
+  .map-dot.sel { opacity: 1; fill: #b91c1c; }
+  .map-tip {
+    position: fixed; z-index: 50; pointer-events: none; display: none;
+    background: rgba(15, 23, 42, 0.95); color: #f8fafc;
+    padding: 7px 10px; border-radius: 7px;
+    font-size: 12px; line-height: 1.4; max-width: 240px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.28);
+  }
+  .map-tip.on { display: block; }
+  .map-tip .t-name { font-weight: 650; }
+  .map-tip .t-meta { color: #cbd5e1; font-size: 11px; }
+  .results { min-width: 0; }
+  .results > #status { margin-top: 0; }
+  @media (max-width: 900px) {
+    .split { grid-template-columns: 1fr; }
+    .map-panel { position: static; }
+  }
+  table { border-collapse: collapse; width: 100%; margin-top: 12px; font-size: 13px; font-variant-numeric: tabular-nums; }
+  th, td { text-align: right; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+  th:first-child, td:first-child { text-align: left; }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+  footer { max-width: 1060px; margin: 0 auto; padding: 0 24px 34px; font-size: 12px; color: var(--muted); }
+  .empty { padding: 40px 0; text-align: center; color: var(--muted); font-size: 14px; }
+  @media (max-width: 720px) {
+    .controls { grid-template-columns: 1fr; }
+    header .api input { width: 150px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>AQUIS — Groundwater Forecast</h1>
+    <div class="datastamp" id="dataStamp">Checking data freshness…</div>
+  </div>
+  <div class="spacer"></div>
+  <a class="back" href="assistant.html">Assistant (Qwen) &rarr;</a>
+  <label class="api">
+    API
+    <input id="apiBase" type="text" spellcheck="false" aria-label="API base URL">
+    <button id="connect" type="button">Connect</button>
+  </label>
+</header>
+
+<main>
+  <section class="controls">
+    <div class="field">
+      <label for="district">District</label>
+      <select id="district"><option value="">Loading…</option></select>
+    </div>
+    <div class="field">
+      <label for="station">Station</label>
+      <select id="station"><option value="">—</option></select>
+    </div>
+    <div class="field">
+      <label for="days">Horizon</label>
+      <select id="days">
+        <option value="7">7 days</option>
+        <option value="14">14 days</option>
+        <option value="30" selected>30 days</option>
+      </select>
+    </div>
+  </section>
+
+  <div class="split">
+    <aside class="panel map-panel">
+      <h2>Station map <span class="hint">hover to identify · click to select</span></h2>
+      <div id="map"><div class="empty">Loading…</div></div>
+      <div id="mapTip" class="map-tip" role="status" aria-live="polite"></div>
+    </aside>
+    <div class="results">
+      <div id="status">Connecting…</div>
+      <div class="cards" id="cards"></div>
+      <div class="panel" id="chartPanel" hidden>
+        <h2 id="chartTitle">Forecast</h2>
+        <div id="chart"></div>
+      </div>
+      <details id="tablePanel" hidden>
+        <summary>Daily values</summary>
+        <div id="table"></div>
+      </details>
+    </div>
+  </div>
+</main>
+
+<footer id="footer">
+  Forecasts are model output, not measurements. Bands are the 90 % predictive interval (q05–q95).
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  const $ = (sel) => document.querySelector(sel);
+  const elDistrict = $("#district");
+  const elStation = $("#station");
+  const elDays = $("#days");
+  const elStatus = $("#status");
+  const elCards = $("#cards");
+  const elChartPanel = $("#chartPanel");
+  const elChart = $("#chart");
+  const elChartTitle = $("#chartTitle");
+  const elTablePanel = $("#tablePanel");
+  const elTable = $("#table");
+  const elMap = $("#map");
+  const elMapTip = $("#mapTip");
+  const elDataStamp = $("#dataStamp");
+  const elApi = $("#apiBase");
+  const btnConnect = $("#connect");
+
+  const state = {
+    api: (localStorage.getItem("aquis.api") || "http://localhost:5000").replace(/\/+$/, ""),
+    stations: [],
+    bySlug: new Map(),
+    current: null,
+    seq: 0,
+    // how many stations we may skip automatically when the default pick has no
+    // forecast (some stations are dropped by the model for insufficient history)
+    autoSkip: 0
+  };
+
+  elApi.value = state.api;
+
+  function setStatus(text, kind) {
+    elStatus.textContent = text || "";
+    elStatus.className = kind || "";
+  }
+
+  function clearOutput() {
+    elCards.innerHTML = "";
+    elChart.innerHTML = "";
+    elChartPanel.hidden = true;
+    elTablePanel.hidden = true;
+    elTable.innerHTML = "";
+  }
+
+  async function getJSON(path) {
+    const res = await fetch(state.api + path, { headers: { "Accept": "application/json" } });
+    let body = null;
+    try { body = await res.json(); } catch (_) { body = null; }
+    if (!res.ok) {
+      const err = new Error((body && (body.detail || body.error)) || ("HTTP " + res.status));
+      err.status = res.status;
+      err.body = body;
+      throw err;
+    }
+    return body;
+  }
+
+  /* ---------------- freshness ---------------- */
+
+  async function loadHealth() {
+    try {
+      const h = await getJSON("/health");
+      const last = h.dataset_last ? new Date(h.dataset_last) : null;
+      if (!last || isNaN(last)) {
+        elDataStamp.textContent = "Data freshness unknown";
+        return;
+      }
+      const ageDays = Math.floor((Date.now() - last) / 86400000);
+      elDataStamp.innerHTML =
+        "Data through <b>" + esc(last.toLocaleString()) + "</b>" +
+        (h.stations ? " · " + esc(h.stations) + " stations" : "") +
+        (h.forecast_backend ? " · forecast <b>" + esc(h.forecast_backend) + "</b>" : "") +
+        (ageDays > 2
+          ? " · <span style=\"color:#92400e\">" + ageDays + " d behind today</span>"
+          : "");
+    } catch (_) {
+      elDataStamp.textContent = "Data freshness unavailable";
+    }
+  }
+
+  /* ---------------- stations ---------------- */
+
+  async function loadStations() {
+    setStatus("Loading stations from " + state.api + " …");
+    clearOutput();
+    loadHealth();
+    elDistrict.innerHTML = '<option value="">Loading…</option>';
+    elStation.innerHTML = '<option value="">—</option>';
+
+    let body;
+    try {
+      body = await getJSON("/stations?limit=2000");
+    } catch (e) {
+      elDistrict.innerHTML = '<option value="">—</option>';
+      elMap.innerHTML = '<div class="empty">No stations loaded</div>';
+      if (e.status === undefined) {
+        setStatus("Cannot reach the API at " + state.api + ". Start it with: python api.py", "error");
+      } else {
+        setStatus("API error: " + e.message, "error");
+      }
+      return;
+    }
+
+    state.stations = Array.isArray(body.stations) ? body.stations : (Array.isArray(body) ? body : []);
+    if (!state.stations.length) {
+      setStatus("The API returned no stations.", "error");
+      return;
+    }
+    state.bySlug = new Map(state.stations.map((s) => [s.slug, s]));
+    buildMap();
+
+    const districts = Array.from(
+      new Set(state.stations.map((s) => s.district).filter(Boolean))
+    ).sort((a, b) => a.localeCompare(b));
+
+    elDistrict.innerHTML = "";
+    const optAll = document.createElement("option");
+    optAll.value = "";
+    optAll.textContent = "All districts (" + state.stations.length + " stations)";
+    elDistrict.appendChild(optAll);
+    for (const d of districts) {
+      const o = document.createElement("option");
+      o.value = d;
+      o.textContent = d;
+      elDistrict.appendChild(o);
+    }
+
+    setStatus(state.stations.length + " stations across " + districts.length + " districts.");
+    fillStations();
+  }
+
+  function fillStations(autoload) {
+    const district = elDistrict.value;
+    const list = state.stations.filter((s) => !district || s.district === district);
+    list.sort((a, b) => String(a.station).localeCompare(String(b.station)));
+
+    elStation.innerHTML = "";
+    if (!list.length) {
+      const o = document.createElement("option");
+      o.value = "";
+      o.textContent = "No stations in this district";
+      elStation.appendChild(o);
+      clearOutput();
+      highlightMap();
+      return;
+    }
+    for (const s of list) {
+      const o = document.createElement("option");
+      o.value = s.slug;
+      o.textContent = s.last_ts
+        ? s.station + " — " + shortDate(s.last_ts)
+        : s.station;
+      o.dataset.name = s.station;
+      elStation.appendChild(o);
+    }
+    // Default to the freshest station in view, not the alphabetically first
+    // one: several stations stopped reporting months ago and their forecasts
+    // are anchored on that stale reading.
+    const freshest = list.reduce((best, s) => {
+      const tb = s.last_ts ? Date.parse(s.last_ts) : -Infinity;
+      const ta = best.last_ts ? Date.parse(best.last_ts) : -Infinity;
+      return tb > ta ? s : best;
+    }, list[0]);
+    if (freshest) elStation.value = freshest.slug;
+
+    highlightMap();
+    if (autoload === false) return;
+    state.autoSkip = 3;
+    loadForecast();
+  }
+
+  function advanceStation() {
+    const i = elStation.selectedIndex;
+    if (i < 0 || i >= elStation.options.length - 1) return false;
+    elStation.selectedIndex = i + 1;
+    return true;
+  }
+
+  /* ---------------- map ---------------- */
+
+  // Coarse Uttar Pradesh outline, copied from app_pages/_up_boundary.py.
+  // Hand-built approximation (44 vertices) — framing only, not a survey boundary.
+  const UP_OUTLINE = [
+    [77.55, 30.42], [78.10, 30.60], [78.75, 30.72], [79.30, 30.90], [79.95, 30.95],
+    [80.55, 30.55], [81.05, 30.28], [81.55, 30.15], [82.10, 29.85], [82.70, 29.55],
+    [83.20, 29.25], [83.70, 29.05], [84.10, 28.60], [84.35, 28.10], [84.05, 27.60],
+    [83.55, 27.30], [83.20, 27.00], [83.60, 26.60], [83.95, 26.30], [84.00, 25.75],
+    [83.60, 25.40], [83.20, 25.15], [82.85, 24.85], [82.45, 24.45], [82.10, 24.20],
+    [81.60, 24.10], [81.15, 24.35], [80.65, 24.60], [80.15, 24.80], [79.70, 24.95],
+    [79.25, 25.15], [78.85, 25.35], [78.45, 25.60], [78.05, 25.95], [77.75, 26.35],
+    [77.45, 26.75], [77.20, 27.15], [77.05, 27.60], [77.15, 28.05], [77.35, 28.50],
+    [77.45, 28.95], [77.40, 29.40], [77.45, 29.90], [77.55, 30.42]
+  ];
+  const MAP_BOX = { lon0: 76.8, lon1: 84.9, lat0: 23.8, lat1: 31.2 };
+
+  function buildMap() {
+    hideTip();
+    const W = 420;
+    const { lon0, lon1, lat0, lat1 } = MAP_BOX;
+    // equirectangular, with longitude compressed by cos(mid-latitude)
+    const k = Math.cos((((lat0 + lat1) / 2) * Math.PI) / 180);
+    const H = Math.round((W * (lat1 - lat0)) / ((lon1 - lon0) * k));
+    const px = (lon) => ((lon - lon0) / (lon1 - lon0)) * W;
+    const py = (lat) => ((lat1 - lat) / (lat1 - lat0)) * H;
+
+    const outline = UP_OUTLINE.map((p, i) =>
+      (i === 0 ? "M" : "L") + px(p[0]).toFixed(1) + " " + py(p[1]).toFixed(1)
+    ).join(" ") + " Z";
+
+    const dots = state.stations
+      .filter((s) => Number.isFinite(s.latitude) && Number.isFinite(s.longitude))
+      .map((s) =>
+        '<circle class="map-dot" data-slug="' + esc(s.slug) + '" r="2.6" cx="' +
+        px(s.longitude).toFixed(1) + '" cy="' + py(s.latitude).toFixed(1) +
+        '" aria-label="' + esc(s.station + (s.district ? " — " + s.district : "")) +
+        '"></circle>'
+      ).join("");
+
+    elMap.innerHTML =
+      '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Uttar Pradesh station map">' +
+      '<path d="' + outline + '" fill="#eef4f8" stroke="#c3d0da" stroke-width="1.2"/>' +
+      dots + "</svg>";
+  }
+
+  function highlightMap() {
+    const district = elDistrict.value;
+    const slug = elStation.value;
+    elMap.querySelectorAll(".map-dot").forEach((d) => {
+      const rec = state.bySlug.get(d.dataset.slug);
+      const inDistrict = !district || (rec && rec.district === district);
+      const selected = d.dataset.slug === slug;
+      d.classList.toggle("dim", !inDistrict);
+      d.classList.toggle("sel", selected);
+      d.setAttribute("r", selected ? "5" : "2.6");
+    });
+  }
+
+  /* ---------------- map hover tooltip ---------------- */
+
+  let tipSlug = null;
+
+  function showTip(rec) {
+    const when = rec.last_ts ? shortDate(rec.last_ts) : null;
+    elMapTip.innerHTML =
+      '<div class="t-name">' + esc(rec.station) + "</div>" +
+      '<div class="t-meta">' + esc(rec.district || "—") + "</div>" +
+      (when ? '<div class="t-meta">last reading ' + esc(when) + "</div>" : "");
+    elMapTip.classList.add("on");
+  }
+
+  function moveTip(clientX, clientY) {
+    const gap = 14;
+    const w = elMapTip.offsetWidth || 180;
+    const h = elMapTip.offsetHeight || 60;
+    let x = clientX + gap;
+    let y = clientY + gap;
+    if (x + w > window.innerWidth - 8) x = clientX - w - gap;
+    if (y + h > window.innerHeight - 8) y = clientY - h - gap;
+    elMapTip.style.left = Math.max(8, x) + "px";
+    elMapTip.style.top = Math.max(8, y) + "px";
+  }
+
+  function hideTip() {
+    tipSlug = null;
+    elMapTip.classList.remove("on");
+    elMap.querySelectorAll(".map-dot.hover").forEach((d) => d.classList.remove("hover"));
+  }
+
+  function selectStation(slug) {
+    const rec = state.bySlug.get(slug);
+    if (!rec) return;
+    if (elDistrict.value !== (rec.district || "")) {
+      elDistrict.value = rec.district || "";
+      fillStations(false);
+    }
+    elStation.value = slug;
+    state.autoSkip = 0;
+    loadForecast();
+  }
+
+  /* ---------------- forecast ---------------- */
+
+  async function loadForecast() {
+    const slug = elStation.value;
+    if (!slug) { clearOutput(); return; }
+    highlightMap();
+
+    const days = Number(elDays.value) || 30;
+    const stationName = elStation.selectedOptions[0]
+      ? elStation.selectedOptions[0].textContent
+      : slug;
+    const district = elDistrict.value || "—";
+
+    clearOutput();
+    setStatus("Scoring " + stationName + " …");
+
+    const token = ++state.seq;
+
+    let data;
+    try {
+      data = await getJSON("/forecast/" + encodeURIComponent(slug) + "?days=" + days);
+    } catch (e) {
+      if (token !== state.seq) return;
+      if (e.status === 422) {
+        // The default pick is alphabetical; a few stations have no forecast
+        // (insufficient history). Walk forward a couple of times before
+        // showing the warning, so the page does not open on an empty screen.
+        if (state.autoSkip > 0 && advanceStation()) {
+          state.autoSkip -= 1;
+          loadForecast();
+          return;
+        }
+        setStatus(
+          stationName + ": no forecast for this station — " +
+          ((e.body && (e.body.hint || e.body.reason)) || "insufficient history") + ".",
+          "warn"
+        );
+      } else if (e.status === undefined) {
+        setStatus("Cannot reach the API at " + state.api + ".", "error");
+      } else {
+        setStatus(stationName + ": " + e.message, "error");
+      }
+      return;
+    }
+    if (token !== state.seq) return;
+
+    const points = (data.trajectory || []).filter(
+      (p) => p && Number.isFinite(p.q50)
+    );
+    if (!points.length) {
+      setStatus(stationName + ": the forecast returned no usable points.", "warn");
+      return;
+    }
+
+    state.current = { slug, data, points, stationName, district };
+    state.autoSkip = 0;
+    render(stationName, district, data, points);
+
+    const anchorTs = Date.parse(data.anchor_time || "");
+    const ageDays = Number.isFinite(anchorTs)
+      ? Math.floor((Date.now() - anchorTs) / 86400000)
+      : null;
+    setStatus(
+      ageDays !== null && ageDays > 7
+        ? "This station's latest reading is " + ageDays + " days old. The forecast is anchored on that reading, not on today."
+        : "",
+      ageDays !== null && ageDays > 7 ? "warn" : ""
+    );
+  }
+
+  /* ---------------- rendering ---------------- */
+
+  function fmt(v, digits) {
+    return Number.isFinite(v) ? v.toFixed(digits === undefined ? 2 : digits) : "—";
+  }
+
+  function shortDate(iso) {
+    const d = new Date(iso);
+    if (isNaN(d)) return String(iso || "");
+    return d.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+  }
+
+  function fmtDate(iso) {
+    const d = new Date(iso);
+    if (isNaN(d)) return String(iso || "");
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  }
+
+  function render(stationName, district, data, points) {
+    const anchor = Number(data.anchor_gwl);
+    const last = points[points.length - 1];
+    const change = last.q50 - anchor;
+    const bandWidth = last.q95 - last.q05;
+
+    let direction = "stable";
+    if (Math.abs(change) >= 0.15) direction = change > 0 ? "rising" : "declining";
+    const arrow = direction === "rising" ? "▲" : direction === "declining" ? "▼" : "●";
+
+    elChartTitle.textContent =
+      stationName + " — " + (district === "—" ? "" : district + " · ") + points.length / 4 + "-day outlook";
+
+    const anchorTs = Date.parse(data.anchor_time || "");
+    const ageDays = Number.isFinite(anchorTs)
+      ? Math.floor((Date.now() - anchorTs) / 86400000)
+      : null;
+
+    const cards = [
+      {
+        k: "Anchor (observed)",
+        v: fmt(anchor) + " m",
+        s: (data.anchor_time ? new Date(data.anchor_time).toLocaleString() : "") +
+           (ageDays !== null && ageDays > 7 ? " · " + ageDays + " d old" : "")
+      },
+      {
+        k: "Forecast level",
+        v: fmt(last.q50) + " m",
+        s: "at " + fmtDate(last.time)
+      },
+      {
+        k: "Projected change",
+        v: (change >= 0 ? "+" : "") + fmt(change) + " m",
+        s: arrow + " " + direction
+      },
+      {
+        k: "90% interval",
+        v: "±" + fmt(bandWidth / 2) + " m",
+        s: fmt(last.q05) + " … " + fmt(last.q95) + " m"
+      }
+    ];
+
+    elCards.innerHTML = cards
+      .map((c) =>
+        '<div class="card"><div class="k">' + esc(c.k) + '</div><div class="v">' +
+        esc(c.v) + '</div><div class="s">' + esc(c.s) + "</div></div>"
+      )
+      .join("");
+
+    elChart.innerHTML = buildChart(points);
+    elChartPanel.hidden = false;
+    elTablePanel.hidden = false;
+    elTable.innerHTML = buildTable(points);
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, (ch) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[ch]));
+  }
+
+  function buildChart(points) {
+    const W = 760, H = 340;
+    const pad = { l: 52, r: 16, t: 14, b: 40 };
+    const iw = W - pad.l - pad.r;
+    const ih = H - pad.t - pad.b;
+
+    let lo = Infinity, hi = -Infinity;
+    for (const p of points) {
+      lo = Math.min(lo, p.q05);
+      hi = Math.max(hi, p.q95);
+    }
+    if (!isFinite(lo) || !isFinite(hi)) return "";
+    const span = Math.max(hi - lo, 0.5);
+    lo -= span * 0.08;
+    hi += span * 0.08;
+
+    const n = points.length;
+    const x = (i) => pad.l + (n === 1 ? iw / 2 : (i / (n - 1)) * iw);
+    const y = (v) => pad.t + ih - ((v - lo) / (hi - lo)) * ih;
+
+    const parts = [];
+
+    // horizontal grid + y labels
+    const ticks = 5;
+    for (let t = 0; t <= ticks; t++) {
+      const v = lo + ((hi - lo) * t) / ticks;
+      const yy = y(v);
+      parts.push('<line class="grid-line" x1="' + pad.l + '" y1="' + yy +
+                 '" x2="' + (W - pad.r) + '" y2="' + yy + '"/>');
+      parts.push('<text class="axis-text" x="' + (pad.l - 8) + '" y="' + (yy + 4) +
+                 '" text-anchor="end">' + v.toFixed(1) + "</text>");
+    }
+
+    // x labels
+    const xTicks = Math.min(6, n);
+    for (let t = 0; t < xTicks; t++) {
+      const i = Math.round((t * (n - 1)) / Math.max(xTicks - 1, 1));
+      parts.push('<text class="axis-text" x="' + x(i) + '" y="' + (H - pad.b + 20) +
+                 '" text-anchor="middle">' + esc(fmtDate(points[i].time)) + "</text>");
+    }
+
+    // 90% band
+    let upper = "";
+    let lower = "";
+    for (let i = 0; i < n; i++) {
+      upper += (i === 0 ? "M" : "L") + x(i) + " " + y(points[i].q95);
+    }
+    for (let i = n - 1; i >= 0; i--) {
+      lower += "L" + x(i) + " " + y(points[i].q05);
+    }
+    parts.push('<path class="band" d="' + upper + lower + 'Z"/>');
+
+    // median line
+    let line = "";
+    for (let i = 0; i < n; i++) {
+      line += (i === 0 ? "M" : "L") + x(i) + " " + y(points[i].q50);
+    }
+    parts.push('<path class="line" d="' + line + '"/>');
+
+    // end marker
+    parts.push('<circle class="dot" cx="' + x(n - 1) + '" cy="' + y(points[n - 1].q50) +
+               '" r="3.5"/>');
+
+    return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Forecast chart">' +
+           parts.join("") + "</svg>";
+  }
+
+  function buildTable(points) {
+    // one row per day (the 00:00 point of each 4-point day)
+    const daily = points.filter((_, i) => i % 4 === 0);
+    const rows = (daily.length ? daily : points).map((p) =>
+      "<tr><td>" + esc(fmtDate(p.time)) + "</td>" +
+      "<td>" + fmt(p.q05) + "</td>" +
+      "<td>" + fmt(p.q50) + "</td>" +
+      "<td>" + fmt(p.q95) + "</td></tr>"
+    );
+    return "<table><thead><tr><th>Date</th><th>q05 (m)</th><th>q50 (m)</th>" +
+           "<th>q95 (m)</th></tr></thead><tbody>" + rows.join("") + "</tbody></table>";
+  }
+
+  /* ---------------- events ---------------- */
+
+  elDistrict.addEventListener("change", function () { fillStations(); });
+  elStation.addEventListener("change", () => { state.autoSkip = 0; loadForecast(); });
+  elDays.addEventListener("change", () => { state.autoSkip = 0; loadForecast(); });
+
+  elMap.addEventListener("mousemove", (event) => {
+    const dot = event.target.closest ? event.target.closest(".map-dot") : null;
+    if (!dot) { hideTip(); return; }
+    const rec = state.bySlug.get(dot.dataset.slug);
+    if (!rec) { hideTip(); return; }
+    if (dot.dataset.slug !== tipSlug) {
+      tipSlug = dot.dataset.slug;
+      elMap.querySelectorAll(".map-dot.hover").forEach((d) => d.classList.remove("hover"));
+      dot.classList.add("hover");
+      showTip(rec);
+    }
+    moveTip(event.clientX, event.clientY);
+  });
+
+  elMap.addEventListener("mouseleave", hideTip);
+
+  elMap.addEventListener("click", (event) => {
+    const dot = event.target.closest(".map-dot");
+    if (dot) selectStation(dot.dataset.slug);
+  });
+
+  btnConnect.addEventListener("click", () => {
+    const v = elApi.value.trim().replace(/\/+$/, "");
+    if (!v) return;
+    state.api = v;
+    localStorage.setItem("aquis.api", v);
+    loadStations();
+  });
+
+  elApi.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") btnConnect.click();
+  });
+
+  loadStations();
+})();
+</script>
+</body>
+</html>

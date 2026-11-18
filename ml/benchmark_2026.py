@@ -11,7 +11,7 @@ Protocol
 --------
 * Universe: stations the fleet scan scores (outputs/fleet_forecast.csv).
 * Actuals: ``data/aligned/table_6h.parquet`` cleaned with
-  ``06_features.drop_gwl_spikes`` (the same cleaning the deployed engines use).
+  ``pipeline_model.drop_gwl_spikes`` (the same cleaning the deployed engines use).
 * Origins: 2026-01-10 then every 30 days while ``origin + 30d <= last obs``.
 * Per origin each station is scored from a *causal* slice (rows with
   ``time <= origin`` only); the anchor is that slice's last observed GWL and the
@@ -56,7 +56,7 @@ if str(ROOT) not in sys.path:
 
 import importlib  # noqa: E402
 
-F = importlib.import_module("06_features")
+F = importlib.import_module("pipeline_model")
 
 from _thresholds import DECLINE_M, HIGH_DECLINE_M  # noqa: E402
 
@@ -172,11 +172,11 @@ def md_table(headers: list[str], rows: list[list]) -> str:
 # main run
 # --------------------------------------------------------------------------- #
 def run(limit_stations: int = 0, write: bool = True) -> dict:
-    import _dl
+    import serving_engines as engines
 
     t0 = time.time()
     print(f"[data] loading {ALIGNED.name}", flush=True)
-    c = _dl._load_traj()                 # table already drop_gwl_spikes-cleaned
+    c = engines._load_traj()             # table already drop_gwl_spikes-cleaned
     tbl = c["tbl"]
     last_obs = pd.Timestamp(tbl["time"].max())
     origins = build_origins(last_obs)
@@ -287,7 +287,7 @@ def run(limit_stations: int = 0, write: bool = True) -> dict:
             actual_chg = actual - anc
 
             try:
-                pred = _dl._predict_deltas(c, feats)
+                pred = engines._predict_deltas(c, feats)
                 dl_q50 = float(pred[-1, 1]) + anc
             except Exception:  # noqa: BLE001
                 exclude["error"] += 1
